@@ -1,0 +1,6 @@
+﻿Add-Migration InitialCreate -context EcommerceDDDContext
+Add-Migration InitialCreate -context IdentityContext
+
+update-database -context EcommerceDDDContext
+update-database -context IdentityContext
+
