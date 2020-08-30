@@ -10,15 +10,15 @@ namespace EcommerceDDD.Domain.Customers.Orders
     public class Order : Entity
     {
         public OrderStatus Status { get; private set; }
-        public DateTime OrderDate { get; private set; }
-        public DateTime? ChangeDate { get; private set; }
+        public DateTime CreatedAt { get; private set; }
+        public DateTime? ChangedAt { get; private set; }
         public bool IsCancelled { get; private set; }
         public Money TotalPrice { get; private set; }
         public List<OrderLine> OrderLines { get; private set; } = new List<OrderLine>();        
 
         public Order(Basket basket, ICurrencyConverter converter)
         {
-            OrderDate = DateTime.Now;            
+            CreatedAt = DateTime.Now;            
             Status = OrderStatus.Placed;
             BuildOrderLines(basket, converter);
             CalculateTotalPrice(basket.Currency);
@@ -26,7 +26,7 @@ namespace EcommerceDDD.Domain.Customers.Orders
 
         public void Change(Basket basket, ICurrencyConverter converter)
         {
-            ChangeDate = DateTime.UtcNow;
+            ChangedAt = DateTime.UtcNow;
             RemoveOrderLine(basket);
             BuildOrderLines(basket, converter);
             CalculateTotalPrice(basket.Currency);

@@ -1,0 +1,26 @@
+<div class="wrapper fadeInDown">
+  <div class="historyViewerFormContent">
+    <table class="table table-responsive table-scroll">
+      <thead class="thead-light">
+        <tr>
+          <th *ngFor="let tableHead of historyRows | sortBy:'asc':'position'">
+            {{tableHead.columnName | titlecase }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let tableData of historyData" style="width:1px; white-space:nowrap;">
+          <td *ngFor="let colName of historyRows | sortBy:'asc':'position' let i = index">
+            <span [ngClass]="{ 'action-column': i === 0 }">
+              {{tableData[colName.columnName]}}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="formFooter">
+      <input type="button" class="cancel-button" (click)="close()" value="Close">
+    </div>
+  </div>
+</div>

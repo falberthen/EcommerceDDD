@@ -8,7 +8,8 @@ namespace EcommerceDDD.Domain.Customers.Orders
     {
         Placed = 1,
         WaitingForPayment = 2,
-        Paid = 3,
+        Sent = 3,
+        Delivered = 4,
         Canceled = 0,
     }
 }

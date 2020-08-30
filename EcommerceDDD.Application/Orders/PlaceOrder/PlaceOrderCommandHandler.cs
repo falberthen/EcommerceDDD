@@ -9,6 +9,7 @@ using EcommerceDDD.Domain.Products;
 using EcommerceDDD.Domain.Customers.Orders;
 using EcommerceDDD.Domain.CurrencyExchange;
 using static EcommerceDDD.Domain.Customers.Orders.Basket;
+using EcommerceDDD.Application.Base;
 
 namespace EcommerceDDD.Application.Orders.PlaceOrder
 {
@@ -35,20 +36,20 @@ namespace EcommerceDDD.Application.Orders.PlaceOrder
                 var productIds = command.Products.Select(p => p.Id).ToList();
                 List<Product> products = await _unitOfWork.ProductRepository.GetProductsByIds(productIds);
 
-                if (products.Count > 0)
+                if (products.Count == 0)
+                    throw new InvalidDataException("The given products are invalid.");
+
+                Basket basket = new Basket(command.Currency);
+                foreach (var product in products)
                 {
-                    Basket basket = new Basket(command.Currency);
-                    foreach (var product in products)
-                    {
-                        var quantity = command.Products.FirstOrDefault(p => p.Id == product.Id).Quantity;
-                        basket.AddProduct(product.Id, product.Price, quantity);
-                    }
-
-                    orderId = customer.PlaceOrder(basket, _currencyConverter);
-
-                    await _unitOfWork.CustomerRepository.AddCustomerOrders(customer);
-                    await _unitOfWork.CommitAsync();
+                    var quantity = command.Products.FirstOrDefault(p => p.Id == product.Id).Quantity;
+                    basket.AddProduct(product.Id, product.Price, quantity);
                 }
+
+                orderId = customer.PlaceOrder(basket, _currencyConverter);
+
+                await _unitOfWork.CustomerRepository.AddCustomerOrders(customer);
+                await _unitOfWork.CommitAsync();                                
             }
 
             return orderId;
