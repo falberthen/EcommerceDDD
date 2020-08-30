@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EcommerceDDD.Application\EcommerceDDD.Application.csproj" />
+    <ProjectReference Include="..\EcommerceDDD.Infrastructure\EcommerceDDD.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
