@@ -1,0 +1,26 @@
+<div class="wrapper fadeInDown">
+  <div class="formContent">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <input type="text" id="email" name="email" formControlName="email" class="fadeIn second" placeholder="Login"
+          [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
+        <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+            <div *ngIf="f.email.errors.required">E-mail is required</div>
+        </div>
+      </div>
+      <div class="form-group">
+          <input type="password" id="password" name="password" formControlName="password" class="fadeIn third" placeholder="Password"
+            [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
+          <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+              <div *ngIf="f.password.errors.required">Password is required</div>
+          </div>
+      </div>
+      <input [disabled]="loading" type="submit" class="fadeIn fourth" value="Log In">
+    </form>
+
+    <div class="formFooter">
+      <a [routerLink]="['/account']" href="" class="underlineHover">Create my account</a>
+    </div>
+
+  </div>
+</div>
