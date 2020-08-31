@@ -1,6 +1,7 @@
 ﻿using EcommerceDDD.Domain.Core.Base;
 using EcommerceDDD.Domain.Core.Messaging;
 using EcommerceDDD.Domain.Customers;
+using EcommerceDDD.Domain.Payments;
 using EcommerceDDD.Domain.Products;
 
 namespace EcommerceDDD.Domain
@@ -9,6 +10,7 @@ namespace EcommerceDDD.Domain
     {
         ICustomerRepository CustomerRepository { get; }
         IStoredEventRepository MessageRepository { get; }
-        IProductRepository ProductRepository { get; }        
+        IProductRepository ProductRepository { get; }
+        IPaymentRepository PaymentRepository { get; }
     }
 }
