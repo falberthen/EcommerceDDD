@@ -33,9 +33,10 @@ namespace EcommerceDDD.Infrastructure.Messaging
                 try
                 {
                     message.SetProcessedAt(DateTime.UtcNow);
+                    await _publisher.Publish(message, cancellationToken);
+
                     _unitOfWork.MessageRepository.UpdateProcessedAt(message);
                     await _unitOfWork.CommitAsync();
-                    await _publisher.Publish(message, cancellationToken);
                 }
                 catch (Exception ex)
                 {
