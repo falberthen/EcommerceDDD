@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace EcommerceDDD.Infrastructure.Database.Migrations
+namespace EcommerceDDD.Infrastructure.Migrations
 {
     [DbContext(typeof(EcommerceDDDContext))]
     partial class EcommerceDDDContextModelSnapshot : ModelSnapshot
@@ -74,6 +74,37 @@ namespace EcommerceDDD.Infrastructure.Database.Migrations
                     b.ToTable("Customers","dbo");
                 });
 
+            modelBuilder.Entity("EcommerceDDD.Domain.Payments.Payment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("ConfirmationEmailSent")
+                        .HasColumnName("ConfirmationEmailSent")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnName("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnName("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("PaidAt")
+                        .HasColumnName("PaidAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte>("Status")
+                        .HasColumnName("StatusId")
+                        .HasColumnType("tinyint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Payments","dbo");
+                });
+
             modelBuilder.Entity("EcommerceDDD.Domain.Products.Product", b =>
                 {
                     b.Property<Guid>("Id")
@@ -101,8 +132,12 @@ namespace EcommerceDDD.Infrastructure.Database.Migrations
                                 .ValueGeneratedOnAdd()
                                 .HasColumnType("uniqueidentifier");
 
-                            b1.Property<DateTime?>("ChangeDate")
+                            b1.Property<DateTime?>("ChangedAt")
                                 .HasColumnName("ChangeDate")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<DateTime>("CreatedAt")
+                                .HasColumnName("CreatedAt")
                                 .HasColumnType("datetime2");
 
                             b1.Property<Guid>("CustomerId")
@@ -111,10 +146,6 @@ namespace EcommerceDDD.Infrastructure.Database.Migrations
                             b1.Property<bool>("IsCancelled")
                                 .HasColumnName("IsCancelled")
                                 .HasColumnType("bit");
-
-                            b1.Property<DateTime>("OrderDate")
-                                .HasColumnName("OrderDate")
-                                .HasColumnType("datetime2");
 
                             b1.Property<byte>("Status")
                                 .HasColumnName("StatusId")
@@ -257,7 +288,7 @@ namespace EcommerceDDD.Infrastructure.Database.Migrations
 
                                             b3.Property<string>("Name")
                                                 .IsRequired()
-                                                .HasColumnName("OrderCurrency")
+                                                .HasColumnName("Currency")
                                                 .HasColumnType("nvarchar(5)")
                                                 .HasMaxLength(5);
 
