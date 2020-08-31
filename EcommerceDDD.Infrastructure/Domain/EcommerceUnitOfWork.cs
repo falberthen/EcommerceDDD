@@ -8,6 +8,7 @@ using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.Core.Base;
 using EcommerceDDD.Domain.Core.Messaging;
 using EcommerceDDD.Domain.Customers;
+using EcommerceDDD.Domain.Payments;
 using EcommerceDDD.Domain.Products;
 using EcommerceDDD.Infrastructure.Database.Context;
 using EcommerceDDD.Infrastructure.Domain;
@@ -20,6 +21,7 @@ namespace EcommerceDDD.Infrastructure.Domain
         public ICustomerRepository CustomerRepository { get; }
         public IStoredEventRepository MessageRepository { get; }
         public IProductRepository ProductRepository { get; }
+        public IPaymentRepository PaymentRepository { get; }
 
         private readonly IEventSerializer _eventSerializer;
 
@@ -27,11 +29,13 @@ namespace EcommerceDDD.Infrastructure.Domain
             ICustomerRepository customerRepository,
             IStoredEventRepository messageRepository,
             IProductRepository productRepository,
+            IPaymentRepository paymentRepository,
             IEventSerializer eventSerializer) : base(dbContext)
         {
             CustomerRepository = customerRepository ?? throw new ArgumentNullException(nameof(customerRepository));
             MessageRepository = messageRepository ?? throw new ArgumentNullException(nameof(messageRepository));
             ProductRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
+            PaymentRepository = paymentRepository ?? throw new ArgumentNullException(nameof(paymentRepository));
 
             _eventSerializer = eventSerializer ?? throw new ArgumentNullException(nameof(eventSerializer));
         }

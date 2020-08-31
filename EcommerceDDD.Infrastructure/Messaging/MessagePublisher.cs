@@ -23,7 +23,7 @@ namespace EcommerceDDD.Infrastructure.Messaging
             _mediator = mediator;
         }
 
-        public Task Publish(StoredEvent message, System.Threading.CancellationToken cancellationToken)
+        public async Task Publish(StoredEvent message, System.Threading.CancellationToken cancellationToken)
         {
             Type messageType = GetType(message.MessageType);
             var domainEvent = JsonConvert.DeserializeObject(message.Payload, messageType);
@@ -31,11 +31,9 @@ namespace EcommerceDDD.Infrastructure.Messaging
             if (messageType != null 
                 && domainEvent != null)
             {
-                _mediator.Publish(domainEvent);
+                await _mediator.Publish(domainEvent);
                 _logger.LogInformation($"message {message.Id} processed!");
             }
-
-            return Task.CompletedTask;
         }
 
         public static Type GetType(string typeName)

@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace EcommerceDDD.Infrastructure.Database.Migrations
+namespace EcommerceDDD.Infrastructure.Migrations
 {
     public partial class InitialCreate : Migration
     {
@@ -23,6 +23,23 @@ namespace EcommerceDDD.Infrastructure.Database.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Customers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Payments",
+                schema: "dbo",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    OrderId = table.Column<Guid>(nullable: false),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    PaidAt = table.Column<DateTime>(nullable: true),
+                    StatusId = table.Column<byte>(nullable: false),
+                    ConfirmationEmailSent = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Payments", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -66,11 +83,11 @@ namespace EcommerceDDD.Infrastructure.Database.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     StatusId = table.Column<byte>(nullable: false),
-                    OrderDate = table.Column<DateTime>(nullable: false),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
                     ChangeDate = table.Column<DateTime>(nullable: true),
                     IsCancelled = table.Column<bool>(nullable: false),
                     TotalPrice = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
-                    OrderCurrency = table.Column<string>(maxLength: 5, nullable: true),
+                    Currency = table.Column<string>(maxLength: 5, nullable: true),
                     CustomerId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
@@ -122,6 +139,10 @@ namespace EcommerceDDD.Infrastructure.Database.Migrations
         {
             migrationBuilder.DropTable(
                 name: "OrderLines",
+                schema: "dbo");
+
+            migrationBuilder.DropTable(
+                name: "Payments",
                 schema: "dbo");
 
             migrationBuilder.DropTable(
