@@ -34,7 +34,11 @@ namespace EcommerceDDD.Application.Base.Commands
             }
             catch (BusinessRuleException e)
             {
-                command.ValidationResult.Errors.Add(new ValidationFailure("Business rule error", e.Message));                
+                command.ValidationResult.Errors.Add(new ValidationFailure("Business rule error", e.Message));
+            }
+            catch (InvalidDataException e)
+            {
+                command.ValidationResult.Errors.Add(new ValidationFailure("Invalid data error", e.Message));
             }
 
             result.ValidationResult = command.ValidationResult;
