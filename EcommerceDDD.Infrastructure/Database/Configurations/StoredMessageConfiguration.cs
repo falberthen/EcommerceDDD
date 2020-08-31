@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EcommerceDDD.Infrastructure.Database.Configurations
 {
-    internal class StoredMessageConfiguration : IEntityTypeConfiguration<StoredEvent>
+    internal sealed class StoredMessageConfiguration : IEntityTypeConfiguration<StoredEvent>
     {
         public void Configure(EntityTypeBuilder<StoredEvent> builder)
         {
