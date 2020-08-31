@@ -27,7 +27,7 @@ namespace EcommerceDDD.Domain.Customers.Orders
             ICurrencyConverter currencyConverter)
         {
             if (quantity > 0)
-                throw new BusinessRuleException("Product quanrity cannot be 0.");
+                throw new BusinessRuleException("Product quantity cannot be 0.");
 
             Quantity = quantity;
             CalculateProductPrices(productPrice, currency, currencyConverter);
