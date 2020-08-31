@@ -1,6 +1,7 @@
 ﻿using EcommerceDDD.Domain.Core.Messaging;
 using EcommerceDDD.Domain.Customers;
 using EcommerceDDD.Domain.Customers.Orders;
+using EcommerceDDD.Domain.Payments;
 using EcommerceDDD.Domain.Products;
 using EcommerceDDD.Infrastructure.Database.Configurations;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ namespace EcommerceDDD.Infrastructure.Database.Context
         public DbSet<StoredEvent> StoredEvents { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderLine> OrderLines { get; set; }
+        public DbSet<Payment> Payments { get; set; }
 
         public EcommerceDDDContext(DbContextOptions<EcommerceDDDContext> options)
             : base(options)
@@ -27,6 +29,7 @@ namespace EcommerceDDD.Infrastructure.Database.Context
             modelBuilder.ApplyConfiguration(new CustomerConfiguration());
             modelBuilder.ApplyConfiguration(new StoredMessageConfiguration());
             modelBuilder.ApplyConfiguration(new ProductConfiguration());
+            modelBuilder.ApplyConfiguration(new PaymentConfiguration());
         }
     }
 }
