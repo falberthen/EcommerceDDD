@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EcommerceDDD.Infrastructure.Database.Configurations
 {
-    internal class CustomerConfiguration : IEntityTypeConfiguration<Customer>
+    internal sealed class CustomerConfiguration : IEntityTypeConfiguration<Customer>
     {
         public void Configure(EntityTypeBuilder<Customer> builder)
         {
@@ -33,8 +33,8 @@ namespace EcommerceDDD.Infrastructure.Database.Configurations
 
                 x.Property<Guid>("Id");
                 x.HasKey("Id");
-                x.Property<DateTime>("OrderDate").HasColumnName("OrderDate");
-                x.Property<DateTime?>("ChangeDate").HasColumnName("ChangeDate");
+                x.Property<DateTime>("CreatedAt").HasColumnName("CreatedAt");
+                x.Property<DateTime?>("ChangedAt").HasColumnName("ChangeDate");
                 x.Property<bool>("IsCancelled").HasColumnName("IsCancelled");
 
                 x.Property("Status").HasColumnName("StatusId").HasConversion(new EnumToNumberConverter<OrderStatus, byte>());
