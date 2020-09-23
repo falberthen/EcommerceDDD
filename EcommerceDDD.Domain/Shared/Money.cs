@@ -1,37 +1,61 @@
-﻿using System.Collections.Generic;
-using EcommerceDDD.Domain.Core.Base;
+﻿using EcommerceDDD.Domain.Core.Base;
 
 namespace EcommerceDDD.Domain.Shared
 {
-    public class Money : ValueObject
+    public class Money : ValueObject<Money>
     {
         public decimal Value { get; }
-        public Currency Currency { get; }
+        public string CurrencyCode { get; }
+        public string CurrencySymbol { get; }
 
-        private Money(decimal value, string currency)
+        private Money(decimal value, string currencyCode)
         {
             Value = value;
-            Currency = Currency.FromCode(currency);
+            Currency currency = Currency.FromCode(currencyCode);
+            CurrencyCode = currency.Code;
+            CurrencySymbol = currency.Symbol;
         }
 
-        public static Money Of(decimal value, string currency)
+        public static Money Of(decimal value, string currencyCode)
         {
-            if (string.IsNullOrEmpty(currency))
+            if (string.IsNullOrEmpty(currencyCode))
                 throw new BusinessRuleException("Money must have currency.");
 
-            return new Money(value, currency);
+            if (value < 0)
+                throw new BusinessRuleException("Money amount value cannot be negative.");
+
+            return new Money(value, currencyCode);
+        }
+
+        protected override bool EqualsCore(Money other)
+        {
+            return Value == other.Value &&
+                CurrencyCode == other.CurrencyCode &&
+                CurrencySymbol == other.CurrencySymbol;
+        }
+
+        protected override int GetHashCodeCore()
+        {
+            unchecked
+            {
+                int hashCode = Value.GetHashCode();
+                hashCode = (hashCode * 397) ^ CurrencyCode.GetHashCode();
+                hashCode = (hashCode * 397) ^ CurrencySymbol.GetHashCode();
+                return hashCode;
+            }
         }
 
         public static Money operator *(decimal number, Money rightValue)
         {
-            return new Money(number * rightValue.Value, rightValue.Currency.Name);
+            return new Money(number * rightValue.Value, rightValue.CurrencyCode);
         }
 
-        protected override IEnumerable<object> GetAtomicValues()
+        public static Money operator +(Money money1, Money money2)
         {
-            // Using a yield return statement to return each element one at a time
-            yield return Value;
-            yield return Currency;
+            if (!money1.CurrencyCode.Equals(money2.CurrencyCode))
+                throw new BusinessRuleException("You cannot sum different currencies.");
+
+            return Of(money1.Value + money2.Value, money1.CurrencyCode);            
         }
 
         private Money(){}

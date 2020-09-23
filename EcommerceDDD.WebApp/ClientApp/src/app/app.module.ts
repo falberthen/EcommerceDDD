@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
-import { EcommerceModule } from './modules/ecommerce/ecomerce.module';
+import { EcommerceModule } from './modules/ecommerce/ecommerce.module';
 import { SharedModule } from './shared/shared.module';
 import { AuthenticationModule } from './modules/authentication/authentication.module';
 import { APP_ROUTES } from './app.routes';

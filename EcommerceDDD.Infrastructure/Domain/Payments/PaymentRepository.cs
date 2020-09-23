@@ -19,14 +19,24 @@ namespace EcommerceDDD.Infrastructure.Domain.Products
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task AddPayment(Payment payment, CancellationToken cancellationToken = default)
+        public async Task Add(Payment payment, CancellationToken cancellationToken = default)
         {
-            await _context.Payments.AddAsync(payment);            
+            await _context.Payments.AddAsync(payment, cancellationToken);            
         }
 
-        public async Task<Payment> GetPaymentById(Guid id, CancellationToken cancellationToken = default)
+        public async Task<Payment> GetById(Guid paymentId, CancellationToken cancellationToken = default)
         {
-            return await _context.Payments.Where(x => x.Id == id).FirstOrDefaultAsync();
+            return await _context.Payments.
+                Include(p => p.Order).
+                Include(p => p.Customer).
+                FirstOrDefaultAsync(x => x.Id == paymentId, cancellationToken);
+        }
+
+        public async Task<Payment> GetByOrderId(Guid orderId, CancellationToken cancellationToken = default)
+        {
+            return await _context.Payments.
+                Include(p => p.Order).
+                FirstOrDefaultAsync(x => x.Order.Id == orderId, cancellationToken);
         }
     }
 }

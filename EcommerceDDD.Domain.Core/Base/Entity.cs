@@ -1,30 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using EcommerceDDD.Domain.Core.Messaging;
+﻿using System.Collections.Generic;
 
 namespace EcommerceDDD.Domain.Core.Base
 {
-    public abstract class Entity
+    /// <summary>
+    /// Entity base class
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    public abstract class Entity<TKey>
     {
-        public Guid Id { get; set; }
+        public TKey Id { get; protected set; }
 
-        protected Entity()
+        public override bool Equals(object obj)
         {
-            Id = Guid.NewGuid();
+            var entity = obj as Entity<TKey>;
+            return entity != null &&
+                this.GetType() == entity.GetType() &&
+                EqualityComparer<TKey>.Default.Equals(Id, entity.Id);
+        }
+        
+        public static bool operator ==(Entity<TKey> a, Entity<TKey> b)
+        {
+            if(ReferenceEquals(a, null) && ReferenceEquals(b, null))
+                return true;
+
+            if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
+                return false;
+
+            return a.Equals(b);
         }
 
-        public IReadOnlyCollection<Event> DomainEvents => _domainEvents?.AsReadOnly();
-
-        public void AddDomainEvent<TE>(TE @event) where TE : Event
+        public static bool operator !=(Entity<TKey> a, Entity<TKey> b)
         {
-            _domainEvents = _domainEvents ?? new List<Event>();
-            _domainEvents.Add(@event);
-        }
-        public void ClearDomainEvents()
-        {
-            _domainEvents.Clear();
+            return !(a == b);
         }
 
-        private List<Event> _domainEvents;
+        public override int GetHashCode()
+        {
+            return (GetType().ToString() + Id).GetHashCode();
+        }
     }
 }

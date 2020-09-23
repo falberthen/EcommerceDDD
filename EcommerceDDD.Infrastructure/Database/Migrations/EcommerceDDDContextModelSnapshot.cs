@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace EcommerceDDD.Infrastructure.Migrations
+namespace EcommerceDDD.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(EcommerceDDDContext))]
     partial class EcommerceDDDContextModelSnapshot : ModelSnapshot
@@ -15,9 +15,25 @@ namespace EcommerceDDD.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.7")
+                .HasAnnotation("ProductVersion", "3.1.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("EcommerceDDD.Domain.Carts.Cart", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("Carts","dbo");
+                });
 
             modelBuilder.Entity("EcommerceDDD.Domain.Core.Messaging.StoredEvent", b =>
                 {
@@ -66,12 +82,33 @@ namespace EcommerceDDD.Infrastructure.Migrations
                         .HasColumnType("varchar(100)")
                         .HasMaxLength(100);
 
-                    b.Property<bool>("WelcomeEmailWasSent")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.ToTable("Customers","dbo");
+                });
+
+            modelBuilder.Entity("EcommerceDDD.Domain.Orders.Order", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnName("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte>("Status")
+                        .HasColumnName("StatusId")
+                        .HasColumnType("tinyint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("Orders","dbo");
                 });
 
             modelBuilder.Entity("EcommerceDDD.Domain.Payments.Payment", b =>
@@ -80,13 +117,13 @@ namespace EcommerceDDD.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("ConfirmationEmailSent")
-                        .HasColumnName("ConfirmationEmailSent")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnName("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnName("CustomerId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("OrderId")
                         .HasColumnName("OrderId")
@@ -101,6 +138,10 @@ namespace EcommerceDDD.Infrastructure.Migrations
                         .HasColumnType("tinyint");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("OrderId");
 
                     b.ToTable("Payments","dbo");
                 });
@@ -124,183 +165,158 @@ namespace EcommerceDDD.Infrastructure.Migrations
                     b.ToTable("Products","dbo");
                 });
 
-            modelBuilder.Entity("EcommerceDDD.Domain.Customers.Customer", b =>
+            modelBuilder.Entity("EcommerceDDD.Domain.Carts.Cart", b =>
                 {
-                    b.OwnsMany("EcommerceDDD.Domain.Customers.Orders.Order", "Orders", b1 =>
+                    b.HasOne("EcommerceDDD.Domain.Customers.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId");
+
+                    b.OwnsMany("EcommerceDDD.Domain.Carts.CartItem", "Items", b1 =>
                         {
                             b1.Property<Guid>("Id")
-                                .ValueGeneratedOnAdd()
                                 .HasColumnType("uniqueidentifier");
 
-                            b1.Property<DateTime?>("ChangedAt")
-                                .HasColumnName("ChangeDate")
-                                .HasColumnType("datetime2");
-
-                            b1.Property<DateTime>("CreatedAt")
-                                .HasColumnName("CreatedAt")
-                                .HasColumnType("datetime2");
-
-                            b1.Property<Guid>("CustomerId")
+                            b1.Property<Guid>("CartId")
                                 .HasColumnType("uniqueidentifier");
 
-                            b1.Property<bool>("IsCancelled")
-                                .HasColumnName("IsCancelled")
-                                .HasColumnType("bit");
+                            b1.Property<Guid?>("ProductId")
+                                .HasColumnType("uniqueidentifier");
 
-                            b1.Property<byte>("Status")
-                                .HasColumnName("StatusId")
-                                .HasColumnType("tinyint");
+                            b1.Property<int>("Quantity")
+                                .HasColumnType("int");
 
                             b1.HasKey("Id");
 
-                            b1.HasIndex("CustomerId");
+                            b1.HasIndex("CartId");
 
-                            b1.ToTable("Orders","dbo");
+                            b1.HasIndex("ProductId");
+
+                            b1.ToTable("CartItems","dbo");
 
                             b1.WithOwner()
-                                .HasForeignKey("CustomerId");
+                                .HasForeignKey("CartId");
 
-                            b1.OwnsMany("EcommerceDDD.Domain.Customers.Orders.OrderLine", "OrderLines", b2 =>
+                            b1.HasOne("EcommerceDDD.Domain.Products.Product", "Product")
+                                .WithMany()
+                                .HasForeignKey("ProductId");
+                        });
+                });
+
+            modelBuilder.Entity("EcommerceDDD.Domain.Orders.Order", b =>
+                {
+                    b.HasOne("EcommerceDDD.Domain.Customers.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId");
+
+                    b.OwnsMany("EcommerceDDD.Domain.Orders.OrderLine", "OrderLines", b1 =>
+                        {
+                            b1.Property<Guid>("OrderId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<Guid>("ProductId")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<Guid>("Id")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<int>("Quantity")
+                                .HasColumnType("int");
+
+                            b1.HasKey("OrderId", "ProductId");
+
+                            b1.ToTable("OrderLines","dbo");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrderId");
+
+                            b1.OwnsOne("EcommerceDDD.Domain.Shared.Money", "ProductBasePrice", b2 =>
                                 {
-                                    b2.Property<Guid>("OrderId")
+                                    b2.Property<Guid>("OrderLineOrderId")
                                         .HasColumnType("uniqueidentifier");
 
-                                    b2.Property<Guid>("ProductId")
-                                        .ValueGeneratedOnAdd()
+                                    b2.Property<Guid>("OrderLineProductId")
                                         .HasColumnType("uniqueidentifier");
 
-                                    b2.Property<Guid>("Id")
-                                        .HasColumnType("uniqueidentifier");
-
-                                    b2.Property<int>("Quantity")
-                                        .HasColumnType("int");
-
-                                    b2.HasKey("OrderId", "ProductId");
-
-                                    b2.ToTable("OrderLines","dbo");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("OrderId");
-
-                                    b2.OwnsOne("EcommerceDDD.Domain.Shared.Money", "ProductBasePrice", b3 =>
-                                        {
-                                            b3.Property<Guid>("OrderLineOrderId")
-                                                .HasColumnType("uniqueidentifier");
-
-                                            b3.Property<Guid>("OrderLineProductId")
-                                                .HasColumnType("uniqueidentifier");
-
-                                            b3.Property<decimal>("Value")
-                                                .HasColumnName("BasePrice")
-                                                .HasColumnType("decimal(5,2)");
-
-                                            b3.HasKey("OrderLineOrderId", "OrderLineProductId");
-
-                                            b3.ToTable("OrderLines");
-
-                                            b3.WithOwner()
-                                                .HasForeignKey("OrderLineOrderId", "OrderLineProductId");
-
-                                            b3.OwnsOne("EcommerceDDD.Domain.Shared.Currency", "Currency", b4 =>
-                                                {
-                                                    b4.Property<Guid>("MoneyOrderLineOrderId")
-                                                        .HasColumnType("uniqueidentifier");
-
-                                                    b4.Property<Guid>("MoneyOrderLineProductId")
-                                                        .HasColumnType("uniqueidentifier");
-
-                                                    b4.Property<string>("Name")
-                                                        .HasColumnName("BaseCurrency")
-                                                        .HasColumnType("nvarchar(5)")
-                                                        .HasMaxLength(5);
-
-                                                    b4.HasKey("MoneyOrderLineOrderId", "MoneyOrderLineProductId");
-
-                                                    b4.ToTable("OrderLines");
-
-                                                    b4.WithOwner()
-                                                        .HasForeignKey("MoneyOrderLineOrderId", "MoneyOrderLineProductId");
-                                                });
-                                        });
-
-                                    b2.OwnsOne("EcommerceDDD.Domain.Shared.Money", "ProductExchangePrice", b3 =>
-                                        {
-                                            b3.Property<Guid>("OrderLineOrderId")
-                                                .HasColumnType("uniqueidentifier");
-
-                                            b3.Property<Guid>("OrderLineProductId")
-                                                .HasColumnType("uniqueidentifier");
-
-                                            b3.Property<decimal>("Value")
-                                                .HasColumnName("ExchangePrice")
-                                                .HasColumnType("decimal(5,2)");
-
-                                            b3.HasKey("OrderLineOrderId", "OrderLineProductId");
-
-                                            b3.ToTable("OrderLines");
-
-                                            b3.WithOwner()
-                                                .HasForeignKey("OrderLineOrderId", "OrderLineProductId");
-
-                                            b3.OwnsOne("EcommerceDDD.Domain.Shared.Currency", "Currency", b4 =>
-                                                {
-                                                    b4.Property<Guid>("MoneyOrderLineOrderId")
-                                                        .HasColumnType("uniqueidentifier");
-
-                                                    b4.Property<Guid>("MoneyOrderLineProductId")
-                                                        .HasColumnType("uniqueidentifier");
-
-                                                    b4.Property<string>("Name")
-                                                        .HasColumnName("ExchangeCurrency")
-                                                        .HasColumnType("nvarchar(5)")
-                                                        .HasMaxLength(5);
-
-                                                    b4.HasKey("MoneyOrderLineOrderId", "MoneyOrderLineProductId");
-
-                                                    b4.ToTable("OrderLines");
-
-                                                    b4.WithOwner()
-                                                        .HasForeignKey("MoneyOrderLineOrderId", "MoneyOrderLineProductId");
-                                                });
-                                        });
-                                });
-
-                            b1.OwnsOne("EcommerceDDD.Domain.Shared.Money", "TotalPrice", b2 =>
-                                {
-                                    b2.Property<Guid>("OrderId")
-                                        .HasColumnType("uniqueidentifier");
+                                    b2.Property<string>("CurrencyCode")
+                                        .HasColumnName("BaseCurrency")
+                                        .HasColumnType("nvarchar(5)")
+                                        .HasMaxLength(5);
 
                                     b2.Property<decimal>("Value")
-                                        .HasColumnName("TotalPrice")
+                                        .HasColumnName("BasePrice")
                                         .HasColumnType("decimal(5,2)");
 
-                                    b2.HasKey("OrderId");
+                                    b2.HasKey("OrderLineOrderId", "OrderLineProductId");
 
-                                    b2.ToTable("Orders");
+                                    b2.ToTable("OrderLines");
 
                                     b2.WithOwner()
-                                        .HasForeignKey("OrderId");
+                                        .HasForeignKey("OrderLineOrderId", "OrderLineProductId");
+                                });
 
-                                    b2.OwnsOne("EcommerceDDD.Domain.Shared.Currency", "Currency", b3 =>
-                                        {
-                                            b3.Property<Guid>("MoneyOrderId")
-                                                .HasColumnType("uniqueidentifier");
+                            b1.OwnsOne("EcommerceDDD.Domain.Shared.Money", "ProductExchangePrice", b2 =>
+                                {
+                                    b2.Property<Guid>("OrderLineOrderId")
+                                        .HasColumnType("uniqueidentifier");
 
-                                            b3.Property<string>("Name")
-                                                .IsRequired()
-                                                .HasColumnName("Currency")
-                                                .HasColumnType("nvarchar(5)")
-                                                .HasMaxLength(5);
+                                    b2.Property<Guid>("OrderLineProductId")
+                                        .HasColumnType("uniqueidentifier");
 
-                                            b3.HasKey("MoneyOrderId");
+                                    b2.Property<string>("CurrencyCode")
+                                        .HasColumnName("ExchangeCurrency")
+                                        .HasColumnType("nvarchar(5)")
+                                        .HasMaxLength(5);
 
-                                            b3.ToTable("Orders");
+                                    b2.Property<decimal>("Value")
+                                        .HasColumnName("ExchangePrice")
+                                        .HasColumnType("decimal(5,2)");
 
-                                            b3.WithOwner()
-                                                .HasForeignKey("MoneyOrderId");
-                                        });
+                                    b2.HasKey("OrderLineOrderId", "OrderLineProductId");
+
+                                    b2.ToTable("OrderLines");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("OrderLineOrderId", "OrderLineProductId");
                                 });
                         });
+
+                    b.OwnsOne("EcommerceDDD.Domain.Shared.Money", "TotalPrice", b1 =>
+                        {
+                            b1.Property<Guid>("OrderId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("CurrencyCode")
+                                .HasColumnName("Currency")
+                                .HasColumnType("nvarchar(5)")
+                                .HasMaxLength(5);
+
+                            b1.Property<decimal>("Value")
+                                .HasColumnName("TotalPrice")
+                                .HasColumnType("decimal(5,2)");
+
+                            b1.HasKey("OrderId");
+
+                            b1.ToTable("Orders");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrderId");
+                        });
+                });
+
+            modelBuilder.Entity("EcommerceDDD.Domain.Payments.Payment", b =>
+                {
+                    b.HasOne("EcommerceDDD.Domain.Customers.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EcommerceDDD.Domain.Orders.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("EcommerceDDD.Domain.Products.Product", b =>
@@ -309,6 +325,12 @@ namespace EcommerceDDD.Infrastructure.Migrations
                         {
                             b1.Property<Guid>("ProductId")
                                 .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("CurrencyCode")
+                                .IsRequired()
+                                .HasColumnName("Currency")
+                                .HasColumnType("nvarchar(5)")
+                                .HasMaxLength(5);
 
                             b1.Property<decimal>("Value")
                                 .HasColumnName("Price")
@@ -320,31 +342,6 @@ namespace EcommerceDDD.Infrastructure.Migrations
 
                             b1.WithOwner()
                                 .HasForeignKey("ProductId");
-
-                            b1.OwnsOne("EcommerceDDD.Domain.Shared.Currency", "Currency", b2 =>
-                                {
-                                    b2.Property<Guid>("MoneyProductId")
-                                        .HasColumnType("uniqueidentifier");
-
-                                    b2.Property<string>("Name")
-                                        .IsRequired()
-                                        .HasColumnName("Currency")
-                                        .HasColumnType("nvarchar(5)")
-                                        .HasMaxLength(5);
-
-                                    b2.Property<string>("Symbol")
-                                        .IsRequired()
-                                        .HasColumnName("CurrencySymbol")
-                                        .HasColumnType("nvarchar(5)")
-                                        .HasMaxLength(5);
-
-                                    b2.HasKey("MoneyProductId");
-
-                                    b2.ToTable("Products");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("MoneyProductId");
-                                });
                         });
                 });
 #pragma warning restore 612, 618

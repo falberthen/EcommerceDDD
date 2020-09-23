@@ -30,7 +30,10 @@ export class ServerErrorInterceptor implements HttpInterceptor {
           if (errorResult.error) {
             Object.keys(errorResult.error.errors).forEach(function (key, index) {
               const error = errorResult.error.errors[key];
-              notifier.showError(error.errorMessage);
+              if(error.errorMessage)
+                notifier.showError(error.errorMessage);
+              else
+                notifier.showError(error);
             });
           }
 

@@ -338,3 +338,5 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/EcommerceDDD.WebApp/.vscode/tasks.json
+/EcommerceDDD.WebApp/.vscode/launch.json

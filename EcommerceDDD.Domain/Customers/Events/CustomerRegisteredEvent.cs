@@ -7,13 +7,11 @@ namespace EcommerceDDD.Domain.Customers.Events
     {
         public Guid CustomerId { get; private set; }
         public string Name { get; private set; }
-        public string Email { get; private set; }
 
-        public CustomerRegisteredEvent(Guid customerId, string name, string email)
+        public CustomerRegisteredEvent(Guid customerId, string name)
         {
             CustomerId = customerId;
             Name = name;
-            Email = email;
             AggregateId = CustomerId;
         }
     }

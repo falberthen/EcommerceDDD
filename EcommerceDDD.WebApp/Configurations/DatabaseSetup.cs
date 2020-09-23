@@ -13,7 +13,8 @@ namespace EcommerceDDD.WebApp.Configurations
     {
         public static void AddDatabaseSetup(this IServiceCollection services, IConfiguration configuration)
         {
-            if (services == null) throw new ArgumentNullException(nameof(services));
+            if (services == null) 
+                throw new ArgumentNullException(nameof(services));
 
             string connString = configuration.GetConnectionString("DefaultConnection");
 
@@ -26,7 +27,7 @@ namespace EcommerceDDD.WebApp.Configurations
                 });
             });
 
-            services.AddDbContext<IdentityContext>(options =>
+            services.AddDbContextPool<IdentityContext>(options =>
                 options.UseSqlServer(connString));
         }
     }
