@@ -1,41 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using EcommerceDDD.Domain.Payments.Events;
 using EcommerceDDD.Domain.Core.Base;
+using EcommerceDDD.Domain.Orders;
+using EcommerceDDD.Domain.Customers;
 
 namespace EcommerceDDD.Domain.Payments
 {
-    public class Payment : Entity, IAggregateRoot
+    public class Payment : AggregateRoot<Guid>
     {
-        public Guid OrderId { get; private set; }
+        public Order Order { get; private set; }
+        public Customer Customer { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime? PaidAt { get; private set; }
         public PaymentStatus Status { get; private set; }
-        public bool ConfirmationEmailSent { get; private set; }
 
-        public Payment(Guid orderId)
+        public Payment(Guid id, Order order)
         {
-            OrderId = orderId;
+            if (order == null)
+                throw new BusinessRuleException("The order is required.");
+
+            Id = id;
+            Order = order;
+            Customer = order.Customer;
             CreatedAt = DateTime.Now;
             Status = PaymentStatus.ToPay;
-            AddDomainEvent(new PaymentCreatedEvent(Id, OrderId));
+            AddDomainEvent(new PaymentCreatedEvent(Id));
         }
 
-        public void PaymentMade()
+        public void MarkAsPaid()
         {
             PaidAt = DateTime.Now;
-            //TODO: Add event
-        }
-
-        public void SetPaymentStatus()
-        {
-            //TODO: Will be changed when paid
-        }
-
-        public void SetConfirmationEmailSent()
-        {
-            ConfirmationEmailSent = true;
+            Status = PaymentStatus.Paid;
+            AddDomainEvent(new PaymentAuthorizedEvent(Id));
         }
 
         // Empty constructor for EF

@@ -4,23 +4,24 @@ using EcommerceDDD.Domain.Core.Base;
 
 namespace EcommerceDDD.Domain.Shared
 {
-    public class Currency : ValueObject
+    public class Currency : ValueObject<Currency>
     {
-        public string Name { get; }
+        public string Code { get; }
         public string Symbol { get; }
         public static Currency USDollar => new Currency("USD", "US$");
         public static Currency CanadianDollar => new Currency("CAD", "CA$");
         public static Currency Euro => new Currency("EUR", "€");
 
-        public Currency(string name, string symbol)
+        public Currency(string code, string symbol)
         {
-            if (string.IsNullOrWhiteSpace(symbol))
-                throw new ArgumentNullException(nameof(symbol));
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Amount cannot be null or whitespace.", nameof(name));
+            if (string.IsNullOrWhiteSpace(code))
+                throw new BusinessRuleException("Code cannot be null or whitespace.");
 
+            if (string.IsNullOrWhiteSpace(symbol))
+                throw new BusinessRuleException("Symbol cannot be null or whitespace.");
+
+            Code = code;
             Symbol = symbol;
-            Name = name;
         }
 
         public static Currency FromCode(string code)
@@ -28,28 +29,33 @@ namespace EcommerceDDD.Domain.Shared
             if (string.IsNullOrWhiteSpace(code))
                 throw new ArgumentNullException(nameof(code));
 
-            switch (code)
+            return code switch
             {
-                case "USD":
-                    return new Currency(Currency.USDollar.Name, Currency.USDollar.Symbol);                            
-                case "CAD":
-                    return new Currency(Currency.CanadianDollar.Name, Currency.CanadianDollar.Symbol);
-                case "EUR":
-                    return new Currency(Currency.Euro.Name, Currency.Euro.Symbol);
-                default:
-                    throw new ArgumentException($"Invalid code: {code}", nameof(code));
-            }
+                "USD" => new Currency(USDollar.Code, USDollar.Symbol),
+                "CAD" => new Currency(CanadianDollar.Code, USDollar.Symbol),
+                "EUR" => new Currency(Euro.Code, USDollar.Symbol),
+                _ => throw new BusinessRuleException($"Invalid code {code}")
+            };
         }
 
         public static List<string> SupportedCurrencies()
         {
-            return new List<string>() { USDollar.Name, Euro.Name, CanadianDollar.Name };
+            return new List<string>() { USDollar.Code, Euro.Code, CanadianDollar.Code };
         }
 
-        protected override IEnumerable<object> GetAtomicValues()
+        protected override bool EqualsCore(Currency other)
         {
-            yield return Name;
-            yield return Symbol;
+            return Code == other.Code && Symbol == other.Symbol;
+        }
+
+        protected override int GetHashCodeCore()
+        {
+            unchecked
+            {
+                int hashCode = Code.GetHashCode();
+                hashCode = (hashCode * 397) ^ Symbol.GetHashCode();
+                return hashCode;
+            }
         }
 
         private Currency() { }

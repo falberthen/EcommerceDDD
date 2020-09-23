@@ -15,10 +15,11 @@ namespace EcommerceDDD.Domain.Core.Messaging
             Payload = payload;
         }
 
-        public void SetProcessedAt(DateTime date)
+        public void SetProcessedAt(DateTime? date)
         {
             if (date == null)
                 throw new ArgumentNullException(nameof(date));
+
             ProcessedAt = date;
         }
 

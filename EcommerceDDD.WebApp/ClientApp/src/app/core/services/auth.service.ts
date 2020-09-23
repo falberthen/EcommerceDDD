@@ -2,13 +2,13 @@ import { Injectable, Inject } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { RestService } from './http/rest.service';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'environments/environment';
 import { LocalStorageService } from './local-storage.service';
 import { Customer } from '../models/Customer';
 import { map } from 'rxjs/operators';
 import { TokenStorageService } from '../token-storage.service';
 import { Router } from '@angular/router';
 import { NotificationService } from './notification.service';
+import { appConstants } from '../constants/appConstants';
 
 @Injectable({
   providedIn: 'root'
@@ -29,23 +29,22 @@ export class AuthService extends RestService {
       @Inject('BASE_URL') baseUrl: string) {
         super(http, baseUrl);
 
-      var storedCustomer = JSON.parse(this.localStorageService.getValueByKey('currentCustomer'));
+      var storedCustomer = JSON.parse(this.localStorageService.getValueByKey(appConstants.storedCustomer));
       this.currentCustomerSubject = new BehaviorSubject<Customer>(storedCustomer);
       this.currentCustomer = this.currentCustomerSubject.asObservable();
     }
 
-    public get currentUserValue(): Customer {
+    public get currentCustomerValue(): Customer {
       return this.currentCustomerSubject.value;
     }
 
     login(email: string, password: string) {
       return this.post("customers/login", { email, password })
         .pipe(map(customer => {
-          console.log(customer);
           // login successful if there's a jwt token in the response
           if (customer && customer.data.token) {
             // store user details and jwt token in local storage to keep user logged in between page refreshes
-            this.localStorageService.setValue('currentCustomer', JSON.stringify(customer.data));
+            this.localStorageService.setValue(appConstants.storedCustomer, JSON.stringify(customer.data));
             this.tokenStorageToken.saveToken(customer.data.token);
             this.currentCustomerSubject.next(customer.data);
             this.isLogged.next(true);
@@ -60,7 +59,7 @@ export class AuthService extends RestService {
 
     logout() {
       // remove user from local storage to log user out
-      localStorage.removeItem('currentCustomer');
+      localStorage.removeItem(appConstants.storedCustomer);
       this.tokenStorageToken.clearToken();
       this.currentCustomerSubject.next(null);
 
@@ -71,3 +70,4 @@ export class AuthService extends RestService {
       this.router.navigate(["/login"]);
     }
 }
+

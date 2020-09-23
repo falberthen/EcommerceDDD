@@ -1,72 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using EcommerceDDD.Domain.Core.Base;
-using EcommerceDDD.Domain.CurrencyExchange;
 using EcommerceDDD.Domain.Customers.Events;
-using EcommerceDDD.Domain.Customers.Orders;
-using EcommerceDDD.Domain.Customers.Orders.Events;
+using EcommerceDDD.Domain.Services;
 
 namespace EcommerceDDD.Domain.Customers
 {
-    public class Customer : Entity, IAggregateRoot
+    public class Customer : AggregateRoot<Guid>
     {
         public string Email { get; private set; }
         public string Name { get; private set; }
-        public bool WelcomeEmailWasSent { get; private set; }
-        public readonly List<Order> Orders = new List<Order>();
-
-        public static Customer CreateCustomer(string email, string name,
+        
+        public static Customer CreateCustomer(Guid id, string email, string name,
             ICustomerUniquenessChecker customerUniquenessChecker)
         {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Customer name cannot be null or whitespace.", nameof(name));
+
             if (!customerUniquenessChecker.IsUserUnique(email))
                 throw new BusinessRuleException("This e-mail is already in use.");
 
-            return new Customer(email, name);
-        }
-
-        public Guid PlaceOrder(Basket basket, ICurrencyConverter currencyConverter)
-        {
-            if(!basket.Products.Any())
-                throw new BusinessRuleException("An order should have at least one product.");
-
-            var order = new Order(basket, currencyConverter);
-            Orders.Add(order);
-
-            AddDomainEvent(new OrderPlacedEvent(Id, order.Id));
-            return order.Id;
-        }
-
-        public Guid ChangeOrder(Basket cart, Guid orderId, ICurrencyConverter currencyConverter)
-        {
-            if (!cart.Products.Any())
-                throw new BusinessRuleException("An order should have at least one product.");
-
-            var orderToChange = Orders.Single(o => o.Id == orderId);
-            orderToChange.Change(cart, currencyConverter);          
-            
-            AddDomainEvent(new OrderChangedEvent(orderToChange.Id));
-            return orderToChange.Id;
+            return new Customer(id, email, name);
         }
 
         public void SetName(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
                 throw new ArgumentNullException(nameof(value));
+
             Name = value;
+            AddDomainEvent(new CustomerUpdatedEvent(Id, Name));
         }
 
-        public void SetWelcomeEmailSent(bool value)
+        private Customer(Guid id, string email, string name)
         {
-            WelcomeEmailWasSent = value;
-        }
-
-        private Customer(string email, string name)
-        {
+            Id = id;
             Email = email;
             Name = name;
-            WelcomeEmailWasSent = false;
-            AddDomainEvent(new CustomerRegisteredEvent(Id, name, email));
+            AddDomainEvent(new CustomerRegisteredEvent(Id, Name));
         }
 
         // Empty constructor for EF
