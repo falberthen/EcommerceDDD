@@ -1,7 +1,11 @@
 <header>
+  <div class="main-title-container">
+    <a class="navbar-brand" [routerLink]="['/home']">
+      <h2 class="app-title">Ecommerce DDD - SPA</h2>
+    </a>
+  </div>
   <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-    <div class="container">
-      <a class="navbar-brand" [routerLink]="['/home']">Ecommerce DDD - SPA</a>
+    <div class="container custom-container">
       <button class="navbar-toggler"
               type="button"
               data-toggle="collapse"
@@ -12,17 +16,55 @@
       <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse" *ngIf="isLoggedIn"
            [ngClass]="{ show: isExpanded }">
         <ul class="navbar-nav flex-grow">
+          <li class="nav-item">
+            <div class="currency-container">
+              <div class="currency-selector-container">
+                <app-currency-dropdown></app-currency-dropdown>
+              </div>
+            </div>
+          </li>
+          <li class="nav-item">
+            <span class="nav-link">|</span>
+          </li>
+          <li class="nav-item"
+            [routerLinkActive]="['link-active']">
+            <a class="nav-link text-secondary underlineHover" style="cursor: pointer;" (click)="showStoredEventsViewer()">
+              <fa-icon [icon]="faList"></fa-icon>
+              Customer Events</a>
+          </li>
           <li class="nav-item"
               [routerLinkActive]="['link-active']"
               [routerLinkActiveOptions]="{ exact: true }">
-            <a class="nav-link text-secondary underlineHover" [routerLink]="['/home']">Home</a>
+            <a class="nav-link text-secondary underlineHover" [routerLink]="['/orders']">
+              <fa-icon [icon]="faShoppingBasket"></fa-icon>
+              My Orders
+            </a>
           </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-secondary  underlineHover" [routerLink]="['/']">Customer History</a>
+          <li class="nav-item"
+              [routerLinkActive]="['link-active']"
+              [routerLinkActiveOptions]="{ exact: true }">
+            <a class="nav-link text-secondary underlineHover" [routerLink]="['/products']">
+              <fa-icon [icon]="faShoppingCart"></fa-icon>
+              Products
+
+              <span class="badge badge-primary">{{cartItems}}</span>
+            </a>
           </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
+          <li class="nav-item">
+            <span class="nav-link">|</span>
+          </li>
+          <li class="nav-item"
+              [routerLinkActive]="['link-active']"
+              [routerLinkActiveOptions]="{ exact: true }">
+            <a class="nav-link text-secondary underlineHover" [routerLink]="['/customer-profile']">
+              <fa-icon [icon]="faUser"></fa-icon>
+              My Profile
+            </a>
+          </li>
+          <li class="nav-item" [routerLinkActive]="['link-active']" style="margin-left: 30px;">
             <a class="nav-link text-primary underlineHover" (click)="logout()" style="cursor: pointer;">
-              Logout {{loggedEmail}}
+              <fa-icon [icon]="faSignOutAlt"></fa-icon>
+              Logout {{customer.name}}
             </a>
           </li>
         </ul>
@@ -30,3 +72,9 @@
     </div>
   </nav>
 </header>
+
+<!-- Stored Event Viewer container-->
+<div class="stored-event-viewer-container">
+  <template #storedEventViewerContainer></template>
+</div>
+

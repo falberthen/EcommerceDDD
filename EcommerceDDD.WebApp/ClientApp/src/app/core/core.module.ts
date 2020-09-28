@@ -6,6 +6,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { NotificationService } from './services/notification.service';
 import { ConfirmationDialogService } from './services/confirmation-dialog.service';
+import { LocalStorageService } from './services/local-storage.service';
+import { CurrencyNotificationService } from './services/currency-notification.service';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { ConfirmationDialogService } from './services/confirmation-dialog.servic
     BrowserAnimationsModule,
     ToastrModule,
     NotificationService,
-    ConfirmationDialogService
+    ConfirmationDialogService,
+    LocalStorageService,
+    CurrencyNotificationService
   ]
 })
 

@@ -1,16 +1,17 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using EcommerceDDD.Application.Base.Queries;
 using EcommerceDDD.Domain.Customers;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
 using EcommerceDDD.Infrastructure.Identity.Services;
 using EcommerceDDD.Application.Customers.ViewModels;
 using EcommerceDDD.Infrastructure.Identity.IdentityUser;
+using EcommerceDDD.Application.Base;
+using BuildingBlocks.CQRS.QueryHandling;
 
 namespace EcommerceDDD.Application.Customers.AuthenticateCustomer
 {
-    public class AuthenticateCustomerQueryHandler : IQueryHandler<AuthenticateCustomerQuery, CustomerViewModel> 
+    public class AuthenticateCustomerQueryHandler : QueryHandler<AuthenticateCustomerQuery, CustomerViewModel> 
     {
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
@@ -23,14 +24,13 @@ namespace EcommerceDDD.Application.Customers.AuthenticateCustomer
             ICustomerRepository customerRepository,
             IJwtService jwtService)
         {
-            _userManager = userManager;
             _signInManager = signInManager;
             _userManager = userManager;
             _customerRepository = customerRepository;
             _jwtService = jwtService;
         }
 
-        public async Task<CustomerViewModel> Handle(AuthenticateCustomerQuery request, CancellationToken cancellationToken)
+        public async override Task<CustomerViewModel> ExecuteQuery(AuthenticateCustomerQuery request, CancellationToken cancellationToken)
         {
             CustomerViewModel customerViewModel = new CustomerViewModel();
 
@@ -40,8 +40,11 @@ namespace EcommerceDDD.Application.Customers.AuthenticateCustomer
                 var token = await _jwtService.GenerateJwt(request.Email);
                 var user = await _userManager.FindByEmailAsync(request.Email);
 
+                if (user == null)
+                    throw new InvalidDataException("User not found.");
+
                 //Customer data
-                var customer = await _customerRepository.GetCustomerByEmail(user.Email);
+                var customer = await _customerRepository.GetByEmail(user.Email, cancellationToken);
                 customerViewModel.Id = customer.Id;
                 customerViewModel.Name = customer.Name;
                 customerViewModel.Email = user.Email;

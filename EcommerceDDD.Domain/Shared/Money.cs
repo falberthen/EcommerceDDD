@@ -6,32 +6,35 @@ namespace EcommerceDDD.Domain.Shared
     public class Money : ValueObject
     {
         public decimal Value { get; }
-        public Currency Currency { get; }
+        public string CurrencyCode { get; }
+        public string CurrencySymbol { get; }
 
-        private Money(decimal value, string currency)
+        private Money(decimal value, string currencyCode)
         {
             Value = value;
-            Currency = Currency.FromCode(currency);
+            Currency currency = Currency.FromCode(currencyCode);
+            CurrencyCode = currency.Code;
+            CurrencySymbol = currency.Symbol;
         }
 
-        public static Money Of(decimal value, string currency)
+        public static Money Of(decimal value, string currencyCode)
         {
-            if (string.IsNullOrEmpty(currency))
+            if (string.IsNullOrEmpty(currencyCode))
                 throw new BusinessRuleException("Money must have currency.");
 
-            return new Money(value, currency);
+            return new Money(value, currencyCode);
         }
 
         public static Money operator *(decimal number, Money rightValue)
         {
-            return new Money(number * rightValue.Value, rightValue.Currency.Name);
+            return new Money(number * rightValue.Value, rightValue.CurrencyCode);
         }
 
         protected override IEnumerable<object> GetAtomicValues()
         {
             // Using a yield return statement to return each element one at a time
             yield return Value;
-            yield return Currency;
+            yield return CurrencyCode;
         }
 
         private Money(){}

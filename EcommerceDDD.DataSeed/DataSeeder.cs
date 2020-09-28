@@ -13,9 +13,13 @@ using EcommerceDDD.Infrastructure.Messaging;
 using EcommerceDDD.Infrastructure.Domain.Products;
 using EcommerceDDD.Infrastructure.Domain;
 using Microsoft.EntityFrameworkCore;
-using EcommerceDDD.Domain.CurrencyExchange;
-using EcommerceDDD.Infrastructure.Domain.ForeignExchanges;
 using EcommerceDDD.Domain.Payments;
+using EcommerceDDD.Domain.Services;
+using EcommerceDDD.Infrastructure.Domain.Carts;
+using EcommerceDDD.Domain.Orders;
+using EcommerceDDD.Infrastructure.Domain.Orders;
+using EcommerceDDD.Domain.Carts;
+using EcommerceDDD.Infrastructure.Domain.CurrencyExchange;
 
 namespace EcommerceDDD.DataSeed
 {
@@ -26,10 +30,13 @@ namespace EcommerceDDD.DataSeed
         static async Task Main(string[] args)
         {
             RegisterServices();
+
             var unitOfWork = _serviceProvider.GetService<IEcommerceUnitOfWork>();
             var currencyConverter = _serviceProvider.GetService<ICurrencyConverter>();
             await SeedProducts.SeedData(unitOfWork, currencyConverter);
+
             DisposeServices();
+            Console.Read();
         }
 
         private static void RegisterServices()
@@ -40,7 +47,9 @@ namespace EcommerceDDD.DataSeed
             options.UseSqlServer(connString));
 
             services.AddScoped<IEcommerceUnitOfWork, EcommerceUnitOfWork>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<ICartRepository, CartRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();
             services.AddScoped<IStoredEventRepository, StoredEventRepository>();

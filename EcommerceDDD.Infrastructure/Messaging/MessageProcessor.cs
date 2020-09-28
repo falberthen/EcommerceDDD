@@ -25,22 +25,21 @@ namespace EcommerceDDD.Infrastructure.Messaging
 
         public async Task ProcessMessages(int batchSize, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Fetching messages...");
-
             var messages = await _unitOfWork.MessageRepository.FetchUnprocessed(batchSize, cancellationToken);
             foreach (var message in messages)
             {
                 try
                 {
-                    message.SetProcessedAt(DateTime.UtcNow);
+                    //Setting processed date
+                    message.SetProcessedAt(DateTime.Now);
                     await _publisher.Publish(message, cancellationToken);
 
                     _unitOfWork.MessageRepository.UpdateProcessedAt(message);
                     await _unitOfWork.CommitAsync();
                 }
                 catch (Exception ex)
-                {
-                    _logger.LogError(ex, $"an error has occurred while processing message {message.Id}: {ex.Message}");
+                {                    
+                    _logger.LogError($"\n-------- An error has occurred while processing message {message.Id}: {ex.Message}\n");
                 }
             }
         }

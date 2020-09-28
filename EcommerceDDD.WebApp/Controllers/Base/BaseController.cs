@@ -1,54 +1,67 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using EcommerceDDD.Application.Base.Commands;
+using BuildingBlocks.CQRS.CommandHandling;
+using BuildingBlocks.CQRS.QueryHandling;
 using EcommerceDDD.Infrastructure.Identity.Helpers;
-using FluentValidation.Results;
 using MediatR;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ontactBookCQRS.WebApp.Controllers.Base
+namespace EcommerceDDD.WebApp.Controllers.Base
 {
     public class BaseController : Controller
     {
         private readonly IUserProvider _userProvider;
+        public readonly IMediator Mediator;
 
         protected Guid UserId
         {
-            get { return _userProvider.GetUserId();}
+            get { return _userProvider.GetUserId(); }
         }
 
-        protected BaseController(IUserProvider userProvider)
+        protected BaseController(IUserProvider userProvider, IMediator mediator)
         {
             _userProvider = userProvider;
+            Mediator = mediator;
         }
 
-        protected new IActionResult Response(CommandHandlerResult result)
+        protected new IActionResult Response<TResult>(QueryHandlerResult<TResult> queryHandlerResult)
         {
-            if (!result.ValidationResult.Errors.Any())
-            {
-                return Ok(new
-                {
-                    success = true,
-                    data = result
-                });
-            }
+            if (!queryHandlerResult.ValidationResult.IsValid)
+                BadRequestActionResult(queryHandlerResult.ValidationResult.Errors);
 
+            return OkActionResult(queryHandlerResult.Result);
+        }
+
+        protected new IActionResult Response<TResult>(CommandHandlerResult<TResult> commandHandlerResult) where TResult : struct
+        {
+            if (!commandHandlerResult.ValidationResult.IsValid)
+                BadRequestActionResult(commandHandlerResult.ValidationResult.Errors);
+
+            return OkActionResult(commandHandlerResult.Id);
+        }
+
+        protected new IActionResult Response(CommandHandlerResult commandHandlerResult)
+        {
+            if (!commandHandlerResult.ValidationResult.IsValid)
+                BadRequestActionResult(commandHandlerResult.ValidationResult.Errors);
+
+            return OkActionResult(commandHandlerResult);
+        }
+
+        private IActionResult BadRequestActionResult(dynamic resultErrors)
+        {
             return BadRequest(new
             {
                 success = false,
-                errors = result.ValidationResult.Errors
+                errors = resultErrors
             });
         }
 
-        protected new IActionResult Response(object result)
+        private IActionResult OkActionResult(dynamic resultData)
         {
             return Ok(new
             {
                 success = true,
-                data = result
+                data = resultData
             });
         }
     }

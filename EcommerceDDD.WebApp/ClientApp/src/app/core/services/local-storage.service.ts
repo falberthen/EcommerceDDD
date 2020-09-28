@@ -17,6 +17,10 @@ export class LocalStorageService {
     localStorage.removeItem(key);
   }
 
+  public clearAllKeys(): void {
+    localStorage.clear();
+  }
+
   public clearLocalStorage() {
     localStorage.clear();
   }

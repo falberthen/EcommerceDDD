@@ -7,10 +7,9 @@ namespace EcommerceDDD.Domain.Core.Base
     {
         protected static bool EqualOperator(ValueObject left, ValueObject right)
         {
-            if (ReferenceEquals(left, null) ^ ReferenceEquals(right, null))
-            {
-                return false;
-            }
+            if (ReferenceEquals(left, null) ^ ReferenceEquals(right, null))            
+                return false;            
+
             return ReferenceEquals(left, null) || left.Equals(right);
         }
 
@@ -24,13 +23,12 @@ namespace EcommerceDDD.Domain.Core.Base
         public override bool Equals(object obj)
         {
             if (obj == null || obj.GetType() != GetType())
-            {
                 return false;
-            }
 
             ValueObject other = (ValueObject)obj;
             IEnumerator<object> thisValues = GetAtomicValues().GetEnumerator();
             IEnumerator<object> otherValues = other.GetAtomicValues().GetEnumerator();
+
             while (thisValues.MoveNext() && otherValues.MoveNext())
             {
                 if (ReferenceEquals(thisValues.Current, null) ^

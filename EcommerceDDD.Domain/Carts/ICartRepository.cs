@@ -9,5 +9,6 @@ namespace EcommerceDDD.Domain.Carts
     {
         Task Add(Cart cart, CancellationToken cancellationToken = default);
         Task<Cart> GetById(Guid cartId, CancellationToken cancellationToken = default);
+        Task<Cart> GetByCustomerId(Guid customerId, CancellationToken cancellationToken = default);
     }
 }

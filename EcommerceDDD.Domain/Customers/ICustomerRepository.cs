@@ -7,11 +7,8 @@ namespace EcommerceDDD.Domain.Customers
 {
     public interface ICustomerRepository : IRepository<Customer>
     {
-        Task RegisterCustomer(Customer customer, CancellationToken cancellationToken = default);
-        Task<Customer> GetCustomerById(Guid id, CancellationToken cancellationToken = default);
-        Task<Customer> GetCustomerByEmail(string email, CancellationToken cancellationToken = default);
-        void UpdateCustomer(Customer customer);
-        Task AddCustomerOrders(Customer customer);
-        Task ChangeCustomerOrder(Customer customer, Guid orderId);
+        Task Add(Customer customer, CancellationToken cancellationToken = default);
+        Task<Customer> GetById(Guid id, CancellationToken cancellationToken = default);
+        Task<Customer> GetByEmail(string email, CancellationToken cancellationToken = default);
     }
 }
