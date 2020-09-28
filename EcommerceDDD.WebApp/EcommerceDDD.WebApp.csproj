@@ -17,29 +17,30 @@
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="3.1.1" />
     <PackageReference Include="AspNetCore.HealthChecks.UI" Version="3.1.1" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="3.1.1" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="3.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
     <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="5.1.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.7" />
-    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="3.1.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.7">
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.HealthChecks" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.8" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="3.1.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.7">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.7" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="3.1.7" />
-    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="3.1.7" />
-    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="3.9.7">
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="3.1.8" />
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -52,15 +53,20 @@
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
     <Content Remove="$(SpaRoot)**" />
+    <Content Remove="%2a%2a\**" />
     <Content Remove="ClientApp\src\app\NewFolder\**" />
     <None Remove="$(SpaRoot)**" />
+    <None Remove="%2a%2a\**" />
     <None Remove="ClientApp\src\app\NewFolder\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="%2a%2a\**" />
     <Compile Remove="ClientApp\src\app\NewFolder\**" />
+    <EmbeddedResource Remove="%2a%2a\**" />
     <EmbeddedResource Remove="ClientApp\src\app\NewFolder\**" />
+    <TypeScriptCompile Remove="%2a%2a\**" />
     <TypeScriptCompile Remove="ClientApp\src\app\NewFolder\**" />
   </ItemGroup>
 
@@ -72,6 +78,12 @@
     <ProjectReference Include="..\EcommerceDDD.Application\EcommerceDDD.Application.csproj" />
     <ProjectReference Include="..\EcommerceDDD.Domain.Core\EcommerceDDD.Domain.Core.csproj" />
     <ProjectReference Include="..\EcommerceDDD.Infrastructure.IoC\EcommerceDDD.Infrastructure.IoC.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="BuildingBlocks.CQRS">
+      <HintPath>..\..\BuildingBlocks.CQRS\BuildingBlocks.CQRS\bin\Debug\netcoreapp3.1\BuildingBlocks.CQRS.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

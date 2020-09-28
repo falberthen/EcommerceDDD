@@ -14,39 +14,27 @@ namespace EcommerceDDD.Infrastructure.Messaging
 {
     public class MessagePublisher : IMessagePublisher
     {
-        private readonly ILogger<MessagePublisher> _logger;
         private readonly IMediator _mediator;
+        private readonly ILogger<MessagePublisher> _logger;
 
-        public MessagePublisher(ILogger<MessagePublisher> logger, IMediator mediator)
-        {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        public MessagePublisher(IMediator mediator, ILogger<MessagePublisher> logger)
+        {            
             _mediator = mediator;
+            _logger = logger;
         }
 
         public async Task Publish(StoredEvent message, System.Threading.CancellationToken cancellationToken)
         {
-            Type messageType = GetType(message.MessageType);
+            Type messageType = StoredEventHelper.GetEventType(message.MessageType);
             var domainEvent = JsonConvert.DeserializeObject(message.Payload, messageType);
 
             if (messageType != null 
                 && domainEvent != null)
             {
                 await _mediator.Publish(domainEvent);
-                _logger.LogInformation($"message {message.Id} processed!");
-            }
-        }
 
-        public static Type GetType(string typeName)
-        {
-            var type = Type.GetType(typeName);
-            if (type != null) return type;
-            foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                type = a.GetType(typeName);
-                if (type != null)
-                    return type;
+                _logger.LogInformation($"\n-------- Message {message.Id} processed at {message.ProcessedAt}\n");
             }
-            return null;
         }
     }
 }

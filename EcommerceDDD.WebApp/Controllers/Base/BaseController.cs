@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using EcommerceDDD.Application.Base.Commands;
+using BuildingBlocks.CQRS.Core;
 using EcommerceDDD.Infrastructure.Identity.Helpers;
-using FluentValidation.Results;
-using MediatR;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ontactBookCQRS.WebApp.Controllers.Base
+namespace EcommerceDDD.WebApp.Controllers.Base
 {
     public class BaseController : Controller
     {
@@ -25,21 +20,36 @@ namespace ontactBookCQRS.WebApp.Controllers.Base
             _userProvider = userProvider;
         }
 
-        protected new IActionResult Response(CommandHandlerResult result)
+        protected new IActionResult Response(HandlerResult handlerResult)
         {
-            if (!result.ValidationResult.Errors.Any())
-            {
+            var resultData = new Object();
+            var dynamicResult = (dynamic)handlerResult;
+
+            if (!handlerResult.ValidationResult.Errors.Any())
+            {                
+                switch (handlerResult.GetType().Name)
+                {
+                    case "QueryHandlerResult`1":
+                        resultData = dynamicResult.Result;
+                        break;
+                    case "CommandHandlerResult`1":
+                        resultData = dynamicResult.Id;
+                        break;
+                    default:
+                        break;
+                }
+
                 return Ok(new
                 {
                     success = true,
-                    data = result
+                    data = resultData
                 });
             }
 
             return BadRequest(new
             {
                 success = false,
-                errors = result.ValidationResult.Errors
+                errors = handlerResult.ValidationResult.Errors
             });
         }
 

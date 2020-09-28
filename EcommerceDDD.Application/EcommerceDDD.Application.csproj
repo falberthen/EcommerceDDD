@@ -6,8 +6,8 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.0.0" />
-    <PackageReference Include="FluentValidation" Version="9.1.2" />
-    <PackageReference Include="MediatR" Version="8.1.0" />
+    <PackageReference Include="BuildingBlocks.CQRS" Version="1.0.1" />
+    <PackageReference Include="FluentValidation" Version="9.2.2" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />

@@ -18,29 +18,31 @@ namespace EcommerceDDD.Infrastructure.Domain.Products
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task AddProduct(Product product, CancellationToken cancellationToken = default)
+        public async Task Add(Product product, CancellationToken cancellationToken = default)
         {
-            await _context.Products.AddAsync(product);            
+            await _context.Products.AddAsync(product, cancellationToken);            
         }
 
-        public async Task AddProducts(List<Product> products, CancellationToken cancellationToken = default)
+        public async Task AddRange(List<Product> products, CancellationToken cancellationToken = default)
         {
-            await _context.Products.AddRangeAsync(products);
+            await _context.Products.AddRangeAsync(products, cancellationToken);
         }
 
-        public async Task<Product> GetProductById(Guid id, CancellationToken cancellationToken = default)
+        public async Task<Product> GetById(Guid id, CancellationToken cancellationToken = default)
         {
-            return await _context.Products.Where(x => x.Id == id).FirstOrDefaultAsync();
+            return await _context.Products.Where(x => x.Id == id)
+                .FirstOrDefaultAsync(cancellationToken);
         }
 
-        public async Task<List<Product>> GetProductsByIds(List<Guid> ids, CancellationToken cancellationToken = default)
+        public async Task<List<Product>> GetByIds(List<Guid> ids, CancellationToken cancellationToken = default)
         {
-            return await _context.Products.Where(x => ids.Contains(x.Id)).ToListAsync();
+            return await _context.Products.Where(x => ids.Contains(x.Id))
+                .ToListAsync(cancellationToken);
         }
 
-        public async Task<List<Product>> ListAllProducts(CancellationToken cancellationToken = default)
+        public async Task<List<Product>> ListAll(CancellationToken cancellationToken = default)
         {
-            return await _context.Products.ToListAsync();
+            return await _context.Products.ToListAsync(cancellationToken);
         }
     }
 }

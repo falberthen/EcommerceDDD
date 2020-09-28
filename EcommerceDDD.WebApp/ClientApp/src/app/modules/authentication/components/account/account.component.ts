@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
-import { AuthService } from 'app/core/services/auth.service';
 import { AccountService } from '../../account.service';
-import { CustomerRegistration } from 'app/core/models/CustomerRegistration';
+import { RegisterCustomerRequest } from 'app/core/models/requests/RegisterCustomerRequest';
 import { NotificationService } from 'app/core/services/notification.service';
 
 @Component({
@@ -56,7 +55,7 @@ export class AccountComponent implements OnInit {
     }
 
     this.loading = true;
-    const customerRegistration = new CustomerRegistration(
+    const customerRegistration = new RegisterCustomerRequest(
       this.f.email.value,
       this.f.name.value,
       this.f.password.value,

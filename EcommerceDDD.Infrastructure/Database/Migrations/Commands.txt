@@ -1,2 +1,1 @@
-﻿Add-Migration InitialCreate -context EcommerceDDDContext
-Add-Migration InitialCreate -context IdentityContext
+﻿Add-Migration InitialCreate -context EcommerceDDDContext -OutputDir "Database/Migrations"

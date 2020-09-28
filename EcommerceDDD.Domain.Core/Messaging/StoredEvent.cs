@@ -19,6 +19,7 @@ namespace EcommerceDDD.Domain.Core.Messaging
         {
             if (date == null)
                 throw new ArgumentNullException(nameof(date));
+
             ProcessedAt = date;
         }
 

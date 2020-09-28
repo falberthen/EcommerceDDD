@@ -75,9 +75,9 @@ namespace EcommerceDDD.WebApp
             services.AddSwaggerSetup();
 
             //Health Checks
-            //services.AddHealthChecksSetup(Configuration);
+            services.AddHealthChecksSetup(Configuration);
 
-            services.AddSingleton(new MessageProcessorTaskOptions(TimeSpan.FromSeconds(10), 10));
+            services.AddSingleton(new MessageProcessorTaskOptions(TimeSpan.FromSeconds(5), 10));
             services.AddHostedService<MessagesProcessorTask>();
         }
 
@@ -114,13 +114,14 @@ namespace EcommerceDDD.WebApp
             });
 
             // HealthCheck middleware
-            //app.UseHealthChecks("/hc", new HealthCheckOptions()
-            //{
-            //    Predicate = _ => true,
-            //    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-            //});
-            //app.UseHealthChecksUI(config => config.UIPath = "/hc-ui");
+            app.UseHealthChecks("/hc", new HealthCheckOptions()
+            {
+                Predicate = _ => true,
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            });
+            app.UseHealthChecksUI(config => config.UIPath = "/hc-ui");
 
+            // Angular SPA
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";

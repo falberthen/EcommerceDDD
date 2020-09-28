@@ -7,13 +7,13 @@ namespace EcommerceDDD.WebApp.BackgroundServices
 {
     public class MessageProcessorTaskOptions
     {
+        public TimeSpan Interval { get; }
+        public int BatchSize { get; }
+
         public MessageProcessorTaskOptions(TimeSpan interval, int batchSize)
         {
             Interval = interval;
             BatchSize = batchSize;
         }
-
-        public TimeSpan Interval { get; }
-        public int BatchSize { get; }
     }
 }

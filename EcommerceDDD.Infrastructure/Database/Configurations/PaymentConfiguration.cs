@@ -15,12 +15,22 @@ namespace EcommerceDDD.Infrastructure.Database.Configurations
             builder.ToTable("Payments", "dbo");
 
             builder.HasKey(b => b.Id);
-            
-            builder.Property<Guid>("OrderId").HasColumnName("OrderId");
-            builder.Property<DateTime>("CreatedAt").HasColumnName("CreatedAt");
-            builder.Property<DateTime?>("PaidAt").HasColumnName("PaidAt");
-            builder.Property("Status").HasColumnName("StatusId").HasConversion(new EnumToNumberConverter<PaymentStatus, byte>());
-            builder.Property<bool>("ConfirmationEmailSent").HasColumnName("ConfirmationEmailSent");
+
+            builder.Property<Guid>("CustomerId")
+                .HasColumnName("CustomerId");
+
+            builder.Property<Guid>("OrderId")
+                .HasColumnName("OrderId");            
+
+            builder.Property<DateTime>("CreatedAt")
+                .HasColumnName("CreatedAt");
+
+            builder.Property<DateTime?>("PaidAt")
+                .HasColumnName("PaidAt");
+
+            builder.Property("Status")
+                .HasColumnName("StatusId")
+                .HasConversion(new EnumToNumberConverter<PaymentStatus, byte>());
         }
     }
 }

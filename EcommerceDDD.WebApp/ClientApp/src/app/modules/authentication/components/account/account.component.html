@@ -1,5 +1,5 @@
 <div class="wrapper fadeInDown">
-  <div class="formContent">
+  <div class="form-content account-form">
     <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
         <input type="text" id="email" name="email" formControlName="email" placeholder="E-mail"
@@ -30,9 +30,9 @@
           <div *ngIf="f.passwordConfirm.errors.required">Password confirm is required</div>
         </div>
       </div>
-      <div class="formFooter">
-        <input type="button" class="cancel-button" value="Cancel" [routerLink]="['/login']" />
-        <input type="submit" value="Create" />
+      <div class="form-footer">
+        <input type="button" value="Cancel" class="btn btn-secondary" [routerLink]="['/login']" />
+        <input type="submit" value="Create" class="btn btn-primary"/>
       </div>
     </form>
   </div>

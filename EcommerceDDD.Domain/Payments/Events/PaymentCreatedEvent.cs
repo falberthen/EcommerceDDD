@@ -8,12 +8,10 @@ namespace EcommerceDDD.Domain.Payments.Events
     public class PaymentCreatedEvent : Event
     {
         public Guid PaymentId { get; private set; }
-        public Guid OrderId { get; private set; }
 
-        public PaymentCreatedEvent(Guid paymentId, Guid orderId)
+        public PaymentCreatedEvent(Guid paymentId)
         {
             PaymentId = paymentId;
-            OrderId = orderId;
             AggregateId = paymentId;
         }
     }
