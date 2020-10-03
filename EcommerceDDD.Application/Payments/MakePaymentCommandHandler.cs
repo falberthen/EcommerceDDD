@@ -22,7 +22,7 @@ namespace EcommerceDDD.Application.Payments
 
         public override async Task<Guid> ExecuteCommand(MakePaymentCommand command, CancellationToken cancellationToken)
         {            
-            var payment = await _unitOfWork.PaymentRepository.GetById(command.PaymentId);
+            var payment = await _unitOfWork.PaymentRepository.GetById(command.PaymentId, cancellationToken);
 
             if (payment == null)
                 throw new InvalidDataException("Payment not found.");

@@ -18,7 +18,7 @@ namespace EcommerceDDD.Application.Customers.UpdateCustomer
 
         public override async Task<Guid> ExecuteCommand(UpdateCustomerCommand request, CancellationToken cancellationToken)
         {
-            var customer = await _unitOfWork.CustomerRepository.GetById(request.CustomerId);
+            var customer = await _unitOfWork.CustomerRepository.GetById(request.CustomerId, cancellationToken);
 
             if (customer == null)
                 throw new InvalidDataException("Customer not found.");

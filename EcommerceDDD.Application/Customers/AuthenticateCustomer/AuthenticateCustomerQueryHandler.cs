@@ -44,7 +44,7 @@ namespace EcommerceDDD.Application.Customers.AuthenticateCustomer
                     throw new InvalidDataException("User not found.");
 
                 //Customer data
-                var customer = await _customerRepository.GetByEmail(user.Email);
+                var customer = await _customerRepository.GetByEmail(user.Email, cancellationToken);
                 customerViewModel.Id = customer.Id;
                 customerViewModel.Name = customer.Name;
                 customerViewModel.Email = user.Email;

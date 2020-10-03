@@ -26,7 +26,7 @@ namespace EcommerceDDD.Application.Orders.PlaceOrder
         public override async Task<Guid> ExecuteCommand(PlaceOrderCommand command, CancellationToken cancellationToken)
         {
             var cart = await _unitOfWork.CartRepository.GetById(command.CartId, cancellationToken);
-            var customer = await _unitOfWork.CustomerRepository.GetById(command.CustomerId);
+            var customer = await _unitOfWork.CustomerRepository.GetById(command.CustomerId, cancellationToken);
 
             if (customer == null)
                 throw new InvalidDataException("Customer not found.");
@@ -40,7 +40,7 @@ namespace EcommerceDDD.Application.Orders.PlaceOrder
             // Cleaning the cart
             cart.Clear();
 
-            await _unitOfWork.OrderRepository.Add(order);
+            await _unitOfWork.OrderRepository.Add(order, cancellationToken);
             await _unitOfWork.CommitAsync();                                
 
             return order.Id;

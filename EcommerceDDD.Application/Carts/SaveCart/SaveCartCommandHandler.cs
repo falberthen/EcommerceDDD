@@ -24,8 +24,8 @@ namespace EcommerceDDD.Application.Carts.CreateCart
 
         public override async Task<Guid> ExecuteCommand(SaveCartCommand command, CancellationToken cancellationToken)
         {
-            var customer = await _unitOfWork.CustomerRepository.GetById(command.CustomerId);
-            var product = await _unitOfWork.ProductRepository.GetById(command.Product.Id);
+            var customer = await _unitOfWork.CustomerRepository.GetById(command.CustomerId, cancellationToken);
+            var product = await _unitOfWork.ProductRepository.GetById(command.Product.Id, cancellationToken);
 
             if (customer == null)
                 throw new InvalidDataException("Customer not found.");
@@ -33,14 +33,14 @@ namespace EcommerceDDD.Application.Carts.CreateCart
             if (product == null)
                 throw new InvalidDataException("Product not found.");
 
-            var cart = await _unitOfWork.CartRepository.GetByCustomerId(customer.Id);
+            var cart = await _unitOfWork.CartRepository.GetByCustomerId(customer.Id, cancellationToken);
             var quantity = command.Product.Quantity;
 
             if (cart == null)
             {
                 cart = new Cart(customer);
                 cart.AddItem(product, quantity);
-                await _unitOfWork.CartRepository.Add(cart);
+                await _unitOfWork.CartRepository.Add(cart, cancellationToken);
             }
             else
             {
