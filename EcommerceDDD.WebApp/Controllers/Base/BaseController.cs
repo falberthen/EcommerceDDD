@@ -20,12 +20,12 @@ namespace EcommerceDDD.WebApp.Controllers.Base
             _userProvider = userProvider;
         }
 
-        protected new IActionResult Response(HandlerResult handlerResult)
+        protected new IActionResult Response(dynamic handlerResult)
         {
             var resultData = new Object();
             var dynamicResult = (dynamic)handlerResult;
 
-            if (!handlerResult.ValidationResult.Errors.Any())
+            if (handlerResult.ValidationResult.Errors.Count == 0)
             {                
                 switch (handlerResult.GetType().Name)
                 {
@@ -50,15 +50,6 @@ namespace EcommerceDDD.WebApp.Controllers.Base
             {
                 success = false,
                 errors = handlerResult.ValidationResult.Errors
-            });
-        }
-
-        protected new IActionResult Response(object result)
-        {
-            return Ok(new
-            {
-                success = true,
-                data = result
             });
         }
     }

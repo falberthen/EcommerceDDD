@@ -27,7 +27,7 @@ namespace EcommerceDDD.Application.Customers.ListCustomerEventHistory
         public override async Task<IList<ProductViewModel>> ExecuteQuery(ListProductsQuery query, CancellationToken cancellationToken)
         {
             IList<ProductViewModel> productsViewMiodel = new List<ProductViewModel>();
-            var products = await _unitOfWork.ProductRepository.ListAll();
+            var products = await _unitOfWork.ProductRepository.ListAll(cancellationToken);
 
             if (string.IsNullOrEmpty(query.Currency))
                 throw new InvalidDataException("Currency code cannot be empty.");
