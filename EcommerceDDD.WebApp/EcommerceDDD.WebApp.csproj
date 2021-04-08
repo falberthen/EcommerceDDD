@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <IsPackable>false</IsPackable>
@@ -82,7 +82,7 @@
 
   <ItemGroup>
     <Reference Include="BuildingBlocks.CQRS">
-      <HintPath>..\..\BuildingBlocks.CQRS\BuildingBlocks.CQRS\bin\Debug\netcoreapp3.1\BuildingBlocks.CQRS.dll</HintPath>
+      <HintPath>..\..\BuildingBlocks.CQRS\BuildingBlocks.CQRS\bin\Debug\net5.0\BuildingBlocks.CQRS.dll</HintPath>
     </Reference>
   </ItemGroup>
 
