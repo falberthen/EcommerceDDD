@@ -30,10 +30,13 @@ namespace EcommerceDDD.DataSeed
         static async Task Main(string[] args)
         {
             RegisterServices();
+
             var unitOfWork = _serviceProvider.GetService<IEcommerceUnitOfWork>();
             var currencyConverter = _serviceProvider.GetService<ICurrencyConverter>();
             await SeedProducts.SeedData(unitOfWork, currencyConverter);
+
             DisposeServices();
+            Console.Read();
         }
 
         private static void RegisterServices()
