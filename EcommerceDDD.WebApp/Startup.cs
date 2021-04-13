@@ -77,7 +77,10 @@ namespace EcommerceDDD.WebApp
             //Health Checks
             services.AddHealthChecksSetup(Configuration);
 
-            services.AddSingleton(new MessageProcessorTaskOptions(TimeSpan.FromSeconds(5), 10));
+            // Message processing
+            var section = this.Configuration.GetSection(nameof(MessageProcessorTaskOptions));
+            var messageProcessorTaskOptions = section.Get<MessageProcessorTaskOptions>();
+            services.AddSingleton(messageProcessorTaskOptions);
             services.AddHostedService<MessagesProcessorTask>();
         }
 
