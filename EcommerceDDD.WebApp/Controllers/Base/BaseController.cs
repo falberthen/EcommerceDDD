@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
+using BuildingBlocks.CQRS.CommandHandling;
 using BuildingBlocks.CQRS.Core;
+using BuildingBlocks.CQRS.QueryHandling;
 using EcommerceDDD.Infrastructure.Identity.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,36 +22,43 @@ namespace EcommerceDDD.WebApp.Controllers.Base
             _userProvider = userProvider;
         }
 
-        protected new IActionResult Response(dynamic handlerResult)
+        protected new IActionResult Response<TResult>(QueryHandlerResult<TResult> queryHandlerResult)
         {
-            var resultData = new Object();
-            var dynamicResult = (dynamic)handlerResult;
+            var isValid = queryHandlerResult.ValidationResult.IsValid;
 
-            if (handlerResult.ValidationResult.Errors.Count == 0)
-            {                
-                switch (handlerResult.GetType().Name)
+            if (!isValid)
+            {
+                return BadRequest(new
                 {
-                    case "QueryHandlerResult`1":
-                        resultData = dynamicResult.Result;
-                        break;
-                    case "CommandHandlerResult`1":
-                        resultData = dynamicResult.Id;
-                        break;
-                    default:
-                        break;
-                }
-
-                return Ok(new
-                {
-                    success = true,
-                    data = resultData
+                    success = isValid,
+                    errors = queryHandlerResult.ValidationResult.Errors
                 });
             }
 
-            return BadRequest(new
+            return Ok(new
             {
-                success = false,
-                errors = handlerResult.ValidationResult.Errors
+                success = isValid,
+                data = queryHandlerResult.Result
+            });
+        }
+
+        protected new IActionResult Response<TResult>(CommandHandlerResult<TResult> commandHandlerResult) where TResult : struct
+        {
+            var isValid = commandHandlerResult.ValidationResult.IsValid;
+
+            if (!isValid)
+            {
+                return BadRequest(new
+                {
+                    success = isValid,
+                    errors = commandHandlerResult.ValidationResult.Errors
+                });
+            }
+
+            return Ok(new
+            {
+                success = isValid,
+                data = commandHandlerResult.Id
             });
         }
     }

@@ -14,7 +14,8 @@ namespace EcommerceDDD.WebApp.BackgroundServices
         private readonly MessageProcessorTaskOptions _options;
         private readonly IServiceScopeFactory _scopeFactory;
 
-        public MessagesProcessorTask(MessageProcessorTaskOptions options, 
+        public MessagesProcessorTask(
+            MessageProcessorTaskOptions options, 
             IServiceScopeFactory scopeFactory,
             ILogger<MessagesProcessorTask> logger)
         {
@@ -25,7 +26,6 @@ namespace EcommerceDDD.WebApp.BackgroundServices
         
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
             _logger.LogInformation("\n--------Processing messages:\n");
 
             while (!cancellationToken.IsCancellationRequested)
@@ -36,8 +36,16 @@ namespace EcommerceDDD.WebApp.BackgroundServices
                     await processor.ProcessMessages(_options.BatchSize, cancellationToken);
                 }
 
-                await Task.Delay(_options.Interval, cancellationToken);
+                await Task.Delay(TimeSpan.FromSeconds(_options.IntervalOnSeconds), cancellationToken);
             }
+        }
+
+        public override async Task StopAsync(CancellationToken stoppingToken)
+        {
+            _logger.LogInformation(
+                "Consume Scoped Service Hosted Service is stopping.");
+
+            await base.StopAsync(stoppingToken);
         }
     }
 }
