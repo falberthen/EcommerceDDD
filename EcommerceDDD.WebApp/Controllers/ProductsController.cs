@@ -17,14 +17,11 @@ namespace EcommerceDDD.WebApp.Controllers
     [ApiController]
     public class ProductsController : BaseController
     {
-        private readonly IMediator _mediator;
-
         public ProductsController(
             IMediator mediator, 
             IUserProvider userProvider)
-            : base(userProvider)
+            : base(userProvider, mediator)
         {
-            _mediator = mediator;
         }
 
         [HttpGet, Route("{currency}")]
@@ -37,7 +34,7 @@ namespace EcommerceDDD.WebApp.Controllers
                 return BadRequest();
 
             var query = new ListProductsQuery(currency);
-            return Response(await _mediator.Send(query));
+            return Response(await Mediator.Send(query));
         }
     }
 }

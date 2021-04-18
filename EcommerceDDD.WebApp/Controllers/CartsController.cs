@@ -19,14 +19,11 @@ namespace EcommerceDDD.WebApp.Controllers
     [ApiController]
     public class CartsController : BaseController
     {
-        private readonly IMediator _mediator;
-
         public CartsController(
             IMediator mediator,
             IUserProvider userProvider)
-            : base(userProvider)
+            : base(userProvider, mediator)
         {
-            _mediator = mediator;
         }
 
         /// <summary>
@@ -44,7 +41,7 @@ namespace EcommerceDDD.WebApp.Controllers
                 return BadRequest();
 
             var command = new SaveCartCommand(request.CustomerId, request.Product);
-            return Response(await _mediator.Send(command));
+            return Response(await Mediator.Send(command));
         }
 
         /// <summary>
@@ -63,7 +60,7 @@ namespace EcommerceDDD.WebApp.Controllers
                 return BadRequest();
 
             var query = new GetCartDetailsQuery(customerId, currency);
-            return Response(await _mediator.Send(query));
+            return Response(await Mediator.Send(query));
         }
     }
 }
