@@ -25,16 +25,14 @@ namespace EcommerceDDD.WebApp.Controllers
     [ApiController]
     public class CustomersController : BaseController
     {
-        private readonly IMediator _mediator;
         private readonly IMapper _mapper;
 
         public CustomersController(
             IMediator mediator,
             IUserProvider userProvider,
             IMapper mapper)
-            : base(userProvider)
+            : base(userProvider, mediator)
         {
-            _mediator = mediator;
             _mapper = mapper;
         }
 
@@ -53,7 +51,7 @@ namespace EcommerceDDD.WebApp.Controllers
                 return BadRequest();
 
             var query = new AuthenticateCustomerQuery(request.Email, request.Password);
-            return Response(await _mediator.Send(query));
+            return Response(await Mediator.Send(query));
         }
 
         /// <summary>
@@ -71,7 +69,7 @@ namespace EcommerceDDD.WebApp.Controllers
                 return BadRequest();
 
             var command = _mapper.Map<RegisterCustomerCommand>(request);
-            return Response(await _mediator.Send(command));
+            return Response(await Mediator.Send(command));
         }
 
         /// <summary>
@@ -90,7 +88,7 @@ namespace EcommerceDDD.WebApp.Controllers
                 return BadRequest();
 
             var command = new UpdateCustomerCommand(customerId, request.Name);
-            return Response(await _mediator.Send(command));
+            return Response(await Mediator.Send(command));
         }
 
         /// <summary>
@@ -108,7 +106,7 @@ namespace EcommerceDDD.WebApp.Controllers
                 return BadRequest();
 
             var query = new ListCustomerStoredEventsQuery(customerId);
-            return Response(await _mediator.Send(query));
+            return Response(await Mediator.Send(query));
         }
     }
 }

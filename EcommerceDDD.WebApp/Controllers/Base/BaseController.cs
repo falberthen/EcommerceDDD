@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Linq;
 using BuildingBlocks.CQRS.CommandHandling;
-using BuildingBlocks.CQRS.Core;
 using BuildingBlocks.CQRS.QueryHandling;
 using EcommerceDDD.Infrastructure.Identity.Helpers;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceDDD.WebApp.Controllers.Base
@@ -11,54 +10,58 @@ namespace EcommerceDDD.WebApp.Controllers.Base
     public class BaseController : Controller
     {
         private readonly IUserProvider _userProvider;
+        public readonly IMediator Mediator;
 
         protected Guid UserId
         {
-            get { return _userProvider.GetUserId();}
+            get { return _userProvider.GetUserId(); }
         }
 
-        protected BaseController(IUserProvider userProvider)
+        protected BaseController(IUserProvider userProvider, IMediator mediator)
         {
             _userProvider = userProvider;
+            Mediator = mediator;
         }
 
         protected new IActionResult Response<TResult>(QueryHandlerResult<TResult> queryHandlerResult)
         {
-            var isValid = queryHandlerResult.ValidationResult.IsValid;
+            if (!queryHandlerResult.ValidationResult.IsValid)
+                BadRequestActionResult(queryHandlerResult.ValidationResult.Errors);
 
-            if (!isValid)
-            {
-                return BadRequest(new
-                {
-                    success = isValid,
-                    errors = queryHandlerResult.ValidationResult.Errors
-                });
-            }
-
-            return Ok(new
-            {
-                success = isValid,
-                data = queryHandlerResult.Result
-            });
+            return OkActionResult(queryHandlerResult.Result);
         }
 
         protected new IActionResult Response<TResult>(CommandHandlerResult<TResult> commandHandlerResult) where TResult : struct
         {
-            var isValid = commandHandlerResult.ValidationResult.IsValid;
+            if (!commandHandlerResult.ValidationResult.IsValid)
+                BadRequestActionResult(commandHandlerResult.ValidationResult.Errors);
 
-            if (!isValid)
+            return OkActionResult(commandHandlerResult.Id);
+        }
+
+        protected new IActionResult Response(CommandHandlerResult commandHandlerResult)
+        {
+            if (!commandHandlerResult.ValidationResult.IsValid)
+                BadRequestActionResult(commandHandlerResult.ValidationResult.Errors);
+
+            return OkActionResult(commandHandlerResult);
+        }
+
+        private IActionResult BadRequestActionResult(dynamic resultErrors)
+        {
+            return BadRequest(new
             {
-                return BadRequest(new
-                {
-                    success = isValid,
-                    errors = commandHandlerResult.ValidationResult.Errors
-                });
-            }
+                success = false,
+                errors = resultErrors
+            });
+        }
 
+        private IActionResult OkActionResult(dynamic resultData)
+        {
             return Ok(new
             {
-                success = isValid,
-                data = commandHandlerResult.Id
+                success = true,
+                data = resultData
             });
         }
     }

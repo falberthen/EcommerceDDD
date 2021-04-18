@@ -62,30 +62,32 @@ The Infrastructure layer takes care of the application's infrastructure and issu
 ### Mainly used technologies:
 <ul>
   <li>
-    <a href='https://get.asp.net/'>ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx'>C#</a>
+    <a href='https://get.asp.net' target="_blank">ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx' target="_blank">C#</a>
     for cross-platform back-end with:
     <ul>
-      <li>.NET Core 3.1</li>
-      <li>Entity Framework Core 3.1</li>
-      <li>ASP.NET WebApi Core with JWT Bearer Authentication</li>
+      <li>.NET 5</li>
+      <li>Entity Framework Core 5.0.5</li>
+      <li>ASP.NET Core with JWT Bearer Authentication</li>
       <li>ASP.NET Identity Core</li>
-      <li>MediatR</li>
-      <li>Automapper</li>
+      <li><a href='https://github.com/falberthen/BuildingBlocks.CQRS' target="_blank">BuildingBlocks.CQRS 2.0.0</a></li>
+      <li>MediatR</li> 
       <li>Fluent Validation</li>
+      <li>Automapper</li>
       <li>NSubstitute</li>
       <li>Swagger</li>
-      <li>HealthChecks</li>
+      <li>HealthChecks</li>      
     </ul>
   </li>
-  <li><a href='https://angular.io/' target="_blank">Angular 9</a> and <a href='http://www.typescriptlang.org/' target="_blank">
-    TypeScript</a> for the front-end with:</li>
+  <li>
+    <a href='https://angular.io/' target="_blank">Angular 9</a> and <a href='http://www.typescriptlang.org/' target="_blank">TypeScript</a> for the front-end with:
     <ul>
-      <li><a href='http://getbootstrap.com/'>Bootstrap</a> for layout and styling</li>
+      <li>Bootstrap</li>
       <li>NgBootstrap</li>
       <li>Font Awesome</li>
       <li>Toastr</li>
       <li>Angular JWT</li>
     </ul>
+  </li>
 </ul>
 
 <hr/>
@@ -94,9 +96,9 @@ The Infrastructure layer takes care of the application's infrastructure and issu
 
 <ul>
   <li>The latest <a href="https://dotnet.microsoft.com/download">.NET Core SDK</a> and <a href="https://www.microsoft.com/en-us/sql-server/sql-server-downloads">SQL Server</a> for the back-end, and change the connection string values in appsettings.json if you need. <br>Of course you can use other database technologies, but you will have to setup Entity Framework to it.</li>
-  <li>Node for the front-end in case you need to install packages.</li>
-  <li>Run EcommerceDDD.DataSeed project to add some products.</li>
-  <li>Set EcommerceDDD.WebApp as Startup project.</li>
+  <li><a href='https://nodejs.org' target="_blank">NodeJs</a> for the front-end in case you need to install packages.</li>
+  <li>Set EcommerceDDD.DataSeed as Startup project and run it once to add some products.</li>
+  <li>Set EcommerceDDD.WebApp as Startup project to use the SPA WebApp.</li>
 </ul>
 
-When registering your customer for the first time, it will create the Identity tables. No database update / migration commands are needed.
+<b>When registering your customer for the first time, it will create the Identity tables. No database update / migration commands are needed.</b>

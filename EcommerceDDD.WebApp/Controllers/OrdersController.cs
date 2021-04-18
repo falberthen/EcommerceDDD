@@ -20,14 +20,11 @@ namespace EcommerceDDD.WebApp.Controllers
     [ApiController]
     public class OrdersController : BaseController
     {
-        private readonly IMediator _mediator;
-
         public OrdersController(
             IMediator mediator,
             IUserProvider userProvider)
-            : base(userProvider)
+            : base(userProvider, mediator)
         {
-            _mediator = mediator;
         }
 
         /// <summary>
@@ -45,7 +42,7 @@ namespace EcommerceDDD.WebApp.Controllers
                 return BadRequest();
 
             var query = new GetOrdersQuery(customerId);
-            return Response(await _mediator.Send(query));
+            return Response(await Mediator.Send(query));
         }
 
         /// <summary>
@@ -63,7 +60,7 @@ namespace EcommerceDDD.WebApp.Controllers
                 return BadRequest();
 
             var query = new GetOrderDetailsQuery(orderId);
-            return Response(await _mediator.Send(query));
+            return Response(await Mediator.Send(query));
         }
 
         /// <summary>
@@ -81,7 +78,7 @@ namespace EcommerceDDD.WebApp.Controllers
                 return BadRequest();
 
             var command = new PlaceOrderCommand(cartId, request.CustomerId, request.Currency);                        
-            return Response(await _mediator.Send(command));
+            return Response(await Mediator.Send(command));
         }
     }
 }
