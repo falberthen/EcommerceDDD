@@ -19,7 +19,7 @@ namespace EcommerceDDD.DataSeed
             for (char c = 'A'; c <= 'Z'; c++)
             {
                 var price = new decimal(rand.NextDouble());
-                var product = new Product($"Product {c}", Money.Of(price, converter.GetBaseCurrency().Code));
+                var product = new Product(Guid.NewGuid(), $"Product {c}", Money.Of(price, converter.GetBaseCurrency().Code));
                 products.Add(product);
                 Console.WriteLine($"Added {product.Name} for {Math.Round(product.Price.Value, 2)} {product.Price.CurrencyCode}");
             }

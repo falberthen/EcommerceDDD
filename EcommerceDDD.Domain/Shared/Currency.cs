@@ -4,7 +4,7 @@ using EcommerceDDD.Domain.Core.Base;
 
 namespace EcommerceDDD.Domain.Shared
 {
-    public class Currency : ValueObject
+    public class Currency : ValueObject<Currency>
     {
         public string Code { get; }
         public string Symbol { get; }
@@ -29,17 +29,13 @@ namespace EcommerceDDD.Domain.Shared
             if (string.IsNullOrWhiteSpace(code))
                 throw new ArgumentNullException(nameof(code));
 
-            switch (code)
+            return code switch
             {
-                case "USD":
-                    return new Currency(USDollar.Code, USDollar.Symbol);                            
-                case "CAD":
-                    return new Currency(CanadianDollar.Code, CanadianDollar.Symbol);
-                case "EUR":
-                    return new Currency(Euro.Code, Euro.Symbol);
-                default:
-                    throw new BusinessRuleException($"Invalid code {code}");
-            }
+                "USD" => new Currency(USDollar.Code, USDollar.Symbol),
+                "CAD" => new Currency(CanadianDollar.Code, USDollar.Symbol),
+                "EUR" => new Currency(Euro.Code, USDollar.Symbol),
+                _ => throw new BusinessRuleException($"Invalid code {code}")
+            };
         }
 
         public static List<string> SupportedCurrencies()
@@ -47,10 +43,19 @@ namespace EcommerceDDD.Domain.Shared
             return new List<string>() { USDollar.Code, Euro.Code, CanadianDollar.Code };
         }
 
-        protected override IEnumerable<object> GetAtomicValues()
+        protected override bool EqualsCore(Currency other)
         {
-            yield return Code;
-            yield return Symbol;
+            return Code == other.Code && Symbol == other.Symbol;
+        }
+
+        protected override int GetHashCodeCore()
+        {
+            unchecked
+            {
+                int hashCode = Code.GetHashCode();
+                hashCode = (hashCode * 397) ^ Symbol.GetHashCode();
+                return hashCode;
+            }
         }
 
         private Currency() { }
