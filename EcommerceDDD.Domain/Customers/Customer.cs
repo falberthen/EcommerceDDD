@@ -1,25 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using EcommerceDDD.Domain.Carts;
 using EcommerceDDD.Domain.Core.Base;
 using EcommerceDDD.Domain.Customers.Events;
 using EcommerceDDD.Domain.Services;
 
 namespace EcommerceDDD.Domain.Customers
 {
-    public class Customer : Entity, IAggregateRoot
+    public class Customer : AggregateRoot<Guid>
     {
         public string Email { get; private set; }
         public string Name { get; private set; }
         
-        public static Customer CreateCustomer(string email, string name,
+        public static Customer CreateCustomer(Guid id, string email, string name,
             ICustomerUniquenessChecker customerUniquenessChecker)
         {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Customer name cannot be null or whitespace.", nameof(name));
+
             if (!customerUniquenessChecker.IsUserUnique(email))
                 throw new BusinessRuleException("This e-mail is already in use.");
 
-            return new Customer(email, name);
+            return new Customer(id, email, name);
         }
 
         public void SetName(string value)
@@ -31,8 +31,9 @@ namespace EcommerceDDD.Domain.Customers
             AddDomainEvent(new CustomerUpdatedEvent(Id, Name));
         }
 
-        private Customer(string email, string name)
+        private Customer(Guid id, string email, string name)
         {
+            Id = id;
             Email = email;
             Name = name;
             AddDomainEvent(new CustomerRegisteredEvent(Id, Name));

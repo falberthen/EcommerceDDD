@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using EcommerceDDD.Domain.Core.Base;
 using EcommerceDDD.Domain.Customers;
 using EcommerceDDD.Domain.Products;
 
 namespace EcommerceDDD.Domain.Carts
 {
-    public class Cart : Entity, IAggregateRoot
+    public class Cart : AggregateRoot<Guid>
     {
         public Customer Customer { get; private set; }
         public IReadOnlyCollection<CartItem> Items => _items;        
         private readonly List<CartItem> _items = new List<CartItem>();
 
-        public Cart(Customer customer)
+        public Cart(Guid id, Customer customer)
         {
+            Id = id;
             if (customer == null)
                 throw new BusinessRuleException("The customer is required.");
 
@@ -30,7 +30,7 @@ namespace EcommerceDDD.Domain.Carts
             if (quantity == 0)
                 throw new BusinessRuleException("The product quantity must be at last 1.");
 
-            var cartItem = new CartItem(product, quantity);
+            var cartItem = new CartItem(Guid.NewGuid(), product, quantity);
             _items.Add(cartItem);
 
             return cartItem;

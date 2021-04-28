@@ -5,7 +5,7 @@ using EcommerceDDD.Domain.Shared;
 
 namespace EcommerceDDD.Domain.Orders
 {
-    public class OrderLine : Entity
+    public class OrderLine : Entity<Guid>
     {
         public Guid OrderId { get; private set; }
         public Guid ProductId { get; private set; }
@@ -13,9 +13,10 @@ namespace EcommerceDDD.Domain.Orders
         public Money ProductBasePrice { get; private set; }
         public Money ProductExchangePrice { get; private set; }
 
-        public OrderLine(Guid orderId, Guid productId, Money productPrice, 
+        public OrderLine(Guid id, Guid orderId, Guid productId, Money productPrice, 
             int quantity, Currency currency, ICurrencyConverter currencyConverter)
         {
+            Id = id;
             OrderId = orderId;
             ProductId = productId;
             Quantity = quantity;

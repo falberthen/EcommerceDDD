@@ -25,26 +25,20 @@ namespace EcommerceDDD.WebApp.Controllers.Base
 
         protected new IActionResult Response<TResult>(QueryHandlerResult<TResult> queryHandlerResult)
         {
-            if (!queryHandlerResult.ValidationResult.IsValid)
-                BadRequestActionResult(queryHandlerResult.ValidationResult.Errors);
-
-            return OkActionResult(queryHandlerResult.Result);
+            return queryHandlerResult.ValidationResult.IsValid ? OkActionResult(queryHandlerResult.Result) 
+                : BadRequestActionResult(queryHandlerResult.ValidationResult.Errors);
         }
 
         protected new IActionResult Response<TResult>(CommandHandlerResult<TResult> commandHandlerResult) where TResult : struct
         {
-            if (!commandHandlerResult.ValidationResult.IsValid)
-                BadRequestActionResult(commandHandlerResult.ValidationResult.Errors);
-
-            return OkActionResult(commandHandlerResult.Id);
+            return commandHandlerResult.ValidationResult.IsValid ? OkActionResult(commandHandlerResult.Id)
+                : BadRequestActionResult(commandHandlerResult.ValidationResult.Errors);
         }
 
         protected new IActionResult Response(CommandHandlerResult commandHandlerResult)
         {
-            if (!commandHandlerResult.ValidationResult.IsValid)
-                BadRequestActionResult(commandHandlerResult.ValidationResult.Errors);
-
-            return OkActionResult(commandHandlerResult);
+            return commandHandlerResult.ValidationResult.IsValid ? OkActionResult(commandHandlerResult)
+                : BadRequestActionResult(commandHandlerResult.ValidationResult.Errors);
         }
 
         private IActionResult BadRequestActionResult(dynamic resultErrors)
