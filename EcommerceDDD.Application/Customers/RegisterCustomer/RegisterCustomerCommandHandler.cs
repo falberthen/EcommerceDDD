@@ -34,7 +34,7 @@ namespace EcommerceDDD.Application.Customers.RegisterCustomer
 
         public override async Task<Guid> ExecuteCommand(RegisterCustomerCommand command, CancellationToken cancellationToken)
         {
-            var customer = Customer.CreateCustomer(command.Email, command.Name, _uniquenessChecker);            
+            var customer = Customer.CreateCustomer(Guid.NewGuid(), command.Email, command.Name, _uniquenessChecker);            
             if(customer != null)
             {
                 await _unitOfWork.CustomerRepository.Add(customer, cancellationToken);

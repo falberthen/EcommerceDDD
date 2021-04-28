@@ -12,8 +12,6 @@ namespace EcommerceDDD.Application.Carts
         [Range(int.MinValue, int.MaxValue, ErrorMessage = "Price value is invalid")]
         public int Quantity { get; set; }
 
-        public ProductDto(){}
-
         public ProductDto(Guid id, int quantity)
         {
             Id = id;

@@ -35,7 +35,7 @@ namespace EcommerceDDD.Application.Orders.PlaceOrder
                 throw new InvalidDataException("Cart not found.");
 
             var currency = Currency.FromCode(command.Currency);
-            var order = Order.PlaceOrder(cart, currency, _currencyConverter);
+            var order = Order.PlaceOrder(Guid.NewGuid(), cart, currency, _currencyConverter);
 
             // Cleaning the cart
             cart.Clear();

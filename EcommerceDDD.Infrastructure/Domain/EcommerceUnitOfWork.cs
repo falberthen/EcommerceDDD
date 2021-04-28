@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Domain;
@@ -50,8 +48,8 @@ namespace EcommerceDDD.Infrastructure.Domain
         protected async override Task StoreEvents(CancellationToken cancellationToken)
         {
             var entities = DbContext.ChangeTracker.Entries()
-                    .Where(e => e.Entity is Entity c && c.DomainEvents != null)
-                    .Select(e => e.Entity as Entity)
+                    .Where(e => e.Entity is AggregateRoot<Guid> c && c.DomainEvents != null)
+                    .Select(e => e.Entity as AggregateRoot<Guid>)
                     .ToArray();
 
             foreach (var entity in entities)

@@ -38,7 +38,7 @@ namespace EcommerceDDD.Application.Carts.CreateCart
 
             if (cart == null)
             {
-                cart = new Cart(customer);
+                cart = new Cart(Guid.NewGuid(), customer);
                 cart.AddItem(product, quantity);
                 await _unitOfWork.CartRepository.Add(cart, cancellationToken);
             }

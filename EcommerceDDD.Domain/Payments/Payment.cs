@@ -6,7 +6,7 @@ using EcommerceDDD.Domain.Customers;
 
 namespace EcommerceDDD.Domain.Payments
 {
-    public class Payment : Entity, IAggregateRoot
+    public class Payment : AggregateRoot<Guid>
     {
         public Order Order { get; private set; }
         public Customer Customer { get; private set; }
@@ -14,11 +14,12 @@ namespace EcommerceDDD.Domain.Payments
         public DateTime? PaidAt { get; private set; }
         public PaymentStatus Status { get; private set; }
 
-        public Payment(Order order)
+        public Payment(Guid id, Order order)
         {
             if (order == null)
                 throw new BusinessRuleException("The order is required.");
 
+            Id = id;
             Order = order;
             Customer = order.Customer;
             CreatedAt = DateTime.Now;

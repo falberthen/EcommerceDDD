@@ -6,6 +6,7 @@ using EcommerceDDD.Application.Base;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.Orders.Events;
 using EcommerceDDD.Domain.Payments;
+using System;
 
 namespace EcommerceDDD.Application.Orders.PlaceOrder
 {
@@ -29,7 +30,7 @@ namespace EcommerceDDD.Application.Orders.PlaceOrder
                     throw new InvalidDataException("Order not found.");
 
                 // Creating a payment
-                var payment = new Payment(order);
+                var payment = new Payment(Guid.NewGuid(), order);
                 await unitOfWork.PaymentRepository.Add(payment);
                 await unitOfWork.CommitAsync();
             }

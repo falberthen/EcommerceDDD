@@ -95,7 +95,7 @@ The Infrastructure layer takes care of the application's infrastructure and issu
 ### What do you need to run it:
 
 <ul>
-  <li>The latest <a href="https://dotnet.microsoft.com/download">.NET Core SDK</a> and <a href="https://www.microsoft.com/en-us/sql-server/sql-server-downloads">SQL Server</a> for the back-end, and change the connection string values in appsettings.json if you need. <br>Of course you can use other database technologies, but you will have to setup Entity Framework to it.</li>
+  <li>The latest <a href="https://dotnet.microsoft.com/download" target="_blank">.NET Core SDK</a> and <a href="https://www.microsoft.com/en-us/sql-server/sql-server-downloads" target="_blank">SQL Server</a> for the back-end, and change the connection string values in appsettings.json if you need. <br>Of course you can use other database technologies, but you will have to setup Entity Framework to it.</li>
   <li><a href='https://nodejs.org' target="_blank">NodeJs</a> for the front-end in case you need to install packages.</li>
   <li>Set EcommerceDDD.DataSeed as Startup project and run it once to add some products.</li>
   <li>Set EcommerceDDD.WebApp as Startup project to use the SPA WebApp.</li>

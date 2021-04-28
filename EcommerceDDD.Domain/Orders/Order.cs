@@ -11,7 +11,7 @@ using EcommerceDDD.Domain.Shared;
 
 namespace EcommerceDDD.Domain.Orders
 {
-    public class Order : Entity, IAggregateRoot
+    public class Order : AggregateRoot<Guid>
     {
         public Customer Customer { get; private set; }
         public OrderStatus Status { get; private set; }
@@ -20,8 +20,9 @@ namespace EcommerceDDD.Domain.Orders
         public IReadOnlyList<OrderLine> OrderLines => _orderLines;
         private readonly List<OrderLine> _orderLines = new List<OrderLine>();
 
-        private Order(Cart cart, Currency currency, ICurrencyConverter converter)
+        private Order(Guid id, Cart cart, Currency currency, ICurrencyConverter converter)
         {
+            Id = id;
             CreatedAt = DateTime.Now;            
             Status = OrderStatus.Placed;
             Customer = cart.Customer;
@@ -29,7 +30,7 @@ namespace EcommerceDDD.Domain.Orders
             AddDomainEvent(new OrderPlacedEvent(Id));
         }
 
-        public static Order PlaceOrder(Cart cart, Currency currency, ICurrencyConverter currencyConverter)
+        public static Order PlaceOrder(Guid id, Cart cart, Currency currency, ICurrencyConverter currencyConverter)
         {
             if (!cart.Items.Any())
                 throw new BusinessRuleException("An order should have at least one product.");
@@ -37,7 +38,7 @@ namespace EcommerceDDD.Domain.Orders
             if (currency == null)
                 throw new BusinessRuleException("The currency is required.");
 
-            var order = new Order(cart, currency, currencyConverter);
+            var order = new Order(id, cart, currency, currencyConverter);
             return order;
         }
 
@@ -50,6 +51,7 @@ namespace EcommerceDDD.Domain.Orders
         {
             var orderLines = cart.Items.Select(c =>
                 new OrderLine(
+                    Guid.NewGuid(),
                     Id, 
                     c.Product.Id, 
                     c.Product.Price, 

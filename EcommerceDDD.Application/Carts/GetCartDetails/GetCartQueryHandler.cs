@@ -7,6 +7,7 @@ using EcommerceDDD.Domain.Services;
 using EcommerceDDD.Domain.Shared;
 using BuildingBlocks.CQRS.QueryHandling;
 using EcommerceDDD.Domain.Carts;
+using System;
 
 namespace EcommerceDDD.Application.Carts.GetCartDetails
 {
@@ -38,7 +39,7 @@ namespace EcommerceDDD.Application.Carts.GetCartDetails
             if (cart == null)
             {
                 // Creating cart
-                cart = new Cart(customer);
+                cart = new Cart(Guid.NewGuid(), customer);
                 await _unitOfWork.CartRepository.Add(cart, cancellationToken);
                 await _unitOfWork.CommitAsync();
             }                
