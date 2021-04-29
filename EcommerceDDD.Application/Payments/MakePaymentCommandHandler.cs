@@ -4,24 +4,22 @@ using System.Threading.Tasks;
 using BuildingBlocks.CQRS.CommandHandling;
 using EcommerceDDD.Application.Base;
 using EcommerceDDD.Domain;
-using EcommerceDDD.Domain.Services;
+using EcommerceDDD.Domain.Payments;
 
 namespace EcommerceDDD.Application.Payments
 {
     public class MakePaymentCommandHandler : CommandHandler<MakePaymentCommand, Guid>
     {
         private readonly IEcommerceUnitOfWork _unitOfWork;
-        private readonly IOrderStatusWorkflow _orderStatusWorkflowManager;
 
-        public MakePaymentCommandHandler(IEcommerceUnitOfWork unitOfWork, 
-            IOrderStatusWorkflow orderStatusManager)
+        public MakePaymentCommandHandler(
+            IEcommerceUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _orderStatusWorkflowManager = orderStatusManager;
         }
 
         public override async Task<Guid> ExecuteCommand(MakePaymentCommand command, CancellationToken cancellationToken)
-        {            
+        {
             var payment = await _unitOfWork.PaymentRepository.GetById(command.PaymentId, cancellationToken);
 
             if (payment == null)
@@ -29,14 +27,40 @@ namespace EcommerceDDD.Application.Payments
 
             if (payment.Order == null)
                 throw new InvalidDataException("Order not found.");
+            
+            try
+            {
+                // Making a fake payment (here we could call a financial institution service and use the customer billing info)
+                var paymentSuccess = MakePayment(payment);
 
-            // Making a fake payment (here we could call a financial institution service and use the customer billing info)
-            payment.MarkAsPaid();
+                if (paymentSuccess)
+                    payment.MarkAsPaid();
+            }
+            catch (Exception)
+            {                
+                throw;
+            }
 
-            // Changing order status
-            _orderStatusWorkflowManager.CalculateOrderStatus(payment.Order, payment);
-            await _unitOfWork.CommitAsync();
             return payment.Id;
+        }
+
+        /// <summary>
+        /// A simple mock that could be replaced by a real payment API call
+        /// </summary>
+        /// <param name="payment"></param>
+        /// <param name="failRandomly">if true, it may simulate fail / not authorized</param>
+        /// <returns></returns>
+        private bool MakePayment(Payment payment, bool failRandomly = false)
+        {
+            bool paymentResult = true;            
+
+            if (failRandomly)
+            {
+                var randomResult = new Random().Next(100) % 2 == 0;
+                paymentResult = !randomResult ? throw new Exception("Payment not authorized.") : randomResult;
+            }
+                            
+            return paymentResult;
         }
     }
 }

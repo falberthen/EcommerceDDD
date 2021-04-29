@@ -7,6 +7,7 @@ using EcommerceDDD.Application.Orders.GetOrderDetails;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.Shared;
 using BuildingBlocks.CQRS.QueryHandling;
+using EcommerceDDD.Domain.Orders;
 
 namespace EcommerceDDD.Application.Orders.GetOrders
 {
@@ -30,38 +31,45 @@ namespace EcommerceDDD.Application.Orders.GetOrders
 
             foreach (var order in orders)
             {
-                var payment = await _unitOfWork.PaymentRepository.GetByOrderId(order.Id, cancellationToken);
+                var payment = await _unitOfWork.PaymentRepository.GetByOrderId(order.Id, cancellationToken);                
+                var productIds = order.OrderLines.Select(p => p.ProductId).ToList();
+                var products = await _unitOfWork.ProductRepository.GetByIds(productIds, cancellationToken);
 
-                if(payment != null) // Payment was created by event already
+                OrderDetailsViewModel viewModel = new OrderDetailsViewModel();
+                viewModel.OrderId = order.Id;
+                viewModel.CreatedAt = order.CreatedAt.ToString();
+                viewModel.Status = PrettifyOrderStatus(order.Status);
+
+                foreach (var orderLine in order.OrderLines)
                 {
-                    var productIds = order.OrderLines.Select(p => p.ProductId).ToList();
-                    var products = await _unitOfWork.ProductRepository.GetByIds(productIds, cancellationToken);
+                    var product = products.Single(p => p.Id == orderLine.ProductId);
+                    var currency = Currency.FromCode(orderLine.ProductExchangePrice.CurrencyCode);
 
-                    OrderDetailsViewModel viewModel = new OrderDetailsViewModel();
-                    viewModel.OrderId = order.Id;
-                    viewModel.CreatedAt = order.CreatedAt.ToString();
-
-                    foreach (var orderLine in order.OrderLines)
+                    viewModel.OrderLines.Add(new OrderLinesDetailsViewModel
                     {
-                        var product = products.Single(p => p.Id == orderLine.ProductId);
-                        var currency = Currency.FromCode(orderLine.ProductExchangePrice.CurrencyCode);
+                        ProductId = orderLine.ProductId,
+                        ProductQuantity = orderLine.Quantity,
+                        ProductPrice = orderLine.ProductExchangePrice.Value,
+                        ProductName = product.Name,
+                        CurrencySymbol = currency.Symbol,
+                    });
+                }
 
-                        viewModel.OrderLines.Add(new OrderLinesDetailsViewModel
-                        {
-                            ProductId = orderLine.ProductId,
-                            ProductQuantity = orderLine.Quantity,
-                            ProductPrice = orderLine.ProductExchangePrice.Value,
-                            ProductName = product.Name,
-                            CurrencySymbol = currency.Symbol,
-                        });
-                    }
-
-                    viewModel.CalculateTotalOrderPrice();
-                    viewModelList.Add(viewModel);
-                }                    
+                viewModel.CalculateTotalOrderPrice();
+                viewModelList.Add(viewModel);
             }
 
             return viewModelList;
+        }
+
+        private string PrettifyOrderStatus(OrderStatus status)
+        {
+            return status switch
+            {
+                OrderStatus.ReadyToShip => "Ready to be shipped.",
+                OrderStatus.WaitingForPayment => "Waiting for payment to be processed.",
+                _ => status.ToString()
+            };
         }
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Domain.Core.Messaging;
@@ -42,7 +41,8 @@ namespace EcommerceDDD.Infrastructure.Messaging
 
         public async Task<IReadOnlyCollection<StoredEvent>> FetchUnprocessed(int batchSize, CancellationToken cancellationToken)
         {
-            var results = await _dbContext.StoredEvents.Where(m => null == m.ProcessedAt)
+            var results = await _dbContext.StoredEvents
+                .Where(m => null == m.ProcessedAt)
                 .OrderBy(m => m.CreatedAt)
                 .Take(batchSize)
                 .ToArrayAsync(cancellationToken);
