@@ -12,11 +12,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
 
-/// <summary>
-/// 2020 - Felipe Alberto | fealberto@gmail.com
-/// </summary>
 namespace EcommerceDDD.WebApp
 {
     public class Startup
@@ -78,10 +74,10 @@ namespace EcommerceDDD.WebApp
             services.AddHealthChecksSetup(Configuration);
 
             // Message processing
-            var section = this.Configuration.GetSection(nameof(MessageProcessorTaskOptions));
-            var messageProcessorTaskOptions = section.Get<MessageProcessorTaskOptions>();
+            var section = this.Configuration.GetSection(nameof(MessageProcessorServiceOptions));
+            var messageProcessorTaskOptions = section.Get<MessageProcessorServiceOptions>();
             services.AddSingleton(messageProcessorTaskOptions);
-            services.AddHostedService<MessagesProcessorTask>();
+            services.AddHostedService<MessagesProcessorService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

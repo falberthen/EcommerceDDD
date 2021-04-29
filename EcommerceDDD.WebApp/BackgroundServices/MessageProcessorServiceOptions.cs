@@ -2,7 +2,7 @@
 
 namespace EcommerceDDD.WebApp.BackgroundServices
 {
-    public class MessageProcessorTaskOptions
+    public class MessageProcessorServiceOptions
     {
         public double IntervalOnSeconds { get; set; }
         public int BatchSize { get; set; }

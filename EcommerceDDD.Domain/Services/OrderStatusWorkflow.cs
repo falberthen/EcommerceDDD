@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using EcommerceDDD.Domain.Orders;
 using EcommerceDDD.Domain.Payments;
 
@@ -16,13 +12,12 @@ namespace EcommerceDDD.Domain.Services
         public void CalculateOrderStatus(Order order, Payment payment)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException("Order cannot be null.");
 
             if (payment == null)
-                throw new ArgumentNullException("payment");
+                throw new ArgumentNullException("Payment cannot be null.");
 
             //Order Status Workflow
-
             if (order.Status == OrderStatus.Placed && payment.Status == PaymentStatus.ToPay)
                 order.ChangeStatus(OrderStatus.WaitingForPayment);
             
