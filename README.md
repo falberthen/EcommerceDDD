@@ -1,65 +1,61 @@
 ## Welcome to Ecommerce DDD
 
-My main goal with this project is to demonstrate how to build a full-stack application using principles of domain-driven design and SOLID to provide an expressive and cohesive code.
-Besides, provide an easy-to-use and scalable API to power a SPA application. Last but not least, I also demonstrate the powerful combination of the CQRS pattern and Event Sourcing. 
+This project is a showcase of a full-stack application I use to combine several cutting-edge technologies and design patterns. 
+It is based on Domain-Driven Design at its core for implementing a clean-architectured API that powers up an Angular-based SPA application, 
+and also demonstrates the powerful combination of the CQRS pattern with Event Sourcing.
 
-<br>The chosen domain was e-commerce, although this project is not intended to be a real or much less ideal implementation of e-commerce solution for production, it is capable of demonstrating a purchasing cycle that goes from product selection to final payment through established business rules.
-
-<br>Thanks for getting here, and <b>let your star</b> if you liked it! I will always keep working to improve the project with optimizations, tests, and refactorings. 
+<br>Thanks for getting here! please <b>let your star</b> if you liked the project. It motivates me to keep improving it.
 
 <hr>
 
 ### Screenshots 
 
-<a href="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/login.png" target="_blank">
-<img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/login.png"/>
-</a>
-<br/><br/><br/>
-<a href="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/products.png" target="_blank">
-<img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/products.png" />
+<a href="images/login.png" target="_blank">
+<img src="images/login.png"/>
 </a>
 
-<br/><br/><br/>
-<a href="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/orders.png" target="_blank">
-<img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/orders.png" />
+<br/><a href="images/products.png" target="_blank">
+<img src="images/products.png" />
 </a>
 
-<br/><br/>
-<a href="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/events.png" target="_blank">
-<img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/events.png" />
+<br/><a href="images/orders.png" target="_blank">
+<img src="images/orders.png" />
+</a>
+
+<br/><a href="images/events.png" target="_blank">
+<img src="images/events.png" />
+</a>
+
+<br/><a href="images/order-events.png" target="_blank">
+<img src="images/order-events.png" />
 </a>
 
 <hr>
-
-### Architecture diagram
-<img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/Diagram.PNG"/>
-
-Following a typical clean architecture, each layer was designed to play a specific role, allowing low coupling and testability. You will find a quick summary about each layer below.
-<hr/>
-
-### Domain Core
-The Domain Core layer establishes basic abstractions to be implemented in the lower layers. It forms the basis of the building blocks for the implementation of DDD, with abstract classes for Entity, Aggregate Root, Value Object and, interfaces for Repository, Unit of Work.
-<br/><br/>
+You will find a quick summary of the architecture below:
 
 ### Domain
-The Domain layer is where the business lies. It has a modular (organized by folders) implementation of the classes that make up the e-commerce through <b>concrete</b> Aggregates, Entities, Value objects, Domain Services and Repository interfaces and Domain Events. All the business rules and invariants are written in the domain models or services to ensure domain integrity and proper flow.
+It is where the business logic lies, with a structured implementation of the models and its invariants that make up the e-commerce through <b>concrete</b> Aggregates, Entities, Value objects, Domain Services, Repository definitions and, Domain Events.
+<br/><br/>
+
+### Domain SeedWork
+This project defines the classes used as a base for all domain building blocks, such as Entities, Value objects, Aggregate roots, Repositories, Services and more. 
 <br/><br/>
 
 ### Application
-The Application layer orchestrates the interactions between the external world (API/SPA) and domain. It does not contain business rules or knowledge. It does not have state reflecting the business situation, but it can have state that reflects the progress of a task for the user or the program. Since the project is based on CQRS/EventSourcing architecture, there are Commands, CommandHandlers, Queries, QueryHandlers, EventHandlers and some primary validation.
+It orchestrates the interactions between the external world (API/SPA) and the domain. It is concerned with defining the jobs needed to be done to accomplish a certain application task. Since the project is based on CQRS/EventSourcing architecture, it defines and handles Commands, Queries and Events.
 <br/><br/>
 
 ### Infrastructure
-The Infrastructure layer takes care of the application's infrastructure and issues not related to the business itself. It is responsible for Database (ORM) creation, Domain Repository implementation, Identity authentication and User Claims, JWT Authentication, Tooling for processing and publishing messages and, Inversion of Control and all and everything we need to support the other layers.
+It takes care of the application's infrastructure and issues not related to the business itself. It is responsible for Database (ORM) creation, Domain Repository implementation, Identity authentication and User Claims, JWT Authentication, tooling for processing and publishing messages, Inversion of Control and, everything else needed to support the upper layers.
 <br/><br/>
 
 ### Presentation
-- <b>API</b>: This API provides all endpoints necessary to perform commands/queries to the Application. The routes are secured using policies that match to the user claims. 
-- <b>SPA</b>: Built using the ASPNET Core Web Application with Angular template. This SPA is a simple and lightweight application using modular components to provide a functional workflow and usability. It contains Angular/Typescript Models, Services, Pipes, Guards, Interceptors and secured routes. 
-- <b>Background Service</b>: Last but not least there's a background service listening to the Stored Events, processing and publishing them asynchronously. 
+- <b>Web API</b>: A restful API providing endpoints with secured routes based on user claims. 
+  It also implements and host a <b>BackgroundService</b> for processing and publishing stored events.
+- <b>SPA</b>: A lightweight Angular-based application using modular components to provide a functional and user-friendly UI.
 <hr>
 
-### Mainly used technologies:
+### Technologies used:
 <ul>
   <li>
     <a href='https://get.asp.net' target="_blank">ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx' target="_blank">C#</a>
@@ -67,9 +63,10 @@ The Infrastructure layer takes care of the application's infrastructure and issu
     <ul>
       <li>.NET 5</li>
       <li>Entity Framework Core 5.0.5</li>
-      <li>ASP.NET Core with JWT Bearer Authentication</li>
-      <li>ASP.NET Identity Core</li>
-      <li><a href='https://github.com/falberthen/BuildingBlocks.CQRS' target="_blank">BuildingBlocks.CQRS 2.0.0</a></li>
+      <li>ASP.NET Core Web API</li>
+      <li>ASP.NET Core Identity</li>
+      <li>JWT Bearer Authentication</li>
+      <li><a href='https://github.com/falberthen/BuildingBlocks.CQRS' target="_blank">BuildingBlocks.CQRS 2.x</a></li>
       <li>MediatR</li> 
       <li>Fluent Validation</li>
       <li>Automapper</li>
@@ -79,7 +76,7 @@ The Infrastructure layer takes care of the application's infrastructure and issu
     </ul>
   </li>
   <li>
-    <a href='https://angular.io/' target="_blank">Angular 9</a> and <a href='http://www.typescriptlang.org/' target="_blank">TypeScript</a> for the front-end with:
+    <a href='https://angular.io/' target="_blank">Angular 12</a> and <a href='http://www.typescriptlang.org/' target="_blank">TypeScript</a> for the front-end with:
     <ul>
       <li>Bootstrap</li>
       <li>NgBootstrap</li>
@@ -95,10 +92,13 @@ The Infrastructure layer takes care of the application's infrastructure and issu
 ### What do you need to run it:
 
 <ul>
-  <li>The latest <a href="https://dotnet.microsoft.com/download" target="_blank">.NET Core SDK</a> and <a href="https://www.microsoft.com/en-us/sql-server/sql-server-downloads" target="_blank">SQL Server</a> for the back-end, and change the connection string values in appsettings.json if you need. <br>Of course you can use other database technologies, but you will have to setup Entity Framework to it.</li>
-  <li><a href='https://nodejs.org' target="_blank">NodeJs</a> for the front-end in case you need to install packages.</li>
-  <li>Set EcommerceDDD.DataSeed as Startup project and run it once to add some products.</li>
-  <li>Set EcommerceDDD.WebApp as Startup project to use the SPA WebApp.</li>
+  <li>The latest <a href="https://dotnet.microsoft.com/download" target="_blank">.NET Core SDK</a> and <a href="https://www.microsoft.com/en-us/sql-server/sql-server-downloads" target="_blank">SQL Server</a> for the database.<br>Entity Framework can be used with other technologies, but some configuration may be needed.</li>
+  <li><a href='https://nodejs.org' target="_blank">NodeJs</a> for the front-end.</li>
+  <li>Set EcommerceDDD.Api as the <b>Startup project</b> to run the API and the BackgroundService.</li>
+  <li>Using a terminal, navigate to <b>/EcommerceDDD.Spa</b>, run <code>npm install</code> for the node packages if first time. 
+  <br>Use <code>ng serve</code> for building and serving the SPA on <b>http://localhost:4200
+  </b></li>
 </ul>
 
-<b>When registering your customer for the first time, it will create the Identity tables. No database update / migration commands are needed.</b>
+<b>When registering your first customer, it will create the database structure automatically.</b>
+<br><b>You may want to set EcommerceDDD.DataSeed as Startup project and run it once to add some products.</b>
