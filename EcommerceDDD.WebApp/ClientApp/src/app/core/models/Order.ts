@@ -4,6 +4,7 @@ export class Order {
   orderLines: OrderLine[] = [];
   createdAt: Date;
   totalPrice: number;
+  status: string;
 }
 
 export class OrderLine{

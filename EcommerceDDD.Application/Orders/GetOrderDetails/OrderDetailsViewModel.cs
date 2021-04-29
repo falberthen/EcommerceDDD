@@ -11,6 +11,7 @@ namespace EcommerceDDD.Application.Orders.GetOrderDetails
         public List<OrderLinesDetailsViewModel> OrderLines { get; set; } = new List<OrderLinesDetailsViewModel>();
         public double TotalPrice { get; private set; }
         public string CreatedAt { get; set; }
+        public string Status { get; set; }
 
         public void CalculateTotalOrderPrice()
         {

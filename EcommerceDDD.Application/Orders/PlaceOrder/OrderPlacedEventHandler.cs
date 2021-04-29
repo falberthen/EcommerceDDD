@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Application.Base;
@@ -12,28 +11,24 @@ namespace EcommerceDDD.Application.Orders.PlaceOrder
 {
     public class OrderPlacedEventHandler : INotificationHandler<OrderPlacedEvent>
     {
-        private readonly IServiceScopeFactory _scopeFactory;
+        private readonly IEcommerceUnitOfWork _unitOfWork;
 
-        public OrderPlacedEventHandler(IServiceScopeFactory scopeFactory)
+        public OrderPlacedEventHandler(IEcommerceUnitOfWork unitOfWork)
         {
-            _scopeFactory = scopeFactory;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task Handle(OrderPlacedEvent orderPlacedEvent, CancellationToken cancellationToken)
-        {
-            using (var scope = _scopeFactory.CreateScope())
-            {
-                var unitOfWork = scope.ServiceProvider.GetRequiredService<IEcommerceUnitOfWork>();
-                var order = await unitOfWork.OrderRepository.GetById(orderPlacedEvent.OrderId);
+        {    
+            var order = await _unitOfWork.OrderRepository.GetById(orderPlacedEvent.OrderId);
 
-                if (order == null)
-                    throw new InvalidDataException("Order not found.");
+            if (order == null)
+                throw new InvalidDataException("Order not found.");
 
-                // Creating a payment
-                var payment = new Payment(Guid.NewGuid(), order);
-                await unitOfWork.PaymentRepository.Add(payment);
-                await unitOfWork.CommitAsync();
-            }
+            // Creating a payment
+            var payment = new Payment(Guid.NewGuid(), order);
+            await _unitOfWork.PaymentRepository.Add(payment);
+            await _unitOfWork.CommitAsync();            
         }
     }
 }

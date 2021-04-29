@@ -1,14 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Domain;
-using EcommerceDDD.Domain.Core.Messaging;
 using Microsoft.Extensions.Logging;
 
 namespace EcommerceDDD.Infrastructure.Messaging
 {
+    public interface IMessageProcessor
+    {
+        Task ProcessMessages(int batchSize, CancellationToken cancellationToken);
+    }
+
     public class MessageProcessor : IMessageProcessor
     {
         private readonly IEcommerceUnitOfWork _unitOfWork;
@@ -29,19 +31,20 @@ namespace EcommerceDDD.Infrastructure.Messaging
             foreach (var message in messages)
             {
                 try
-                {
-                    //Setting processed date
-                    message.SetProcessedAt(DateTime.Now);
+                {                    
                     await _publisher.Publish(message, cancellationToken);
 
+                    message.SetProcessedAt(DateTime.Now);
                     _unitOfWork.MessageRepository.UpdateProcessedAt(message);
                     await _unitOfWork.CommitAsync();
+
+                    _logger.LogInformation($"\n--- Message {message.Id} processed at {message.ProcessedAt}\n");
                 }
                 catch (Exception ex)
                 {                    
-                    _logger.LogError($"\n-------- An error has occurred while processing message {message.Id}: {ex.Message}\n");
+                    _logger.LogError($"\n--- An error has occurred while processing message {message.Id}: {ex.Message}\n");
                 }
             }
         }
-    }
+    }    
 }

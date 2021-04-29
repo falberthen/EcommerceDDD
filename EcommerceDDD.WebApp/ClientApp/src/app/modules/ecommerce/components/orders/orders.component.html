@@ -28,15 +28,22 @@
             <td colspan="4" class="table-row">
               <div class="date-placed-container">
                 <b>Order placed on:</b>
-                <span class="date-placed-text" >
+                <span class="date-placed-text">
                   {{order.createdAt | date}}
-                </span>
+                </span>                
               </div>
               <div class="total-to-pay-container">
                 <b>Total:</b>
                 <span class="total-to-pay-text" >
                   {{order.totalPrice.toFixed(2)}} {{order.orderLines[0].currencySymbol}}
                 </span>
+              </div>              
+            </td>
+          </tr>
+          <tr>
+            <td colspan="4" class="table-row">
+              <div class="order-status-container">
+                <div class="order-status-text">{{order.status}}</div>
               </div>
             </td>
           </tr>

@@ -9,10 +9,12 @@ namespace EcommerceDDD.Infrastructure.Messaging
 {
     public static class StoredEventHelper
     {
-        public static StoredEvent BuildFromDomainEvent<TE>(TE @event, IEventSerializer serializer) where TE : Event
+        public static StoredEvent BuildFromDomainEvent<TE>(TE @event, IEventSerializer serializer) 
+            where TE : Event
         {
             if (null == @event)
                 throw new ArgumentNullException(nameof(@event));
+
             if (null == serializer)
                 throw new ArgumentNullException(nameof(serializer));
 
