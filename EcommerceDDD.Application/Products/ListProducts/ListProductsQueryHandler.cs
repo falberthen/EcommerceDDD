@@ -8,6 +8,7 @@ using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.Services;
 using EcommerceDDD.Domain.Shared;
 using BuildingBlocks.CQRS.QueryHandling;
+using System;
 
 namespace EcommerceDDD.Application.Customers.ListCustomerEventHistory
 {
@@ -41,7 +42,7 @@ namespace EcommerceDDD.Application.Customers.ListCustomerEventHistory
                 {
                     Id = product.Id,
                     Name = product.Name,
-                    Price = convertedPrice.Value.ToString(),
+                    Price = Math.Round(convertedPrice.Value, 2).ToString(),
                     CurrencySymbol = currency.Symbol
                 });
             }

@@ -12,6 +12,9 @@ using System.Collections.Generic;
 using System.Net;
 using BuildingBlocks.CQRS.CommandHandling;
 using EcommerceDDD.WebApp.Controllers.Base;
+using BuildingBlocks.CQRS.QueryHandling;
+using EcommerceDDD.Application.EventSourcing.StoredEventsData;
+using EcommerceDDD.Application.Orders.ListOrderStoredEvents;
 
 namespace EcommerceDDD.WebApp.Controllers
 {
@@ -38,11 +41,8 @@ namespace EcommerceDDD.WebApp.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetOrders([FromRoute] Guid customerId)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
             var query = new GetOrdersQuery(customerId);
-            return Response(await Mediator.Send(query));
+            return await Response(query);
         }
 
         /// <summary>
@@ -56,11 +56,8 @@ namespace EcommerceDDD.WebApp.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetOrderDetails([FromRoute] Guid orderId)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
             var query = new GetOrderDetailsQuery(orderId);
-            return Response(await Mediator.Send(query));
+            return await Response(query);
         }
 
         /// <summary>
@@ -74,11 +71,23 @@ namespace EcommerceDDD.WebApp.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> PlaceOrder([FromRoute] Guid cartId, [FromBody] PlaceOrderRequest request)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
+            var command = new PlaceOrderCommand(cartId, request.CustomerId, request.Currency);
+            return await Response(command);
+        }
 
-            var command = new PlaceOrderCommand(cartId, request.CustomerId, request.Currency);                        
-            return Response(await Mediator.Send(command));
+        /// <summary>
+        /// Returns the Stored Events of a given Order
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <returns></returns>
+        [HttpGet, Route("{orderId:guid}/events")]
+        [Authorize(Policy = "CanRead")]
+        [ProducesResponseType(typeof(QueryHandlerResult<IList<StoredEventData>>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ListEvents([FromRoute] Guid orderId)
+        {
+            var query = new ListOrderStoredEventsQuery(orderId);
+            return await Response(query);
         }
     }
 }

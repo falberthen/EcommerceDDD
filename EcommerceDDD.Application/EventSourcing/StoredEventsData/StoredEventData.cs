@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace EcommerceDDD.Application.EventSourcing.StoredEvents
+﻿namespace EcommerceDDD.Application.EventSourcing.StoredEventsData
 {
+    /// <summary>
+    /// Common fields to display with the stored event payload data
+    /// </summary>
     public class StoredEventData
     {
         public string Id { get; set; }

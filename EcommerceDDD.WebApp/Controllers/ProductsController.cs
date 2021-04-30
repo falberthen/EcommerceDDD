@@ -30,11 +30,8 @@ namespace EcommerceDDD.WebApp.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetProducts([FromRoute]string currency)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
             var query = new ListProductsQuery(currency);
-            return Response(await Mediator.Send(query));
+            return await Response(query);
         }
     }
 }

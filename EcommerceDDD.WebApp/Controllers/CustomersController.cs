@@ -12,11 +12,11 @@ using EcommerceDDD.Application.Customers.AuthenticateCustomer;
 using EcommerceDDD.Application.Customers.ListCustomerStoredEvents;
 using System.Net;
 using EcommerceDDD.Application.Customers.ViewModels;
-using EcommerceDDD.Application.EventSourcing.StoredEvents;
 using System.Collections.Generic;
 using BuildingBlocks.CQRS.CommandHandling;
 using BuildingBlocks.CQRS.QueryHandling;
 using EcommerceDDD.WebApp.Controllers.Base;
+using EcommerceDDD.Application.EventSourcing.StoredEventsData;
 
 namespace EcommerceDDD.WebApp.Controllers
 {
@@ -47,11 +47,8 @@ namespace EcommerceDDD.WebApp.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DoLogin([FromBody]AuthenticateCustomerRequest request)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
             var query = new AuthenticateCustomerQuery(request.Email, request.Password);
-            return Response(await Mediator.Send(query));
+            return await Response(query);
         }
 
         /// <summary>
@@ -65,11 +62,8 @@ namespace EcommerceDDD.WebApp.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromBody]RegisterCustomerRequest request)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
             var command = _mapper.Map<RegisterCustomerCommand>(request);
-            return Response(await Mediator.Send(command));
+            return await Response(command);
         }
 
         /// <summary>
@@ -84,11 +78,8 @@ namespace EcommerceDDD.WebApp.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Update([FromRoute]Guid customerId, [FromBody]UpdateCustomerRequest request)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
             var command = new UpdateCustomerCommand(customerId, request.Name);
-            return Response(await Mediator.Send(command));
+            return await Response(command);
         }
 
         /// <summary>
@@ -102,11 +93,8 @@ namespace EcommerceDDD.WebApp.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ListEvents([FromRoute]Guid customerId)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
             var query = new ListCustomerStoredEventsQuery(customerId);
-            return Response(await Mediator.Send(query));
+            return await Response(query);
         }
     }
 }

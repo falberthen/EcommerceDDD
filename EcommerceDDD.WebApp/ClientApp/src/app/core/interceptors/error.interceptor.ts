@@ -23,18 +23,21 @@ export class ServerErrorInterceptor implements HttpInterceptor {
     const notifier = this.injector.get(NotificationService);
 
     return next.handle(request).pipe(
-      //retry(1),
       catchError((error: any) => {
         if (error instanceof HttpErrorResponse) {
           errorResult = errorService.getServerErrorMessage(error);
-          if (errorResult.error) {
-            Object.keys(errorResult.error.errors).forEach(function (key, index) {
-              const error = errorResult.error.errors[key];
-              if(error.errorMessage)
-                notifier.showError(error.errorMessage);
-              else
+          const errorObject = errorResult.error;
+
+          if (errorObject) {
+            if(errorObject.errors) {
+              Object.keys(errorObject.errors).forEach(function (key, index) {
+                const error = errorObject.errors[key];
                 notifier.showError(error);
-            });
+              });
+            }
+
+            if(errorObject.message)
+                notifier.showError(errorObject.message);
           }
 
           return throwError(error);

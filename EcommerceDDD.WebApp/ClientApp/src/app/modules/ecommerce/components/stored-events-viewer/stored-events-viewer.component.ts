@@ -28,12 +28,24 @@ export class StoredEventsViewerComponent implements OnInit {
         case "CustomerStoredEventData":
           this.getCustomerStoredEvents();
         break;
+        case "OrderStoredEventData":
+          this.getOrderStoredEvents();
+        break;
       }
     }
   }
 
   getCustomerStoredEvents() {
     this.storedEventService.getCustomerStoredEvents(this.aggregateId)
+    .subscribe((result: any) => {
+      this.storedEventData = result.data;
+      this.storedEventDataRows = this.getObjectKeys(result.data[0]);
+    },
+    error => console.error(error));
+  }
+
+  getOrderStoredEvents() {
+    this.storedEventService.getOrderStoredEvents(this.aggregateId)
     .subscribe((result: any) => {
       this.storedEventData = result.data;
       this.storedEventDataRows = this.getObjectKeys(result.data[0]);
@@ -69,5 +81,4 @@ export class StoredEventsViewerComponent implements OnInit {
   close() {
     this.destroyComponent.emit();
   }
-
 }

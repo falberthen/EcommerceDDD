@@ -8,8 +8,8 @@ namespace EcommerceDDD.Domain.Shared
     {
         public string Code { get; }
         public string Symbol { get; }
-        public static Currency USDollar => new Currency("USD", "US$");
-        public static Currency CanadianDollar => new Currency("CAD", "CA$");
+        public static Currency USDollar => new Currency("USD", "$");
+        public static Currency CanadianDollar => new Currency("CAD", "CDN$");
         public static Currency Euro => new Currency("EUR", "€");
 
         public Currency(string code, string symbol)
@@ -32,8 +32,8 @@ namespace EcommerceDDD.Domain.Shared
             return code switch
             {
                 "USD" => new Currency(USDollar.Code, USDollar.Symbol),
-                "CAD" => new Currency(CanadianDollar.Code, USDollar.Symbol),
-                "EUR" => new Currency(Euro.Code, USDollar.Symbol),
+                "CAD" => new Currency(CanadianDollar.Code, CanadianDollar.Symbol),
+                "EUR" => new Currency(Euro.Code, Euro.Symbol),
                 _ => throw new BusinessRuleException($"Invalid code {code}")
             };
         }

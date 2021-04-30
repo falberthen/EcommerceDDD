@@ -25,14 +25,14 @@
             </td>
             <td class="table-row">{{ cartItem.productName }}</td>
             <td class="table-row">{{ cartItem.productQuantity }}</td>
-            <td class="table-row">{{ cartItem.productPrice }} {{ cartItem.currencySymbol }}</td>
+            <td class="table-row">{{ cartItem.currencySymbol }} {{ cartItem.productPrice }}</td>
           </tr>
           <tr>
             <td colspan="4" class="table-row">
               <div class="total-to-pay-container">
                 <b>Total:</b>
                 <span class="total-to-pay-text" >
-                  {{cart.totalPrice.toFixed(2)}} {{cart.cartItems[0].currencySymbol}}
+                  {{cart.cartItems[0].currencySymbol}} {{cart.totalPrice.toFixed(2)}}
                 </span>
               </div>
             </td>

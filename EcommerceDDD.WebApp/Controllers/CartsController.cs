@@ -37,11 +37,8 @@ namespace EcommerceDDD.WebApp.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SaveCart([FromBody] SaveCartRequest request)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
             var command = new SaveCartCommand(request.CustomerId, request.Product);
-            return Response(await Mediator.Send(command));
+            return await Response(command);
         }
 
         /// <summary>
@@ -56,11 +53,8 @@ namespace EcommerceDDD.WebApp.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetCartDetails([FromRoute] Guid customerId, [FromRoute] string currency)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
             var query = new GetCartDetailsQuery(customerId, currency);
-            return Response(await Mediator.Send(query));
+            return await Response(query);
         }
     }
 }

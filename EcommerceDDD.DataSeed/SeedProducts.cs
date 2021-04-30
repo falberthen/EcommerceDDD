@@ -15,7 +15,8 @@ namespace EcommerceDDD.DataSeed
             //Creating products
             List<Product> products = new List<Product>();
             var rand = new Random();
-
+            
+            Console.WriteLine("Adding products...\n");
             for (char c = 'A'; c <= 'Z'; c++)
             {
                 var price = new decimal(rand.NextDouble());
@@ -23,7 +24,8 @@ namespace EcommerceDDD.DataSeed
                 products.Add(product);
                 Console.WriteLine($"Added {product.Name} for {Math.Round(product.Price.Value, 2)} {product.Price.CurrencyCode}");
             }
-
+            
+            Console.WriteLine("\nProducts added.");
             await unitOfWork.ProductRepository.AddRange(products);
             await unitOfWork.CommitAsync();
         }

@@ -13,7 +13,7 @@
           <tbody>
             <tr *ngFor="let product of products | sortBy: 'asc':'name'; index as i">
               <td class="table-row-text name-column">{{ product.name }}</td>
-              <td class="table-row-text price-column">{{ product.price }} {{ product.currencySymbol }}</td>
+              <td class="table-row-text price-column">{{ product.currencySymbol }} {{ product.price }}</td>
               <td class="add-column">
                 <div *ngIf="product.quantity == 0">
                   <button (click)="saveCart(product)" class="btn btn-primary add-change-item-button">
