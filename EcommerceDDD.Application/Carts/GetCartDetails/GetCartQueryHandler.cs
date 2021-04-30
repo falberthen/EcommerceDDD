@@ -58,15 +58,15 @@ namespace EcommerceDDD.Application.Carts.GetCartDetails
                 foreach (var cartItem in cart.Items)
                 {
                     var product = products.Single(p => p.Id == cartItem.Product.Id);
-
+                    var convertedPrice = _currencyConverter.Convert(currency, cartItem.Product.Price);
                     viewModel.CartItems.Add(new CartItemDetailsViewModel
-                    {
+                    {                        
                         ProductId = cartItem.Product.Id,
                         ProductQuantity = cartItem.Quantity,
                         ProductName = product.Name,
-                        ProductPrice = _currencyConverter.Convert(currency, cartItem.Product.Price).Value,
+                        ProductPrice = Math.Round(convertedPrice.Value, 2),
                         CurrencySymbol = currency.Symbol,
-                    });
+                    }); ;
                 }
 
                 viewModel.CalculateTotalOrderPrice();

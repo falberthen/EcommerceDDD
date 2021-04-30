@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using BuildingBlocks.CQRS.QueryHandling;
-using EcommerceDDD.Application.EventSourcing.StoredEvents;
 using FluentValidation;
 using FluentValidation.Results;
+using EcommerceDDD.Application.EventSourcing.StoredEventsData;
 
 namespace EcommerceDDD.Application.Customers.ListCustomerStoredEvents
 {

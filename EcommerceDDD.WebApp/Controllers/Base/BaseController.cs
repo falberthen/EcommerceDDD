@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using BuildingBlocks.CQRS.CommandHandling;
 using BuildingBlocks.CQRS.QueryHandling;
 using EcommerceDDD.Infrastructure.Identity.Helpers;
@@ -23,22 +24,55 @@ namespace EcommerceDDD.WebApp.Controllers.Base
             Mediator = mediator;
         }
 
-        protected new IActionResult Response<TResult>(QueryHandlerResult<TResult> queryHandlerResult)
+        protected async new Task<IActionResult> Response<TResult>(Query<TResult> query)
         {
-            return queryHandlerResult.ValidationResult.IsValid ? OkActionResult(queryHandlerResult.Result) 
-                : BadRequestActionResult(queryHandlerResult.ValidationResult.Errors);
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
+                var queryHandlerResult = await Mediator.Send(query);
+                return queryHandlerResult.ValidationResult.IsValid ? OkActionResult(queryHandlerResult.Result)
+                    : BadRequestActionResult(queryHandlerResult.ValidationResult.Errors);
+            }
+            catch (Exception e)
+            {
+                return BadRequestActionResult(e.Message);
+            }            
         }
 
-        protected new IActionResult Response<TResult>(CommandHandlerResult<TResult> commandHandlerResult) where TResult : struct
+        protected async new Task<IActionResult> Response<TResult>(Command<TResult> command) 
+            where TResult : struct
         {
-            return commandHandlerResult.ValidationResult.IsValid ? OkActionResult(commandHandlerResult.Id)
-                : BadRequestActionResult(commandHandlerResult.ValidationResult.Errors);
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
+                var commandHandlerResult = await Mediator.Send(command);
+                return commandHandlerResult.ValidationResult.IsValid ? OkActionResult(commandHandlerResult.Id)
+                    : BadRequestActionResult(commandHandlerResult.ValidationResult.Errors);
+            }
+            catch (Exception e)
+            {
+                return BadRequestActionResult(e.Message);
+            }
         }
 
-        protected new IActionResult Response(CommandHandlerResult commandHandlerResult)
+        protected new IActionResult Response(Command commandHandlerResult)
         {
-            return commandHandlerResult.ValidationResult.IsValid ? OkActionResult(commandHandlerResult)
+            try
+            {
+                if (!ModelState.IsValid)
+                return BadRequest();
+
+                return commandHandlerResult.ValidationResult.IsValid ? OkActionResult(commandHandlerResult)
                 : BadRequestActionResult(commandHandlerResult.ValidationResult.Errors);
+            }
+            catch (Exception e)
+            {
+                return BadRequestActionResult(e.Message);
+            }
         }
 
         private IActionResult BadRequestActionResult(dynamic resultErrors)
@@ -46,7 +80,7 @@ namespace EcommerceDDD.WebApp.Controllers.Base
             return BadRequest(new
             {
                 success = false,
-                errors = resultErrors
+                message = resultErrors
             });
         }
 

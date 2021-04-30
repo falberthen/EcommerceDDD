@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, AfterViewInit, ComponentFactoryResolver, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, OnDestroy, OnInit, ComponentFactoryResolver, ViewChild, ViewContainerRef } from '@angular/core';
 import { AuthService } from 'app/core/services/auth.service';
 import { TokenStorageService } from 'app/core/token-storage.service';
 import { Subscription } from 'rxjs';
@@ -54,13 +54,13 @@ export class NavMenuComponent implements OnInit, OnDestroy {
 
   getCurrentUserEmail(){
     if(this.isLoggedIn){
-      const currentCustomer = this.authService.currentCustomer.subscribe(customer => {
+      this.authService.currentCustomer.subscribe(customer => {
         this.customer = customer;
       });
     }
   }
 
-  showStoredEventsViewer() {
+  showCustomerStoredEvents() {
     this.isModalOpen = true;
     this.storedEventViewerContainer.clear();
     const factory = this.resolver.resolveComponentFactory(StoredEventsViewerComponent);

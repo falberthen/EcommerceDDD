@@ -1,11 +1,11 @@
 ## Welcome to Ecommerce DDD
 
-My main goal with this project is to demonstrate how to build a full-stack application using principles of domain-driven design and SOLID to provide an expressive and cohesive code.
-Besides, provide an easy-to-use and scalable API to power a SPA application. Last but not least, I also demonstrate the powerful combination of the CQRS pattern and Event Sourcing. 
+This project is a showcase of how to build a full-stack application using domain-driven design and SOLID principles to provide an expressive and cohesive code.
+Besides, provide an easy-to-use and scalable API to power a SPA application. Last but not least, I also demonstrate the powerful combination of the CQRS pattern with Event Sourcing. 
 
-<br>The chosen domain was e-commerce, although this project is not intended to be a real or much less ideal implementation of e-commerce solution for production, it is capable of demonstrating a purchasing cycle that goes from product selection to final payment through established business rules.
+<br>Although this project is not intended to be a real or much less ideal implementation of an e-commerce solution, it is capable of demonstrating a purchasing cycle that goes from product selection to final payment through established business rules and events.
 
-<br>Thanks for getting here, and <b>let your star</b> if you liked it! I will always keep working to improve the project with optimizations, tests, and refactorings. 
+<br>Thanks for getting here, and <b>let your star</b> if you liked it! I will always keep working to improve it. 
 
 <hr>
 
@@ -14,12 +14,12 @@ Besides, provide an easy-to-use and scalable API to power a SPA application. Las
 <a href="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/login.png" target="_blank">
 <img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/login.png"/>
 </a>
-<br/><br/><br/>
+<br/><br/>
 <a href="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/products.png" target="_blank">
 <img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/products.png" />
 </a>
 
-<br/><br/><br/>
+<br/><br/>
 <a href="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/orders.png" target="_blank">
 <img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/orders.png" />
 </a>
@@ -27,6 +27,11 @@ Besides, provide an easy-to-use and scalable API to power a SPA application. Las
 <br/><br/>
 <a href="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/events.png" target="_blank">
 <img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/events.png" />
+</a>
+
+<br/><br/>
+<a href="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/order-events.png" target="_blank">
+<img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/order-events.png" />
 </a>
 
 <hr>

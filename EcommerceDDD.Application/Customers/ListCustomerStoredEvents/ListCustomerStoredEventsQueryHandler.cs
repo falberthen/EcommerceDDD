@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using EcommerceDDD.Application.EventSourcing;
 using EcommerceDDD.Domain;
-using EcommerceDDD.Application.EventSourcing.StoredEvents;
 using BuildingBlocks.CQRS.QueryHandling;
+using EcommerceDDD.Application.EventSourcing.StoredEventsData;
+using EcommerceDDD.Application.EventSourcing;
 
 namespace EcommerceDDD.Application.Customers.ListCustomerStoredEvents
 {
@@ -12,19 +12,15 @@ namespace EcommerceDDD.Application.Customers.ListCustomerStoredEvents
     {
         private readonly IEcommerceUnitOfWork _unitOfWork;
 
-        public ListCustomerStoredEventsQueryHandler(
-            IEcommerceUnitOfWork unitOfWork)
+        public ListCustomerStoredEventsQueryHandler(IEcommerceUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
         public override async Task<IList<CustomerStoredEventData>> ExecuteQuery(ListCustomerStoredEventsQuery request, CancellationToken cancellationToken)
         {
-            IList<CustomerStoredEventData> customerStoredEvents = new List<CustomerStoredEventData>();
             var storedEvents = await _unitOfWork.MessageRepository.GetByAggregateId(request.CustomerId, cancellationToken);
-            
-            CustomerEventNormatizer normatizer = new CustomerEventNormatizer();
-            customerStoredEvents = normatizer.ToHistoryData(storedEvents);
+            IList<CustomerStoredEventData> customerStoredEvents = StoredEventPrettier<CustomerStoredEventData>.ToPretty(storedEvents);
             return customerStoredEvents;
         }
     }

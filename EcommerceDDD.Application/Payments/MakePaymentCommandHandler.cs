@@ -57,7 +57,7 @@ namespace EcommerceDDD.Application.Payments
             if (failRandomly)
             {
                 var randomResult = new Random().Next(100) % 2 == 0;
-                paymentResult = !randomResult ? throw new Exception("Payment not authorized.") : randomResult;
+                paymentResult = !randomResult ? throw new Exception($"Payment {payment.Id} not authorized.") : randomResult;
             }
                             
             return paymentResult;
