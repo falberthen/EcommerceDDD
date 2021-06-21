@@ -1,14 +1,12 @@
-﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
 namespace EcommerceDDD.Domain.Core.Messaging
 {
-    public abstract class Event : Message, INotification
+    public abstract class Event : Message, IDomainEvent
     {
         public DateTime CreatedAt { get; private set; }
-        protected Event()
+
+        public Event()
         {
             CreatedAt = DateTime.Now;
         }

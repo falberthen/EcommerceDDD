@@ -7,7 +7,8 @@ using EcommerceDDD.Application.Orders.GetOrderDetails;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.Shared;
 using BuildingBlocks.CQRS.QueryHandling;
-using EcommerceDDD.Domain.Orders;
+using EcommerceDDD.Domain.Customers;
+using EcommerceDDD.Domain.Customers.Orders;
 
 namespace EcommerceDDD.Application.Orders.GetOrders
 {
@@ -24,30 +25,32 @@ namespace EcommerceDDD.Application.Orders.GetOrders
         public override async Task<List<OrderDetailsViewModel>> ExecuteQuery(GetOrdersQuery query, CancellationToken cancellationToken)
         {
             List<OrderDetailsViewModel> viewModelList = new List<OrderDetailsViewModel>();
-            var orders = await _unitOfWork.OrderRepository.GetByCustomerId(query.CustomerId, cancellationToken);
 
-            if (orders == null)
-                throw new InvalidDataException("Orders not found.");
+            var customerId = CustomerId.Of(query.CustomerId);
+            var customer = await _unitOfWork.CustomerRepository.GetCustomerById(customerId, cancellationToken);
 
-            foreach (var order in orders)
+            if (customer == null)
+                throw new InvalidDataException("Custumer not found.");
+
+            foreach (var order in customer.Orders)
             {
-                var payment = await _unitOfWork.PaymentRepository.GetByOrderId(order.Id, cancellationToken);                
+                var payment = await _unitOfWork.PaymentRepository.GetPaymentByOrderId(order.Id, cancellationToken);                
                 var productIds = order.OrderLines.Select(p => p.ProductId).ToList();
-                var products = await _unitOfWork.ProductRepository.GetByIds(productIds, cancellationToken);
+                var products = await _unitOfWork.ProductRepository.GetProductsByIds(productIds, cancellationToken);
 
                 OrderDetailsViewModel viewModel = new OrderDetailsViewModel();
-                viewModel.OrderId = order.Id;
+                viewModel.OrderId = order.Id.Value;
                 viewModel.CreatedAt = order.CreatedAt.ToString();
                 viewModel.Status = PrettifyOrderStatus(order.Status);
 
                 foreach (var orderLine in order.OrderLines)
                 {
-                    var product = products.Single(p => p.Id == orderLine.ProductId);
+                    var product = products.Single((System.Func<Domain.Products.Product, bool>)(p => p.Id == orderLine.ProductId));
                     var currency = Currency.FromCode(orderLine.ProductExchangePrice.CurrencyCode);
 
                     viewModel.OrderLines.Add(new OrderLinesDetailsViewModel
                     {
-                        ProductId = orderLine.ProductId,
+                        ProductId = orderLine.ProductId.Value,
                         ProductQuantity = orderLine.Quantity,
                         ProductPrice = orderLine.ProductExchangePrice.Value,
                         ProductName = product.Name,

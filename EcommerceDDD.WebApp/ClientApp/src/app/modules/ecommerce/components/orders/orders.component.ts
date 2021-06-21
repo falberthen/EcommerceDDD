@@ -54,7 +54,7 @@ export class OrdersComponent implements OnInit {
   }
 
   getOrderDetails() {
-    this.orderService.getOrderDetails(this.orderId)
+    this.orderService.getOrderDetails(this.customerId, this.orderId)
       .subscribe((result: any) => {
           this.orders.push(result.data);
         },

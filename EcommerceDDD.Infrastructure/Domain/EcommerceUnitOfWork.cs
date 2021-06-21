@@ -7,7 +7,6 @@ using EcommerceDDD.Domain.Carts;
 using EcommerceDDD.Domain.Core.Base;
 using EcommerceDDD.Domain.Core.Messaging;
 using EcommerceDDD.Domain.Customers;
-using EcommerceDDD.Domain.Orders;
 using EcommerceDDD.Domain.Payments;
 using EcommerceDDD.Domain.Products;
 using EcommerceDDD.Infrastructure.Database.Context;
@@ -18,7 +17,6 @@ namespace EcommerceDDD.Infrastructure.Domain
     public class EcommerceUnitOfWork : UnitOfWork<EcommerceDDDContext>, IEcommerceUnitOfWork
     {
         public ICustomerRepository CustomerRepository { get; }
-        public IOrderRepository OrderRepository { get; }
         public IStoredEventRepository MessageRepository { get; }
         public IProductRepository ProductRepository { get; }
         public ICartRepository CartRepository { get; }
@@ -28,7 +26,6 @@ namespace EcommerceDDD.Infrastructure.Domain
 
         public EcommerceUnitOfWork(EcommerceDDDContext dbContext,
             ICustomerRepository customerRepository,
-            IOrderRepository orderRepository,
             IStoredEventRepository messageRepository,
             IProductRepository productRepository,
             IPaymentRepository paymentRepository,
@@ -36,7 +33,6 @@ namespace EcommerceDDD.Infrastructure.Domain
             IEventSerializer eventSerializer) : base(dbContext)
         {
             CustomerRepository = customerRepository ?? throw new ArgumentNullException(nameof(customerRepository));
-            OrderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
             MessageRepository = messageRepository ?? throw new ArgumentNullException(nameof(messageRepository));
             ProductRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
             CartRepository = cartRepository ?? throw new ArgumentNullException(nameof(cartRepository));
@@ -48,15 +44,15 @@ namespace EcommerceDDD.Infrastructure.Domain
         protected async override Task StoreEvents(CancellationToken cancellationToken)
         {
             var entities = DbContext.ChangeTracker.Entries()
-                    .Where(e => e.Entity is AggregateRoot<Guid> c && c.DomainEvents != null)
-                    .Select(e => e.Entity as AggregateRoot<Guid>)
+                    .Where(e => e.Entity is IAggregateRoot c && c.DomainEvents != null)
+                    .Select(e => e.Entity as IAggregateRoot)
                     .ToArray();
 
             foreach (var entity in entities)
             {
                 var messages = entity.DomainEvents
                     .Select(e => 
-                    StoredEventHelper.BuildFromDomainEvent(e, _eventSerializer)).ToArray();
+                    StoredEventHelper.BuildFromDomainEvent(e as Event, _eventSerializer)).ToArray();
 
                 entity.ClearDomainEvents();
                 await DbContext.AddRangeAsync(messages, cancellationToken);

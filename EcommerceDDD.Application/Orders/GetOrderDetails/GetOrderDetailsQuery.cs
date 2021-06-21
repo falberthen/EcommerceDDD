@@ -7,10 +7,12 @@ namespace EcommerceDDD.Application.Orders.GetOrderDetails
 {
     public class GetOrderDetailsQuery : Query<OrderDetailsViewModel>
     {
+        public Guid CustomerId { get; set; }
         public Guid OrderId { get; set; }
 
-        public GetOrderDetailsQuery(Guid orderId)
+        public GetOrderDetailsQuery(Guid customerId, Guid orderId)
         {
+            CustomerId = customerId;
             OrderId = orderId;
         }
 
@@ -24,6 +26,7 @@ namespace EcommerceDDD.Application.Orders.GetOrderDetails
     {
         public GetOrderDetailsQueryValidator()
         {
+            RuleFor(x => x.CustomerId).NotEqual(Guid.Empty).WithMessage("CustomerId is empty.");
             RuleFor(x => x.OrderId).NotEqual(Guid.Empty).WithMessage("OrderId is empty.");
         }
     }

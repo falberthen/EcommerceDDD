@@ -19,12 +19,11 @@ export class OrderService extends RestService {
     return this.get(this.controllerName + '/' + customerId);
   }
 
-  public getOrderDetails(orderId: string): Observable<any>{
-    return this.get(this.controllerName + '/' + orderId + '/details');
+  public getOrderDetails(customerId: string, orderId: string): Observable<any>{
+    return this.get(this.controllerName + '/' + customerId + '/' + orderId + '/details');
   }
 
   public placeOrder(cartId: string, request: PlaceOrderRequest): Observable<any>{
     return this.post(this.controllerName + '/' + cartId, request);
   }
-
 }

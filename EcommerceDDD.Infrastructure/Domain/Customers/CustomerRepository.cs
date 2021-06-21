@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Domain.Customers;
@@ -19,22 +17,23 @@ namespace EcommerceDDD.Infrastructure.Domain.Customers
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public async Task Add(Customer customer, CancellationToken cancellationToken = default)
+        public async Task AddCustomer(Customer customer, CancellationToken cancellationToken = default)
         {
             await _dbContext.Customers.AddAsync(customer, cancellationToken);
         }
 
-        public async Task<Customer> GetById(Guid id, CancellationToken cancellationToken = default)
+        public async Task<Customer> GetCustomerById(CustomerId id, CancellationToken cancellationToken = default)
         {
             return await _dbContext.Customers
                 .Where(c => c.Id == id)
                 .FirstOrDefaultAsync(cancellationToken);
         }
 
-        public async Task<Customer> GetByEmail(string email, CancellationToken cancellationToken = default)
+        public async Task<Customer> GetCustomerByEmail(string email, CancellationToken cancellationToken = default)
         {
-            return await _dbContext.Customers.Where(c => c.Email == email)
+            return await _dbContext.Customers
+                .Where(c => c.Email == email)
                 .FirstOrDefaultAsync(cancellationToken);
-        } 
+        }
     }
 }

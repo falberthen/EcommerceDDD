@@ -1,4 +1,4 @@
-﻿using EcommerceDDD.Domain.Orders;
+﻿using EcommerceDDD.Domain.Customers.Orders;
 using EcommerceDDD.Domain.Payments;
 
 namespace EcommerceDDD.Domain.Services

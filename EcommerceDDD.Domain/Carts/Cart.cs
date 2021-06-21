@@ -3,52 +3,54 @@ using System.Collections.Generic;
 using System.Linq;
 using EcommerceDDD.Domain.Core.Base;
 using EcommerceDDD.Domain.Customers;
-using EcommerceDDD.Domain.Products;
 
 namespace EcommerceDDD.Domain.Carts
 {
-    public class Cart : AggregateRoot<Guid>
-    {
-        public Customer Customer { get; private set; }
+    public class Cart : AggregateRoot<CartId>
+    {        
+        public CustomerId CustomerId { get; private set; }
         public IReadOnlyCollection<CartItem> Items => _items;        
         private readonly List<CartItem> _items = new List<CartItem>();
 
-        public Cart(Guid id, Customer customer)
+        public Cart(CartId cartId, CustomerId customerId)
         {
-            Id = id;
-            if (customer == null)
+            Id = cartId;
+            if (customerId == null)
                 throw new BusinessRuleException("The customer is required.");
 
-            Customer = customer;
+            CustomerId = customerId;
         }
 
-        public CartItem AddItem(Product product, int quantity)
+        public CartItem AddItem(CartItemProductData productData)
         {
-            if (product == null)
+            if (productData == null)
                 throw new BusinessRuleException("The cart item must have a product.");
 
-            if (quantity == 0)
+            if (productData.Quantity == 0)
                 throw new BusinessRuleException("The product quantity must be at last 1.");
 
-            var cartItem = new CartItem(Guid.NewGuid(), product, quantity);
+            var cartItem = new CartItem(Guid.NewGuid(), 
+                productData.ProductId, 
+                productData.Quantity);
+
             _items.Add(cartItem);
 
             return cartItem;
         }
 
-        public CartItem ChangeCart(Product product, int quantity)
+        public CartItem ChangeCart(CartItemProductData productData)
         {
-            if (product == null)
+            if (productData == null)
                 throw new BusinessRuleException("The cart item must have a product.");
 
-            var cartItem = _items.FirstOrDefault(i => i.Product.Id == product.Id);
+            var cartItem = _items.FirstOrDefault((Func<CartItem, bool>)(i => i.ProductId.Value == productData.ProductId.Value));
 
             if (cartItem == null) 
-                cartItem = AddItem(product, quantity); // Add item
-            else if(quantity == 0) 
+                cartItem = AddItem(productData); // Add item
+            else if(productData.Quantity == 0) 
                 RemoveItem(cartItem.Id); // Remove Item
             else 
-                cartItem.ChangeQuantity(quantity); // Change item quantity
+                cartItem.ChangeQuantity(productData.Quantity); // Change item quantity
 
             return cartItem;
         }

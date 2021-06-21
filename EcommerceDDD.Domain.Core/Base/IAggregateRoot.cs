@@ -8,7 +8,7 @@ namespace EcommerceDDD.Domain.Core.Base
     /// </summary>
     public interface IAggregateRoot
     {
-        IReadOnlyCollection<Event> DomainEvents { get; }
+        IReadOnlyCollection<IDomainEvent> DomainEvents { get; }
         void ClearDomainEvents();
     }
 }

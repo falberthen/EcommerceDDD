@@ -1,7 +1,4 @@
-﻿using EcommerceDDD.Domain;
-using EcommerceDDD.Domain.Customers;
-
-namespace EcommerceDDD.Domain.Services
+﻿namespace EcommerceDDD.Domain.Services
 {
     public class CustomerUniquenessChecker : ICustomerUniquenessChecker
     {
@@ -14,7 +11,7 @@ namespace EcommerceDDD.Domain.Services
 
         public bool IsUserUnique(string customerEmail)
         {
-            var customer = _unitOfWork.CustomerRepository.GetByEmail(customerEmail).Result;
+            var customer = _unitOfWork.CustomerRepository.GetCustomerByEmail(customerEmail).Result;
             return customer == null;
         }
     }

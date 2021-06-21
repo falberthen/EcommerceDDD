@@ -8,6 +8,7 @@ using EcommerceDDD.Domain.Shared;
 using FluentAssertions;
 using NSubstitute;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -37,8 +38,8 @@ namespace EcommerceDDD.Tests.Commands
 
         [Fact]
         public async Task Order_has_been_placed_for_customer()
-        {                                    
-            var currency = Currency.USDollar;
+        {
+            var currency = Currency.CanadianDollar;
             var productPrice = 12.5;
             var productQuantity = 10;
             var customerEmail = "test@domain.com";
@@ -50,18 +51,26 @@ namespace EcommerceDDD.Tests.Commands
             var customerUniquenessChecker = Substitute.For<ICustomerUniquenessChecker>();
             customerUniquenessChecker.IsUserUnique(customerEmail).Returns(true);
 
-            var customer = Customer.CreateCustomer(Guid.NewGuid(), customerEmail, "Customer X", customerUniquenessChecker);
-            _customerRepository.GetById(Arg.Any<Guid>()).Returns(customer);
+            var customerId = CustomerId.Of(Guid.NewGuid());
+            var customer = Customer.CreateCustomer(customerEmail, "Customer X", customerUniquenessChecker);
 
-            var product = new Product(Guid.NewGuid(), "Product X", productMoney);
-            _productRepository.GetById(Arg.Any<Guid>()).Returns(product);
+            _customerRepository.GetCustomerById(Arg.Any<CustomerId>()).Returns(customer);
 
-            var cart = new Cart(Guid.NewGuid(), customer);
-            cart.AddItem(product, productQuantity);
-            _cartRepository.GetById(cart.Id).Returns(cart);
+            var productId = ProductId.Of(Guid.NewGuid());
+            var product = new Product(productId, "Product X", productMoney);
+            _productRepository.GetProductById(Arg.Any<ProductId>()).Returns(product);
+
+            var productData = new CartItemProductData(productId, product.Price, productQuantity);
+            var cart = new Cart(CartId.Of(Guid.NewGuid()), customerId);
+            cart.AddItem(productData);
+
+            List<Product> products = new List<Product>() { product };
+            _cartRepository.GetCartById(cart.Id).Returns(cart);
+            _productRepository.GetProductsByIds(Arg.Any<List<ProductId>>()).Returns(products);
 
             var placeOrderCommandHandler = new PlaceOrderCommandHandler(_unitOfWork, _currencyConverter);
-            var placeOrderCommand = new PlaceOrderCommand(cart.Id, customer.Id, currency.Code);
+            var placeOrderCommand = new PlaceOrderCommand(cart.Id.Value, customerId.Value, currency.Code);
+
             var orderResult = await placeOrderCommandHandler.Handle(placeOrderCommand, CancellationToken.None);
 
             await _unitOfWork.Received(1).CommitAsync(Arg.Any<CancellationToken>());

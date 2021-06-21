@@ -1,18 +1,15 @@
 ﻿using EcommerceDDD.Domain.Core.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace EcommerceDDD.Domain.Payments.Events
 {
     public class PaymentCreatedEvent : Event
     {
-        public Guid PaymentId { get; private set; }
+        public PaymentId PaymentId { get; private set; }
 
-        public PaymentCreatedEvent(Guid paymentId)
+        public PaymentCreatedEvent(PaymentId paymentId)
         {
             PaymentId = paymentId;
-            AggregateId = paymentId;
+            AggregateId = paymentId.Value;
         }
     }
 }

@@ -8,6 +8,7 @@ using EcommerceDDD.Domain.Shared;
 using BuildingBlocks.CQRS.QueryHandling;
 using EcommerceDDD.Domain.Carts;
 using System;
+using EcommerceDDD.Domain.Customers;
 
 namespace EcommerceDDD.Application.Carts.GetCartDetails
 {
@@ -26,7 +27,8 @@ namespace EcommerceDDD.Application.Carts.GetCartDetails
         {
             CartDetailsViewModel viewModel = new CartDetailsViewModel();
 
-            var customer = await _unitOfWork.CustomerRepository.GetById(query.CustomerId, cancellationToken);
+            var customerId = CustomerId.Of(query.CustomerId);
+            var customer = await _unitOfWork.CustomerRepository.GetCustomerById(customerId, cancellationToken);
 
             if (customer == null)
                 throw new InvalidDataException("Customer not found.");
@@ -34,34 +36,35 @@ namespace EcommerceDDD.Application.Carts.GetCartDetails
             if (string.IsNullOrWhiteSpace(query.Currency))
                 throw new InvalidDataException("Currency can't be empty.");
 
-            var cart = await _unitOfWork.CartRepository.GetByCustomerId(query.CustomerId, cancellationToken);
+            var cart = await _unitOfWork.CartRepository.GetCartByCustomerId(customerId, cancellationToken);
 
             if (cart == null)
             {
                 // Creating cart
-                cart = new Cart(Guid.NewGuid(), customer);
-                await _unitOfWork.CartRepository.Add(cart, cancellationToken);
+                var cartId = CartId.Of(Guid.NewGuid());
+                cart = new Cart(cartId, customerId);
+                await _unitOfWork.CartRepository.AddCart(cart, cancellationToken);
                 await _unitOfWork.CommitAsync();
             }                
 
             var currency = Currency.FromCode(query.Currency);
 
-            viewModel.CartId = cart.Id;
+            viewModel.CartId = cart.Id.Value;
             if (cart.Items.Count > 0)
             {
-                var productIds = cart.Items.Select(p => p.Product.Id).ToList();
-                var products = await _unitOfWork.ProductRepository.GetByIds(productIds, cancellationToken);
+                var productIds = cart.Items.Select(p => p.ProductId).ToList();
+                var products = await _unitOfWork.ProductRepository.GetProductsByIds(productIds, cancellationToken);
 
                 if (products == null)
                     throw new InvalidDataException("Products not found");
 
                 foreach (var cartItem in cart.Items)
                 {
-                    var product = products.Single(p => p.Id == cartItem.Product.Id);
-                    var convertedPrice = _currencyConverter.Convert(currency, cartItem.Product.Price);
+                    var product = products.Single(p => p.Id == cartItem.ProductId);
+                    var convertedPrice = _currencyConverter.Convert(currency, product.Price);
                     viewModel.CartItems.Add(new CartItemDetailsViewModel
                     {                        
-                        ProductId = cartItem.Product.Id,
+                        ProductId = cartItem.ProductId.Value,
                         ProductQuantity = cartItem.Quantity,
                         ProductName = product.Name,
                         ProductPrice = Math.Round(convertedPrice.Value, 2),
