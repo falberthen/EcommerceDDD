@@ -1,27 +1,27 @@
 ﻿using System;
 using EcommerceDDD.Domain.Payments.Events;
 using EcommerceDDD.Domain.Core.Base;
-using EcommerceDDD.Domain.Orders;
 using EcommerceDDD.Domain.Customers;
+using EcommerceDDD.Domain.Customers.Orders;
 
 namespace EcommerceDDD.Domain.Payments
 {
-    public class Payment : AggregateRoot<Guid>
+    public class Payment : AggregateRoot<PaymentId>
     {
-        public Order Order { get; private set; }
-        public Customer Customer { get; private set; }
+        public OrderId OrderId { get; private set; }
+        public CustomerId CustomerId { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime? PaidAt { get; private set; }
         public PaymentStatus Status { get; private set; }
 
-        public Payment(Guid id, Order order)
+        public Payment(PaymentId paymentId, CustomerId customerId, OrderId orderId)
         {
-            if (order == null)
+            if (orderId.Value == Guid.Empty)
                 throw new BusinessRuleException("The order is required.");
 
-            Id = id;
-            Order = order;
-            Customer = order.Customer;
+            Id = paymentId;
+            OrderId = orderId;
+            CustomerId = customerId;
             CreatedAt = DateTime.Now;
             Status = PaymentStatus.ToPay;
             AddDomainEvent(new PaymentCreatedEvent(Id));

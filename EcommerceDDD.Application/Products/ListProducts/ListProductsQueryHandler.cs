@@ -28,7 +28,7 @@ namespace EcommerceDDD.Application.Customers.ListCustomerEventHistory
         public override async Task<IList<ProductViewModel>> ExecuteQuery(ListProductsQuery query, CancellationToken cancellationToken)
         {
             IList<ProductViewModel> productsViewMiodel = new List<ProductViewModel>();
-            var products = await _unitOfWork.ProductRepository.ListAll(cancellationToken);
+            var products = await _unitOfWork.ProductRepository.ListAllProducts(cancellationToken);
 
             if (string.IsNullOrEmpty(query.Currency))
                 throw new InvalidDataException("Currency code cannot be empty.");
@@ -40,7 +40,7 @@ namespace EcommerceDDD.Application.Customers.ListCustomerEventHistory
 
                 productsViewMiodel.Add(new ProductViewModel
                 {
-                    Id = product.Id,
+                    Id = product.Id.Value,
                     Name = product.Name,
                     Price = Math.Round(convertedPrice.Value, 2).ToString(),
                     CurrencySymbol = currency.Symbol

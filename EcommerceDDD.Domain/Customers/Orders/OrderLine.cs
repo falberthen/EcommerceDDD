@@ -1,25 +1,27 @@
 ﻿using System;
 using EcommerceDDD.Domain.Core.Base;
+using EcommerceDDD.Domain.Products;
 using EcommerceDDD.Domain.Services;
 using EcommerceDDD.Domain.Shared;
 
-namespace EcommerceDDD.Domain.Orders
+namespace EcommerceDDD.Domain.Customers.Orders
 {
     public class OrderLine : Entity<Guid>
     {
-        public Guid OrderId { get; private set; }
-        public Guid ProductId { get; private set; }
+        public OrderId OrderId { get; private set; }
+        public ProductId ProductId { get; private set; }
         public int Quantity { get; private set; }
         public Money ProductBasePrice { get; private set; }
         public Money ProductExchangePrice { get; private set; }
 
-        public OrderLine(Guid id, Guid orderId, Guid productId, Money productPrice, 
+        public OrderLine(Guid id, OrderId orderId, ProductId productId, Money productPrice,
             int quantity, Currency currency, ICurrencyConverter currencyConverter)
         {
             Id = id;
             OrderId = orderId;
             ProductId = productId;
             Quantity = quantity;
+            
             CalculateProductPrices(productPrice, currency, currencyConverter);
         }
 

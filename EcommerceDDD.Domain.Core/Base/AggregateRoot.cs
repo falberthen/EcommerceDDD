@@ -9,12 +9,12 @@ namespace EcommerceDDD.Domain.Core.Base
     /// <typeparam name="TKey"></typeparam>
     public abstract class AggregateRoot<TKey> : Entity<TKey>, IAggregateRoot
     {
-        public IReadOnlyCollection<Event> DomainEvents => _domainEvents?.AsReadOnly();
+        public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents?.AsReadOnly();
 
-        public void AddDomainEvent<TE>(TE @event) where TE : Event
+        protected void AddDomainEvent(IDomainEvent domainEvent)
         {
-            _domainEvents = _domainEvents ?? new List<Event>();
-            _domainEvents.Add(@event);
+            _domainEvents = _domainEvents ?? new List<IDomainEvent>();
+            _domainEvents.Add(domainEvent);
         }
 
         public void ClearDomainEvents()
@@ -22,6 +22,6 @@ namespace EcommerceDDD.Domain.Core.Base
             _domainEvents.Clear();
         }
 
-        private List<Event> _domainEvents;
+        private List<IDomainEvent> _domainEvents;
     }
 }

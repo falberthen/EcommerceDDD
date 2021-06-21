@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Application.Base;
 using BuildingBlocks.CQRS.CommandHandling;
+using EcommerceDDD.Domain.Customers;
 
 namespace EcommerceDDD.Application.Customers.UpdateCustomer
 {
@@ -18,7 +19,8 @@ namespace EcommerceDDD.Application.Customers.UpdateCustomer
 
         public override async Task<Guid> ExecuteCommand(UpdateCustomerCommand request, CancellationToken cancellationToken)
         {
-            var customer = await _unitOfWork.CustomerRepository.GetById(request.CustomerId, cancellationToken);
+            var customerId = CustomerId.Of(request.CustomerId);
+            var customer = await _unitOfWork.CustomerRepository.GetCustomerById(customerId, cancellationToken);
 
             if (customer == null)
                 throw new InvalidDataException("Customer not found.");
@@ -26,7 +28,7 @@ namespace EcommerceDDD.Application.Customers.UpdateCustomer
             customer.SetName(request.Name);
             await _unitOfWork.CommitAsync();
 
-            return customer.Id;
+            return customer.Id.Value;
         }
     }
 }

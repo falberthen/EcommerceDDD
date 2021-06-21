@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace EcommerceDDD.Domain.Core.Base
+﻿namespace EcommerceDDD.Domain.Core.Base
 {
     /// <summary>
     /// Value object base class

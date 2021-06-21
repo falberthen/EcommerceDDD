@@ -41,7 +41,7 @@ export const APP_ROUTES: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'orders/:orderId',
+    path: 'orders/:customerId/:orderId',
     component: OrdersComponent,
     canActivate: [AuthGuard],
     pathMatch: 'full'

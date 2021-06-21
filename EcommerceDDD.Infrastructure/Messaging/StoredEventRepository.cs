@@ -32,7 +32,7 @@ namespace EcommerceDDD.Infrastructure.Messaging
         public async Task<IList<StoredEvent>> GetByAggregateId(Guid aggregateId, CancellationToken cancellationToken)
         {
             var results = await _dbContext.StoredEvents
-                .Where(c=>c.AggregateId == aggregateId)
+                .Where(c => c.AggregateId == aggregateId)
                 .OrderBy(m => m.CreatedAt)
                 .ToListAsync(cancellationToken);
 

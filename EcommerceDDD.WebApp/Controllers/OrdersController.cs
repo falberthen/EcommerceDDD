@@ -50,13 +50,13 @@ namespace EcommerceDDD.WebApp.Controllers
         /// </summary>
         /// <param name="orderId"></param>
         /// <returns></returns>
-        [HttpGet, Route("{orderId:guid}/details")]
+        [HttpGet, Route("{customerId:guid}/{orderId:guid}/details")]
         [Authorize(Policy = "CanRead")]
         [ProducesResponseType(typeof(OrderDetailsViewModel), (int)HttpStatusCode.OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetOrderDetails([FromRoute] Guid orderId)
+        public async Task<IActionResult> GetOrderDetails([FromRoute] Guid customerId, [FromRoute] Guid orderId)
         {
-            var query = new GetOrderDetailsQuery(orderId);
+            var query = new GetOrderDetailsQuery(customerId, orderId);
             return await Response(query);
         }
 

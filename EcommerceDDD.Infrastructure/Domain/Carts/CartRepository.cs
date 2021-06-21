@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Domain.Carts;
@@ -19,27 +17,22 @@ namespace EcommerceDDD.Infrastructure.Domain.Carts
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task Add(Cart cart, CancellationToken cancellationToken = default)
+        public async Task AddCart(Cart cart, CancellationToken cancellationToken = default)
         {
             await _context.Carts.AddAsync(cart, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<Cart> GetById(Guid cartId, CancellationToken cancellationToken = default)
+        public async Task<Cart> GetCartById(CartId cartId, CancellationToken cancellationToken = default)
         {
             return await _context.Carts
-                .Include(c => c.Items)
-                .ThenInclude(ci => ci.Product)
                 .FirstOrDefaultAsync(x => x.Id == cartId, cancellationToken);
         }
 
-        public async Task<Cart> GetByCustomerId(Guid customerId, CancellationToken cancellationToken = default)
+        public async Task<Cart> GetCartByCustomerId(CustomerId customerId, CancellationToken cancellationToken = default)
         {
             return await _context.Carts
-                .Include(c => c.Customer)
-                .Include(c => c.Items)
-                .ThenInclude(ci => ci.Product)
-                .FirstOrDefaultAsync(x => x.Customer.Id == customerId, cancellationToken);
+                .FirstOrDefaultAsync(x => x.CustomerId == customerId, cancellationToken);
         }
     }
 }

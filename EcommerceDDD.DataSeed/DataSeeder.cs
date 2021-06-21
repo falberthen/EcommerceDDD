@@ -16,8 +16,6 @@ using Microsoft.EntityFrameworkCore;
 using EcommerceDDD.Domain.Payments;
 using EcommerceDDD.Domain.Services;
 using EcommerceDDD.Infrastructure.Domain.Carts;
-using EcommerceDDD.Domain.Orders;
-using EcommerceDDD.Infrastructure.Domain.Orders;
 using EcommerceDDD.Domain.Carts;
 using EcommerceDDD.Infrastructure.Domain.CurrencyExchange;
 
@@ -47,7 +45,6 @@ namespace EcommerceDDD.DataSeed
             options.UseSqlServer(connString));
 
             services.AddScoped<IEcommerceUnitOfWork, EcommerceUnitOfWork>();
-            services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<ICartRepository, CartRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();

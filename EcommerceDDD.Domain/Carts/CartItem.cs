@@ -6,13 +6,13 @@ namespace EcommerceDDD.Domain.Carts
 {
     public class CartItem : Entity<Guid>
     {
-        public Product Product { get; private set; }
+        public ProductId ProductId { get; private set; }
         public int Quantity { get; private set; }
 
-        public CartItem(Guid id, Product product, int quantity)
+        public CartItem(Guid id, ProductId productId, int quantity)
         {
             Id = id;
-            Product = product;
+            ProductId = productId;
             Quantity = quantity;
         }
 

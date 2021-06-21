@@ -121,7 +121,7 @@ export class ProductSelectionComponent implements OnInit {
       .subscribe((result: any) => {
           this.localStorageService.clearKey('cartItems');
           this.notificationService.showSuccess('Order placed with success.');
-          this.router.navigate(['/orders/' + result.data]);
+          this.router.navigate(['/orders/' + this.customerId + '/' + result.data]);
         },
         (error) => console.error(error)
       );

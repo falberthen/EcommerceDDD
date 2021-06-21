@@ -2,13 +2,14 @@
 using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Domain.Core.Base;
+using EcommerceDDD.Domain.Customers;
 
 namespace EcommerceDDD.Domain.Carts
 {
     public interface ICartRepository : IRepository<Cart>
     {
-        Task Add(Cart cart, CancellationToken cancellationToken = default);
-        Task<Cart> GetById(Guid cartId, CancellationToken cancellationToken = default);
-        Task<Cart> GetByCustomerId(Guid customerId, CancellationToken cancellationToken = default);
+        Task AddCart(Cart cart, CancellationToken cancellationToken = default);
+        Task<Cart> GetCartById(CartId cartId, CancellationToken cancellationToken = default);
+        Task<Cart> GetCartByCustomerId(CustomerId customerId, CancellationToken cancellationToken = default);
     }
 }

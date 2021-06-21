@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using EcommerceDDD.Domain.Customers;
+using EcommerceDDD.Domain.Customers.Orders;
 using EcommerceDDD.Domain.Payments;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -14,13 +14,17 @@ namespace EcommerceDDD.Infrastructure.Database.Configurations
         {
             builder.ToTable("Payments", "dbo");
 
-            builder.HasKey(b => b.Id);
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id)
+                .HasConversion(
+                    v => v.Value,
+                    v => new PaymentId(v));
 
-            builder.Property<Guid>("CustomerId")
-                .HasColumnName("CustomerId");
+            builder.Property(e => e.CustomerId)
+                .HasConversion(guid => guid.Value, s => new CustomerId(s));
 
-            builder.Property<Guid>("OrderId")
-                .HasColumnName("OrderId");            
+            builder.Property(e => e.OrderId)
+                .HasConversion(guid => guid.Value, s => new OrderId(s));
 
             builder.Property<DateTime>("CreatedAt")
                 .HasColumnName("CreatedAt");

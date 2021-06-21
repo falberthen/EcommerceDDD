@@ -4,9 +4,12 @@ using System.Threading.Tasks;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Application.Base;
 using EcommerceDDD.Domain.Services;
-using EcommerceDDD.Domain.Orders;
 using EcommerceDDD.Domain.Shared;
 using BuildingBlocks.CQRS.CommandHandling;
+using EcommerceDDD.Domain.Customers;
+using EcommerceDDD.Domain.Carts;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace EcommerceDDD.Application.Orders.PlaceOrder
 {
@@ -25,8 +28,11 @@ namespace EcommerceDDD.Application.Orders.PlaceOrder
 
         public override async Task<Guid> ExecuteCommand(PlaceOrderCommand command, CancellationToken cancellationToken)
         {
-            var cart = await _unitOfWork.CartRepository.GetById(command.CartId, cancellationToken);
-            var customer = await _unitOfWork.CustomerRepository.GetById(command.CustomerId, cancellationToken);
+            var cartId = CartId.Of(command.CartId);
+            var cart = await _unitOfWork.CartRepository.GetCartById(cartId, cancellationToken);
+            var customerId = CustomerId.Of(command.CustomerId);
+            var customer = await _unitOfWork.CustomerRepository.GetCustomerById(customerId, cancellationToken);
+            var productsData = new List<CartItemProductData>();
 
             if (customer == null)
                 throw new InvalidDataException("Customer not found.");
@@ -35,15 +41,26 @@ namespace EcommerceDDD.Application.Orders.PlaceOrder
                 throw new InvalidDataException("Cart not found.");
 
             var currency = Currency.FromCode(command.Currency);
-            var order = Order.PlaceOrder(Guid.NewGuid(), cart, currency, _currencyConverter);
+
+            var products = await _unitOfWork.ProductRepository
+                .GetProductsByIds(cart.Items.Select(i => i.ProductId).ToList());
+
+            if (products == null)
+                throw new InvalidDataException("Products couldn't be loaded.");
+
+            foreach (var item in cart.Items)
+            {
+                var product = products.Where(p => p.Id == item.ProductId).FirstOrDefault();
+                productsData.Add(new CartItemProductData(product.Id, product.Price, item.Quantity));
+            }
+
+            var order = customer.PlaceOrder(customerId, productsData, currency, _currencyConverter);
 
             // Cleaning the cart
             cart.Clear();
 
-            await _unitOfWork.OrderRepository.Add(order, cancellationToken);
-            await _unitOfWork.CommitAsync();                                
-
-            return order.Id;
+            await _unitOfWork.CommitAsync();
+            return order.Id.Value;
         }
     }
 }

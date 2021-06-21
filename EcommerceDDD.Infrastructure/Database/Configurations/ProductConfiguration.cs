@@ -11,7 +11,12 @@ namespace EcommerceDDD.Infrastructure.Database.Configurations
         {
             builder.ToTable("Products", "dbo");
 
-            builder.HasKey(r => r.Id);
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id)
+                .HasConversion(
+                    v => v.Value,
+                    v => new ProductId(v));
+
             builder.Property(e => e.CreationDate);
             builder.Property(e => e.Name).HasMaxLength(25).IsRequired();
 
@@ -22,4 +27,4 @@ namespace EcommerceDDD.Infrastructure.Database.Configurations
             });
         }
     }
-}  
+}

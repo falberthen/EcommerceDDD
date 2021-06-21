@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using EcommerceDDD.Domain.Payments.Events;
 using EcommerceDDD.Domain.Services;
 using EcommerceDDD.Domain;
+using System.Linq;
 
 namespace EcommerceDDD.Application.Payments
 {
@@ -26,20 +27,28 @@ namespace EcommerceDDD.Application.Payments
 
         public async Task Handle(PaymentCreatedEvent paymentCreatedEvent, CancellationToken cancellationToken)
         {
-            var payment = await _unitOfWork.PaymentRepository.GetById(paymentCreatedEvent.PaymentId, cancellationToken);
+            var payment = await _unitOfWork.PaymentRepository.GetPaymentById(paymentCreatedEvent.PaymentId, cancellationToken);
+            var customer = await _unitOfWork.CustomerRepository.GetCustomerById(payment.CustomerId, cancellationToken);
 
             if (payment == null)
                 throw new InvalidDataException("Payment not found.");
 
-            if (payment.Order == null)
-                throw new InvalidDataException("Order not found.");
+            if (customer == null)
+                throw new InvalidDataException("Customer not found.");
+
+            var order = customer.Orders.
+                Where(o => o.Id == payment.OrderId)
+                .FirstOrDefault();
+
+            if (order == null)
+                throw new InvalidDataException("order not found.");
 
             // Changing order status
-            _orderStatusWorkflow.CalculateOrderStatus(payment.Order, payment);
+            _orderStatusWorkflow.CalculateOrderStatus(order, payment);
             await _unitOfWork.CommitAsync(cancellationToken);
 
             // Attempting to pay
-            MakePaymentCommand command = new MakePaymentCommand(paymentCreatedEvent.PaymentId);
+            MakePaymentCommand command = new MakePaymentCommand(paymentCreatedEvent.PaymentId.Value);
             await _mediator.Send(command, cancellationToken);          
         }
     }

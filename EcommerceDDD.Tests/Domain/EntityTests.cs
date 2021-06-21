@@ -18,8 +18,9 @@ namespace EcommerceDDD.Tests.Domain
             var customerUniquenessChecker = Substitute.For<ICustomerUniquenessChecker>();
             customerUniquenessChecker.IsUserUnique(email).Returns(true);
 
-            var product = new Product(Guid.NewGuid(), "Product X", Money.Of(10, Currency.USDollar.Code));
-            var customer = Customer.CreateCustomer(Guid.NewGuid(), email, "Customer X", customerUniquenessChecker);
+            var productId = ProductId.Of(Guid.NewGuid());
+            var product = new Product(productId, "Product X", Money.Of(10, Currency.USDollar.Code));
+            var customer = Customer.CreateCustomer(email, "Customer X", customerUniquenessChecker);
 
             (product.GetHashCode() == customer.GetHashCode()).Should().BeFalse();
             product.Equals(customer).Should().BeFalse();
@@ -32,8 +33,9 @@ namespace EcommerceDDD.Tests.Domain
             var productName = "Product X";
             var id = Guid.NewGuid();
 
-            var productX = new Product(id, productName, money);
-            var productY = new Product(id, "Product Y", money);
+            var productId = ProductId.Of(Guid.NewGuid());
+            var productX = new Product(productId, productName, money);
+            var productY = new Product(productId, "Product Y", money);
 
             (productX.GetHashCode() == productY.GetHashCode()).Should().BeTrue();
             productX.Equals(productY).Should().BeTrue();
@@ -45,10 +47,10 @@ namespace EcommerceDDD.Tests.Domain
             var money = Money.Of(10, Currency.USDollar.Code);
             var productName = "Product X";
 
-            var productX = new Product(Guid.NewGuid(), productName, money);
-            var productY = new Product(Guid.NewGuid(), productName, money);
+            var productX = new Product(ProductId.Of(Guid.NewGuid()), productName, money);
+            var productY = new Product(ProductId.Of(Guid.NewGuid()), productName, money);
 
-            (productX.GetHashCode() == productY.GetHashCode()).Should().BeFalse();
+            (productX.GetHashCode() == productY.GetHashCode()).Should().BeTrue();
             productX.Equals(productY).Should().BeFalse();
         }
     }

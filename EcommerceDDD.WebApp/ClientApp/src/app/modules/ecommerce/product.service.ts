@@ -16,5 +16,4 @@ export class ProductService extends RestService {
   public getProducts(currency: string): Observable<Product[]>{
     return this.get('products/' + currency);
   }
-
 }

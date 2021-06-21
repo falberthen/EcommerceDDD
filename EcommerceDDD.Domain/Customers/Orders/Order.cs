@@ -3,43 +3,34 @@ using System.Collections.Generic;
 using System.Linq;
 using EcommerceDDD.Domain.Carts;
 using EcommerceDDD.Domain.Core.Base;
-using EcommerceDDD.Domain.Customers;
-using EcommerceDDD.Domain.Orders.Events;
-using EcommerceDDD.Domain.Payments;
 using EcommerceDDD.Domain.Services;
 using EcommerceDDD.Domain.Shared;
 
-namespace EcommerceDDD.Domain.Orders
+namespace EcommerceDDD.Domain.Customers.Orders
 {
-    public class Order : AggregateRoot<Guid>
+    public class Order : Entity<OrderId>
     {
-        public Customer Customer { get; private set; }
+        public CustomerId CustomerId { get; private set; }
         public OrderStatus Status { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public Money TotalPrice { get; private set; }
         public IReadOnlyList<OrderLine> OrderLines => _orderLines;
         private readonly List<OrderLine> _orderLines = new List<OrderLine>();
 
-        private Order(Guid id, Cart cart, Currency currency, ICurrencyConverter converter)
+        private Order(CustomerId customerId, OrderId orderId, List<CartItemProductData> products, 
+            Currency currency, ICurrencyConverter converter)
         {
-            Id = id;
+            Id = orderId;
+            CustomerId = customerId;
             CreatedAt = DateTime.Now;            
             Status = OrderStatus.Placed;
-            Customer = cart.Customer;
-            BuildOrderLines(cart, currency, converter);
-            AddDomainEvent(new OrderPlacedEvent(Id));
+            BuildOrderLines(products, currency, converter);
         }
 
-        public static Order PlaceOrder(Guid id, Cart cart, Currency currency, ICurrencyConverter currencyConverter)
+        internal static Order CreateNew(CustomerId customerId, List<CartItemProductData> products, 
+            Currency currency, ICurrencyConverter converter)
         {
-            if (!cart.Items.Any())
-                throw new BusinessRuleException("An order should have at least one product.");
-
-            if (currency == null)
-                throw new BusinessRuleException("The currency is required.");
-
-            var order = new Order(id, cart, currency, currencyConverter);
-            return order;
+            return new Order(customerId, OrderId.Of(Guid.NewGuid()), products, currency, converter);
         }
 
         public void ChangeStatus(OrderStatus status)
@@ -47,14 +38,15 @@ namespace EcommerceDDD.Domain.Orders
             Status = status;
         }
 
-        private void BuildOrderLines(Cart cart, Currency currency, ICurrencyConverter converter)
+        private void BuildOrderLines(List<CartItemProductData> products, 
+            Currency currency, ICurrencyConverter converter)
         {
-            var orderLines = cart.Items.Select(c =>
+            var orderLines = products.Select(c =>
                 new OrderLine(
                     Guid.NewGuid(),
                     Id, 
-                    c.Product.Id, 
-                    c.Product.Price, 
+                    c.ProductId,
+                    c.ProductPrice,
                     c.Quantity,
                     currency,
                     converter)).ToArray();

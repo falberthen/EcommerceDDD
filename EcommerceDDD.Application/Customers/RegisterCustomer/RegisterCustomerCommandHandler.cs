@@ -36,15 +36,15 @@ namespace EcommerceDDD.Application.Customers.RegisterCustomer
         {
             try
             {
-                var customer = Customer.CreateCustomer(Guid.NewGuid(), command.Email, command.Name, _uniquenessChecker);
+                var customer = Customer.CreateCustomer(command.Email, command.Name, _uniquenessChecker);
                 if (customer != null)
                 {
-                    await _unitOfWork.CustomerRepository.Add(customer, cancellationToken);
+                    await _unitOfWork.CustomerRepository.AddCustomer(customer, cancellationToken);
                     await CreateUserForCustomer(command);
                     await _unitOfWork.CommitAsync();
                 }
 
-                return customer.Id;
+                return customer.Id.Value;
             }
             catch(Exception)
             {

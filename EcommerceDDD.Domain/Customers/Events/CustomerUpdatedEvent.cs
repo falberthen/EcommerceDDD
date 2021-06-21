@@ -1,18 +1,17 @@
-﻿using System;
-using EcommerceDDD.Domain.Core.Messaging;
+﻿using EcommerceDDD.Domain.Core.Messaging;
 
 namespace EcommerceDDD.Domain.Customers.Events
 {
     public class CustomerUpdatedEvent : Event
     {
-        public Guid CustomerId { get; private set; }
+        public CustomerId CustomerId { get; private set; }
         public string Name { get; private set; }
 
-        public CustomerUpdatedEvent(Guid customerId, string name)
+        public CustomerUpdatedEvent(CustomerId customerId, string name)
         {
             CustomerId = customerId;
             Name = name;
-            AggregateId = CustomerId;
+            AggregateId = CustomerId.Value;
         }        
     }
 }
