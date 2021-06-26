@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.Domain.Services
+﻿namespace EcommerceDDD.Domain.Customers
 {
     public interface ICustomerUniquenessChecker
     {

@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace EcommerceDDD.Domain.Core.Messaging
+namespace EcommerceDDD.Domain.Core.Events
 {
-    public abstract class Event : Message, IDomainEvent
+    public abstract class DomainEvent : Message, IDomainEvent
     {
         public DateTime CreatedAt { get; private set; }
 
-        public Event()
+        public DomainEvent()
         {
             CreatedAt = DateTime.Now;
         }

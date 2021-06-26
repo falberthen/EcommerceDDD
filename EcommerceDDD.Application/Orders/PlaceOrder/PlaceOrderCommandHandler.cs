@@ -3,13 +3,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Application.Base;
-using EcommerceDDD.Domain.Services;
-using EcommerceDDD.Domain.Shared;
 using BuildingBlocks.CQRS.CommandHandling;
 using EcommerceDDD.Domain.Customers;
 using EcommerceDDD.Domain.Carts;
 using System.Linq;
 using System.Collections.Generic;
+using EcommerceDDD.Domain.SharedKernel;
 
 namespace EcommerceDDD.Application.Orders.PlaceOrder
 {

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using EcommerceDDD.Infrastructure.Identity.IdentityUser;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -18,12 +17,14 @@ namespace EcommerceDDD.Infrastructure.Database.Context
         {
             modelBuilder.Entity<User>(b =>
             {
-                b.Property(u => u.Id).HasDefaultValueSql("newsequentialid()");
+                b.Property(u => u.Id)
+                    .HasDefaultValueSql("newsequentialid()");
             });
 
             modelBuilder.Entity<Role>(b =>
             {
-                b.Property(u => u.Id).HasDefaultValueSql("newsequentialid()");
+                b.Property(u => u.Id)
+                    .HasDefaultValueSql("newsequentialid()");
             });
 
             base.OnModelCreating(modelBuilder);

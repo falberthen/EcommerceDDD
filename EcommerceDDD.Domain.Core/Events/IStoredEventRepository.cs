@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace EcommerceDDD.Domain.Core.Messaging
+namespace EcommerceDDD.Domain.Core.Events
 {
     public interface IStoredEventRepository
     {

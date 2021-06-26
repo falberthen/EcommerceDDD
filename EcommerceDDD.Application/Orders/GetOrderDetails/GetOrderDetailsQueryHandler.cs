@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Domain;
-using EcommerceDDD.Domain.Shared;
+using EcommerceDDD.Domain.SharedKernel;
 using BuildingBlocks.CQRS.QueryHandling;
 using EcommerceDDD.Domain.Customers.Orders;
 using EcommerceDDD.Domain.Customers;

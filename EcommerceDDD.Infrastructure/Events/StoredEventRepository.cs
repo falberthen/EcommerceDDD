@@ -4,11 +4,11 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EcommerceDDD.Domain.Core.Messaging;
+using EcommerceDDD.Domain.Core.Events;
 using EcommerceDDD.Infrastructure.Database.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace EcommerceDDD.Infrastructure.Messaging
+namespace EcommerceDDD.Infrastructure.Events
 {
     public class StoredEventRepository : IStoredEventRepository
     {

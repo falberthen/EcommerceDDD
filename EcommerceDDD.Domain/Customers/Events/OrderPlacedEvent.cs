@@ -1,9 +1,9 @@
-﻿using EcommerceDDD.Domain.Core.Messaging;
+﻿using EcommerceDDD.Domain.Core.Events;
 using EcommerceDDD.Domain.Customers.Orders;
 
 namespace EcommerceDDD.Domain.Customers.Events
 {
-    public class OrderPlacedEvent : Event
+    public class OrderPlacedEvent : DomainEvent
     {
         public CustomerId CustomerId { get; private set; }
         public OrderId OrderId { get; private set; }

@@ -1,6 +1,5 @@
 using EcommerceDDD.Domain.Core.Base;
 using EcommerceDDD.Domain.Customers;
-using EcommerceDDD.Domain.Services;
 using FluentAssertions;
 using NSubstitute;
 using System;

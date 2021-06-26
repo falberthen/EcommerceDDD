@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EcommerceDDD.Domain.Carts;
 using EcommerceDDD.Domain.Core.Base;
-using EcommerceDDD.Domain.Services;
-using EcommerceDDD.Domain.Shared;
+using EcommerceDDD.Domain.SharedKernel;
 
 namespace EcommerceDDD.Domain.Customers.Orders
 {

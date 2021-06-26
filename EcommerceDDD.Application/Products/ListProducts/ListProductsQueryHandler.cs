@@ -5,8 +5,7 @@ using EcommerceDDD.Application.Base;
 using EcommerceDDD.Application.Customers.ViewModels;
 using EcommerceDDD.Application.Products.ListProducts;
 using EcommerceDDD.Domain;
-using EcommerceDDD.Domain.Services;
-using EcommerceDDD.Domain.Shared;
+using EcommerceDDD.Domain.SharedKernel;
 using BuildingBlocks.CQRS.QueryHandling;
 using System;
 

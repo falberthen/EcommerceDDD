@@ -8,7 +8,8 @@ using EcommerceDDD.Application.EventSourcing;
 
 namespace EcommerceDDD.Application.Customers.ListCustomerStoredEvents
 {
-    public class ListCustomerStoredEventsQueryHandler : QueryHandler<ListCustomerStoredEventsQuery, IList<CustomerStoredEventData>> 
+    public class ListCustomerStoredEventsQueryHandler : QueryHandler<ListCustomerStoredEventsQuery, 
+        IList<CustomerStoredEventData>> 
     {
         private readonly IEcommerceUnitOfWork _unitOfWork;
 

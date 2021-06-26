@@ -3,9 +3,9 @@
 This project is a showcase of how to build a full-stack application using domain-driven design and SOLID principles to provide an expressive and cohesive code.
 Besides, provide an easy-to-use and scalable API to power a SPA application. Last but not least, I also demonstrate the powerful combination of the CQRS pattern with Event Sourcing. 
 
-<br>Although this project is not intended to be a real or much less ideal implementation of an e-commerce solution, it is capable of demonstrating a purchasing cycle that goes from product selection to final payment through established business rules and events.
+<br>Although this project is not intended to be a real or much less ideal implementation of an e-commerce solution, it is capable of demonstrating a purchasing cycle, that goes from product selection to final payment through established business rules and events.
 
-<br>Thanks for getting here, and <b>let your star</b> if you liked it! I will always keep working to improve it. 
+<br>Thanks for getting here, and <b>let your star</b> if you liked it! I will always keep working to improve it.
 
 <hr>
 
@@ -51,11 +51,11 @@ The Domain layer is where the business lies. It has a modular (organized by fold
 <br/><br/>
 
 ### Application
-The Application layer orchestrates the interactions between the external world (API/SPA) and domain. It does not contain business rules or knowledge. It does not have state reflecting the business situation, but it can have state that reflects the progress of a task for the user or the program. Since the project is based on CQRS/EventSourcing architecture, there are Commands, CommandHandlers, Queries, QueryHandlers, EventHandlers and some primary validation.
+The Application layer orchestrates the interactions between the external world (API/SPA) and domain. It does not define domain logic nor have state reflecting the business situation, but it can have state that reflects the progress of a task for the user or the program. Since the project is based on CQRS/EventSourcing architecture, there are Commands, CommandHandlers, Queries, QueryHandlers, EventHandlers and some primary validation.
 <br/><br/>
 
 ### Infrastructure
-The Infrastructure layer takes care of the application's infrastructure and issues not related to the business itself. It is responsible for Database (ORM) creation, Domain Repository implementation, Identity authentication and User Claims, JWT Authentication, Tooling for processing and publishing messages and, Inversion of Control and all and everything we need to support the other layers.
+The Infrastructure layer takes care of the application's infrastructure and issues not related to the business itself. It is responsible for Database (ORM) creation, Domain Repository implementation, Identity authentication and User Claims, JWT Authentication, Tooling for processing and publishing messages, Inversion of Control and, everything we need to support the upper layers.
 <br/><br/>
 
 ### Presentation

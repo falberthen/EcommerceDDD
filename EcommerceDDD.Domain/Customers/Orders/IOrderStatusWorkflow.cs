@@ -1,7 +1,6 @@
-﻿using EcommerceDDD.Domain.Customers.Orders;
-using EcommerceDDD.Domain.Payments;
+﻿using EcommerceDDD.Domain.Payments;
 
-namespace EcommerceDDD.Domain.Services
+namespace EcommerceDDD.Domain.Customers.Orders
 {
     public interface IOrderStatusWorkflow
     {

@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Application.Orders.GetOrderDetails;
 using EcommerceDDD.Domain;
-using EcommerceDDD.Domain.Shared;
+using EcommerceDDD.Domain.SharedKernel;
 using BuildingBlocks.CQRS.QueryHandling;
 using EcommerceDDD.Domain.Customers;
 using EcommerceDDD.Domain.Customers.Orders;

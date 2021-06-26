@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Http;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Infrastructure.Identity.IdentityUser;
 using Microsoft.AspNetCore.Identity;
-using EcommerceDDD.Domain.Services;
 using EcommerceDDD.Application.Base;
 using BuildingBlocks.CQRS.CommandHandling;
 

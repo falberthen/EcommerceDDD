@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using EcommerceDDD.Application.EventSourcing.StoredEventsData;
-using EcommerceDDD.Domain.Core.Messaging;
+using EcommerceDDD.Domain.Core.Events;
 using Newtonsoft.Json;
 
 namespace EcommerceDDD.Application.EventSourcing

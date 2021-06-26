@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EcommerceDDD.Domain.Core.Messaging
+namespace EcommerceDDD.Domain.Core.Events
 {
     public abstract class Message
     {

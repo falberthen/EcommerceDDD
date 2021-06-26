@@ -1,8 +1,7 @@
 ﻿using System;
 using EcommerceDDD.Domain.Core.Base;
 using EcommerceDDD.Domain.Products;
-using EcommerceDDD.Domain.Services;
-using EcommerceDDD.Domain.Shared;
+using EcommerceDDD.Domain.SharedKernel;
 
 namespace EcommerceDDD.Domain.Customers.Orders
 {

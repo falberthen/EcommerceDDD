@@ -1,4 +1,4 @@
-﻿using EcommerceDDD.Domain.Core.Messaging;
+﻿using EcommerceDDD.Domain.Core.Events;
 using System.Collections.Generic;
 
 namespace EcommerceDDD.Domain.Core.Base

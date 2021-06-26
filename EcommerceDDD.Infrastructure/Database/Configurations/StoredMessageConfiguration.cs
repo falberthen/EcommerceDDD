@@ -1,4 +1,4 @@
-﻿using EcommerceDDD.Domain.Core.Messaging;
+﻿using EcommerceDDD.Domain.Core.Events;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

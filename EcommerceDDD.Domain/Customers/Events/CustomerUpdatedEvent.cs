@@ -1,8 +1,8 @@
-﻿using EcommerceDDD.Domain.Core.Messaging;
+﻿using EcommerceDDD.Domain.Core.Events;
 
 namespace EcommerceDDD.Domain.Customers.Events
 {
-    public class CustomerUpdatedEvent : Event
+    public class CustomerUpdatedEvent : DomainEvent
     {
         public CustomerId CustomerId { get; private set; }
         public string Name { get; private set; }

@@ -3,9 +3,9 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Domain.Payments.Events;
-using EcommerceDDD.Domain.Services;
 using EcommerceDDD.Domain;
 using System.Linq;
+using EcommerceDDD.Domain.Customers.Orders;
 
 namespace EcommerceDDD.Application.Payments
 {

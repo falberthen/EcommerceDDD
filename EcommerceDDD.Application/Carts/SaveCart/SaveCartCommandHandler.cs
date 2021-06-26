@@ -4,10 +4,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.Carts;
-using EcommerceDDD.Domain.Services;
 using BuildingBlocks.CQRS.CommandHandling;
 using EcommerceDDD.Domain.Customers;
 using EcommerceDDD.Domain.Products;
+using EcommerceDDD.Domain.SharedKernel;
 
 namespace EcommerceDDD.Application.Carts.CreateCart
 {

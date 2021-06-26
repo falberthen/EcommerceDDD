@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.Carts;
 using EcommerceDDD.Domain.Core.Base;
-using EcommerceDDD.Domain.Core.Messaging;
+using EcommerceDDD.Domain.Core.Events;
 using EcommerceDDD.Domain.Customers;
 using EcommerceDDD.Domain.Payments;
 using EcommerceDDD.Domain.Products;
 using EcommerceDDD.Infrastructure.Database.Context;
-using EcommerceDDD.Infrastructure.Messaging;
+using EcommerceDDD.Infrastructure.Events;
 
 namespace EcommerceDDD.Infrastructure.Domain
 {
@@ -52,7 +52,7 @@ namespace EcommerceDDD.Infrastructure.Domain
             {
                 var messages = entity.DomainEvents
                     .Select(e => 
-                    StoredEventHelper.BuildFromDomainEvent(e as Event, _eventSerializer)).ToArray();
+                    StoredEventHelper.BuildFromDomainEvent(e as DomainEvent, _eventSerializer)).ToArray();
 
                 entity.ClearDomainEvents();
                 await DbContext.AddRangeAsync(messages, cancellationToken);

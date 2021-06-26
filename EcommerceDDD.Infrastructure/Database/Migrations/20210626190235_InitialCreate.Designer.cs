@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EcommerceDDD.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(EcommerceDDDContext))]
-    [Migration("20210620235714_InitialCreate")]
+    [Migration("20210626190235_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,7 +34,7 @@ namespace EcommerceDDD.Infrastructure.Database.Migrations
                     b.ToTable("Carts", "dbo");
                 });
 
-            modelBuilder.Entity("EcommerceDDD.Domain.Core.Messaging.StoredEvent", b =>
+            modelBuilder.Entity("EcommerceDDD.Domain.Core.Events.StoredEvent", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -206,7 +206,7 @@ namespace EcommerceDDD.Infrastructure.Database.Migrations
                                     b2.WithOwner()
                                         .HasForeignKey("OrderId");
 
-                                    b2.OwnsOne("EcommerceDDD.Domain.Shared.Money", "ProductBasePrice", b3 =>
+                                    b2.OwnsOne("EcommerceDDD.Domain.SharedKernel.Money", "ProductBasePrice", b3 =>
                                         {
                                             b3.Property<Guid>("OrderLineOrderId")
                                                 .HasColumnType("uniqueidentifier");
@@ -231,7 +231,7 @@ namespace EcommerceDDD.Infrastructure.Database.Migrations
                                                 .HasForeignKey("OrderLineOrderId", "OrderLineProductId");
                                         });
 
-                                    b2.OwnsOne("EcommerceDDD.Domain.Shared.Money", "ProductExchangePrice", b3 =>
+                                    b2.OwnsOne("EcommerceDDD.Domain.SharedKernel.Money", "ProductExchangePrice", b3 =>
                                         {
                                             b3.Property<Guid>("OrderLineOrderId")
                                                 .HasColumnType("uniqueidentifier");
@@ -261,7 +261,7 @@ namespace EcommerceDDD.Infrastructure.Database.Migrations
                                     b2.Navigation("ProductExchangePrice");
                                 });
 
-                            b1.OwnsOne("EcommerceDDD.Domain.Shared.Money", "TotalPrice", b2 =>
+                            b1.OwnsOne("EcommerceDDD.Domain.SharedKernel.Money", "TotalPrice", b2 =>
                                 {
                                     b2.Property<Guid>("OrderId")
                                         .HasColumnType("uniqueidentifier");
@@ -293,7 +293,7 @@ namespace EcommerceDDD.Infrastructure.Database.Migrations
 
             modelBuilder.Entity("EcommerceDDD.Domain.Products.Product", b =>
                 {
-                    b.OwnsOne("EcommerceDDD.Domain.Shared.Money", "Price", b1 =>
+                    b.OwnsOne("EcommerceDDD.Domain.SharedKernel.Money", "Price", b1 =>
                         {
                             b1.Property<Guid>("ProductId")
                                 .HasColumnType("uniqueidentifier");

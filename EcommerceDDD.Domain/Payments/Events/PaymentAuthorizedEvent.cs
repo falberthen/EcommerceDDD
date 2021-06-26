@@ -1,8 +1,8 @@
-﻿using EcommerceDDD.Domain.Core.Messaging;
+﻿using EcommerceDDD.Domain.Core.Events;
 
 namespace EcommerceDDD.Domain.Payments.Events
 {
-    public class PaymentAuthorizedEvent : Event
+    public class PaymentAuthorizedEvent : DomainEvent
     {
         public PaymentId PaymentId { get; private set; }
 

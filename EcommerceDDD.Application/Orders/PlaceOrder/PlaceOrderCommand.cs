@@ -1,8 +1,8 @@
 ﻿using System;
-using EcommerceDDD.Domain.Shared;
 using FluentValidation;
 using FluentValidation.Results;
 using BuildingBlocks.CQRS.CommandHandling;
+using EcommerceDDD.Domain.SharedKernel;
 
 namespace EcommerceDDD.Application.Orders.PlaceOrder
 {
