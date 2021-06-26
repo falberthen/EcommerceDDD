@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using EcommerceDDD.Domain.Core.Base;
 
-namespace EcommerceDDD.Domain.Shared
+namespace EcommerceDDD.Domain.SharedKernel
 {
     public class Currency : ValueObject<Currency>
     {

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
-using EcommerceDDD.Domain.Core.Messaging;
+using EcommerceDDD.Domain.Core.Events;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace EcommerceDDD.Infrastructure.Messaging
+namespace EcommerceDDD.Infrastructure.Events
 {
     public interface IMessagePublisher
     {

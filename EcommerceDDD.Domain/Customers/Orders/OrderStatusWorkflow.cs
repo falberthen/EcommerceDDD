@@ -1,8 +1,7 @@
 ﻿using System;
-using EcommerceDDD.Domain.Customers.Orders;
 using EcommerceDDD.Domain.Payments;
 
-namespace EcommerceDDD.Domain.Services
+namespace EcommerceDDD.Domain.Customers.Orders
 {
     /// <summary>
     /// Domain service for calculating Order status

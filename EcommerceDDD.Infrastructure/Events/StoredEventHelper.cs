@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Reflection;
-using EcommerceDDD.Domain.Core.Messaging;
+using EcommerceDDD.Domain.Core.Events;
 using EcommerceDDD.Domain.Customers.Events;
 using MediatR;
 using Newtonsoft.Json;
 
-namespace EcommerceDDD.Infrastructure.Messaging
+namespace EcommerceDDD.Infrastructure.Events
 {
     public static class StoredEventHelper
     {
         public static StoredEvent BuildFromDomainEvent<TE>(TE @event, IEventSerializer serializer) 
-            where TE : Event
+            where TE : DomainEvent
         {
             if (null == @event)
                 throw new ArgumentNullException(nameof(@event));

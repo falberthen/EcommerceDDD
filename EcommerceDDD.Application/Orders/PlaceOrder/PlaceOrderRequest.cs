@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EcommerceDDD.Application.Orders.PlaceOrder
 {
-    public class PlaceOrderRequest
+    public record PlaceOrderRequest
     {
         [Required(ErrorMessage = "The {0} field is required.")]
         public Guid CustomerId { get; set; }

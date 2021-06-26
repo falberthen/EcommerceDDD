@@ -1,5 +1,5 @@
 ﻿using EcommerceDDD.Domain.Products;
-using EcommerceDDD.Domain.Shared;
+using EcommerceDDD.Domain.SharedKernel;
 
 namespace EcommerceDDD.Domain.Carts
 {

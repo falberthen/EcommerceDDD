@@ -1,7 +1,6 @@
 ﻿using EcommerceDDD.Domain.Customers;
 using EcommerceDDD.Domain.Products;
-using EcommerceDDD.Domain.Services;
-using EcommerceDDD.Domain.Shared;
+using EcommerceDDD.Domain.SharedKernel;
 using FluentAssertions;
 using NSubstitute;
 using System;

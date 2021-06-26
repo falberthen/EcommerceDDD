@@ -3,21 +3,21 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using EcommerceDDD.Domain;
-using EcommerceDDD.Domain.Core.Messaging;
+using EcommerceDDD.Domain.Core.Events;
 using EcommerceDDD.Domain.Customers;
 using EcommerceDDD.Domain.Products;
 using Microsoft.Extensions.DependencyInjection;
 using EcommerceDDD.Infrastructure.Database.Context;
 using EcommerceDDD.Infrastructure.Domain.Customers;
-using EcommerceDDD.Infrastructure.Messaging;
 using EcommerceDDD.Infrastructure.Domain.Products;
 using EcommerceDDD.Infrastructure.Domain;
 using Microsoft.EntityFrameworkCore;
 using EcommerceDDD.Domain.Payments;
-using EcommerceDDD.Domain.Services;
 using EcommerceDDD.Infrastructure.Domain.Carts;
 using EcommerceDDD.Domain.Carts;
 using EcommerceDDD.Infrastructure.Domain.CurrencyExchange;
+using EcommerceDDD.Domain.SharedKernel;
+using EcommerceDDD.Infrastructure.Events;
 
 namespace EcommerceDDD.DataSeed
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 using EcommerceDDD.Domain.Core.Base;
-using EcommerceDDD.Domain.Shared;
+using EcommerceDDD.Domain.SharedKernel;
 
 namespace EcommerceDDD.Domain.Products
 {

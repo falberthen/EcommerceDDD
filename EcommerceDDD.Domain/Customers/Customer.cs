@@ -5,8 +5,7 @@ using EcommerceDDD.Domain.Carts;
 using EcommerceDDD.Domain.Core.Base;
 using EcommerceDDD.Domain.Customers.Events;
 using EcommerceDDD.Domain.Customers.Orders;
-using EcommerceDDD.Domain.Services;
-using EcommerceDDD.Domain.Shared;
+using EcommerceDDD.Domain.SharedKernel;
 
 namespace EcommerceDDD.Domain.Customers
 {

@@ -1,5 +1,5 @@
 ﻿using EcommerceDDD.Domain.Carts;
-using EcommerceDDD.Domain.Core.Messaging;
+using EcommerceDDD.Domain.Core.Events;
 using EcommerceDDD.Domain.Customers;
 using EcommerceDDD.Domain.Payments;
 using EcommerceDDD.Domain.Products;
@@ -23,7 +23,7 @@ namespace EcommerceDDD.Infrastructure.Database.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Ignore<Event>();
+            modelBuilder.Ignore<DomainEvent>();
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(EcommerceDDDContext).Assembly);
         }
     }

@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using EcommerceDDD.Domain.Payments.Events;
 using System.IO;
 using EcommerceDDD.Domain;
-using EcommerceDDD.Domain.Services;
 using System.Linq;
+using EcommerceDDD.Domain.Customers.Orders;
 
 namespace EcommerceDDD.Application.Orders.PlaceOrder
 {

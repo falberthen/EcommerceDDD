@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using EcommerceDDD.Domain;
 using Microsoft.Extensions.Logging;
 
-namespace EcommerceDDD.Infrastructure.Messaging
+namespace EcommerceDDD.Infrastructure.Events
 {
     public interface IMessageProcessor
     {

@@ -1,5 +1,4 @@
-﻿using EcommerceDDD.Domain.Services;
-using EcommerceDDD.Domain.Shared;
+﻿using EcommerceDDD.Domain.SharedKernel;
 using System.Collections.Generic;
 using System.Linq;
 

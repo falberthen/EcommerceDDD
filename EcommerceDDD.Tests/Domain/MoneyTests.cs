@@ -1,5 +1,5 @@
 ﻿using EcommerceDDD.Domain.Core.Base;
-using EcommerceDDD.Domain.Shared;
+using EcommerceDDD.Domain.SharedKernel;
 using FluentAssertions;
 using System;
 using Xunit;

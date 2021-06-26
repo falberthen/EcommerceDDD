@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.Domain.Shared;
-
-namespace EcommerceDDD.Domain.Services
+﻿namespace EcommerceDDD.Domain.SharedKernel
 {
     public interface ICurrencyConverter
     {

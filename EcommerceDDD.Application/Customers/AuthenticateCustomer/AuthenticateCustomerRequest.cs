@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace EcommerceDDD.Application.Customers.AuthenticateCustomer
 {
-    public class AuthenticateCustomerRequest
+    public record AuthenticateCustomerRequest
     {
         [Required(ErrorMessage = "The {0} field is mandatory.")]
         [EmailAddress(ErrorMessage = "The field {0} is in an invalid format")]

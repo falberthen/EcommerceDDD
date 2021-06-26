@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using System.Linq;
-using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Microsoft.EntityFrameworkCore.Query;
@@ -23,7 +22,10 @@ namespace EcommerceDDD.Infrastructure.Database.Extensions
             return sql;
         }
 
-        private static object Private(this object obj, string privateField) => obj?.GetType().GetField(privateField, BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(obj);
-        private static T Private<T>(this object obj, string privateField) => (T)obj?.GetType().GetField(privateField, BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(obj);
+        private static object Private(this object obj, string privateField) => obj?.GetType()
+            .GetField(privateField, BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(obj);
+
+        private static T Private<T>(this object obj, string privateField) => (T)obj?.GetType()
+            .GetField(privateField, BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(obj);
     }
 }
