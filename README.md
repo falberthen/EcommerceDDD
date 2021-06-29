@@ -30,14 +30,14 @@ Besides, provide an easy-to-use and scalable API to power a SPA application. Las
 </a>
 
 <br/><br/>
-<a href="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/order-events.PNG" target="_blank">
-<img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/order-events.PNG" />
+<a href="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/order-events.png" target="_blank">
+<img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/order-events.png" />
 </a>
 
 <hr>
 
 ### Architecture diagram
-<img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/Diagram.PNG"/>
+<img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/diagram.png"/>
 
 Following a typical clean architecture, each layer was designed to play a specific role, allowing low coupling and testability. You will find a quick summary about each layer below.
 <hr/>
