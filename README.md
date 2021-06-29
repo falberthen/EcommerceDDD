@@ -11,33 +11,33 @@ Besides, provide an easy-to-use and scalable API to power a SPA application. Las
 
 ### Screenshots 
 
-<a href="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/login.png" target="_blank">
-<img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/login.png"/>
+<a href="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/images/login.png" target="_blank">
+<img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/images/login.png"/>
 </a>
 <br/><br/>
-<a href="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/products.png" target="_blank">
-<img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/products.png" />
-</a>
-
-<br/><br/>
-<a href="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/orders.png" target="_blank">
-<img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/orders.png" />
+<a href="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/images/products.png" target="_blank">
+<img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/images/products.png" />
 </a>
 
 <br/><br/>
-<a href="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/events.png" target="_blank">
-<img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/events.png" />
+<a href="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/images/orders.png" target="_blank">
+<img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/images/orders.png" />
 </a>
 
 <br/><br/>
-<a href="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/order-events.PNG" target="_blank">
-<img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/order-events.PNG" />
+<a href="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/images/events.png" target="_blank">
+<img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/images/events.png" />
+</a>
+
+<br/><br/>
+<a href="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/images/order-events.png" target="_blank">
+<img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/images/order-events.png" />
 </a>
 
 <hr>
 
 ### Architecture diagram
-<img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/Screenshots/Diagram.PNG"/>
+<img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/images/diagram.png"/>
 
 Following a typical clean architecture, each layer was designed to play a specific role, allowing low coupling and testability. You will find a quick summary about each layer below.
 <hr/>

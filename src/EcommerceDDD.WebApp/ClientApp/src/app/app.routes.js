@@ -42,7 +42,7 @@ exports.APP_ROUTES = [
         pathMatch: 'full'
     },
     {
-        path: 'orders/:orderId',
+        path: 'orders/:customerId/:orderId',
         component: orders_component_1.OrdersComponent,
         canActivate: [auth_guard_1.AuthGuard],
         pathMatch: 'full'

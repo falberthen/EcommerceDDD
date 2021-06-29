@@ -17,9 +17,10 @@ namespace EcommerceDDD.WebApp
 {
     public class Startup
     {
+        public IWebHostEnvironment Env { get; set; }
         public IConfiguration Configuration { get; }
 
-        public Startup(IHostEnvironment env)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -28,6 +29,7 @@ namespace EcommerceDDD.WebApp
 
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
+            Env = env;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -81,14 +83,14 @@ namespace EcommerceDDD.WebApp
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
             app.UseRouting();
             app.UseSwaggerSetup();
             app.UseAuthentication();
             app.UseAuthorization();
 
-            if (env.IsDevelopment())
+            if (Env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -100,7 +102,7 @@ namespace EcommerceDDD.WebApp
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            if (!env.IsDevelopment())
+            if (!Env.IsDevelopment())
             {
                 app.UseSpaStaticFiles();
             }
@@ -125,12 +127,11 @@ namespace EcommerceDDD.WebApp
             {
                 spa.Options.SourcePath = "ClientApp";
 
-                if (env.IsDevelopment())
+                if (Env.IsDevelopment())
                 {
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
-
         }
     }
 }
