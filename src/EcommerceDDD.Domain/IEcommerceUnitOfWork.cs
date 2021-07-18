@@ -9,10 +9,10 @@ namespace EcommerceDDD.Domain
 {
     public interface IEcommerceUnitOfWork : IUnitOfWork
     {
-        ICustomerRepository CustomerRepository { get; }
-        IStoredEventRepository MessageRepository { get; }
-        IProductRepository ProductRepository { get; }
-        ICartRepository CartRepository { get; }
-        IPaymentRepository PaymentRepository { get; }
+        ICustomers Customers { get; }
+        IProducts Products { get; }
+        ICarts Carts { get; }
+        IPayments Payments { get; }
+        IStoredEvents StoredEvents { get; }
     }
 }

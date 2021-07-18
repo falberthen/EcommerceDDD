@@ -27,8 +27,11 @@ namespace EcommerceDDD.Application.Payments
 
         public async Task Handle(PaymentCreatedEvent paymentCreatedEvent, CancellationToken cancellationToken)
         {
-            var payment = await _unitOfWork.PaymentRepository.GetPaymentById(paymentCreatedEvent.PaymentId, cancellationToken);
-            var customer = await _unitOfWork.CustomerRepository.GetCustomerById(payment.CustomerId, cancellationToken);
+            var payment = await _unitOfWork.Payments
+                .GetById(paymentCreatedEvent.PaymentId, cancellationToken);
+
+            var customer = await _unitOfWork.Customers
+                .GetById(payment.CustomerId, cancellationToken);
 
             if (payment == null)
                 throw new InvalidDataException("Payment not found.");

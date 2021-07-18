@@ -17,22 +17,22 @@ namespace EcommerceDDD.Tests.Commands
     public class PlaceOrderCommandHandlerTests
     {
         private readonly IEcommerceUnitOfWork _unitOfWork;
-        private readonly ICustomerRepository _customerRepository;
-        private readonly IProductRepository _productRepository;
-        private readonly ICartRepository _cartRepository;
+        private readonly ICustomers _customers;
+        private readonly IProducts _products;
+        private readonly ICarts _carts;
         private readonly ICurrencyConverter _currencyConverter;
 
         public PlaceOrderCommandHandlerTests()
         {
-            _customerRepository = NSubstitute.Substitute.For<ICustomerRepository>();
-            _productRepository = NSubstitute.Substitute.For<IProductRepository>();
-            _cartRepository = NSubstitute.Substitute.For<ICartRepository>();
+            _customers = NSubstitute.Substitute.For<ICustomers>();
+            _products = NSubstitute.Substitute.For<IProducts>();
+            _carts = NSubstitute.Substitute.For<ICarts>();
             _currencyConverter = Substitute.For<ICurrencyConverter>();
             _unitOfWork = NSubstitute.Substitute.For<IEcommerceUnitOfWork>();
 
-            _unitOfWork.CustomerRepository.ReturnsForAnyArgs(_customerRepository);
-            _unitOfWork.ProductRepository.ReturnsForAnyArgs(_productRepository);
-            _unitOfWork.CartRepository.ReturnsForAnyArgs(_cartRepository);
+            _unitOfWork.Customers.ReturnsForAnyArgs(_customers);
+            _unitOfWork.Products.ReturnsForAnyArgs(_products);
+            _unitOfWork.Carts.ReturnsForAnyArgs(_carts);
         }
 
         [Fact]
@@ -53,19 +53,18 @@ namespace EcommerceDDD.Tests.Commands
             var customerId = CustomerId.Of(Guid.NewGuid());
             var customer = Customer.CreateCustomer(customerEmail, "Customer X", customerUniquenessChecker);
 
-            _customerRepository.GetCustomerById(Arg.Any<CustomerId>()).Returns(customer);
+            _customers.GetById(Arg.Any<CustomerId>()).Returns(customer);
 
-            var productId = ProductId.Of(Guid.NewGuid());
-            var product = new Product(productId, "Product X", productMoney);
-            _productRepository.GetProductById(Arg.Any<ProductId>()).Returns(product);
+            var product = Product.CreateNew("Product X", productMoney);
+            _products.GetById(Arg.Any<ProductId>()).Returns(product);
 
-            var productData = new CartItemProductData(productId, product.Price, productQuantity);
-            var cart = new Cart(CartId.Of(Guid.NewGuid()), customerId);
+            var productData = new CartItemProductData(product.Id, product.Price, productQuantity);
+            var cart = Cart.CreateNew(customerId);
             cart.AddItem(productData);
 
             List<Product> products = new List<Product>() { product };
-            _cartRepository.GetCartById(cart.Id).Returns(cart);
-            _productRepository.GetProductsByIds(Arg.Any<List<ProductId>>()).Returns(products);
+            _carts.GetById(cart.Id).Returns(cart);
+            _products.GetByIds(Arg.Any<List<ProductId>>()).Returns(products);
 
             var placeOrderCommandHandler = new PlaceOrderCommandHandler(_unitOfWork, _currencyConverter);
             var placeOrderCommand = new PlaceOrderCommand(cart.Id.Value, customerId.Value, currency.Code);

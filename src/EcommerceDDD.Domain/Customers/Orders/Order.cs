@@ -16,16 +16,6 @@ namespace EcommerceDDD.Domain.Customers.Orders
         public IReadOnlyList<OrderLine> OrderLines => _orderLines;
         private readonly List<OrderLine> _orderLines = new List<OrderLine>();
 
-        private Order(CustomerId customerId, OrderId orderId, List<CartItemProductData> products, 
-            Currency currency, ICurrencyConverter converter)
-        {
-            Id = orderId;
-            CustomerId = customerId;
-            CreatedAt = DateTime.Now;            
-            Status = OrderStatus.Placed;
-            BuildOrderLines(products, currency, converter);
-        }
-
         internal static Order CreateNew(CustomerId customerId, List<CartItemProductData> products, 
             Currency currency, ICurrencyConverter converter)
         {
@@ -37,27 +27,37 @@ namespace EcommerceDDD.Domain.Customers.Orders
             Status = status;
         }
 
-        private void BuildOrderLines(List<CartItemProductData> products, 
+        private void CalculateTotalPrice(Currency currency)
+        {
+            var total = _orderLines.Sum(x => x.ProductExchangePrice.Value);
+            TotalPrice = Money.Of(total, currency.Code);
+        }
+
+        private void BuildOrderLines(List<CartItemProductData> products,
             Currency currency, ICurrencyConverter converter)
         {
             var orderLines = products.Select(c =>
-                new OrderLine(
-                    Guid.NewGuid(),
-                    Id, 
+                OrderLine.CreateNew(
+                    Id,
                     c.ProductId,
                     c.ProductPrice,
                     c.Quantity,
                     currency,
-                    converter)).ToArray();
+                    converter)
+                ).ToArray();
 
             _orderLines.AddRange(orderLines);
             CalculateTotalPrice(currency);
         }
 
-        private void CalculateTotalPrice(Currency currency)
+        private Order(CustomerId customerId, OrderId orderId, List<CartItemProductData> products,
+            Currency currency, ICurrencyConverter converter)
         {
-            var total = _orderLines.Sum(x => x.ProductExchangePrice.Value);
-            TotalPrice = Money.Of(total, currency.Code);
+            Id = orderId;
+            CustomerId = customerId;
+            CreatedAt = DateTime.Now;
+            Status = OrderStatus.Placed;
+            BuildOrderLines(products, currency, converter);
         }
 
         // Empty constructor for EF

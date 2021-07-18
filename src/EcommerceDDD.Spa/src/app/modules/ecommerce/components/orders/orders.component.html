@@ -1,0 +1,65 @@
+<div class="orders-container">
+  <div class="mb-4" *ngIf="!orderId">
+    <h3>My Orders</h3>
+  </div>
+  <div *ngIf="!isLoading && orders && orders.length == 0" class="alert alert-danger no-orders-message">
+    <span  *ngIf="!orderId">
+      You don't have Orders
+    </span>
+    <span  *ngIf="orderId">
+      Order not found.
+    </span>
+  </div>
+  <div *ngIf="orders && orders.length > 0">
+    <div *ngFor="let order of orders; index as i" class="order-details-container form-content">
+      <a class="nav-link text-secondary underlineHover" style="cursor: pointer;" (click)="showOrderStoredEvents(order.orderId)">
+        <fa-icon [icon]="faList"></fa-icon>
+        Order Events
+      </a>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col" class="table-header">Product</th>
+            <th scope="col" class="table-header">Quantity</th>
+            <th scope="col" class="table-header">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let orderLine of order.orderLines; index as i">
+            <td class="table-row">{{ orderLine.productName }}</td>
+            <td class="table-row">{{ orderLine.productQuantity }}</td>
+            <td>{{ orderLine.productPrice }} {{ orderLine.currencySymbol }}</td>
+          </tr>
+          <tr>
+            <td colspan="4" class="table-row">
+              <div class="date-placed-container">
+                <b>Order placed on:</b>
+                <span class="date-placed-text">
+                  {{order.createdAt | date}}
+                </span>
+              </div>
+              <div class="total-to-pay-container">
+                <b>Total:</b>
+                <span class="total-to-pay-text" >
+                  {{order.totalPrice.toFixed(2)}} {{order.orderLines[0].currencySymbol}}
+                </span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="4" class="table-row">
+              <div class="order-status-container">
+                <div class="order-status-text">{{order.status}}</div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Stored Event Viewer container-->
+<div class="stored-event-viewer-container">
+  <template #storedEventViewerContainer></template>
+</div>

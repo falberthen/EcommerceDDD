@@ -28,9 +28,14 @@ namespace EcommerceDDD.Application.Orders.PlaceOrder
         public override async Task<Guid> ExecuteCommand(PlaceOrderCommand command, CancellationToken cancellationToken)
         {
             var cartId = CartId.Of(command.CartId);
-            var cart = await _unitOfWork.CartRepository.GetCartById(cartId, cancellationToken);
+            var cart = await _unitOfWork.Carts
+                .GetById(cartId, cancellationToken);
+
             var customerId = CustomerId.Of(command.CustomerId);
-            var customer = await _unitOfWork.CustomerRepository.GetCustomerById(customerId, cancellationToken);
+
+            var customer = await _unitOfWork.Customers
+                .GetById(customerId, cancellationToken);
+
             var productsData = new List<CartItemProductData>();
 
             if (customer == null)
@@ -41,8 +46,8 @@ namespace EcommerceDDD.Application.Orders.PlaceOrder
 
             var currency = Currency.FromCode(command.Currency);
 
-            var products = await _unitOfWork.ProductRepository
-                .GetProductsByIds(cart.Items.Select(i => i.ProductId).ToList());
+            var products = await _unitOfWork.Products
+                .GetByIds(cart.Items.Select(i => i.ProductId).ToList());
 
             if (products == null)
                 throw new InvalidDataException("Products couldn't be loaded.");
