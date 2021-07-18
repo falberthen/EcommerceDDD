@@ -12,13 +12,9 @@ namespace EcommerceDDD.Domain.Carts
         public IReadOnlyCollection<CartItem> Items => _items;        
         private readonly List<CartItem> _items = new List<CartItem>();
 
-        public Cart(CartId cartId, CustomerId customerId)
+        public static Cart CreateNew(CustomerId customerId)
         {
-            Id = cartId;
-            if (customerId == null)
-                throw new BusinessRuleException("The customer is required.");
-
-            CustomerId = customerId;
+            return new Cart(CartId.Of(Guid.NewGuid()), customerId);
         }
 
         public CartItem AddItem(CartItemProductData productData)
@@ -67,6 +63,15 @@ namespace EcommerceDDD.Domain.Carts
         public void Clear()
         {            
             _items.Clear();            
+        }
+
+        private Cart(CartId cartId, CustomerId customerId)
+        {
+            Id = cartId;
+            if (customerId == null)
+                throw new BusinessRuleException("The customer is required.");
+
+            CustomerId = customerId;
         }
 
         // Empty constructor for EF

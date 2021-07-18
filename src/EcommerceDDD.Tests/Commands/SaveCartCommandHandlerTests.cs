@@ -17,22 +17,22 @@ namespace EcommerceDDD.Tests.Commands
     public class SaveCartCommandHandlerTests
     {
         private readonly IEcommerceUnitOfWork _unitOfWork;
-        private readonly ICustomerRepository _customerRepository;
-        private readonly IProductRepository _productRepository;
-        private readonly ICartRepository _cartRepository;
+        private readonly ICustomers _customers;
+        private readonly IProducts _products;
+        private readonly ICarts _cartRepository;
         private readonly ICurrencyConverter _currencyConverter;
 
         public SaveCartCommandHandlerTests()
         {
-            _customerRepository = NSubstitute.Substitute.For<ICustomerRepository>();
-            _productRepository = NSubstitute.Substitute.For<IProductRepository>();
-            _cartRepository = NSubstitute.Substitute.For<ICartRepository>();
+            _customers = NSubstitute.Substitute.For<ICustomers>();
+            _products = NSubstitute.Substitute.For<IProducts>();
+            _cartRepository = NSubstitute.Substitute.For<ICarts>();
             _currencyConverter = Substitute.For<ICurrencyConverter>();
             _unitOfWork = NSubstitute.Substitute.For<IEcommerceUnitOfWork>();
 
-            _unitOfWork.CustomerRepository.ReturnsForAnyArgs(_customerRepository);
-            _unitOfWork.ProductRepository.ReturnsForAnyArgs(_productRepository);
-            _unitOfWork.CartRepository.ReturnsForAnyArgs(_cartRepository);
+            _unitOfWork.Customers.ReturnsForAnyArgs(_customers);
+            _unitOfWork.Products.ReturnsForAnyArgs(_products);
+            _unitOfWork.Carts.ReturnsForAnyArgs(_cartRepository);
         }
 
         [Fact]
@@ -47,30 +47,35 @@ namespace EcommerceDDD.Tests.Commands
             customerUniquenessChecker.IsUserUnique(customerEmail).Returns(true);
 
             var productMoney = Money.Of(Convert.ToDecimal(productPrice), currency.Code);
-            _currencyConverter.Convert(currency, Money.Of(Convert.ToDecimal(productPrice * productQuantity), currency.Code))
-                .Returns(productMoney);
+            var customer = Customer
+                .CreateCustomer(customerEmail, "Customer X", customerUniquenessChecker);
 
-            var customer = Customer.CreateCustomer(customerEmail, "Customer X", customerUniquenessChecker);
-            _customerRepository.GetCustomerById(Arg.Any<CustomerId>()).Returns(customer);
+            _customers
+                .GetById(Arg.Any<CustomerId>()).Returns(customer);
 
-            var productId = ProductId.Of(Guid.NewGuid());
-            var product = new Product(productId, "Product X", productMoney);
-            _productRepository.GetProductById(Arg.Any<ProductId>()).Returns(product);
+            var product = Product.CreateNew("Product X", productMoney);
+            _products.GetById(Arg.Any<ProductId>()).Returns(product);
 
-            var handler = new SaveCartCommandHandler(_unitOfWork, _currencyConverter);
+            var handler = new SaveCartCommandHandler(_unitOfWork);
             var command = new SaveCartCommand(customer.Id.Value, new ProductDto(product.Id.Value, productQuantity));
             var result = await handler.Handle(command, CancellationToken.None);
 
-            await _cartRepository.Received(1).AddCart(Arg.Is((Cart c) => c.Id.Value == result.Id), Arg.Any<CancellationToken>());
-            await _customerRepository.Received(1).GetCustomerById(customer.Id, Arg.Any<CancellationToken>());
-            await _unitOfWork.Received(1).CommitAsync(Arg.Any<CancellationToken>());
+            await _cartRepository.Received(1)
+                .Add(Arg.Is((Cart c) => c.Id.Value == result.Id), Arg.Any<CancellationToken>());
+
+            await _customers.Received(1)
+                .GetById(customer.Id, Arg.Any<CancellationToken>());
+
+            await _unitOfWork.Received(1)
+                .CommitAsync(Arg.Any<CancellationToken>());
+
             result.Should().NotBe(Guid.Empty);
         }
 
         [Fact]
         public async Task SaveCartCommand_validation_should_fail_with_empty_required_fields()
         {
-            var handler = new SaveCartCommandHandler(_unitOfWork, _currencyConverter);
+            var handler = new SaveCartCommandHandler(_unitOfWork);
             var command = new SaveCartCommand(Guid.Empty, null);
             var result = await handler.Handle(command, CancellationToken.None);
 

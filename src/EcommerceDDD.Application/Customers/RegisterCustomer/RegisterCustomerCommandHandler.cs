@@ -38,7 +38,9 @@ namespace EcommerceDDD.Application.Customers.RegisterCustomer
                 var customer = Customer.CreateCustomer(command.Email, command.Name, _uniquenessChecker);
                 if (customer != null)
                 {
-                    await _unitOfWork.CustomerRepository.AddCustomer(customer, cancellationToken);
+                    await _unitOfWork.Customers
+                        .Add(customer, cancellationToken);
+
                     await CreateUserForCustomer(command);
                     await _unitOfWork.CommitAsync();
                 }

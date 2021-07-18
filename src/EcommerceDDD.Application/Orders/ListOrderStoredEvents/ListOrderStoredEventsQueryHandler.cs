@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace EcommerceDDD.Application.Orders.ListOrderStoredEvents
 {
-    public class ListOrderStoredEventsQueryHandler : QueryHandler<ListOrderStoredEventsQuery, IList<StoredEventData>>
+    public class ListOrderStoredEventsQueryHandler : QueryHandler<ListOrderStoredEventsQuery, 
+        IList<StoredEventData>>
     {
         private readonly IEcommerceUnitOfWork _unitOfWork;
 
@@ -22,16 +23,22 @@ namespace EcommerceDDD.Application.Orders.ListOrderStoredEvents
         {
             List<StoredEventData> storedEvents = new List<StoredEventData>();
             
-            var orderStoredEvents = await _unitOfWork.MessageRepository.GetByAggregateId(request.OrderId, cancellationToken);
+            var orderStoredEvents = await _unitOfWork.StoredEvents
+                .GetByAggregateId(request.OrderId, cancellationToken);
+
             storedEvents.AddRange(StoredEventPrettier<StoredEventData>.ToPretty(orderStoredEvents));
 
             var orderId = OrderId.Of(request.OrderId);
-            var payment = await _unitOfWork.PaymentRepository.GetPaymentByOrderId(orderId, cancellationToken);
+            var payment = await _unitOfWork.Payments
+                .GetByOrderId(orderId, cancellationToken);
 
             if(payment != null)
             {
-                var paymentStoredEvents = await _unitOfWork.MessageRepository.GetByAggregateId(payment.Id.Value, cancellationToken);
-                storedEvents.AddRange(StoredEventPrettier<StoredEventData>.ToPretty(paymentStoredEvents));
+                var paymentStoredEvents = await _unitOfWork.StoredEvents
+                    .GetByAggregateId(payment.Id.Value, cancellationToken);
+
+                storedEvents.AddRange(StoredEventPrettier<StoredEventData>
+                    .ToPretty(paymentStoredEvents));
             }
                         
             return storedEvents;

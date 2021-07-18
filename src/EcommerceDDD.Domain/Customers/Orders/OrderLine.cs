@@ -13,15 +13,10 @@ namespace EcommerceDDD.Domain.Customers.Orders
         public Money ProductBasePrice { get; private set; }
         public Money ProductExchangePrice { get; private set; }
 
-        public OrderLine(Guid id, OrderId orderId, ProductId productId, Money productPrice,
+        internal static OrderLine CreateNew(OrderId orderId, ProductId productId, Money productPrice,
             int quantity, Currency currency, ICurrencyConverter currencyConverter)
         {
-            Id = id;
-            OrderId = orderId;
-            ProductId = productId;
-            Quantity = quantity;
-            
-            CalculateProductPrices(productPrice, currency, currencyConverter);
+            return new OrderLine(orderId, productId, productPrice, quantity, currency, currencyConverter);
         }
 
         private void CalculateProductPrices(Money productPrice, Currency currency,
@@ -34,6 +29,17 @@ namespace EcommerceDDD.Domain.Customers.Orders
                 throw new BusinessRuleException("A valid product price must be provided.");
 
             ProductExchangePrice = Money.Of(convertedPrice.Value, currency.Code);            
+        }
+
+        private OrderLine(OrderId orderId, ProductId productId, Money productPrice,
+            int quantity, Currency currency, ICurrencyConverter currencyConverter)
+        {
+            Id = Guid.NewGuid();
+            OrderId = orderId;
+            ProductId = productId;
+            Quantity = quantity;
+
+            CalculateProductPrices(productPrice, currency, currencyConverter);
         }
 
         // Empty constructor for EF
