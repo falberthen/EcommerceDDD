@@ -1,5 +1,5 @@
 ﻿using EcommerceDDD.Domain.Carts;
-using EcommerceDDD.Domain.Core.Base;
+using EcommerceDDD.Domain.SeedWork;
 using EcommerceDDD.Domain.Core.Events;
 using EcommerceDDD.Domain.Customers;
 using EcommerceDDD.Domain.Payments;

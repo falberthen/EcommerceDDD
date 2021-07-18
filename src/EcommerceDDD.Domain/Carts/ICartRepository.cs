@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using EcommerceDDD.Domain.Core.Base;
+using EcommerceDDD.Domain.SeedWork;
 using EcommerceDDD.Domain.Customers;
 
 namespace EcommerceDDD.Domain.Carts
