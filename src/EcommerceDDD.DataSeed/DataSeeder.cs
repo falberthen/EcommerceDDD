@@ -45,11 +45,11 @@ namespace EcommerceDDD.DataSeed
             options.UseSqlServer(connString));
 
             services.AddScoped<IEcommerceUnitOfWork, EcommerceUnitOfWork>();
-            services.AddScoped<ICustomerRepository, CustomerRepository>();
-            services.AddScoped<ICartRepository, CartRepository>();
-            services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<IPaymentRepository, PaymentRepository>();
-            services.AddScoped<IStoredEventRepository, StoredEventRepository>();
+            services.AddScoped<ICustomers, Customers>();
+            services.AddScoped<ICarts, Carts>();
+            services.AddScoped<IProducts, Products>();
+            services.AddScoped<IPayments, Payments>();
+            services.AddScoped<IStoredEvents, StoredEvents>();
             services.AddScoped<IEventSerializer, EventSerializer>();
             services.AddScoped<ICurrencyConverter, CurrencyConverter>();
             services.AddScoped<EcommerceDDDContext>();

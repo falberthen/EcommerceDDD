@@ -14,8 +14,8 @@ namespace EcommerceDDD.Application.Customers.DomainServices
 
         public bool IsUserUnique(string customerEmail)
         {
-            var customer = _unitOfWork.CustomerRepository
-                .GetCustomerByEmail(customerEmail).Result;
+            var customer = _unitOfWork.Customers
+                .GetByEmail(customerEmail).Result;
 
             return customer == null;
         }

@@ -16,27 +16,27 @@ namespace EcommerceDDD.Infrastructure.Domain
 {
     public class EcommerceUnitOfWork : UnitOfWork<EcommerceDDDContext>, IEcommerceUnitOfWork
     {
-        public ICustomerRepository CustomerRepository { get; }
-        public IStoredEventRepository MessageRepository { get; }
-        public IProductRepository ProductRepository { get; }
-        public ICartRepository CartRepository { get; }
-        public IPaymentRepository PaymentRepository { get; }
+        public ICustomers Customers { get; }
+        public IStoredEvents StoredEvents { get; }
+        public IProducts Products { get; }
+        public ICarts Carts { get; }
+        public IPayments Payments { get; }
 
         private readonly IEventSerializer _eventSerializer;
 
         public EcommerceUnitOfWork(EcommerceDDDContext dbContext,
-            ICustomerRepository customerRepository,
-            IStoredEventRepository messageRepository,
-            IProductRepository productRepository,
-            IPaymentRepository paymentRepository,
-            ICartRepository cartRepository,
+            ICustomers customers,
+            IStoredEvents storedEvents,
+            IProducts products,
+            IPayments payments,
+            ICarts carts,
             IEventSerializer eventSerializer) : base(dbContext)
         {
-            CustomerRepository = customerRepository ?? throw new ArgumentNullException(nameof(customerRepository));
-            MessageRepository = messageRepository ?? throw new ArgumentNullException(nameof(messageRepository));
-            ProductRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
-            CartRepository = cartRepository ?? throw new ArgumentNullException(nameof(cartRepository));
-            PaymentRepository = paymentRepository ?? throw new ArgumentNullException(nameof(paymentRepository));
+            Customers = customers ?? throw new ArgumentNullException(nameof(customers));
+            StoredEvents = storedEvents ?? throw new ArgumentNullException(nameof(storedEvents));
+            Products = products ?? throw new ArgumentNullException(nameof(products));
+            Carts = carts ?? throw new ArgumentNullException(nameof(carts));
+            Payments = payments ?? throw new ArgumentNullException(nameof(payments));
 
             _eventSerializer = eventSerializer ?? throw new ArgumentNullException(nameof(eventSerializer));
         }

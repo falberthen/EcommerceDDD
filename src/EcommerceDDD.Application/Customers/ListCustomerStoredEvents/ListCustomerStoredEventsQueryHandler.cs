@@ -20,8 +20,12 @@ namespace EcommerceDDD.Application.Customers.ListCustomerStoredEvents
 
         public override async Task<IList<CustomerStoredEventData>> ExecuteQuery(ListCustomerStoredEventsQuery request, CancellationToken cancellationToken)
         {
-            var storedEvents = await _unitOfWork.MessageRepository.GetByAggregateId(request.CustomerId, cancellationToken);
-            IList<CustomerStoredEventData> customerStoredEvents = StoredEventPrettier<CustomerStoredEventData>.ToPretty(storedEvents);
+            var storedEvents = await _unitOfWork.StoredEvents
+                .GetByAggregateId(request.CustomerId, cancellationToken);
+
+            IList<CustomerStoredEventData> customerStoredEvents = StoredEventPrettier<CustomerStoredEventData>
+                .ToPretty(storedEvents);
+
             return customerStoredEvents;
         }
     }

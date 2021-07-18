@@ -21,7 +21,8 @@ namespace EcommerceDDD.Application.Orders.PlaceOrder
 
         public async Task Handle(OrderPlacedEvent orderPlacedEvent, CancellationToken cancellationToken)
         {
-            var customer = await _unitOfWork.CustomerRepository.GetCustomerById(orderPlacedEvent.CustomerId, cancellationToken);
+            var customer = await _unitOfWork.Customers
+                .GetById(orderPlacedEvent.CustomerId, cancellationToken);
 
             var order = customer.Orders.
                 Where(o => o.Id == orderPlacedEvent.OrderId)
@@ -31,8 +32,9 @@ namespace EcommerceDDD.Application.Orders.PlaceOrder
                 throw new InvalidDataException("Order not found.");
 
             // Creating a payment
-            var payment = new Payment(PaymentId.Of(Guid.NewGuid()), order.CustomerId, order.Id);
-            await _unitOfWork.PaymentRepository.AddPayment(payment);
+            var payment = Payment.CreateNew(order.CustomerId, order.Id);
+            await _unitOfWork.Payments.Add(payment);
+
             await _unitOfWork.CommitAsync();            
         }
     }
