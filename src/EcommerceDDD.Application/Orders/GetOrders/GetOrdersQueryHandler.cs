@@ -12,7 +12,8 @@ using EcommerceDDD.Domain.Customers.Orders;
 
 namespace EcommerceDDD.Application.Orders.GetOrders
 {
-    public class GetOrdersQueryHandler : QueryHandler<GetOrdersQuery, List<OrderDetailsViewModel>>
+    public class GetOrdersQueryHandler : QueryHandler<GetOrdersQuery, 
+        List<OrderDetailsViewModel>>
     {
         private readonly IEcommerceUnitOfWork _unitOfWork;
 
@@ -22,7 +23,8 @@ namespace EcommerceDDD.Application.Orders.GetOrders
             _unitOfWork = unitOfWork;
         }
 
-        public override async Task<List<OrderDetailsViewModel>> ExecuteQuery(GetOrdersQuery query, CancellationToken cancellationToken)
+        public override async Task<List<OrderDetailsViewModel>> ExecuteQuery(GetOrdersQuery query, 
+            CancellationToken cancellationToken)
         {
             List<OrderDetailsViewModel> viewModelList = new List<OrderDetailsViewModel>();
 
@@ -51,8 +53,12 @@ namespace EcommerceDDD.Application.Orders.GetOrders
 
                 foreach (var orderLine in order.OrderLines)
                 {
-                    var product = products.Single((System.Func<Domain.Products.Product, bool>)(p => p.Id == orderLine.ProductId));
-                    var currency = Currency.FromCode(orderLine.ProductExchangePrice.CurrencyCode);
+                    var product = products.Single(
+                        (System.Func<Domain.Products.Product, bool>)
+                        (p => p.Id == orderLine.ProductId));
+
+                    var currency = Currency
+                        .FromCode(orderLine.ProductExchangePrice.CurrencyCode);
 
                     viewModel.OrderLines.Add(new OrderLinesDetailsViewModel
                     {

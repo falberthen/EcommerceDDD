@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using EcommerceDDD.Application.Orders.PlaceOrder;
-using EcommerceDDD.Infrastructure.Identity.Helpers;
 using EcommerceDDD.Application.Orders.GetOrderDetails;
 using EcommerceDDD.Application.Orders.GetOrders;
 using System.Collections.Generic;
@@ -24,9 +23,8 @@ namespace EcommerceDDD.WebApi.Controllers
     public class OrdersController : BaseController
     {
         public OrdersController(
-            IMediator mediator,
-            IUserProvider userProvider)
-            : base(userProvider, mediator)
+            IMediator mediator)
+            : base(mediator)
         {
         }
 

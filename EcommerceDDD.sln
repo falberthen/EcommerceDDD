@@ -50,6 +50,8 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "EcommerceDDD.SPA", "src\Eco
 		SlnRelativePath = "src\EcommerceDDD.SPA\"
 	EndProjectSection
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{E42BCD55-BE0C-4F93-821F-8A3802593173}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -92,6 +94,10 @@ Global
 		{ADDD1F59-75C2-4E18-B1A3-AA235284FADB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ADDD1F59-75C2-4E18-B1A3-AA235284FADB}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{ADDD1F59-75C2-4E18-B1A3-AA235284FADB}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{E42BCD55-BE0C-4F93-821F-8A3802593173}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E42BCD55-BE0C-4F93-821F-8A3802593173}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E42BCD55-BE0C-4F93-821F-8A3802593173}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E42BCD55-BE0C-4F93-821F-8A3802593173}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

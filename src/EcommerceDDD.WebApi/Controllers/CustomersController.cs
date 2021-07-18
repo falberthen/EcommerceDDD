@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AutoMapper;
-using EcommerceDDD.Infrastructure.Identity.Helpers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using EcommerceDDD.Application.Customers.RegisterCustomer;
@@ -29,9 +28,8 @@ namespace EcommerceDDD.WebApi.Controllers
 
         public CustomersController(
             IMediator mediator,
-            IUserProvider userProvider,
             IMapper mapper)
-            : base(userProvider, mediator)
+            : base(mediator)
         {
             _mapper = mapper;
         }

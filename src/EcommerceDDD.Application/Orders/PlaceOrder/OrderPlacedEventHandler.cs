@@ -5,7 +5,6 @@ using EcommerceDDD.Application.Base;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.Payments;
 using EcommerceDDD.Domain.Customers.Events;
-using System;
 using System.Linq;
 
 namespace EcommerceDDD.Application.Orders.PlaceOrder
@@ -19,21 +18,25 @@ namespace EcommerceDDD.Application.Orders.PlaceOrder
             _unitOfWork = unitOfWork;
         }
 
-        public async Task Handle(OrderPlacedEvent orderPlacedEvent, CancellationToken cancellationToken)
+        public async Task Handle(OrderPlacedEvent orderPlacedEvent, 
+            CancellationToken cancellationToken)
         {
             var customer = await _unitOfWork.Customers
                 .GetById(orderPlacedEvent.CustomerId, cancellationToken);
 
-            var order = customer.Orders.
-                Where(o => o.Id == orderPlacedEvent.OrderId)
+            var order = customer.Orders
+                .Where(o => o.Id == orderPlacedEvent.OrderId)
                 .FirstOrDefault();
 
             if (order == null)
                 throw new InvalidDataException("Order not found.");
 
             // Creating a payment
-            var payment = Payment.CreateNew(order.CustomerId, order.Id);
-            await _unitOfWork.Payments.Add(payment);
+            var payment = Payment
+                .CreateNew(order.CustomerId, order.Id);
+
+            await _unitOfWork.Payments
+                .Add(payment);
 
             await _unitOfWork.CommitAsync();            
         }
