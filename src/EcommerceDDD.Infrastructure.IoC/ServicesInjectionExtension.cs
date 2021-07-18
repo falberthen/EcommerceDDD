@@ -41,13 +41,13 @@ namespace EcommerceDDD.Infrastructure.IoC
 
             // Infra - Domain persistence
             services.AddScoped<IEcommerceUnitOfWork, EcommerceUnitOfWork>();
-            services.AddScoped<ICustomerRepository, CustomerRepository>();
-            services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<ICartRepository, CartRepository>();
-            services.AddScoped<IPaymentRepository, PaymentRepository>();
+            services.AddScoped<ICustomers, Customers>();
+            services.AddScoped<IProducts, Products>();
+            services.AddScoped<ICarts, Carts>();
+            services.AddScoped<IPayments, Payments>();
 
             // Infrastructure - Data EventSourcing
-            services.AddScoped<IStoredEventRepository, StoredEventRepository>();
+            services.AddScoped<IStoredEvents, StoredEvents>();
             services.AddSingleton<IEventSerializer, EventSerializer>();
 
             // Infrastructure - Identity     

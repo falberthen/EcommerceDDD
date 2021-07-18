@@ -1,0 +1,39 @@
+.cart-details-container {
+  width: 100%;
+  min-height: 95px;
+  height: 100%;
+  position: relative;
+  border-radius: 5px;
+
+  .remove-item {
+    color: red;
+  }
+
+  .cart-title {
+    padding-bottom: 10px;
+    padding-top: 10px;
+  }
+
+  .place-order-container{
+    padding-bottom: 20px;
+  }
+
+  .empty-cart-message{
+    margin-bottom: 10px;
+  }
+
+  .total-to-pay-container {
+    float:right;
+    margin-right: 20px;
+    font-size: 20px;
+
+    .total-to-pay-text {
+      margin-left:5px;
+    }
+  }
+
+  .table-row {
+    line-height: 40px;
+    font-size: 15px;
+  }
+}
