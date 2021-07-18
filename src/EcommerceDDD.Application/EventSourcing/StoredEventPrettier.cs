@@ -17,9 +17,12 @@ namespace EcommerceDDD.Application.EventSourcing
                 var eventName = message.MessageType
                     .Substring(message.MessageType.LastIndexOf('.')).Substring(1);
 
-                THistoryData history = JsonConvert.DeserializeObject<THistoryData>(message.Payload);
+                THistoryData history = JsonConvert
+                    .DeserializeObject<THistoryData>(message.Payload);
+
                 history.Id = message.Id.ToString();
-                history.Timestamp = message.CreatedAt.ToString("yyyy'-'MM'-'dd' - 'HH':'mm':'ss");                 
+                history.Timestamp = message
+                    .CreatedAt.ToString("yyyy'-'MM'-'dd' - 'HH':'mm':'ss");                 
                 history.Action = eventName;
                 historyData.Add(history);
             }

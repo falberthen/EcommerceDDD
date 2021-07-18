@@ -30,15 +30,21 @@ namespace EcommerceDDD.Application.Customers.AuthenticateCustomer
             _jwtService = jwtService;
         }
 
-        public async override Task<CustomerViewModel> ExecuteQuery(AuthenticateCustomerQuery request, CancellationToken cancellationToken)
+        public async override Task<CustomerViewModel> ExecuteQuery(AuthenticateCustomerQuery request, 
+            CancellationToken cancellationToken)
         {
             CustomerViewModel customerViewModel = new CustomerViewModel();
 
-            var signIn = await _signInManager.PasswordSignInAsync(request.Email, request.Password, false, true);
+            var signIn = await _signInManager
+                .PasswordSignInAsync(request.Email, request.Password, false, true);
+            
             if (signIn.Succeeded)            
             {
-                var token = await _jwtService.GenerateJwt(request.Email);
-                var user = await _userManager.FindByEmailAsync(request.Email);
+                var token = await _jwtService
+                    .GenerateJwt(request.Email);
+
+                var user = await _userManager
+                    .FindByEmailAsync(request.Email);
 
                 if (user == null)
                     throw new InvalidDataException("User not found.");

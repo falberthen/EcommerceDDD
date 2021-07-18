@@ -31,8 +31,12 @@ namespace EcommerceDDD.WebApi.BackgroundServices
             {
                 using (var scope = _scopeFactory.CreateScope())
                 {
-                    var processor = scope.ServiceProvider.GetRequiredService<IMessageProcessor>();
-                    await processor.ProcessMessages(_options.BatchSize, cancellationToken);
+                    var processor = scope.ServiceProvider
+                        .GetRequiredService<IMessageProcessor>();
+
+                    await processor
+                        .ProcessMessages(_options.BatchSize, cancellationToken);
+
                     await Task.Delay(TimeSpan.FromSeconds(_options.IntervalOnSeconds), cancellationToken);
                 }
             }            

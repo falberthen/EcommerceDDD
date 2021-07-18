@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using BuildingBlocks.CQRS.CommandHandling;
 using BuildingBlocks.CQRS.QueryHandling;
-using EcommerceDDD.Infrastructure.Identity.Helpers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,17 +9,10 @@ namespace EcommerceDDD.WebApi.Controllers.Base
 {
     public class BaseController : Controller
     {
-        private readonly IUserProvider _userProvider;
         public readonly IMediator Mediator;
 
-        protected Guid UserId
+        protected BaseController(IMediator mediator)
         {
-            get { return _userProvider.GetUserId(); }
-        }
-
-        protected BaseController(IUserProvider userProvider, IMediator mediator)
-        {
-            _userProvider = userProvider;
             Mediator = mediator;
         }
 

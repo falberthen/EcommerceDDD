@@ -22,7 +22,8 @@ namespace EcommerceDDD.Application.Carts.GetCartDetails
             _currencyConverter = currencyConverter;
         }
 
-        public async override Task<CartDetailsViewModel> ExecuteQuery(GetCartDetailsQuery query, CancellationToken cancellationToken)
+        public async override Task<CartDetailsViewModel> ExecuteQuery(GetCartDetailsQuery query, 
+            CancellationToken cancellationToken)
         {
             CartDetailsViewModel viewModel = new CartDetailsViewModel();
 
@@ -52,6 +53,7 @@ namespace EcommerceDDD.Application.Carts.GetCartDetails
             var currency = Currency.FromCode(query.Currency);
 
             viewModel.CartId = cart.Id.Value;
+
             if (cart.Items.Count > 0)
             {
                 var productIds = cart.Items.Select(p => p.ProductId).ToList();

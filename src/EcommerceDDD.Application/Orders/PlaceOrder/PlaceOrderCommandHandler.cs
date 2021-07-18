@@ -25,7 +25,8 @@ namespace EcommerceDDD.Application.Orders.PlaceOrder
             _currencyConverter = converter;
         }
 
-        public override async Task<Guid> ExecuteCommand(PlaceOrderCommand command, CancellationToken cancellationToken)
+        public override async Task<Guid> ExecuteCommand(PlaceOrderCommand command, 
+            CancellationToken cancellationToken)
         {
             var cartId = CartId.Of(command.CartId);
             var cart = await _unitOfWork.Carts
@@ -54,11 +55,17 @@ namespace EcommerceDDD.Application.Orders.PlaceOrder
 
             foreach (var item in cart.Items)
             {
-                var product = products.Where(p => p.Id == item.ProductId).FirstOrDefault();
-                productsData.Add(new CartItemProductData(product.Id, product.Price, item.Quantity));
+                var product = products
+                    .Where(p => p.Id == item.ProductId)
+                    .FirstOrDefault();
+
+                productsData.Add(
+                    new CartItemProductData(product.Id, product.Price, item.Quantity)
+                );
             }
 
-            var order = customer.PlaceOrder(customerId, productsData, currency, _currencyConverter);
+            var order = customer
+                .PlaceOrder(customerId, productsData, currency, _currencyConverter);
 
             // Cleaning the cart
             cart.Clear();
