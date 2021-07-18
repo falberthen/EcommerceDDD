@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
-using EcommerceDDD.Infrastructure.Identity.Helpers;
 using EcommerceDDD.Application.Carts.GetCartDetails;
 using EcommerceDDD.Application.Carts.CreateCart;
 using MediatR;
@@ -20,9 +19,8 @@ namespace EcommerceDDD.WebApi.Controllers
     public class CartsController : BaseController
     {
         public CartsController(
-            IMediator mediator,
-            IUserProvider userProvider)
-            : base(userProvider, mediator)
+            IMediator mediator)
+            : base(mediator)
         {
         }
 

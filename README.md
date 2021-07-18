@@ -1,6 +1,6 @@
 ## Welcome to Ecommerce DDD
 
-This project is a showcase of a full-stack application I use to combine several cutting-edge technologies and design patterns. 
+This project is a showcase of a full-stack application I use to combine several cutting-edge technologies and architectural patterns. <br>
 It is based on Domain-Driven Design at its core for implementing a clean-architectured API that powers up an Angular-based SPA application, 
 and also demonstrates the powerful combination of the CQRS pattern with Event Sourcing.
 
@@ -38,7 +38,7 @@ It is where the business logic lies, with a structured implementation of the mod
 <br/><br/>
 
 ### Domain SeedWork
-This project defines the classes used as a base for all domain building blocks, such as Entities, Value objects, Aggregate roots, Repositories, Services and more. 
+This project defines the classes used as a base for all domain building blocks, such as Entities, Value objects, Aggregate root, Repositories, Services and more. 
 <br/><br/>
 
 ### Application
@@ -72,13 +72,13 @@ It takes care of the application's infrastructure and issues not related to the 
       <li>Automapper</li>
       <li>NSubstitute</li>
       <li>Swagger</li>
-      <li>HealthChecks</li>      
+      <li>HealthChecks</li>
+      <li>Docker</li>   
     </ul>
   </li>
   <li>
     <a href='https://angular.io/' target="_blank">Angular 12</a> and <a href='http://www.typescriptlang.org/' target="_blank">TypeScript</a> for the front-end with:
     <ul>
-      <li>Bootstrap</li>
       <li>NgBootstrap</li>
       <li>Font Awesome</li>
       <li>Toastr</li>
@@ -94,11 +94,29 @@ It takes care of the application's infrastructure and issues not related to the 
 <ul>
   <li>The latest <a href="https://dotnet.microsoft.com/download" target="_blank">.NET Core SDK</a> and <a href="https://www.microsoft.com/en-us/sql-server/sql-server-downloads" target="_blank">SQL Server</a> for the database.<br>Entity Framework can be used with other technologies, but some configuration may be needed.</li>
   <li><a href='https://nodejs.org' target="_blank">NodeJs</a> for the front-end.</li>
-  <li>Set EcommerceDDD.Api as the <b>Startup project</b> to run the API and the BackgroundService.</li>
-  <li>Using a terminal, navigate to <b>/EcommerceDDD.Spa</b>, run <code>npm install</code> for the node packages if first time. 
+  <li><b>Optional: <a href="https://docs.docker.com/docker-for-windows/wsl/" target="_blank">Docker Desktop with support for WLS 2</a>
+</ul>
+
+### Running the WebAPI
+<ul>
+  <li>Self-Hosted: set <b>EcommerceDDD.Api</b> as the <b>Startup project</b> and run</li>  
+  <li>Docker: run <code>docker-compose up --build </code></li>
+</ul>
+
+### Running the Angular SPA
+<ul>
+  <li>Using a terminal, navigate to <b>/EcommerceDDD.Spa</b>, run <code>npm install</code> for the node packages if first run. 
   <br>Use <code>ng serve</code> for building and serving the SPA on <b>http://localhost:4200
   </b></li>
 </ul>
 
-<b>When registering your first customer, it will create the database structure automatically.</b>
-<br><b>You may want to set EcommerceDDD.DataSeed as Startup project and run it once to add some products.</b>
+<strong>Notes:</strong> 
+<ul>
+  <li>
+    The <b>docker-compose.yml</b> is targeting the OS to <b>Linux</b> and setting up the with <b>SQL Server 2019 for Ubuntu</b> 
+  </li>
+  <li>
+    When registering your first customer, it will create the database structure automatically.
+    <br><b>You may want to set EcommerceDDD.DataSeed to add some products.
+  </li>
+</ul>

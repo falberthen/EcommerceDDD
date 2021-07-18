@@ -11,7 +11,8 @@ namespace EcommerceDDD.Application.Customers.RegisterCustomer
         {
         }
 
-        public async Task Handle(CustomerRegisteredEvent customerRegisteredEvent, CancellationToken cancellationToken)
+        public async Task Handle(CustomerRegisteredEvent customerRegisteredEvent, 
+            CancellationToken cancellationToken)
         {
             // Here we could send an email to customer informing the user was registred with success
             await Task.CompletedTask;

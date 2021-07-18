@@ -25,7 +25,8 @@ namespace EcommerceDDD.Application.Payments
             _mediator = mediator;            
         }
 
-        public async Task Handle(PaymentCreatedEvent paymentCreatedEvent, CancellationToken cancellationToken)
+        public async Task Handle(PaymentCreatedEvent paymentCreatedEvent
+            , CancellationToken cancellationToken)
         {
             var payment = await _unitOfWork.Payments
                 .GetById(paymentCreatedEvent.PaymentId, cancellationToken);

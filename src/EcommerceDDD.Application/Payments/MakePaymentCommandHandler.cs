@@ -18,7 +18,8 @@ namespace EcommerceDDD.Application.Payments
             _unitOfWork = unitOfWork;
         }
 
-        public override async Task<Guid> ExecuteCommand(MakePaymentCommand command, CancellationToken cancellationToken)
+        public override async Task<Guid> ExecuteCommand(MakePaymentCommand command, 
+            CancellationToken cancellationToken)
         {
             var paymentId = PaymentId.Of(command.PaymentId);
             var payment = await _unitOfWork.Payments
@@ -59,7 +60,9 @@ namespace EcommerceDDD.Application.Payments
             if (failRandomly)
             {
                 var randomResult = new Random().Next(100) % 2 == 0;
-                paymentResult = !randomResult ? throw new Exception($"Payment {payment.Id} not authorized.") : randomResult;
+                paymentResult = !randomResult 
+                    ? throw new Exception($"Payment {payment.Id} not authorized.") 
+                    : randomResult;
             }
                             
             return paymentResult;

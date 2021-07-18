@@ -1,11 +1,12 @@
 ﻿using System;
-using EcommerceDDD.Infrastructure.Identity.IdentityUser;
+using EcommerceDDD.Infrastructure.Identity.Users;
+using EcommerceDDD.Infrastructure.Identity.Roles;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceDDD.Infrastructure.Database.Context
 {
-    public class IdentityContext : IdentityDbContext<User, Role, Guid>
+    public class IdentityContext : IdentityDbContext<ApplicationUser, UserRole, Guid>
     {
         public IdentityContext(DbContextOptions<IdentityContext> options)
             : base(options)
@@ -15,13 +16,13 @@ namespace EcommerceDDD.Infrastructure.Database.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>(b =>
+            modelBuilder.Entity<ApplicationUser>(b =>
             {
                 b.Property(u => u.Id)
                     .HasDefaultValueSql("newsequentialid()");
             });
 
-            modelBuilder.Entity<Role>(b =>
+            modelBuilder.Entity<UserRole>(b =>
             {
                 b.Property(u => u.Id)
                     .HasDefaultValueSql("newsequentialid()");

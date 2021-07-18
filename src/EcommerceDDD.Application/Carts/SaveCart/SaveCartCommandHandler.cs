@@ -20,7 +20,8 @@ namespace EcommerceDDD.Application.Carts.CreateCart
             _unitOfWork = unitOfWork;
         }
 
-        public override async Task<Guid> ExecuteCommand(SaveCartCommand command, CancellationToken cancellationToken)
+        public override async Task<Guid> ExecuteCommand(SaveCartCommand command, 
+            CancellationToken cancellationToken)
         {
             var customerId = CustomerId.Of(command.CustomerId);
             var customer = await _unitOfWork.Customers
@@ -40,7 +41,10 @@ namespace EcommerceDDD.Application.Carts.CreateCart
                 GetByCustomerId(customerId, cancellationToken);
 
             var quantity = command.Product.Quantity;
-            var cartItemProductData = new CartItemProductData(product.Id, product.Price, quantity);
+            var cartItemProductData = new CartItemProductData(
+                product.Id, 
+                product.Price, quantity
+            );
 
             if (cart == null)
             {

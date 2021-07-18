@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Security.Claims;
 using System.Text;
 using EcommerceDDD.Infrastructure.Database.Context;
 using EcommerceDDD.Infrastructure.Identity;
 using EcommerceDDD.Infrastructure.Identity.Claims;
-using EcommerceDDD.Infrastructure.Identity.IdentityUser;
+using EcommerceDDD.Infrastructure.Identity.Roles;
+using EcommerceDDD.Infrastructure.Identity.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -22,14 +24,15 @@ namespace EcommerceDDD.WebApi.Configurations
             if (null == services) 
                 throw new ArgumentNullException(nameof(services));
 
-            services.AddIdentity<User, IdentityRole<Guid>>()
-                .AddUserStore<UserStore<User, Role, IdentityContext, Guid>>()
+            services.AddIdentity<ApplicationUser, UserRole>()
+                .AddUserStore<UserStore<ApplicationUser, UserRole, IdentityContext, Guid>>()
                 .AddEntityFrameworkStores<IdentityContext>()
+                .AddRoles<UserRole>()
                 .AddDefaultTokenProviders();
 
-            // JWT Setup
             var appSettingsSection = configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
+
 
             var appSettings = appSettingsSection.Get<AppSettings>();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
@@ -40,6 +43,7 @@ namespace EcommerceDDD.WebApi.Configurations
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(x =>
             {
+                // JWT Setup
                 x.RequireHttpsMetadata = true;
                 x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters
