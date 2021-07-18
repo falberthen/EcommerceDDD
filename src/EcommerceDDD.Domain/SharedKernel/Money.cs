@@ -1,4 +1,4 @@
-﻿using EcommerceDDD.Domain.Core.Base;
+﻿using EcommerceDDD.Domain.SeedWork;
 
 namespace EcommerceDDD.Domain.SharedKernel
 {

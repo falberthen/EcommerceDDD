@@ -1,5 +1,5 @@
 ﻿using System;
-using EcommerceDDD.Domain.Core.Base;
+using EcommerceDDD.Domain.SeedWork;
 using EcommerceDDD.Domain.Products;
 using EcommerceDDD.Domain.SharedKernel;
 

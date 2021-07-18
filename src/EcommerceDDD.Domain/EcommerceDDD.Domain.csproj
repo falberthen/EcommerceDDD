@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EcommerceDDD.Domain.Core\EcommerceDDD.Domain.Core.csproj" />
+    <ProjectReference Include="..\EcommerceDDD.Domain.SeedWork\EcommerceDDD.Domain.SeedWork.csproj" />
   </ItemGroup>
 
 </Project>

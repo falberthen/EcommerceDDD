@@ -1,4 +1,4 @@
-﻿using EcommerceDDD.Domain.Core.Base;
+﻿using EcommerceDDD.Domain.SeedWork;
 using System;
 
 namespace EcommerceDDD.Domain.Carts
