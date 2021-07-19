@@ -20,7 +20,8 @@ namespace EcommerceDDD.Application.Orders.GetOrderDetails
             _unitOfWork = unitOfWork;
         }
 
-        public override async Task<OrderDetailsViewModel> ExecuteQuery(GetOrderDetailsQuery query, CancellationToken cancellationToken)
+        public override async Task<OrderDetailsViewModel> ExecuteQuery(GetOrderDetailsQuery query, 
+            CancellationToken cancellationToken)
         {
             OrderDetailsViewModel viewModel = new OrderDetailsViewModel();
             var orderId = OrderId.Of(query.OrderId);
@@ -35,7 +36,10 @@ namespace EcommerceDDD.Application.Orders.GetOrderDetails
             if (order == null)
                 throw new InvalidDataException("Order not found.");
 
-            var productIds = order.OrderLines.Select(p => p.ProductId).ToList();
+            var productIds = order.OrderLines
+                .Select(p => p.ProductId)
+                .ToList();
+
             var products = await _unitOfWork.Products
                 .GetByIds(productIds, cancellationToken);
 
@@ -47,8 +51,12 @@ namespace EcommerceDDD.Application.Orders.GetOrderDetails
 
             foreach (var orderLine in order.OrderLines)
             {
-                var product = products.Single((System.Func<Domain.Products.Product, bool>)(p => p.Id == orderLine.ProductId));
-                var currency = Currency.FromCode(orderLine.ProductExchangePrice.CurrencyCode);
+                var product = products.Single(
+                    (System.Func<Domain.Products.Product, bool>)
+                    (p => p.Id == orderLine.ProductId));
+
+                var currency = Currency
+                    .FromCode(orderLine.ProductExchangePrice.CurrencyCode);
 
                 viewModel.OrderLines.Add(new OrderLinesDetailsViewModel
                 {

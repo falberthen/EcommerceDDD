@@ -19,14 +19,18 @@ namespace EcommerceDDD.Application.Orders.ListOrderStoredEvents
             _unitOfWork = unitOfWork;
         }
 
-        public override async Task<IList<StoredEventData>> ExecuteQuery(ListOrderStoredEventsQuery request, CancellationToken cancellationToken)
+        public override async Task<IList<StoredEventData>> ExecuteQuery(ListOrderStoredEventsQuery request, 
+            CancellationToken cancellationToken)
         {
             List<StoredEventData> storedEvents = new List<StoredEventData>();
             
             var orderStoredEvents = await _unitOfWork.StoredEvents
                 .GetByAggregateId(request.OrderId, cancellationToken);
 
-            storedEvents.AddRange(StoredEventPrettier<StoredEventData>.ToPretty(orderStoredEvents));
+            storedEvents.AddRange(
+                StoredEventPrettier<StoredEventData>
+                .ToPretty(orderStoredEvents)
+            );
 
             var orderId = OrderId.Of(request.OrderId);
             var payment = await _unitOfWork.Payments

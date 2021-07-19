@@ -22,7 +22,8 @@ namespace EcommerceDDD.Application.Orders.PlaceOrder
             _orderStatusWorkflow = orderStatusWorkflow;
         }
 
-        public async Task Handle(PaymentAuthorizedEvent paymentAuthorizedEvent, CancellationToken cancellationToken)
+        public async Task Handle(PaymentAuthorizedEvent paymentAuthorizedEvent, 
+            CancellationToken cancellationToken)
         {
             var payment = await _unitOfWork.Payments
                 .GetById(paymentAuthorizedEvent.PaymentId, cancellationToken);
