@@ -14,17 +14,12 @@ namespace EcommerceDDD.Domain.Payments
         public DateTime? PaidAt { get; private set; }
         public PaymentStatus Status { get; private set; }
 
-        public Payment(PaymentId paymentId, CustomerId customerId, OrderId orderId)
+        public static Payment CreateNew(CustomerId customerId, OrderId orderId)
         {
             if (orderId.Value == Guid.Empty)
                 throw new BusinessRuleException("The order is required.");
 
-            Id = paymentId;
-            OrderId = orderId;
-            CustomerId = customerId;
-            CreatedAt = DateTime.Now;
-            Status = PaymentStatus.ToPay;
-            AddDomainEvent(new PaymentCreatedEvent(Id));
+            return new Payment(customerId, orderId);
         }
 
         public void MarkAsPaid()
@@ -32,6 +27,19 @@ namespace EcommerceDDD.Domain.Payments
             PaidAt = DateTime.Now;
             Status = PaymentStatus.Paid;
             AddDomainEvent(new PaymentAuthorizedEvent(Id));
+        }
+
+        private Payment(CustomerId customerId, OrderId orderId)
+        {
+            if (orderId.Value == Guid.Empty)
+                throw new BusinessRuleException("The order is required.");
+
+            Id = PaymentId.Of(Guid.NewGuid());
+            OrderId = orderId;
+            CustomerId = customerId;
+            CreatedAt = DateTime.Now;
+            Status = PaymentStatus.ToPay;
+            AddDomainEvent(new PaymentCreatedEvent(Id));
         }
 
         // Empty constructor for EF

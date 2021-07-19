@@ -22,12 +22,14 @@ namespace EcommerceDDD.Application.Carts.GetCartDetails
             _currencyConverter = currencyConverter;
         }
 
-        public async override Task<CartDetailsViewModel> ExecuteQuery(GetCartDetailsQuery query, CancellationToken cancellationToken)
+        public async override Task<CartDetailsViewModel> ExecuteQuery(GetCartDetailsQuery query, 
+            CancellationToken cancellationToken)
         {
             CartDetailsViewModel viewModel = new CartDetailsViewModel();
 
             var customerId = CustomerId.Of(query.CustomerId);
-            var customer = await _unitOfWork.CustomerRepository.GetCustomerById(customerId, cancellationToken);
+            var customer = await _unitOfWork.Customers
+                .GetById(customerId, cancellationToken);
 
             if (customer == null)
                 throw new InvalidDataException("Customer not found.");
@@ -35,24 +37,28 @@ namespace EcommerceDDD.Application.Carts.GetCartDetails
             if (string.IsNullOrWhiteSpace(query.Currency))
                 throw new InvalidDataException("Currency can't be empty.");
 
-            var cart = await _unitOfWork.CartRepository.GetCartByCustomerId(customerId, cancellationToken);
+            var cart = await _unitOfWork.Carts
+                .GetByCustomerId(customerId, cancellationToken);
 
             if (cart == null)
             {
                 // Creating cart
-                var cartId = CartId.Of(Guid.NewGuid());
-                cart = new Cart(cartId, customerId);
-                await _unitOfWork.CartRepository.AddCart(cart, cancellationToken);
+                cart = Cart.CreateNew(customerId);
+                await _unitOfWork.Carts
+                    .Add(cart, cancellationToken);
+
                 await _unitOfWork.CommitAsync();
             }                
 
             var currency = Currency.FromCode(query.Currency);
 
             viewModel.CartId = cart.Id.Value;
+
             if (cart.Items.Count > 0)
             {
                 var productIds = cart.Items.Select(p => p.ProductId).ToList();
-                var products = await _unitOfWork.ProductRepository.GetProductsByIds(productIds, cancellationToken);
+                var products = await _unitOfWork.Products
+                    .GetByIds(productIds, cancellationToken);
 
                 if (products == null)
                     throw new InvalidDataException("Products not found");

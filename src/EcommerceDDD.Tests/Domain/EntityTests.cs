@@ -17,28 +17,13 @@ namespace EcommerceDDD.Tests.Domain
             var customerUniquenessChecker = Substitute.For<ICustomerUniquenessChecker>();
             customerUniquenessChecker.IsUserUnique(email).Returns(true);
 
-            var productId = ProductId.Of(Guid.NewGuid());
-            var product = new Product(productId, "Product X", Money.Of(10, Currency.USDollar.Code));
+            var product = Product.CreateNew("Product X", Money.Of(10, Currency.USDollar.Code));
             var customer = Customer.CreateCustomer(email, "Customer X", customerUniquenessChecker);
 
             (product.GetHashCode() == customer.GetHashCode()).Should().BeFalse();
             product.Equals(customer).Should().BeFalse();
         }
 
-        [Fact]
-        public void Entities_are_equal_with_same_ids()
-        {
-            var money = Money.Of(10, Currency.USDollar.Code);
-            var productName = "Product X";
-            var id = Guid.NewGuid();
-
-            var productId = ProductId.Of(Guid.NewGuid());
-            var productX = new Product(productId, productName, money);
-            var productY = new Product(productId, "Product Y", money);
-
-            (productX.GetHashCode() == productY.GetHashCode()).Should().BeTrue();
-            productX.Equals(productY).Should().BeTrue();
-        }
 
         [Fact]
         public void Entities_arent_equal_with_different_ids()
@@ -46,8 +31,8 @@ namespace EcommerceDDD.Tests.Domain
             var money = Money.Of(10, Currency.USDollar.Code);
             var productName = "Product X";
 
-            var productX = new Product(ProductId.Of(Guid.NewGuid()), productName, money);
-            var productY = new Product(ProductId.Of(Guid.NewGuid()), productName, money);
+            var productX = Product.CreateNew(productName, money);
+            var productY = Product.CreateNew(productName, money);
 
             (productX.GetHashCode() == productY.GetHashCode()).Should().BeTrue();
             productX.Equals(productY).Should().BeFalse();

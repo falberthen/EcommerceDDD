@@ -20,12 +20,14 @@ namespace EcommerceDDD.Application.Orders.GetOrderDetails
             _unitOfWork = unitOfWork;
         }
 
-        public override async Task<OrderDetailsViewModel> ExecuteQuery(GetOrderDetailsQuery query, CancellationToken cancellationToken)
+        public override async Task<OrderDetailsViewModel> ExecuteQuery(GetOrderDetailsQuery query, 
+            CancellationToken cancellationToken)
         {
             OrderDetailsViewModel viewModel = new OrderDetailsViewModel();
             var orderId = OrderId.Of(query.OrderId);
             var customerId = CustomerId.Of(query.CustomerId);
-            var customer = await _unitOfWork.CustomerRepository.GetCustomerById(customerId, cancellationToken);
+            var customer = await _unitOfWork.Customers
+                .GetById(customerId, cancellationToken);
 
             var order = customer.Orders.
                Where(o => o.Id == orderId)
@@ -34,8 +36,12 @@ namespace EcommerceDDD.Application.Orders.GetOrderDetails
             if (order == null)
                 throw new InvalidDataException("Order not found.");
 
-            var productIds = order.OrderLines.Select(p => p.ProductId).ToList();
-            var products = await _unitOfWork.ProductRepository.GetProductsByIds(productIds, cancellationToken);
+            var productIds = order.OrderLines
+                .Select(p => p.ProductId)
+                .ToList();
+
+            var products = await _unitOfWork.Products
+                .GetByIds(productIds, cancellationToken);
 
             if (products == null)
                 throw new InvalidDataException("Products not found");
@@ -45,8 +51,12 @@ namespace EcommerceDDD.Application.Orders.GetOrderDetails
 
             foreach (var orderLine in order.OrderLines)
             {
-                var product = products.Single((System.Func<Domain.Products.Product, bool>)(p => p.Id == orderLine.ProductId));
-                var currency = Currency.FromCode(orderLine.ProductExchangePrice.CurrencyCode);
+                var product = products.Single(
+                    (System.Func<Domain.Products.Product, bool>)
+                    (p => p.Id == orderLine.ProductId));
+
+                var currency = Currency
+                    .FromCode(orderLine.ProductExchangePrice.CurrencyCode);
 
                 viewModel.OrderLines.Add(new OrderLinesDetailsViewModel
                 {

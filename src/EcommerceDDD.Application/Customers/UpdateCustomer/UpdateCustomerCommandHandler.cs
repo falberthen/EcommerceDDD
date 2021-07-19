@@ -17,10 +17,12 @@ namespace EcommerceDDD.Application.Customers.UpdateCustomer
             _unitOfWork = unitOfWork;
         }
 
-        public override async Task<Guid> ExecuteCommand(UpdateCustomerCommand request, CancellationToken cancellationToken)
+        public override async Task<Guid> ExecuteCommand(UpdateCustomerCommand request, 
+            CancellationToken cancellationToken)
         {
             var customerId = CustomerId.Of(request.CustomerId);
-            var customer = await _unitOfWork.CustomerRepository.GetCustomerById(customerId, cancellationToken);
+            var customer = await _unitOfWork.Customers
+                .GetById(customerId, cancellationToken);
 
             if (customer == null)
                 throw new InvalidDataException("Customer not found.");

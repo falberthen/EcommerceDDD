@@ -31,14 +31,22 @@ namespace EcommerceDDD.Application.Customers.RegisterCustomer
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public override async Task<Guid> ExecuteCommand(RegisterCustomerCommand command, CancellationToken cancellationToken)
+        public override async Task<Guid> ExecuteCommand(RegisterCustomerCommand command, 
+            CancellationToken cancellationToken)
         {
             try
             {
-                var customer = Customer.CreateCustomer(command.Email, command.Name, _uniquenessChecker);
+                var customer = Customer.CreateCustomer(
+                    command.Email, 
+                    command.Name, 
+                    _uniquenessChecker
+                );
+
                 if (customer != null)
                 {
-                    await _unitOfWork.CustomerRepository.AddCustomer(customer, cancellationToken);
+                    await _unitOfWork.Customers
+                        .Add(customer, cancellationToken);
+
                     await CreateUserForCustomer(command);
                     await _unitOfWork.CommitAsync();
                 }
@@ -60,7 +68,9 @@ namespace EcommerceDDD.Application.Customers.RegisterCustomer
                 Email = request.Email
             };
 
-            var userCreated = await _userManager.CreateAsync(user, request.Password);
+            var userCreated = await _userManager
+                .CreateAsync(user, request.Password);
+
             if (!userCreated.Succeeded)
             {
                 foreach (var error in userCreated.Errors)

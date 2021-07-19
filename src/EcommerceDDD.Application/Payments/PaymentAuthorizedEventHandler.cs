@@ -22,10 +22,14 @@ namespace EcommerceDDD.Application.Orders.PlaceOrder
             _orderStatusWorkflow = orderStatusWorkflow;
         }
 
-        public async Task Handle(PaymentAuthorizedEvent paymentAuthorizedEvent, CancellationToken cancellationToken)
+        public async Task Handle(PaymentAuthorizedEvent paymentAuthorizedEvent, 
+            CancellationToken cancellationToken)
         {
-            var payment = await _unitOfWork.PaymentRepository.GetPaymentById(paymentAuthorizedEvent.PaymentId, cancellationToken);
-            var customer = await _unitOfWork.CustomerRepository.GetCustomerById(payment.CustomerId, cancellationToken);
+            var payment = await _unitOfWork.Payments
+                .GetById(paymentAuthorizedEvent.PaymentId, cancellationToken);
+
+            var customer = await _unitOfWork.Customers
+                .GetById(payment.CustomerId, cancellationToken);
 
             var order = customer.Orders.
                 Where(o => o.Id == payment.OrderId)

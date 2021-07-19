@@ -27,7 +27,7 @@ namespace EcommerceDDD.Infrastructure.Events
 
         public async Task ProcessMessages(int batchSize, CancellationToken cancellationToken)
         {
-            var messages = await _unitOfWork.MessageRepository.FetchUnprocessed(batchSize, cancellationToken);
+            var messages = await _unitOfWork.StoredEvents.FetchUnprocessed(batchSize, cancellationToken);
             foreach (var message in messages)
             {
                 try
@@ -35,7 +35,8 @@ namespace EcommerceDDD.Infrastructure.Events
                     await _publisher.Publish(message, cancellationToken);
 
                     message.SetProcessedAt(DateTime.Now);
-                    _unitOfWork.MessageRepository.UpdateProcessedAt(message);
+                    _unitOfWork.StoredEvents.UpdateProcessedAt(message);
+
                     await _unitOfWork.CommitAsync();
 
                     _logger.LogInformation($"\n--- Message {message.Id} processed at {message.ProcessedAt}\n");

@@ -10,11 +10,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceDDD.Infrastructure.Events
 {
-    public class StoredEventRepository : IStoredEventRepository
+    public class StoredEvents : IStoredEvents
     {
         private readonly EcommerceDDDContext _dbContext;
 
-        public StoredEventRepository(EcommerceDDDContext dbContext)
+        public StoredEvents(EcommerceDDDContext dbContext)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }

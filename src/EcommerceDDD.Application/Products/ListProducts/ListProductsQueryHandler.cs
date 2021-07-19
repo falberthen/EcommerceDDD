@@ -24,10 +24,12 @@ namespace EcommerceDDD.Application.Customers.ListCustomerEventHistory
             _currencyConverter = currencyConverter;
         }
 
-        public override async Task<IList<ProductViewModel>> ExecuteQuery(ListProductsQuery query, CancellationToken cancellationToken)
+        public override async Task<IList<ProductViewModel>> ExecuteQuery(ListProductsQuery query, 
+            CancellationToken cancellationToken)
         {
             IList<ProductViewModel> productsViewMiodel = new List<ProductViewModel>();
-            var products = await _unitOfWork.ProductRepository.ListAllProducts(cancellationToken);
+            var products = await _unitOfWork.Products
+                .ListAll(cancellationToken);
 
             if (string.IsNullOrEmpty(query.Currency))
                 throw new InvalidDataException("Currency code cannot be empty.");
@@ -35,7 +37,8 @@ namespace EcommerceDDD.Application.Customers.ListCustomerEventHistory
             var currency = Currency.FromCode(query.Currency);
             foreach (var product in products)
             {
-                var convertedPrice = _currencyConverter.Convert(currency, product.Price);
+                var convertedPrice = _currencyConverter
+                    .Convert(currency, product.Price);
 
                 productsViewMiodel.Add(new ProductViewModel
                 {

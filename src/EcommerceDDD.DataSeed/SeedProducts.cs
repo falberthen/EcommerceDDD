@@ -20,13 +20,13 @@ namespace EcommerceDDD.DataSeed
             {
                 var price = new decimal(rand.NextDouble());
                 var productId = ProductId.Of(Guid.NewGuid());
-                var product = new Product(productId, $"Product {c}", Money.Of(price, converter.GetBaseCurrency().Code));
+                var product = Product.CreateNew($"Product {c}", Money.Of(price, converter.GetBaseCurrency().Code));
                 products.Add(product);
                 Console.WriteLine($"Added {product.Name} for {Math.Round(product.Price.Value, 2)} {product.Price.CurrencyCode}");
             }
             
             Console.WriteLine("\nProducts added.");
-            await unitOfWork.ProductRepository.AddProducts(products);
+            await unitOfWork.Products.AddList(products);
             await unitOfWork.CommitAsync();
         }
     }

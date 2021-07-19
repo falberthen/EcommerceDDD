@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace EcommerceDDD.Domain.Core.Events
 {
-    public interface IStoredEventRepository
+    public interface IStoredEvents
     {
         void UpdateProcessedAt(StoredEvent message);
         Task StoreRange(List<StoredEvent> messages);

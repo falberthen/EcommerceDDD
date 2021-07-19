@@ -12,7 +12,8 @@ using EcommerceDDD.Domain.Customers.Orders;
 
 namespace EcommerceDDD.Application.Orders.GetOrders
 {
-    public class GetOrdersQueryHandler : QueryHandler<GetOrdersQuery, List<OrderDetailsViewModel>>
+    public class GetOrdersQueryHandler : QueryHandler<GetOrdersQuery, 
+        List<OrderDetailsViewModel>>
     {
         private readonly IEcommerceUnitOfWork _unitOfWork;
 
@@ -22,21 +23,28 @@ namespace EcommerceDDD.Application.Orders.GetOrders
             _unitOfWork = unitOfWork;
         }
 
-        public override async Task<List<OrderDetailsViewModel>> ExecuteQuery(GetOrdersQuery query, CancellationToken cancellationToken)
+        public override async Task<List<OrderDetailsViewModel>> ExecuteQuery(GetOrdersQuery query, 
+            CancellationToken cancellationToken)
         {
             List<OrderDetailsViewModel> viewModelList = new List<OrderDetailsViewModel>();
 
             var customerId = CustomerId.Of(query.CustomerId);
-            var customer = await _unitOfWork.CustomerRepository.GetCustomerById(customerId, cancellationToken);
+            var customer = await _unitOfWork.Customers
+                .GetById(customerId, cancellationToken);
 
             if (customer == null)
                 throw new InvalidDataException("Custumer not found.");
 
             foreach (var order in customer.Orders)
             {
-                var payment = await _unitOfWork.PaymentRepository.GetPaymentByOrderId(order.Id, cancellationToken);                
-                var productIds = order.OrderLines.Select(p => p.ProductId).ToList();
-                var products = await _unitOfWork.ProductRepository.GetProductsByIds(productIds, cancellationToken);
+                var payment = await _unitOfWork.Payments
+                    .GetByOrderId(order.Id, cancellationToken);
+                
+                var productIds = order.OrderLines.
+                    Select(p => p.ProductId).ToList();
+
+                var products = await _unitOfWork.Products
+                    .GetByIds(productIds, cancellationToken);
 
                 OrderDetailsViewModel viewModel = new OrderDetailsViewModel();
                 viewModel.OrderId = order.Id.Value;
@@ -45,8 +53,12 @@ namespace EcommerceDDD.Application.Orders.GetOrders
 
                 foreach (var orderLine in order.OrderLines)
                 {
-                    var product = products.Single((System.Func<Domain.Products.Product, bool>)(p => p.Id == orderLine.ProductId));
-                    var currency = Currency.FromCode(orderLine.ProductExchangePrice.CurrencyCode);
+                    var product = products.Single(
+                        (System.Func<Domain.Products.Product, bool>)
+                        (p => p.Id == orderLine.ProductId));
+
+                    var currency = Currency
+                        .FromCode(orderLine.ProductExchangePrice.CurrencyCode);
 
                     viewModel.OrderLines.Add(new OrderLinesDetailsViewModel
                     {

@@ -8,28 +8,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceDDD.Infrastructure.Domain.Carts
 {
-    public class CartRepository : ICartRepository
+    public class Carts : ICarts
     {
         private readonly EcommerceDDDContext _context;
 
-        public CartRepository(EcommerceDDDContext context)
+        public Carts(EcommerceDDDContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task AddCart(Cart cart, CancellationToken cancellationToken = default)
+        public async Task Add(Cart cart, CancellationToken cancellationToken = default)
         {
             await _context.Carts.AddAsync(cart, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<Cart> GetCartById(CartId cartId, CancellationToken cancellationToken = default)
+        public async Task<Cart> GetById(CartId cartId, CancellationToken cancellationToken = default)
         {
             return await _context.Carts
                 .FirstOrDefaultAsync(x => x.Id == cartId, cancellationToken);
         }
 
-        public async Task<Cart> GetCartByCustomerId(CustomerId customerId, CancellationToken cancellationToken = default)
+        public async Task<Cart> GetByCustomerId(CustomerId customerId, CancellationToken cancellationToken = default)
         {
             return await _context.Carts
                 .FirstOrDefaultAsync(x => x.CustomerId == customerId, cancellationToken);
