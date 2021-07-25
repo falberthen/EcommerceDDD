@@ -5,21 +5,29 @@ using Microsoft.AspNetCore.Http;
 using System.Linq;
 using Microsoft.AspNetCore.Identity;
 
-namespace EcommerceDDD.Infrastructure.Identity.IdentityUser
+namespace EcommerceDDD.Infrastructure.Identity.Users
 {
-    public class User : IdentityUser<Guid>, IUser
+    public interface IApplicationUser
+    {
+        string Name { get; }
+        string Email { get; }
+        ClaimsPrincipal GetUser();
+        bool IsAuthenticated();
+        IEnumerable<Claim> GetClaimsIdentity();
+    }
+
+    public class ApplicationUser : IdentityUser<Guid>, IApplicationUser
     {
         public string Name => GetName();
 
-        private readonly IHttpContextAccessor _accessor;
-
-        private User()
-        {
-        }
-
-        public User(IHttpContextAccessor accessor)
+        public ApplicationUser(IHttpContextAccessor accessor)
         {
             _accessor = accessor;
+        }
+
+        public ClaimsPrincipal GetUser()
+        {
+            return _accessor?.HttpContext?.User as ClaimsPrincipal;
         }
 
         private string GetName()
@@ -38,7 +46,12 @@ namespace EcommerceDDD.Infrastructure.Identity.IdentityUser
         {
             return _accessor.HttpContext.User.Claims;
         }
-    }
 
-    public class Role : IdentityRole<Guid> { }
+
+        private readonly IHttpContextAccessor _accessor;
+
+        private ApplicationUser()
+        {
+        }
+    }
 }

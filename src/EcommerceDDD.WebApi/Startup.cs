@@ -1,6 +1,5 @@
 using EcommerceDDD.WebApi.BackgroundServices;
 using EcommerceDDD.WebApi.Configurations;
-using EcommerceDDD.Infrastructure.Identity.Helpers;
 using EcommerceDDD.Infrastructure.IoC;
 using HealthChecks.UI.Client;
 using MediatR;
@@ -10,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using EcommerceDDD.Application.SignalR;
 
 namespace EcommerceDDD.WebApi
 {
@@ -33,15 +33,15 @@ namespace EcommerceDDD.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
-            {
-                options.AddPolicy(
-                  "CorsPolicy",
-                  builder => builder.WithOrigins("http://localhost:4200")
-                  .AllowAnyMethod()
-                  .AllowAnyHeader()
-                  .AllowCredentials());
-            });
+            services.AddCors(o => 
+                o.AddPolicy("CorsPolicy", builder => {
+                    builder
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials()
+                    .WithOrigins("http://localhost:4200");
+                }
+            ));
 
             // Setting DBContexts
             services.AddDatabaseSetup(Configuration);
@@ -49,7 +49,6 @@ namespace EcommerceDDD.WebApi
             // ASP.NET Identity Settings & JWT
             services.AddIdentitySetup(Configuration);
 
-            // Authorization
             services.AddAuthSetup(Configuration);
 
             // AutoMapper Settings
@@ -61,20 +60,17 @@ namespace EcommerceDDD.WebApi
             // Adding MediatR
             services.AddMediatR(typeof(Startup));
 
-            // ASP.NET HttpContext dependency
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-            // User Provider
-            services.AddSingleton<IUserProvider, UserProvider>();
-
             // .NET Native DI Abstraction
             services.RegisterServices();
 
             // Swagger Config
             services.AddSwaggerSetup();
 
-            //Health Checks
+            // Health Checks
             services.AddHealthChecksSetup(Configuration);
+
+            // SignalR support
+            services.AddSignalR();
 
             // Message processing
             var section = this.Configuration.GetSection(nameof(MessageProcessorServiceOptions));
@@ -107,6 +103,12 @@ namespace EcommerceDDD.WebApi
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
             });
             app.UseHealthChecksUI(config => config.UIPath = "/hc-ui");
+
+            // SignalR
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<OrderStatusHub>("api/orderstatushub");
+            });
         }
     }
 }

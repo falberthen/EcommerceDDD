@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using EcommerceDDD.Infrastructure.Identity.IdentityUser;
+using EcommerceDDD.Infrastructure.Identity.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -13,11 +12,11 @@ namespace EcommerceDDD.Infrastructure.Identity.Services
 {
     public class JwtService : IJwtService
     {
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly AppSettings _appSettings;
 
         public JwtService(
-            UserManager<User> userManager,
+            UserManager<ApplicationUser> userManager,
             IOptions<AppSettings> appSettings) 
         {
             _userManager = userManager;

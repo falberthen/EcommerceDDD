@@ -27,7 +27,9 @@ namespace EcommerceDDD.Infrastructure.Events
 
         public async Task ProcessMessages(int batchSize, CancellationToken cancellationToken)
         {
-            var messages = await _unitOfWork.StoredEvents.FetchUnprocessed(batchSize, cancellationToken);
+            var messages = await _unitOfWork.StoredEvents.
+                FetchUnprocessed(batchSize, cancellationToken);
+
             foreach (var message in messages)
             {
                 try

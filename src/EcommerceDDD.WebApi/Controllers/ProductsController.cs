@@ -3,7 +3,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
-using EcommerceDDD.Infrastructure.Identity.Helpers;
 using EcommerceDDD.Application.Products.ListProducts;
 using System.Collections.Generic;
 using EcommerceDDD.Application.Customers.ViewModels;
@@ -18,9 +17,8 @@ namespace EcommerceDDD.WebApi.Controllers
     public class ProductsController : BaseController
     {
         public ProductsController(
-            IMediator mediator, 
-            IUserProvider userProvider)
-            : base(userProvider, mediator)
+            IMediator mediator)
+            : base(mediator)
         {
         }
 
