@@ -5,22 +5,22 @@ using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
 using EcommerceDDD.Infrastructure.Identity.Services;
 using EcommerceDDD.Application.Customers.ViewModels;
-using EcommerceDDD.Infrastructure.Identity.IdentityUser;
 using EcommerceDDD.Application.Base;
 using BuildingBlocks.CQRS.QueryHandling;
+using EcommerceDDD.Infrastructure.Identity.Users;
 
 namespace EcommerceDDD.Application.Customers.AuthenticateCustomer
 {
     public class AuthenticateCustomerQueryHandler : QueryHandler<AuthenticateCustomerQuery, CustomerViewModel> 
     {
-        private readonly SignInManager<User> _signInManager;
-        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ICustomers _customers;
         private readonly IJwtService _jwtService;
 
         public AuthenticateCustomerQueryHandler(
-            SignInManager<User> signInManager,
-            UserManager<User> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager,
             ICustomers customers,
             IJwtService jwtService)
         {
@@ -39,15 +39,15 @@ namespace EcommerceDDD.Application.Customers.AuthenticateCustomer
                 .PasswordSignInAsync(request.Email, request.Password, false, true);
             
             if (signIn.Succeeded)            
-            {
-                var token = await _jwtService
-                    .GenerateJwt(request.Email);
-
+            {               
                 var user = await _userManager
                     .FindByEmailAsync(request.Email);
 
                 if (user == null)
                     throw new InvalidDataException("User not found.");
+
+                var token = await _jwtService
+                   .GenerateJwt(user.Email);
 
                 //Customer data
                 var customer = await _customers

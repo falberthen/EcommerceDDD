@@ -6,6 +6,7 @@ using EcommerceDDD.Domain.Payments.Events;
 using EcommerceDDD.Domain;
 using System.Linq;
 using EcommerceDDD.Domain.Customers.Orders;
+using EcommerceDDD.Application.Orders;
 
 namespace EcommerceDDD.Application.Payments
 {
@@ -13,16 +14,19 @@ namespace EcommerceDDD.Application.Payments
     {
         private readonly IEcommerceUnitOfWork _unitOfWork;
         private readonly IOrderStatusWorkflow _orderStatusWorkflow;
-        private readonly IMediator _mediator;        
+        private readonly IMediator _mediator;
+        private readonly IOrderStatusBroadcaster _orderStatusBroadcaster;
 
         public PaymentCreatedEventHandler(
             IEcommerceUnitOfWork unitOfWork,
             IOrderStatusWorkflow orderStatusWorkflow,            
-            IMediator mediator)
+            IMediator mediator,
+            IOrderStatusBroadcaster orderStatusBroadcaster)
         {
             _unitOfWork = unitOfWork;
             _orderStatusWorkflow = orderStatusWorkflow;
-            _mediator = mediator;            
+            _mediator = mediator;
+            _orderStatusBroadcaster = orderStatusBroadcaster;
         }
 
         public async Task Handle(PaymentCreatedEvent paymentCreatedEvent
@@ -53,7 +57,14 @@ namespace EcommerceDDD.Application.Payments
 
             // Attempting to pay
             MakePaymentCommand command = new MakePaymentCommand(paymentCreatedEvent.PaymentId.Value);
-            await _mediator.Send(command, cancellationToken);          
+            await _mediator.Send(command, cancellationToken);
+
+            // Broadcasting order update
+            await _orderStatusBroadcaster.BroadcastOrderStatus(
+                customer.Id,
+                order.Id,
+                order.Status
+            );
         }
     }
 }

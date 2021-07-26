@@ -4,9 +4,9 @@ export class Order {
   orderLines: OrderLine[] = [];
   createdAt: Date;
   totalPrice: number;
-  status: string;
+  status: OrderStatus;
 
-  constructor(orderId: string, createdAt: Date, totalPrice: number, status: string) {
+  constructor(orderId: string, createdAt: Date, totalPrice: number, status: OrderStatus) {
     this.orderId = orderId;
     this.createdAt = createdAt;
     this.totalPrice = totalPrice;
@@ -27,5 +27,15 @@ export class OrderLine{
     this.productQuantity = productQuantity;
     this.productPrice = productPrice;
     this.currencySymbol = currencySymbol;
+  }
+}
+
+export class OrderStatus {
+  statusCode: number;
+  statusText: string;
+
+  constructor(statusCode: number, statusText: string) {
+    this.statusCode = statusCode;
+    this.statusText = statusText;
   }
 }

@@ -65,6 +65,7 @@ It takes care of the application's infrastructure and issues not related to the 
       <li>Entity Framework Core 5.0.5</li>
       <li>ASP.NET Core Web API</li>
       <li>ASP.NET Core Identity</li>
+      <li>SignalR Core</li>
       <li>JWT Bearer Authentication</li>
       <li><a href='https://github.com/falberthen/BuildingBlocks.CQRS' target="_blank">BuildingBlocks.CQRS 2.x</a></li>
       <li>MediatR</li> 
@@ -73,7 +74,7 @@ It takes care of the application's infrastructure and issues not related to the 
       <li>NSubstitute</li>
       <li>Swagger</li>
       <li>HealthChecks</li>
-      <li>Docker</li>   
+      <li>Docker Compose</li>
     </ul>
   </li>
   <li>

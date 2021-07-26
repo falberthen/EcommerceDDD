@@ -5,10 +5,10 @@ using EcommerceDDD.Domain.Customers;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using EcommerceDDD.Domain;
-using EcommerceDDD.Infrastructure.Identity.IdentityUser;
 using Microsoft.AspNetCore.Identity;
 using EcommerceDDD.Application.Base;
 using BuildingBlocks.CQRS.CommandHandling;
+using EcommerceDDD.Infrastructure.Identity.Users;
 
 namespace EcommerceDDD.Application.Customers.RegisterCustomer
 {
@@ -16,11 +16,11 @@ namespace EcommerceDDD.Application.Customers.RegisterCustomer
     {
         private readonly IEcommerceUnitOfWork _unitOfWork;
         private readonly ICustomerUniquenessChecker _uniquenessChecker;
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public RegisterCustomerCommandHandler(
-            UserManager<User> userManager,
+            UserManager<ApplicationUser> userManager,
             IEcommerceUnitOfWork unitOfWork,
             ICustomerUniquenessChecker uniquenessChecker,
             IHttpContextAccessor httpContextAccessor)
@@ -59,10 +59,10 @@ namespace EcommerceDDD.Application.Customers.RegisterCustomer
             }
         }
 
-        private async Task<User> CreateUserForCustomer(RegisterCustomerCommand request)
+        private async Task<ApplicationUser> CreateUserForCustomer(RegisterCustomerCommand request)
         {
             //Creating Identity user
-            var user = new User(_httpContextAccessor)
+            var user = new ApplicationUser(_httpContextAccessor)
             {
                 UserName = request.Email,
                 Email = request.Email
@@ -78,7 +78,7 @@ namespace EcommerceDDD.Application.Customers.RegisterCustomer
                     throw new InvalidDataException(error.Description.ToString());
                 }
             }
- 
+
             //Adding user claims
             await _userManager.AddClaimAsync(user, new Claim("CanRead", "Read"));
             await _userManager.AddClaimAsync(user, new Claim("CanSave", "Save"));

@@ -48,6 +48,7 @@ namespace EcommerceDDD.Application.Orders.GetOrderDetails
 
             viewModel.OrderId = order.Id.Value;
             viewModel.CreatedAt = order.CreatedAt.ToString();
+            viewModel.Status = OrderStatusPrettier.Prettify(order.Status);
 
             foreach (var orderLine in order.OrderLines)
             {
