@@ -35,6 +35,17 @@
         text-align: center;
         font-size:15px;
         font-weight:bolder;
+
+        .placed {
+          color: rgba(32, 67, 221, 0.801);
+        }
+        .waitingForPayment {
+          color: rgb(206, 148, 13);
+        }
+
+        .readyToShip {
+          color: green;
+        }
       }
     }
   }
