@@ -8,7 +8,6 @@ using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.SharedKernel;
 using BuildingBlocks.CQRS.QueryHandling;
 using EcommerceDDD.Domain.Customers;
-using EcommerceDDD.Domain.Customers.Orders;
 
 namespace EcommerceDDD.Application.Orders.GetOrders
 {
@@ -49,7 +48,7 @@ namespace EcommerceDDD.Application.Orders.GetOrders
                 OrderDetailsViewModel viewModel = new OrderDetailsViewModel();
                 viewModel.OrderId = order.Id.Value;
                 viewModel.CreatedAt = order.CreatedAt.ToString();
-                viewModel.Status = PrettifyOrderStatus(order.Status);
+                viewModel.Status = OrderStatusPrettier.Prettify(order.Status);
 
                 foreach (var orderLine in order.OrderLines)
                 {
@@ -75,16 +74,6 @@ namespace EcommerceDDD.Application.Orders.GetOrders
             }
 
             return viewModelList;
-        }
-
-        private string PrettifyOrderStatus(OrderStatus status)
-        {
-            return status switch
-            {
-                OrderStatus.ReadyToShip => "Ready to be shipped.",
-                OrderStatus.WaitingForPayment => "Waiting for payment to be processed.",
-                _ => status.ToString()
-            };
-        }
+        }        
     }
 }

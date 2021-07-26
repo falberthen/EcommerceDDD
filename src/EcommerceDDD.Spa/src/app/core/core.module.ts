@@ -1,4 +1,4 @@
-import { Optional, SkipSelf, NgModule } from '@angular/core';
+import { Optional, SkipSelf, NgModule, APP_INITIALIZER } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from './services/auth.service';
 import { AuthGuard } from './guards/auth.guard';
@@ -8,6 +8,7 @@ import { NotificationService } from './services/notification.service';
 import { LocalStorageService } from './services/local-storage.service';
 import { CurrencyNotificationService } from './services/currency-notification.service';
 import { ConfirmationDialogService } from './services/confirmation-dialog.service';
+import { SignalrService } from './services/signalr.service';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { ConfirmationDialogService } from './services/confirmation-dialog.servic
     ConfirmationDialogService,
     LocalStorageService,
     CurrencyNotificationService,
+    SignalrService
   ]
 })
 

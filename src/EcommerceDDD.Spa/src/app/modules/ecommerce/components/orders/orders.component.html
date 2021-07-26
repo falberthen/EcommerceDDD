@@ -11,7 +11,7 @@
     </span>
   </div>
   <div *ngIf="orders && orders.length > 0">
-    <div *ngFor="let order of orders; index as i" class="order-details-container form-content">
+    <div *ngFor="let order of orders | orderBy:'createdAt': true ; index as i" class="order-details-container form-content">
       <a class="nav-link text-secondary underlineHover" style="cursor: pointer;" (click)="showOrderStoredEvents(order.orderId)">
         <fa-icon [icon]="faList"></fa-icon>
         Order Events
@@ -26,9 +26,16 @@
         </thead>
         <tbody>
           <tr *ngFor="let orderLine of order.orderLines; index as i">
-            <td class="table-row">{{ orderLine.productName }}</td>
-            <td class="table-row">{{ orderLine.productQuantity }}</td>
-            <td>{{ orderLine.productPrice }} {{ orderLine.currencySymbol }}</td>
+            <td class="table-row">
+              {{ orderLine.productName }}
+            </td>
+            <td class="table-row">
+              {{ orderLine.productQuantity }}
+            </td>
+            <td>
+              {{ orderLine.productPrice }}
+              {{ orderLine.currencySymbol }}
+            </td>
           </tr>
           <tr>
             <td colspan="4" class="table-row">
@@ -41,7 +48,8 @@
               <div class="total-to-pay-container">
                 <b>Total:</b>
                 <span class="total-to-pay-text" >
-                  {{order.totalPrice.toFixed(2)}} {{order.orderLines[0].currencySymbol}}
+                  {{order.totalPrice.toFixed(2)}}
+                  {{order.orderLines[0].currencySymbol}}
                 </span>
               </div>
             </td>
@@ -49,7 +57,11 @@
           <tr>
             <td colspan="4" class="table-row">
               <div class="order-status-container">
-                <div class="order-status-text">{{order.status}}</div>
+                <div class="order-status-text">
+                  <div [ngClass]="getStatusCssClass(order.status)">
+                    {{order.status.statusText}}
+                  </div>
+                </div>
               </div>
             </td>
           </tr>

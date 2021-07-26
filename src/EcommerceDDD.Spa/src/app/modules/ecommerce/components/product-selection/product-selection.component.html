@@ -11,7 +11,7 @@
       <div *ngIf="products && products.length > 0" class="table-responsive">
         <table class="table table-hover">
           <tbody>
-            <tr *ngFor="let product of products; index as i">
+            <tr *ngFor="let product of products | orderBy:'name';; index as i">
               <td class="table-row-text name-column">{{ product.name }}</td>
               <td class="table-row-text price-column">{{ product.currencySymbol }} {{ product.price }}</td>
               <td class="add-column">
