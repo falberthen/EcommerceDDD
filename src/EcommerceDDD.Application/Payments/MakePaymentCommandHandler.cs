@@ -33,7 +33,8 @@ namespace EcommerceDDD.Application.Payments
             
             try
             {
-                // Making a fake payment (here we could call a financial institution service and use the customer billing info)
+                // Making a fake payment
+                // (here we could call a financial institution service and use the customer billing info)
                 var paymentSuccess = MakePayment(payment);
 
                 if (paymentSuccess)

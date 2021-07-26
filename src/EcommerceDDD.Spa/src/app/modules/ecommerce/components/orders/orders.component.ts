@@ -1,8 +1,10 @@
-import { Component, OnInit, ViewChild, ComponentFactoryResolver, ViewContainerRef, ComponentFactory } from '@angular/core';
+import { Component, OnInit, ViewChild, ComponentFactoryResolver, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { faList } from '@fortawesome/free-solid-svg-icons';
-import { Order } from 'src/app/core/models/Order';
+import { orderStatusCodes } from 'src/app/core/constants/appConstants';
+import { Order, OrderStatus } from 'src/app/core/models/Order';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { SignalrService } from 'src/app/core/services/signalr.service';
 import { OrderService } from '../../order.service';
 import { StoredEventsViewerComponent } from '../stored-events-viewer/stored-events-viewer.component';
 
@@ -20,6 +22,7 @@ export class OrdersComponent implements OnInit {
   isLoading = false;
   isModalOpen = false;
   storedEventsViewerComponentRef: any;
+  hubHelloMessage!: string;
 
   @ViewChild('storedEventViewerContainer', { read: ViewContainerRef })
   storedEventViewerContainer!: ViewContainerRef;
@@ -28,16 +31,14 @@ export class OrdersComponent implements OnInit {
     private orderService: OrderService,
     private authService: AuthService,
     private route: ActivatedRoute,
-    private resolver: ComponentFactoryResolver) { }
+    private resolver: ComponentFactoryResolver,
+    private signalrService: SignalrService) { }
 
   ngOnInit() {
-
     if(this.authService.currentCustomer) {
-
       const customer = this.authService.currentCustomer;
       this.customerId = customer.id;
       this.route.paramMap.subscribe(params => {
-
         const orderIdValue = params.get("orderId");
         if(orderIdValue) {
           this.orderId = orderIdValue;
@@ -46,6 +47,15 @@ export class OrdersComponent implements OnInit {
         else
           this.loadOrders();
       })
+
+      // SignalR group
+      this.signalrService
+        .addCustomerToGroup(this.customerId);
+
+      this.signalrService.connection
+        .on("UpdateOrderStatus", (orderId: string, status: OrderStatus) => {
+          this.updateOrderStatus(orderId, status);
+        });
     }
   }
 
@@ -58,6 +68,19 @@ export class OrdersComponent implements OnInit {
         },
         (error) => console.error(error)
       );
+  }
+
+  getStatusCssClass(status: OrderStatus): string {
+    switch (status.statusCode) {
+      case orderStatusCodes.placed:
+        return 'placed';
+      case orderStatusCodes.readyToShip:
+          return 'readyToShip';
+          case orderStatusCodes.waitingForPayment:
+          return 'waitingForPayment';
+      default:
+        return '';
+    }
   }
 
   getOrderDetails() {
@@ -81,5 +104,11 @@ export class OrdersComponent implements OnInit {
       this.storedEventsViewerComponentRef.destroy();
       this.isModalOpen = false;
     });
+  }
+
+  updateOrderStatus(orderId: string, status: OrderStatus){
+    var order = this.orders.find(e=>e.orderId == orderId);
+    if(order)
+      order.status = status;
   }
 }

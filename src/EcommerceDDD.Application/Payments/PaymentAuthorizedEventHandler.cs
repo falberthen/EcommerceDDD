@@ -13,13 +13,16 @@ namespace EcommerceDDD.Application.Orders.PlaceOrder
     {
         private readonly IEcommerceUnitOfWork _unitOfWork;
         private readonly IOrderStatusWorkflow _orderStatusWorkflow;
+        private readonly IOrderStatusBroadcaster _orderStatusBroadcaster;
 
         public PaymentAuthorizedEventHandler(
             IEcommerceUnitOfWork unitOfWork,
-            IOrderStatusWorkflow orderStatusWorkflow)
+            IOrderStatusWorkflow orderStatusWorkflow,
+            IOrderStatusBroadcaster orderStatusBroadcaster)
         {
             _unitOfWork = unitOfWork;
             _orderStatusWorkflow = orderStatusWorkflow;
+            _orderStatusBroadcaster = orderStatusBroadcaster;
         }
 
         public async Task Handle(PaymentAuthorizedEvent paymentAuthorizedEvent, 
@@ -44,6 +47,13 @@ namespace EcommerceDDD.Application.Orders.PlaceOrder
             // Changing order status
             _orderStatusWorkflow.CalculateOrderStatus(order, payment);
             await _unitOfWork.CommitAsync(cancellationToken);
+
+            // Broadcasting order update
+            await _orderStatusBroadcaster.BroadcastOrderStatus(
+                customer.Id, 
+                order.Id, 
+                order.Status
+            );
         }
     }
 }

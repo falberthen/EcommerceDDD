@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { RestService } from './http/rest.service';
 import { HttpClient } from '@angular/common/http';
 import { LocalStorageService } from './local-storage.service';
@@ -67,7 +67,7 @@ export class AuthService extends RestService {
       localStorage.removeItem(appConstants.storedCustomer);
       this.tokenStorageToken.clearToken();
 
-      //broadcasting to listeners
+      // broadcasting to listeners
       this.isLogged.next(false);
 
       // redirects

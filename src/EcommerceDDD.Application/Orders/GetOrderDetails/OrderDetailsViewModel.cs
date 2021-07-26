@@ -11,7 +11,7 @@ namespace EcommerceDDD.Application.Orders.GetOrderDetails
         public List<OrderLinesDetailsViewModel> OrderLines { get; set; } = new List<OrderLinesDetailsViewModel>();
         public double TotalPrice { get; private set; }
         public string CreatedAt { get; set; }
-        public string Status { get; set; }
+        public OrderStatusViewModel Status { get; set; }
 
         public void CalculateTotalOrderPrice()
         {
@@ -23,9 +23,21 @@ namespace EcommerceDDD.Application.Orders.GetOrderDetails
     public class OrderLinesDetailsViewModel
     {
         public Guid ProductId { get; set; }
-        public String ProductName { get; set; }
+        public string ProductName { get; set; }
         public decimal ProductPrice { get; set; }
         public int ProductQuantity { get; set; }
-        public String CurrencySymbol { get; set; }
+        public string CurrencySymbol { get; set; }
+    }
+
+    public class OrderStatusViewModel
+    {
+        public OrderStatusViewModel(int statusCode, string statusText)
+        {
+            StatusCode = statusCode;
+            StatusText = statusText;
+        }
+
+        public int StatusCode { get; set; }
+        public string StatusText { get; set; }
     }
 }

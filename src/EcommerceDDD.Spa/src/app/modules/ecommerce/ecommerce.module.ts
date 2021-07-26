@@ -9,6 +9,7 @@ import { CustomerProfileComponent } from './components/customer-profile/customer
 import { CartDetailsComponent } from './components/cart-details/cart-details.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import { OrderByPipe } from 'src/app/core/pipes/order-by.pipe';
 
 @NgModule({
    declarations: [
@@ -17,7 +18,8 @@ import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
       ProductSelectionComponent,
       CartDetailsComponent,
       OrdersComponent,
-      CustomerProfileComponent
+      CustomerProfileComponent,
+      OrderByPipe
    ],
    imports: [
       CommonModule,
