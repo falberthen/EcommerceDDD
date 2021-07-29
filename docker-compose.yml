@@ -1,0 +1,24 @@
+version: '3.4'
+
+services:
+  ecommerceddd.webapi:
+    image: ${DOCKER_REGISTRY-}ecommercedddwebapi
+    container_name: ecommerceddd.webapi
+    build:
+      context: .
+      dockerfile: src/EcommerceDDD.WebApi/Dockerfile
+    ports:
+      - "5000:5001"
+    restart: always
+    depends_on:
+     - ms-sql-server
+
+  ms-sql-server:
+    image: "mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04"
+    container_name: ms-sql-server
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "P455w0rd"
+    ports:
+      - "1433:1433"
+    restart: always
