@@ -23,7 +23,6 @@ using Microsoft.AspNetCore.Authorization;
 using EcommerceDDD.Infrastructure.Identity.Users;
 using EcommerceDDD.Infrastructure.Identity.Services;
 using EcommerceDDD.Infrastructure.Identity.Claims;
-using Microsoft.AspNetCore.Http;
 
 namespace EcommerceDDD.Infrastructure.IoC
 {
@@ -63,8 +62,6 @@ namespace EcommerceDDD.Infrastructure.IoC
             // Messaging
             services.AddScoped<IMessagePublisher, MessagePublisher>();
             services.AddScoped<IMessageProcessor, MessageProcessor>();
-
-            services.AddHttpContextAccessor();
         }
     }
 }

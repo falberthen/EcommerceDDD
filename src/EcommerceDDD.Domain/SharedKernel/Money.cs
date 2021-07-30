@@ -8,14 +8,6 @@ namespace EcommerceDDD.Domain.SharedKernel
         public string CurrencyCode { get; }
         public string CurrencySymbol { get; }
 
-        private Money(decimal value, string currencyCode)
-        {
-            Value = value;
-            Currency currency = Currency.FromCode(currencyCode);
-            CurrencyCode = currency.Code;
-            CurrencySymbol = currency.Symbol;
-        }
-
         public static Money Of(decimal value, string currencyCode)
         {
             if (string.IsNullOrEmpty(currencyCode))
@@ -25,6 +17,19 @@ namespace EcommerceDDD.Domain.SharedKernel
                 throw new BusinessRuleException("Money amount value cannot be negative.");
 
             return new Money(value, currencyCode);
+        }
+
+        public static Money operator *(decimal number, Money rightValue)
+        {
+            return new Money(number * rightValue.Value, rightValue.CurrencyCode);
+        }
+
+        public static Money operator +(Money money1, Money money2)
+        {
+            if (!money1.CurrencyCode.Equals(money2.CurrencyCode))
+                throw new BusinessRuleException("You cannot sum different currencies.");
+
+            return Of(money1.Value + money2.Value, money1.CurrencyCode);
         }
 
         protected override bool EqualsCore(Money other)
@@ -45,17 +50,12 @@ namespace EcommerceDDD.Domain.SharedKernel
             }
         }
 
-        public static Money operator *(decimal number, Money rightValue)
+        private Money(decimal value, string currencyCode)
         {
-            return new Money(number * rightValue.Value, rightValue.CurrencyCode);
-        }
-
-        public static Money operator +(Money money1, Money money2)
-        {
-            if (!money1.CurrencyCode.Equals(money2.CurrencyCode))
-                throw new BusinessRuleException("You cannot sum different currencies.");
-
-            return Of(money1.Value + money2.Value, money1.CurrencyCode);            
+            Value = value;
+            Currency currency = Currency.FromCode(currencyCode);
+            CurrencyCode = currency.Code;
+            CurrencySymbol = currency.Symbol;
         }
 
         private Money(){}
