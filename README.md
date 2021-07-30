@@ -118,6 +118,6 @@ It takes care of the application's infrastructure and issues not related to the 
   </li>
   <li>
     When registering your first customer, it will create the database structure automatically.
-    <br><b>You may want to set EcommerceDDD.DataSeed to add some products.
+    <br><b>DataSeeder will add some products for you if the Products table is empty.
   </li>
 </ul>
