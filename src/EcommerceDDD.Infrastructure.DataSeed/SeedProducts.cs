@@ -5,7 +5,7 @@ using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.Products;
 using EcommerceDDD.Domain.SharedKernel;
 
-namespace EcommerceDDD.DataSeed
+namespace EcommerceDDD.Infrastructure.DataSeed
 {
     public static class SeedProducts
     {
