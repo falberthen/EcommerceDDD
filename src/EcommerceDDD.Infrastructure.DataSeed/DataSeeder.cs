@@ -19,7 +19,7 @@ using EcommerceDDD.Infrastructure.Domain.CurrencyExchange;
 using EcommerceDDD.Domain.SharedKernel;
 using EcommerceDDD.Infrastructure.Events;
 
-namespace EcommerceDDD.DataSeed
+namespace EcommerceDDD.Infrastructure.DataSeed
 {
     class DataSeeder
     {
