@@ -12,7 +12,7 @@ namespace EcommerceDDD.Domain.Payments
         public static PaymentId Of(Guid paymentId)
         {
             if (paymentId == Guid.Empty)
-                throw new BusinessRuleException("Cart Id must be provided.");
+                throw new BusinessRuleException("Quote Id must be provided.");
 
             return new PaymentId(paymentId);
         }

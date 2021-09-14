@@ -13,16 +13,16 @@ namespace EcommerceDDD.Infrastructure.Database.Configurations
             builder.HasKey(r => r.Id);
 
             builder.Property(r => r.CreatedAt)
-                .IsRequired();
+            .IsRequired();
 
             builder.Property(r => r.ProcessedAt);
 
             builder.Property(r => r.MessageType)
-                .HasMaxLength(200)
-                .IsRequired();
+            .HasMaxLength(200)
+            .IsRequired();
 
             builder.Property(r => r.Payload)
-                .IsRequired();
+            .IsRequired();
         }
     }
 }

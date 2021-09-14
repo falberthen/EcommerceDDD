@@ -14,11 +14,13 @@ export class AccountService extends RestService {
   }
 
   public registerAccount(request: RegisterCustomerRequest) {
-    return this.post("customers/register", request);
+    return this.post("customers/register", request)
+    .toPromise();
   }
 
   public updateCustomer(customerId: string, request: UpdateCustomerRequest) {
-    return this.put("customers/" + customerId, request);
+    return this.put("customers/" + customerId, request)
+    .toPromise();
   }
 
 }

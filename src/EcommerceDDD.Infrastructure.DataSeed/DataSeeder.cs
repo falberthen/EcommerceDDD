@@ -13,8 +13,8 @@ using EcommerceDDD.Infrastructure.Domain.Products;
 using EcommerceDDD.Infrastructure.Domain;
 using Microsoft.EntityFrameworkCore;
 using EcommerceDDD.Domain.Payments;
-using EcommerceDDD.Infrastructure.Domain.Carts;
-using EcommerceDDD.Domain.Carts;
+using EcommerceDDD.Infrastructure.Domain.Quotes;
+using EcommerceDDD.Domain.Quotes;
 using EcommerceDDD.Infrastructure.Domain.CurrencyExchange;
 using EcommerceDDD.Domain.SharedKernel;
 using EcommerceDDD.Infrastructure.Events;
@@ -46,7 +46,7 @@ namespace EcommerceDDD.Infrastructure.DataSeed
 
             services.AddScoped<IEcommerceUnitOfWork, EcommerceUnitOfWork>();
             services.AddScoped<ICustomers, Customers>();
-            services.AddScoped<ICarts, Carts>();
+            services.AddScoped<IQuotes, Quotes>();
             services.AddScoped<IProducts, Products>();
             services.AddScoped<IPayments, Payments>();
             services.AddScoped<IStoredEvents, StoredEvents>();

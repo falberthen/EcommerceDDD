@@ -8,6 +8,7 @@ using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.SharedKernel;
 using BuildingBlocks.CQRS.QueryHandling;
 using EcommerceDDD.Domain.Customers;
+using EcommerceDDD.Domain.Orders.Specifications;
 
 namespace EcommerceDDD.Application.Orders.GetOrders
 {
@@ -34,11 +35,11 @@ namespace EcommerceDDD.Application.Orders.GetOrders
             if (customer == null)
                 throw new InvalidDataException("Custumer not found.");
 
-            foreach (var order in customer.Orders)
+            var isOrderPlacedByCustomer = new IsOrderPlacedByCustomer(customer.Id);
+            var customerOrders = await _unitOfWork.Orders.Find(isOrderPlacedByCustomer);
+
+            foreach (var order in customerOrders)
             {
-                var payment = await _unitOfWork.Payments
-                    .GetByOrderId(order.Id, cancellationToken);
-                
                 var productIds = order.OrderLines.
                     Select(p => p.ProductId).ToList();
 

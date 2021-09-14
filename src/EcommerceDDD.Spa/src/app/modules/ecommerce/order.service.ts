@@ -15,15 +15,18 @@ export class OrderService extends RestService {
     super(http, baseUrl);
   }
 
-  public getOrders(customerId: string): Observable<any>{
-    return this.get(this.controllerName + '/' + customerId);
+  public getOrders(customerId: string): Promise<any>{
+    return this.get(this.controllerName + '/' + customerId)
+    .toPromise();
   }
 
-  public getOrderDetails(customerId: string, orderId: string): Observable<any>{
-    return this.get(this.controllerName + '/' + customerId + '/' + orderId + '/details');
+  public getOrderDetails(customerId: string, orderId: string): Promise<any>{
+    return this.get(this.controllerName + '/' + customerId + '/' + orderId + '/details')
+    .toPromise();
   }
 
-  public placeOrder(cartId: string, request: PlaceOrderRequest): Observable<any>{
-    return this.post(this.controllerName + '/' + cartId, request);
+  public placeOrder(quoteId: string, request: PlaceOrderRequest): Promise<any>{
+    return this.post(this.controllerName + '/' + quoteId, request)
+    .toPromise();
   }
 }

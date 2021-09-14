@@ -53,9 +53,9 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     }
   }
 
-  get cartItems() {
-    let cartItems = this.localStorageService.getValueByKey('cartItems');
-    return cartItems ? cartItems : '0';
+  get quoteItems() {
+    let quoteItems = this.localStorageService.getValueByKey('quoteItems');
+    return quoteItems ? quoteItems : '0';
   }
 
   showCustomerStoredEvents() {

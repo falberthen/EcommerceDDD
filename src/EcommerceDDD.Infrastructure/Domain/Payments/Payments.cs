@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EcommerceDDD.Domain.Customers.Orders;
 using EcommerceDDD.Domain.Payments;
+using EcommerceDDD.Domain.SeedWork;
 using EcommerceDDD.Infrastructure.Database.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,16 +24,17 @@ namespace EcommerceDDD.Infrastructure.Domain.Products
             await _context.Payments.AddAsync(payment, cancellationToken);
         }
 
+        public async Task<IReadOnlyList<Payment>> Find(Specification<Payment> specification, CancellationToken cancellationToken = default)
+        {
+            return await _context.Payments
+                .Where(specification.ToExpression())
+                .ToListAsync();
+        }
+
         public async Task<Payment> GetById(PaymentId paymentId, CancellationToken cancellationToken = default)
         {
             return await _context.Payments
                 .FirstOrDefaultAsync(x => x.Id == paymentId, cancellationToken);
-        }
-
-        public async Task<Payment> GetByOrderId(OrderId orderId, CancellationToken cancellationToken = default)
-        {
-            return await _context.Payments
-                .FirstOrDefaultAsync(x => x.OrderId == orderId, cancellationToken);
         }
     }
 }
