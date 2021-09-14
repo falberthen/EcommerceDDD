@@ -1,5 +1,5 @@
 ﻿using EcommerceDDD.Application.Orders.GetOrderDetails;
-using EcommerceDDD.Domain.Customers.Orders;
+using EcommerceDDD.Domain.Orders;
 
 namespace EcommerceDDD.Application.Orders
 {

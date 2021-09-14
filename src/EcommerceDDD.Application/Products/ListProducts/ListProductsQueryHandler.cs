@@ -27,7 +27,7 @@ namespace EcommerceDDD.Application.Customers.ListCustomerEventHistory
         public override async Task<IList<ProductViewModel>> ExecuteQuery(ListProductsQuery query, 
             CancellationToken cancellationToken)
         {
-            IList<ProductViewModel> productsViewMiodel = new List<ProductViewModel>();
+            IList<ProductViewModel> productsViewModel = new List<ProductViewModel>();
             var products = await _unitOfWork.Products
                 .ListAll(cancellationToken);
 
@@ -40,7 +40,7 @@ namespace EcommerceDDD.Application.Customers.ListCustomerEventHistory
                 var convertedPrice = _currencyConverter
                     .Convert(currency, product.Price);
 
-                productsViewMiodel.Add(new ProductViewModel
+                productsViewModel.Add(new ProductViewModel
                 {
                     Id = product.Id.Value,
                     Name = product.Name,
@@ -49,7 +49,7 @@ namespace EcommerceDDD.Application.Customers.ListCustomerEventHistory
                 });
             }
 
-            return productsViewMiodel;
+            return productsViewModel;
         }
     }
 }

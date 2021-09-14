@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.SharedKernel;
 using BuildingBlocks.CQRS.QueryHandling;
-using EcommerceDDD.Domain.Customers.Orders;
-using EcommerceDDD.Domain.Customers;
+using EcommerceDDD.Domain.Orders;
 
 namespace EcommerceDDD.Application.Orders.GetOrderDetails
 {
@@ -25,14 +24,9 @@ namespace EcommerceDDD.Application.Orders.GetOrderDetails
         {
             OrderDetailsViewModel viewModel = new OrderDetailsViewModel();
             var orderId = OrderId.Of(query.OrderId);
-            var customerId = CustomerId.Of(query.CustomerId);
-            var customer = await _unitOfWork.Customers
-                .GetById(customerId, cancellationToken);
-
-            var order = customer.Orders.
-               Where(o => o.Id == orderId)
-               .FirstOrDefault();
-
+            var order = await _unitOfWork.Orders
+                .GetById(orderId, cancellationToken);
+            
             if (order == null)
                 throw new InvalidDataException("Order not found.");
 

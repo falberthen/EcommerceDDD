@@ -62,7 +62,7 @@ export class OrdersComponent implements OnInit {
   loadOrders() {
     this.isLoading = true;
     this.orderService.getOrders(this.customerId)
-      .subscribe((result: any) => {
+      .then((result: any) => {
           this.orders = result.data;
           this.isLoading = false;
         },
@@ -75,9 +75,9 @@ export class OrdersComponent implements OnInit {
       case orderStatusCodes.placed:
         return 'placed';
       case orderStatusCodes.readyToShip:
-          return 'readyToShip';
-          case orderStatusCodes.waitingForPayment:
-          return 'waitingForPayment';
+        return 'readyToShip';
+        case orderStatusCodes.waitingForPayment:
+        return 'waitingForPayment';
       default:
         return '';
     }
@@ -85,7 +85,7 @@ export class OrdersComponent implements OnInit {
 
   getOrderDetails() {
     this.orderService.getOrderDetails(this.customerId, this.orderId)
-      .subscribe((result: any) => {
+      .then((result: any) => {
           this.orders.push(result.data);
         },
         (error) => console.error(error)

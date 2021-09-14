@@ -36,7 +36,7 @@ namespace EcommerceDDD.Application.Customers.RegisterCustomer
         {
             try
             {
-                var customer = Customer.CreateCustomer(
+                var customer = Customer.CreateNew(
                     command.Email, 
                     command.Name, 
                     _uniquenessChecker

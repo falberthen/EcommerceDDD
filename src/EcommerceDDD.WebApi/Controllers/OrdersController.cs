@@ -63,13 +63,13 @@ namespace EcommerceDDD.WebApi.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost, Route("{cartId:guid}")]
+        [HttpPost, Route("{quoteId:guid}")]
         [Authorize(Policy = "CanSave")]
         [ProducesResponseType(typeof(CommandHandlerResult<Guid>), (int)HttpStatusCode.Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> PlaceOrder([FromRoute] Guid cartId, [FromBody] PlaceOrderRequest request)
+        public async Task<IActionResult> PlaceOrder([FromRoute] Guid quoteId, [FromBody] PlaceOrderRequest request)
         {
-            var command = new PlaceOrderCommand(cartId, request.CustomerId, request.Currency);
+            var command = new PlaceOrderCommand(quoteId, request.CustomerId, request.Currency);
             return await Response(command);
         }
 

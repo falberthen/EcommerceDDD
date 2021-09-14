@@ -1,36 +1,36 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using EcommerceDDD.Domain.Carts;
+using EcommerceDDD.Domain.Quotes;
 using EcommerceDDD.Domain.Customers;
 using EcommerceDDD.Infrastructure.Database.Context;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
-namespace EcommerceDDD.Infrastructure.Domain.Carts
+namespace EcommerceDDD.Infrastructure.Domain.Quotes
 {
-    public class Carts : ICarts
+    public class Quotes : IQuotes
     {
         private readonly EcommerceDDDContext _context;
 
-        public Carts(EcommerceDDDContext context)
+        public Quotes(EcommerceDDDContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task Add(Cart cart, CancellationToken cancellationToken = default)
+        public async Task Add(Quote quote, CancellationToken cancellationToken = default)
         {
-            await _context.Carts.AddAsync(cart, cancellationToken);
+            await _context.Quotes.AddAsync(quote, cancellationToken);
         }
 
-        public async Task<Cart> GetById(CartId cartId, CancellationToken cancellationToken = default)
+        public async Task<Quote> GetById(QuoteId quoteId, CancellationToken cancellationToken = default)
         {
-            return await _context.Carts
-                .FirstOrDefaultAsync(x => x.Id == cartId, cancellationToken);
+            return await _context.Quotes.FirstOrDefaultAsync(x => x.Id == quoteId, cancellationToken);
         }
 
-        public async Task<Cart> GetByCustomerId(CustomerId customerId, CancellationToken cancellationToken = default)
+        public async Task<Quote> GetCurrentQuote(CustomerId customerId, CancellationToken cancellationToken = default)
         {
-            return await _context.Carts
+            return await _context.Quotes.OrderByDescending(t => t.CreationDate)
                 .FirstOrDefaultAsync(x => x.CustomerId == customerId, cancellationToken);
         }
     }

@@ -1,0 +1,47 @@
+<div class="form-content cart-details-container">
+  <div class="cart-title">
+    <h4>Cart</h4>
+  </div>
+  <div *ngIf="!quote || quote.quoteItems.length == 0" class="empty-cart-message alert alert-danger">
+    Empty cart
+  </div>
+  <div *ngIf="quote && quote.quoteItems.length > 0">
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col" class="table-header"></th>
+            <th scope="col" class="table-header">Product</th>
+            <th scope="col" class="table-header">Quantity</th>
+            <th scope="col" class="table-header">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let quoteItem of quote.quoteItems; index as i">
+            <td class="table-row">
+              <button (click)="removeItem(quoteItem)" class="btn remove-item">
+                <fa-icon [icon]="faMinusCircle" title="Remove"></fa-icon>
+              </button>
+            </td>
+            <td class="table-row">{{ quoteItem.productName }}</td>
+            <td class="table-row">{{ quoteItem.productQuantity }}</td>
+            <td class="table-row">{{ quoteItem.currencySymbol }} {{ quoteItem.productPrice }}</td>
+          </tr>
+          <tr>
+            <td colspan="4" class="table-row">
+              <div class="total-to-pay-container">
+                <b>Total:</b>
+                <span class="total-to-pay-text" >
+                  {{quote.quoteItems[0].currencySymbol}} {{quote.totalPrice.toFixed(2)}}
+                </span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="place-order-container">
+      <button (click)="placeOrder()" class="btn btn-primary">Place Order</button>
+    </div>
+  </div>
+</div>
