@@ -4,9 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Domain.Payments.Events;
 using EcommerceDDD.Domain;
-using System.Linq;
-using EcommerceDDD.Domain.Customers.Orders;
 using EcommerceDDD.Application.Orders;
+using EcommerceDDD.Domain.Orders;
 
 namespace EcommerceDDD.Application.Payments
 {
@@ -38,15 +37,14 @@ namespace EcommerceDDD.Application.Payments
             var customer = await _unitOfWork.Customers
                 .GetById(payment.CustomerId, cancellationToken);
 
+            var order = await _unitOfWork.Orders
+                .GetById(payment.OrderId, cancellationToken);
+
             if (payment == null)
                 throw new InvalidDataException("Payment not found.");
 
             if (customer == null)
                 throw new InvalidDataException("Customer not found.");
-
-            var order = customer.Orders.
-                Where(o => o.Id == payment.OrderId)
-                .FirstOrDefault();
 
             if (order == null)
                 throw new InvalidDataException("order not found.");

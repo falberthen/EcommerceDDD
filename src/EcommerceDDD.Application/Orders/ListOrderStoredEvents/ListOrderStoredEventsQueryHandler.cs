@@ -2,7 +2,8 @@
 using EcommerceDDD.Application.EventSourcing;
 using EcommerceDDD.Application.EventSourcing.StoredEventsData;
 using EcommerceDDD.Domain;
-using EcommerceDDD.Domain.Customers.Orders;
+using EcommerceDDD.Domain.Orders;
+using EcommerceDDD.Domain.Payments.Specifications;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,13 +34,14 @@ namespace EcommerceDDD.Application.Orders.ListOrderStoredEvents
             );
 
             var orderId = OrderId.Of(request.OrderId);
+            var isPaymentOfOrder = new IsPaymentOfOrder(orderId);
             var payment = await _unitOfWork.Payments
-                .GetByOrderId(orderId, cancellationToken);
+                .Find(isPaymentOfOrder, cancellationToken);
 
-            if(payment != null)
+            if(payment.Count > 0)
             {
                 var paymentStoredEvents = await _unitOfWork.StoredEvents
-                    .GetByAggregateId(payment.Id.Value, cancellationToken);
+                    .GetByAggregateId(payment[0].Id.Value, cancellationToken);
 
                 storedEvents.AddRange(StoredEventPrettier<StoredEventData>
                     .ToPretty(paymentStoredEvents));

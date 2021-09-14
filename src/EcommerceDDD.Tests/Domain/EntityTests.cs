@@ -18,7 +18,7 @@ namespace EcommerceDDD.Tests.Domain
             customerUniquenessChecker.IsUserUnique(email).Returns(true);
 
             var product = Product.CreateNew("Product X", Money.Of(10, Currency.USDollar.Code));
-            var customer = Customer.CreateCustomer(email, "Customer X", customerUniquenessChecker);
+            var customer = Customer.CreateNew(email, "Customer X", customerUniquenessChecker);
 
             (product.GetHashCode() == customer.GetHashCode()).Should().BeFalse();
             product.Equals(customer).Should().BeFalse();

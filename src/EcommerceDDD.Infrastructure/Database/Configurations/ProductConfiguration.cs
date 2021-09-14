@@ -13,24 +13,24 @@ namespace EcommerceDDD.Infrastructure.Database.Configurations
 
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id)
-                .HasConversion(
-                    v => v.Value,
-                    v => new ProductId(v));
+            .HasConversion(
+                v => v.Value,
+                v => new ProductId(v));
 
             builder.Property(e => e.CreationDate);
             builder.Property(e => e.Name)
-                .HasMaxLength(25).IsRequired();
+            .HasMaxLength(25).IsRequired();
 
             builder.OwnsOne(e => e.Price, b =>
             {
                 b.Property(e => e.Value)
-                    .HasColumnName("Price")
-                    .HasColumnType("decimal(5,2)");
+                .HasColumnName("Price")
+                .HasColumnType("decimal(5,2)");
 
                 b.Property(e => e.CurrencyCode)
-                    .HasColumnName("Currency")
-                    .HasMaxLength(5)
-                    .IsRequired();
+                .HasColumnName("Currency")
+                .HasMaxLength(5)
+                .IsRequired();
             });
         }
     }

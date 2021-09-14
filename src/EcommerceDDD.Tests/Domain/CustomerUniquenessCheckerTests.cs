@@ -18,7 +18,7 @@ namespace EcommerceDDD.Tests
             var customerUniquenessChecker = Substitute.For<ICustomerUniquenessChecker>();
             customerUniquenessChecker.IsUserUnique(email).Returns(true);
 
-            var customer = Customer.CreateCustomer(email, name, customerUniquenessChecker);
+            var customer = Customer.CreateNew(email, name, customerUniquenessChecker);
 
             customer.Email.Should().Be(email);
         }
@@ -30,7 +30,7 @@ namespace EcommerceDDD.Tests
             customerUniquenessChecker.IsUserUnique(email).Returns(false);
 
             Action action = () => 
-                Customer.CreateCustomer(email, name, customerUniquenessChecker);
+                Customer.CreateNew(email, name, customerUniquenessChecker);
 
             action.Should().Throw<BusinessRuleException>();
         }

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using EcommerceDDD.Infrastructure.Database.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -28,7 +25,9 @@ namespace EcommerceDDD.WebApi.Configurations
             });
 
             services.AddDbContextPool<IdentityContext>(options =>
-                options.UseSqlServer(connString));
+            {
+                options.UseSqlServer(connString);
+            });
         }
     }
 }

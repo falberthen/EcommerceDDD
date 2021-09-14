@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Claims;
 using System.Text;
 using EcommerceDDD.Infrastructure.Database.Context;
 using EcommerceDDD.Infrastructure.Identity;
@@ -32,7 +31,6 @@ namespace EcommerceDDD.WebApi.Configurations
 
             var appSettingsSection = configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
-
 
             var appSettings = appSettingsSection.Get<AppSettings>();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);

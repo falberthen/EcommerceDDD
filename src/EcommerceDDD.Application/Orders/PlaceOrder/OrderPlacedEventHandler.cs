@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using EcommerceDDD.Application.Base;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.Payments;
-using EcommerceDDD.Domain.Customers.Events;
 using System.Linq;
+using EcommerceDDD.Domain.Orders.Events;
 
 namespace EcommerceDDD.Application.Orders.PlaceOrder
 {
@@ -21,12 +21,8 @@ namespace EcommerceDDD.Application.Orders.PlaceOrder
         public async Task Handle(OrderPlacedEvent orderPlacedEvent, 
             CancellationToken cancellationToken)
         {
-            var customer = await _unitOfWork.Customers
-                .GetById(orderPlacedEvent.CustomerId, cancellationToken);
-
-            var order = customer.Orders
-                .Where(o => o.Id == orderPlacedEvent.OrderId)
-                .FirstOrDefault();
+            var order = await _unitOfWork.Orders
+                .GetById(orderPlacedEvent.OrderId, cancellationToken);
 
             if (order == null)
                 throw new InvalidDataException("Order not found.");

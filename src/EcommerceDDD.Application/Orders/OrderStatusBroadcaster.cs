@@ -1,7 +1,7 @@
 ﻿using EcommerceDDD.Application.Orders;
 using EcommerceDDD.Application.SignalR;
 using EcommerceDDD.Domain.Customers;
-using EcommerceDDD.Domain.Customers.Orders;
+using EcommerceDDD.Domain.Orders;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using System;
@@ -51,7 +51,6 @@ namespace EcommerceDDD.Application.Orders
             {
                 _logger.LogError($"\n--- An error has occurred while broadcasting status for order {orderId.Value}: {ex.Message}\n");
             }
-
         }
     }
 }

@@ -2,7 +2,7 @@
 using EcommerceDDD.Domain.Payments.Events;
 using EcommerceDDD.Domain.SeedWork;
 using EcommerceDDD.Domain.Customers;
-using EcommerceDDD.Domain.Customers.Orders;
+using EcommerceDDD.Domain.Orders;
 
 namespace EcommerceDDD.Domain.Payments
 {
@@ -19,7 +19,7 @@ namespace EcommerceDDD.Domain.Payments
             if (orderId.Value == Guid.Empty)
                 throw new BusinessRuleException("The order is required.");
 
-            return new Payment(customerId, orderId);
+            return new Payment(PaymentId.Of(Guid.NewGuid()), customerId, orderId);
         }
 
         public void MarkAsPaid()
@@ -29,12 +29,12 @@ namespace EcommerceDDD.Domain.Payments
             AddDomainEvent(new PaymentAuthorizedEvent(Id));
         }
 
-        private Payment(CustomerId customerId, OrderId orderId)
+        private Payment(PaymentId id, CustomerId customerId, OrderId orderId)
         {
             if (orderId.Value == Guid.Empty)
                 throw new BusinessRuleException("The order is required.");
 
-            Id = PaymentId.Of(Guid.NewGuid());
+            Id = id;
             OrderId = orderId;
             CustomerId = customerId;
             CreatedAt = DateTime.Now;

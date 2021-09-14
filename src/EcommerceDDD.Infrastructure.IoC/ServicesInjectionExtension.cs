@@ -12,17 +12,18 @@ using EcommerceDDD.Infrastructure.Domain.Products;
 using EcommerceDDD.Application.Customers.RegisterCustomer;
 using EcommerceDDD.Domain.Payments;
 using EcommerceDDD.Domain.SharedKernel;
-using EcommerceDDD.Infrastructure.Domain.Carts;
+using EcommerceDDD.Infrastructure.Domain.Quotes;
 using EcommerceDDD.Infrastructure.Domain.CurrencyExchange;
-using EcommerceDDD.Domain.Carts;
+using EcommerceDDD.Domain.Quotes;
 using EcommerceDDD.Application.Customers.DomainServices;
-using EcommerceDDD.Domain.Customers.Orders;
 using EcommerceDDD.Infrastructure.Events;
 using EcommerceDDD.Application.Orders;
 using Microsoft.AspNetCore.Authorization;
 using EcommerceDDD.Infrastructure.Identity.Users;
 using EcommerceDDD.Infrastructure.Identity.Services;
 using EcommerceDDD.Infrastructure.Identity.Claims;
+using EcommerceDDD.Domain.Orders;
+using EcommerceDDD.Infrastructure.Domain.Orders;
 
 namespace EcommerceDDD.Infrastructure.IoC
 {
@@ -45,7 +46,8 @@ namespace EcommerceDDD.Infrastructure.IoC
             services.AddScoped<IEcommerceUnitOfWork, EcommerceUnitOfWork>();
             services.AddScoped<ICustomers, Customers>();
             services.AddScoped<IProducts, Products>();
-            services.AddScoped<ICarts, Carts>();
+            services.AddScoped<IOrders, Orders>();
+            services.AddScoped<IQuotes, Quotes>();
             services.AddScoped<IPayments, Payments>();
 
             // Infrastructure - Data EventSourcing

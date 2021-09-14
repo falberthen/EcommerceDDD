@@ -5,7 +5,7 @@ using EcommerceDDD.Domain.Payments.Events;
 using System.IO;
 using EcommerceDDD.Domain;
 using System.Linq;
-using EcommerceDDD.Domain.Customers.Orders;
+using EcommerceDDD.Domain.Orders;
 
 namespace EcommerceDDD.Application.Orders.PlaceOrder
 {
@@ -31,12 +31,8 @@ namespace EcommerceDDD.Application.Orders.PlaceOrder
             var payment = await _unitOfWork.Payments
                 .GetById(paymentAuthorizedEvent.PaymentId, cancellationToken);
 
-            var customer = await _unitOfWork.Customers
-                .GetById(payment.CustomerId, cancellationToken);
-
-            var order = customer.Orders.
-                Where(o => o.Id == payment.OrderId)
-                .FirstOrDefault();
+            var order = await _unitOfWork.Orders
+                .GetById(payment.OrderId, cancellationToken);
 
             if (payment == null)
                 throw new InvalidDataException("Payment not found.");
@@ -50,7 +46,7 @@ namespace EcommerceDDD.Application.Orders.PlaceOrder
 
             // Broadcasting order update
             await _orderStatusBroadcaster.BroadcastOrderStatus(
-                customer.Id, 
+                order.CustomerId, 
                 order.Id, 
                 order.Status
             );
