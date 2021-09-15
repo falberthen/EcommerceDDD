@@ -62,9 +62,7 @@ export class AccountComponent implements OnInit {
       this.f.passwordConfirm.value);
 
     this.accountService.registerAccount(customerRegistration)
-    .pipe(first())
-    .subscribe(
-      data => {
+    .then(data => {
         this.notificationService.showSuccess("Account successfully created!");
         this.router.navigate([this.returnUrl]);
       },

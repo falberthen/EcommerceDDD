@@ -46,9 +46,9 @@
     </div>
   </div>
   <div class="cart-details-container fadeInDown">
-    <app-cart-details #cart
-      (sendCartItemsEvent)="syncronizeCartToProductList($event)"
+    <app-cart #cart
+      (sendQuoteItemsEvent)="syncronizeQuoteToProductList($event)"
       (placeOrderEvent)="placeOrder()">
-    </app-cart-details>
+    </app-cart>
   </div>
 </div>

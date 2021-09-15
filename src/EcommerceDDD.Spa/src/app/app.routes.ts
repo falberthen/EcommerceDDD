@@ -29,7 +29,7 @@ export const APP_ROUTES: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'products/:cartId',
+    path: 'products/:quoteId',
     component: ProductSelectionComponent,
     canActivate: [AuthGuard],
     pathMatch: 'full'

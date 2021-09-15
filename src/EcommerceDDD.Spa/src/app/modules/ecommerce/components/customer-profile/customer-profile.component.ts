@@ -57,7 +57,7 @@ export class CustomerProfileComponent implements OnInit {
 
     if(this.customer) {
       this.accountService.updateCustomer(this.customer.id, customerUpdate)
-      .subscribe(
+      .then(
         data => {
           this.notificationService.showSuccess("Profile successfully updated!");
           this.setLocalStorageValues(customerUpdate.name);

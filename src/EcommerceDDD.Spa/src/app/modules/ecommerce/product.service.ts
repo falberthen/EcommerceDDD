@@ -13,7 +13,8 @@ export class ProductService extends RestService {
     super(http, baseUrl);
   }
 
-  public getProducts(currency: string): Observable<Product[]>{
-    return this.get('products/' + currency);
+  public getProducts(currency: string): Promise<Product[]>{
+    return this.get('products/' + currency)
+    .toPromise();
   }
 }

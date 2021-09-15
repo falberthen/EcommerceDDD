@@ -1,6 +1,6 @@
 import { Product } from '../Product';
 
-export class SaveCartRequest {
+export class CreateQuoteRequest {
   customerId: string;
   product: Product;
   currency: string;

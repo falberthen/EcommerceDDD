@@ -1,16 +1,16 @@
 
-export class Cart {
-  cartId: string;
-  cartItems: CartItem[] = [];
+export class Quote {
+  quoteId: string;
+  quoteItems: QuoteItem[] = [];
   totalPrice: number;
 
-  constructor(cartId: string, totalPrice: number) {
-    this.cartId = cartId;
+  constructor(quoteId: string, totalPrice: number) {
+    this.quoteId = quoteId;
     this.totalPrice = totalPrice;
   }
 }
 
-export class CartItem{
+export class QuoteItem{
   productId: string;
   productName: string;
   productPrice: number;

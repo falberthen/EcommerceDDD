@@ -6,7 +6,7 @@ import { ProductSelectionComponent } from './components/product-selection/produc
 import { OrdersComponent } from './components/orders/orders.component';
 import { RouterModule } from '@angular/router';
 import { CustomerProfileComponent } from './components/customer-profile/customer-profile.component';
-import { CartDetailsComponent } from './components/cart-details/cart-details.component';
+import { CartComponent } from './components/cart/cart.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { OrderModule } from 'ngx-order-pipe';
@@ -16,7 +16,7 @@ import { OrderModule } from 'ngx-order-pipe';
       HomeComponent,
       StoredEventsViewerComponent,
       ProductSelectionComponent,
-      CartDetailsComponent,
+      CartComponent,
       OrdersComponent,
       CustomerProfileComponent,
    ],
