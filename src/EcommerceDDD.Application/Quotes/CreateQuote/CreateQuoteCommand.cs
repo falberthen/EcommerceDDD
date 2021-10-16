@@ -1,7 +1,7 @@
 ﻿using System;
-using BuildingBlocks.CQRS.CommandHandling;
 using FluentValidation;
 using FluentValidation.Results;
+using EcommerceDDD.Application.Core.CQRS.CommandHandling;
 
 namespace EcommerceDDD.Application.Quotes.SaveQuote
 {

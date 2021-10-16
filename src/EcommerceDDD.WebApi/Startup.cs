@@ -6,10 +6,9 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using EcommerceDDD.Application.SignalR;
+using EcommerceDDD.Application.Core.SignalR;
 
 namespace EcommerceDDD.WebApi
 {

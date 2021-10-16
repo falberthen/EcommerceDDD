@@ -1,11 +1,10 @@
 ﻿using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
-using EcommerceDDD.Application.Base;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.Payments;
-using System.Linq;
 using EcommerceDDD.Domain.Orders.Events;
+using EcommerceDDD.Application.Core.ExceptionHandling;
 
 namespace EcommerceDDD.Application.Orders.PlaceOrder
 {
@@ -25,7 +24,7 @@ namespace EcommerceDDD.Application.Orders.PlaceOrder
                 .GetById(orderPlacedEvent.OrderId, cancellationToken);
 
             if (order == null)
-                throw new InvalidDataException("Order not found.");
+                throw new ApplicationDataException("Order not found.");
 
             // Creating a payment
             var payment = Payment

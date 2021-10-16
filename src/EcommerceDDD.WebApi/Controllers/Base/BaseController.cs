@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Threading.Tasks;
-using BuildingBlocks.CQRS.CommandHandling;
-using BuildingBlocks.CQRS.QueryHandling;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using EcommerceDDD.Application.Core.CQRS.QueryHandling;
+using EcommerceDDD.Application.Core.CQRS.CommandHandling;
 
 namespace EcommerceDDD.WebApi.Controllers.Base
 {
@@ -44,22 +44,6 @@ namespace EcommerceDDD.WebApi.Controllers.Base
                 var commandHandlerResult = await Mediator.Send(command);
                 return commandHandlerResult.ValidationResult.IsValid ? OkActionResult(commandHandlerResult.Id)
                     : BadRequestActionResult(commandHandlerResult.ValidationResult.Errors);
-            }
-            catch (Exception e)
-            {
-                return BadRequestActionResult(e.Message);
-            }
-        }
-
-        protected new IActionResult Response(Command commandHandlerResult)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                return BadRequest();
-
-                return commandHandlerResult.ValidationResult.IsValid ? OkActionResult(commandHandlerResult)
-                : BadRequestActionResult(commandHandlerResult.ValidationResult.Errors);
             }
             catch (Exception e)
             {

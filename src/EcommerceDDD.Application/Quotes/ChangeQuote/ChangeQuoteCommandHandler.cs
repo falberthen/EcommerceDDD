@@ -1,11 +1,11 @@
 ﻿using System;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.Quotes;
-using BuildingBlocks.CQRS.CommandHandling;
 using EcommerceDDD.Domain.Products;
+using EcommerceDDD.Application.Core.CQRS.CommandHandling;
+using EcommerceDDD.Application.Core.ExceptionHandling;
 
 namespace EcommerceDDD.Application.Quotes.SaveQuote
 {
@@ -31,10 +31,10 @@ namespace EcommerceDDD.Application.Quotes.SaveQuote
                 .GetById(productId, cancellationToken);
 
             if (quote == null)
-                throw new InvalidDataException("Quote not found.");
+                throw new ApplicationDataException("Quote not found.");
 
             if (product == null)
-                throw new InvalidDataException("Product not found.");
+                throw new ApplicationDataException("Product not found.");
 
             var quantity = command.Product.Quantity;
             var quotetemProductData = new QuoteItemProductData(

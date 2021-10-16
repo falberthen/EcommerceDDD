@@ -2,11 +2,9 @@
 using System.Net;
 using MediatR;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
-using BuildingBlocks.CQRS.CommandHandling;
 using EcommerceDDD.WebApi.Controllers.Base;
 using EcommerceDDD.Application.Quotes.GetQuoteDetails;
 using EcommerceDDD.Application.Quotes.SaveQuote;
@@ -32,7 +30,7 @@ namespace EcommerceDDD.WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [Authorize(Policy = "CanSave")]
-        [ProducesResponseType(typeof(CommandHandlerResult<Guid>), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(Guid), (int)HttpStatusCode.Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateQuote([FromBody] CreateQuoteRequest request)
         {
@@ -47,7 +45,7 @@ namespace EcommerceDDD.WebApi.Controllers
         /// <returns></returns>
         [HttpPut]
         [Authorize(Policy = "CanSave")]
-        [ProducesResponseType(typeof(CommandHandlerResult<Guid>), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(Guid), (int)HttpStatusCode.OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ChangeQuote([FromBody] ChangeQuoteRequest request)
         {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
@@ -9,13 +10,10 @@ using EcommerceDDD.Application.Customers.UpdateCustomer;
 using Microsoft.AspNetCore.Authorization;
 using EcommerceDDD.Application.Customers.AuthenticateCustomer;
 using EcommerceDDD.Application.Customers.ListCustomerStoredEvents;
-using System.Net;
 using EcommerceDDD.Application.Customers.ViewModels;
 using System.Collections.Generic;
-using BuildingBlocks.CQRS.CommandHandling;
-using BuildingBlocks.CQRS.QueryHandling;
-using EcommerceDDD.Application.EventSourcing.StoredEventsData;
 using EcommerceDDD.WebApi.Controllers.Base;
+using EcommerceDDD.Application.Core.EventSourcing.StoredEventsData;
 
 namespace EcommerceDDD.WebApi.Controllers
 {
@@ -56,7 +54,7 @@ namespace EcommerceDDD.WebApi.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost, Route("register")]
-        [ProducesResponseType(typeof(CommandHandlerResult<Guid>), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(Guid), (int)HttpStatusCode.Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromBody]RegisterCustomerRequest request)
         {
@@ -72,7 +70,7 @@ namespace EcommerceDDD.WebApi.Controllers
         /// <returns></returns>
         [HttpPut, Route("{customerId:guid}")]
         [Authorize(Policy = "CanSave")]
-        [ProducesResponseType(typeof(CommandHandlerResult<Guid>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(Guid), (int)HttpStatusCode.OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Update([FromRoute]Guid customerId, [FromBody]UpdateCustomerRequest request)
         {
@@ -87,7 +85,7 @@ namespace EcommerceDDD.WebApi.Controllers
         /// <returns></returns>
         [HttpGet, Route("{customerId:guid}/events")]
         [Authorize(Policy = "CanRead")]
-        [ProducesResponseType(typeof(QueryHandlerResult<IList<CustomerStoredEventData>>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IList<CustomerStoredEventData>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ListEvents([FromRoute]Guid customerId)
         {

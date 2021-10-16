@@ -1,12 +1,12 @@
-﻿using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
+using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using EcommerceDDD.Application.Products.ListProducts;
 using System.Collections.Generic;
 using EcommerceDDD.Application.Customers.ViewModels;
-using System.Net;
 using EcommerceDDD.WebApi.Controllers.Base;
 
 namespace EcommerceDDD.WebApi.Controllers
