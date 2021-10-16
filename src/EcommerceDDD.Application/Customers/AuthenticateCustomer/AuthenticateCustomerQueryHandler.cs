@@ -5,9 +5,9 @@ using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
 using EcommerceDDD.Infrastructure.Identity.Services;
 using EcommerceDDD.Application.Customers.ViewModels;
-using EcommerceDDD.Application.Base;
-using BuildingBlocks.CQRS.QueryHandling;
 using EcommerceDDD.Infrastructure.Identity.Users;
+using EcommerceDDD.Application.Core.CQRS.QueryHandling;
+using EcommerceDDD.Application.Core.ExceptionHandling;
 
 namespace EcommerceDDD.Application.Customers.AuthenticateCustomer
 {
@@ -44,7 +44,7 @@ namespace EcommerceDDD.Application.Customers.AuthenticateCustomer
                     .FindByEmailAsync(request.Email);
 
                 if (user == null)
-                    throw new InvalidDataException("User not found.");
+                    throw new ApplicationDataException("User not found.");
 
                 var token = await _jwtService
                    .GenerateJwt(user.Email);

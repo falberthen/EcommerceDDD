@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.Application.EventSourcing.StoredEventsData
+﻿namespace EcommerceDDD.Application.Core.EventSourcing.StoredEventsData
 {
     public class CustomerStoredEventData : StoredEventData
     {

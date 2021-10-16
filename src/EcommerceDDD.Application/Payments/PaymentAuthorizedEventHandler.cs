@@ -6,6 +6,7 @@ using System.IO;
 using EcommerceDDD.Domain;
 using System.Linq;
 using EcommerceDDD.Domain.Orders;
+using EcommerceDDD.Application.Core.ExceptionHandling;
 
 namespace EcommerceDDD.Application.Orders.PlaceOrder
 {
@@ -35,10 +36,10 @@ namespace EcommerceDDD.Application.Orders.PlaceOrder
                 .GetById(payment.OrderId, cancellationToken);
 
             if (payment == null)
-                throw new InvalidDataException("Payment not found.");
+                throw new ApplicationDataException("Payment not found.");
 
             if (order == null)
-                throw new InvalidDataException("Order not found.");
+                throw new ApplicationDataException("Order not found.");
 
             // Changing order status
             _orderStatusWorkflow.CalculateOrderStatus(order, payment);

@@ -4,9 +4,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.Quotes;
-using BuildingBlocks.CQRS.CommandHandling;
 using EcommerceDDD.Domain.Customers;
 using EcommerceDDD.Domain.Products;
+using EcommerceDDD.Application.Core.ExceptionHandling;
+using EcommerceDDD.Application.Core.CQRS.CommandHandling;
 
 namespace EcommerceDDD.Application.Quotes.SaveQuote
 {
@@ -32,10 +33,10 @@ namespace EcommerceDDD.Application.Quotes.SaveQuote
                 .GetById(productId, cancellationToken);
 
             if (customer == null)
-                throw new InvalidDataException("Customer not found.");
+                throw new ApplicationDataException("Customer not found.");
 
             if (product == null)
-                throw new InvalidDataException("Product not found.");
+                throw new ApplicationDataException("Product not found.");
 
             var quantity = command.Product.Quantity;
             var quotetemProductData = new QuoteItemProductData(

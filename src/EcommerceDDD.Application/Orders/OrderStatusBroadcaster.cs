@@ -1,5 +1,4 @@
-﻿using EcommerceDDD.Application.Orders;
-using EcommerceDDD.Application.SignalR;
+﻿using EcommerceDDD.Application.Core.SignalR;
 using EcommerceDDD.Domain.Customers;
 using EcommerceDDD.Domain.Orders;
 using Microsoft.AspNetCore.SignalR;

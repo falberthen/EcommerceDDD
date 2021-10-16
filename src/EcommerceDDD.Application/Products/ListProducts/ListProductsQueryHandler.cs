@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using EcommerceDDD.Application.Base;
 using EcommerceDDD.Application.Customers.ViewModels;
 using EcommerceDDD.Application.Products.ListProducts;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.SharedKernel;
-using BuildingBlocks.CQRS.QueryHandling;
 using System;
+using EcommerceDDD.Application.Core.CQRS.QueryHandling;
+using EcommerceDDD.Application.Core.ExceptionHandling;
 
 namespace EcommerceDDD.Application.Customers.ListCustomerEventHistory
 {
@@ -32,7 +32,7 @@ namespace EcommerceDDD.Application.Customers.ListCustomerEventHistory
                 .ListAll(cancellationToken);
 
             if (string.IsNullOrEmpty(query.Currency))
-                throw new InvalidDataException("Currency code cannot be empty.");
+                throw new ApplicationDataException("Currency code cannot be empty.");
 
             var currency = Currency.FromCode(query.Currency);
             foreach (var product in products)

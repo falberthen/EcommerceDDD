@@ -1,7 +1,7 @@
-﻿using BuildingBlocks.CQRS.QueryHandling;
-using EcommerceDDD.Application.Customers.ViewModels;
-using FluentValidation;
+﻿using FluentValidation;
 using FluentValidation.Results;
+using EcommerceDDD.Application.Core.CQRS.QueryHandling;
+using EcommerceDDD.Application.Customers.ViewModels;
 
 namespace EcommerceDDD.Application.Customers.AuthenticateCustomer
 {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Net;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
@@ -8,12 +9,9 @@ using EcommerceDDD.Application.Orders.PlaceOrder;
 using EcommerceDDD.Application.Orders.GetOrderDetails;
 using EcommerceDDD.Application.Orders.GetOrders;
 using System.Collections.Generic;
-using System.Net;
-using BuildingBlocks.CQRS.CommandHandling;
-using BuildingBlocks.CQRS.QueryHandling;
-using EcommerceDDD.Application.EventSourcing.StoredEventsData;
 using EcommerceDDD.Application.Orders.ListOrderStoredEvents;
 using EcommerceDDD.WebApi.Controllers.Base;
+using EcommerceDDD.Application.Core.EventSourcing.StoredEventsData;
 
 namespace EcommerceDDD.WebApi.Controllers
 {
@@ -65,7 +63,7 @@ namespace EcommerceDDD.WebApi.Controllers
         /// <returns></returns>
         [HttpPost, Route("{quoteId:guid}")]
         [Authorize(Policy = "CanSave")]
-        [ProducesResponseType(typeof(CommandHandlerResult<Guid>), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(Guid), (int)HttpStatusCode.Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> PlaceOrder([FromRoute] Guid quoteId, [FromBody] PlaceOrderRequest request)
         {
@@ -80,7 +78,7 @@ namespace EcommerceDDD.WebApi.Controllers
         /// <returns></returns>
         [HttpGet, Route("{orderId:guid}/events")]
         [Authorize(Policy = "CanRead")]
-        [ProducesResponseType(typeof(QueryHandlerResult<IList<StoredEventData>>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IList<StoredEventData>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ListEvents([FromRoute] Guid orderId)
         {

@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using EcommerceDDD.Application.Customers.RegisterCustomer;
-using EcommerceDDD.Application.Customers.UpdateCustomer;
-using EcommerceDDD.Application.Orders.PlaceOrder;
 
-namespace EcommerceDDD.Application.AutoMapper
+namespace EcommerceDDD.Application.Core.AutoMapper
 {
     public class RequestToCommandProfile : Profile
     {

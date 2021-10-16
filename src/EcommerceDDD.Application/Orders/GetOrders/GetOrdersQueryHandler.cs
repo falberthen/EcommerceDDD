@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Application.Orders.GetOrderDetails;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.SharedKernel;
-using BuildingBlocks.CQRS.QueryHandling;
 using EcommerceDDD.Domain.Customers;
 using EcommerceDDD.Domain.Orders.Specifications;
+using EcommerceDDD.Application.Core.CQRS.QueryHandling;
+using EcommerceDDD.Application.Core.ExceptionHandling;
 
 namespace EcommerceDDD.Application.Orders.GetOrders
 {
@@ -33,7 +33,7 @@ namespace EcommerceDDD.Application.Orders.GetOrders
                 .GetById(customerId, cancellationToken);
 
             if (customer == null)
-                throw new InvalidDataException("Custumer not found.");
+                throw new ApplicationDataException("Custumer not found.");
 
             var isOrderPlacedByCustomer = new IsOrderPlacedByCustomer(customer.Id);
             var customerOrders = await _unitOfWork.Orders.Find(isOrderPlacedByCustomer);

@@ -1,7 +1,7 @@
 ﻿using System;
 using FluentValidation.Results;
-using BuildingBlocks.CQRS.CommandHandling;
 using FluentValidation;
+using EcommerceDDD.Application.Core.CQRS.CommandHandling;
 
 namespace EcommerceDDD.Application.Customers.RegisterCustomer
 {

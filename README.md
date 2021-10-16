@@ -69,7 +69,6 @@ It takes care of the application's infrastructure and issues not related to the 
       <li>ASP.NET Core Identity</li>
       <li>SignalR Core</li>
       <li>JWT Bearer Authentication</li>
-      <li><a href='https://github.com/falberthen/BuildingBlocks.CQRS' target="_blank">BuildingBlocks.CQRS 2.x</a></li>
       <li>MediatR</li> 
       <li>Fluent Validation</li>
       <li>Automapper</li>

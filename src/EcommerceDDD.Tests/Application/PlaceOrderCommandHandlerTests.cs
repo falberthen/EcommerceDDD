@@ -12,7 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace EcommerceDDD.Tests.Commands
+namespace EcommerceDDD.Tests.Application
 {
     public class PlaceOrderCommandHandlerTests
     {

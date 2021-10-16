@@ -2,9 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Domain;
-using EcommerceDDD.Application.Base;
-using BuildingBlocks.CQRS.CommandHandling;
 using EcommerceDDD.Domain.Customers;
+using EcommerceDDD.Application.Core.CQRS.CommandHandling;
+using EcommerceDDD.Application.Core.ExceptionHandling;
 
 namespace EcommerceDDD.Application.Customers.UpdateCustomer
 {
@@ -25,7 +25,7 @@ namespace EcommerceDDD.Application.Customers.UpdateCustomer
                 .GetById(customerId, cancellationToken);
 
             if (customer == null)
-                throw new InvalidDataException("Customer not found.");
+                throw new ApplicationDataException("Customer not found.");
 
             customer.SetName(request.Name);
             await _unitOfWork.CommitAsync();

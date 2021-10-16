@@ -1,10 +1,10 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Domain;
-using BuildingBlocks.CQRS.QueryHandling;
-using System;
 using EcommerceDDD.Domain.Customers;
 using EcommerceDDD.Domain.Orders.Specifications;
+using EcommerceDDD.Application.Core.CQRS.QueryHandling;
 
 namespace EcommerceDDD.Application.Quotes.GetCurrentQuote
 {
