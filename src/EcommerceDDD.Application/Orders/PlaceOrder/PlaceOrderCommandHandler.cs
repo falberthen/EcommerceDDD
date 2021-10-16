@@ -2,14 +2,14 @@
 using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Domain;
-using EcommerceDDD.Application.Base;
-using BuildingBlocks.CQRS.CommandHandling;
 using EcommerceDDD.Domain.Customers;
 using EcommerceDDD.Domain.Quotes;
 using System.Linq;
 using System.Collections.Generic;
 using EcommerceDDD.Domain.SharedKernel;
 using EcommerceDDD.Domain.Orders;
+using EcommerceDDD.Application.Core.CQRS.CommandHandling;
+using EcommerceDDD.Application.Core.ExceptionHandling;
 
 namespace EcommerceDDD.Application.Orders.PlaceOrder
 {
@@ -38,10 +38,10 @@ namespace EcommerceDDD.Application.Orders.PlaceOrder
                 .GetById(customerId, cancellationToken);
 
             if (customer == null)
-                throw new InvalidDataException("Customer not found.");
+                throw new ApplicationDataException("Customer not found.");
 
             if (quote == null)
-                throw new InvalidDataException("Quote not found.");
+                throw new ApplicationDataException("Quote not found.");
 
             var currency = Currency.FromCode(command.Currency);
 
@@ -49,7 +49,7 @@ namespace EcommerceDDD.Application.Orders.PlaceOrder
                 .GetByIds(quote.Items.Select(i => i.ProductId).ToList());
 
             if (products == null)
-                throw new InvalidDataException("Products couldn't be loaded.");
+                throw new ApplicationDataException("Products couldn't be loaded.");
 
             foreach (var item in quote.Items)
             {

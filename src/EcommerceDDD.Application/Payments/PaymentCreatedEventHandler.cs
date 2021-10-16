@@ -1,11 +1,11 @@
 ﻿using MediatR;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Domain.Payments.Events;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Application.Orders;
 using EcommerceDDD.Domain.Orders;
+using EcommerceDDD.Application.Core.ExceptionHandling;
 
 namespace EcommerceDDD.Application.Payments
 {
@@ -41,13 +41,13 @@ namespace EcommerceDDD.Application.Payments
                 .GetById(payment.OrderId, cancellationToken);
 
             if (payment == null)
-                throw new InvalidDataException("Payment not found.");
+                throw new ApplicationDataException("Payment not found.");
 
             if (customer == null)
-                throw new InvalidDataException("Customer not found.");
+                throw new ApplicationDataException("Customer not found.");
 
             if (order == null)
-                throw new InvalidDataException("order not found.");
+                throw new ApplicationDataException("order not found.");
 
             // Changing order status
             _orderStatusWorkflow.CalculateOrderStatus(order, payment);

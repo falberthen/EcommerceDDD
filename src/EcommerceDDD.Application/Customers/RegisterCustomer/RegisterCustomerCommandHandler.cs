@@ -6,9 +6,9 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using EcommerceDDD.Domain;
 using Microsoft.AspNetCore.Identity;
-using EcommerceDDD.Application.Base;
-using BuildingBlocks.CQRS.CommandHandling;
 using EcommerceDDD.Infrastructure.Identity.Users;
+using EcommerceDDD.Application.Core.CQRS.CommandHandling;
+using EcommerceDDD.Application.Core.ExceptionHandling;
 
 namespace EcommerceDDD.Application.Customers.RegisterCustomer
 {
@@ -75,7 +75,7 @@ namespace EcommerceDDD.Application.Customers.RegisterCustomer
             {
                 foreach (var error in userCreated.Errors)
                 {
-                    throw new InvalidDataException(error.Description.ToString());
+                    throw new ApplicationDataException(error.Description.ToString());
                 }
             }
 

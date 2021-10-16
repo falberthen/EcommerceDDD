@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using EcommerceDDD.Application.EventSourcing.StoredEventsData;
+using EcommerceDDD.Application.Core.EventSourcing.StoredEventsData;
 using EcommerceDDD.Domain.Core.Events;
 using Newtonsoft.Json;
 
-namespace EcommerceDDD.Application.EventSourcing
+namespace EcommerceDDD.Application.Core.EventSourcing
 {
     public static class StoredEventPrettier<THistoryData> 
         where THistoryData : StoredEventData, new()

@@ -4,8 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.SharedKernel;
-using BuildingBlocks.CQRS.QueryHandling;
 using EcommerceDDD.Domain.Orders;
+using EcommerceDDD.Application.Core.CQRS.QueryHandling;
+using EcommerceDDD.Application.Core.ExceptionHandling;
 
 namespace EcommerceDDD.Application.Orders.GetOrderDetails
 {
@@ -28,7 +29,7 @@ namespace EcommerceDDD.Application.Orders.GetOrderDetails
                 .GetById(orderId, cancellationToken);
             
             if (order == null)
-                throw new InvalidDataException("Order not found.");
+                throw new ApplicationDataException("Order not found.");
 
             var productIds = order.OrderLines
                 .Select(p => p.ProductId)
@@ -38,7 +39,7 @@ namespace EcommerceDDD.Application.Orders.GetOrderDetails
                 .GetByIds(productIds, cancellationToken);
 
             if (products == null)
-                throw new InvalidDataException("Products not found");
+                throw new ApplicationDataException("Products not found");
 
             viewModel.OrderId = order.Id.Value;
             viewModel.CreatedAt = order.CreatedAt.ToString();

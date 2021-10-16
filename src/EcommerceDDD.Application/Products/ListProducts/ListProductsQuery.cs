@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using BuildingBlocks.CQRS.QueryHandling;
+using EcommerceDDD.Application.Core.CQRS.QueryHandling;
 using EcommerceDDD.Application.Customers.ViewModels;
 using FluentValidation;
 using FluentValidation.Results;

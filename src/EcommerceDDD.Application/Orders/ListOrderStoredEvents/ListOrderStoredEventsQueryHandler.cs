@@ -1,6 +1,6 @@
-﻿using BuildingBlocks.CQRS.QueryHandling;
-using EcommerceDDD.Application.EventSourcing;
-using EcommerceDDD.Application.EventSourcing.StoredEventsData;
+﻿using EcommerceDDD.Application.Core.CQRS.QueryHandling;
+using EcommerceDDD.Application.Core.EventSourcing;
+using EcommerceDDD.Application.Core.EventSourcing.StoredEventsData;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.Orders;
 using EcommerceDDD.Domain.Payments.Specifications;

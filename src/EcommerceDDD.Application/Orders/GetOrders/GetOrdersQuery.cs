@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using EcommerceDDD.Application.Orders.GetOrderDetails;
-using BuildingBlocks.CQRS.QueryHandling;
 using FluentValidation.Results;
 using FluentValidation;
+using EcommerceDDD.Application.Orders.GetOrderDetails;
+using EcommerceDDD.Application.Core.CQRS.QueryHandling;
 
 namespace EcommerceDDD.Application.Orders.GetOrders
 {

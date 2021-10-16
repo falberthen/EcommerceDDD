@@ -1,13 +1,13 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EcommerceDDD.Application.Base;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.SharedKernel;
-using BuildingBlocks.CQRS.QueryHandling;
 using EcommerceDDD.Domain.Quotes;
-using System;
 using EcommerceDDD.Domain.Customers;
+using EcommerceDDD.Application.Core.CQRS.QueryHandling;
+using EcommerceDDD.Application.Core.ExceptionHandling;
 
 namespace EcommerceDDD.Application.Quotes.GetQuoteDetails
 {
@@ -32,10 +32,10 @@ namespace EcommerceDDD.Application.Quotes.GetQuoteDetails
                 .GetById(quoteId, cancellationToken);
 
             if (quote == null)
-                throw new InvalidDataException("Quote not found.");
+                throw new ApplicationDataException("Quote not found.");
 
             if (string.IsNullOrWhiteSpace(query.Currency))
-                throw new InvalidDataException("Currency can't be empty.");
+                throw new ApplicationDataException("Currency can't be empty.");
 
             if (quote.Items.Count > 0)
             {
@@ -46,7 +46,7 @@ namespace EcommerceDDD.Application.Quotes.GetQuoteDetails
                     .GetByIds(productIds, cancellationToken);
 
                 if (products == null)
-                    throw new InvalidDataException("Products not found");
+                    throw new ApplicationDataException("Products not found");
 
                 foreach (var quoteItem in quote.Items)
                 {

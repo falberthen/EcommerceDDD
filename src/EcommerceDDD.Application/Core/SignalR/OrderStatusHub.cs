@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 
-namespace EcommerceDDD.Application.SignalR
+namespace EcommerceDDD.Application.Core.SignalR
 {
     public interface IOrderStatusHubClient
     {

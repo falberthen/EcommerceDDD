@@ -2,9 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Domain;
-using BuildingBlocks.CQRS.QueryHandling;
-using EcommerceDDD.Application.EventSourcing.StoredEventsData;
-using EcommerceDDD.Application.EventSourcing;
+using EcommerceDDD.Application.Core.CQRS.QueryHandling;
+using EcommerceDDD.Application.Core.EventSourcing.StoredEventsData;
+using EcommerceDDD.Application.Core.EventSourcing;
 
 namespace EcommerceDDD.Application.Customers.ListCustomerStoredEvents
 {

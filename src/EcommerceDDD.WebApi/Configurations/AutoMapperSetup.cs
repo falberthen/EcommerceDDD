@@ -1,6 +1,5 @@
 ﻿using System;
-using AutoMapper;
-using EcommerceDDD.Application.AutoMapper;
+using EcommerceDDD.Application.Core.AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EcommerceDDD.WebApi.Configurations

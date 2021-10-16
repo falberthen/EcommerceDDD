@@ -1,5 +1,5 @@
 ﻿using System;
-using BuildingBlocks.CQRS.CommandHandling;
+using EcommerceDDD.Application.Core.CQRS.CommandHandling;
 using FluentValidation;
 using FluentValidation.Results;
 

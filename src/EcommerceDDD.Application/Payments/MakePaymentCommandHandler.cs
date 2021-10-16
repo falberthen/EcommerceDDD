@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using BuildingBlocks.CQRS.CommandHandling;
-using EcommerceDDD.Application.Base;
+using EcommerceDDD.Application.Core.CQRS.CommandHandling;
+using EcommerceDDD.Application.Core.ExceptionHandling;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.Payments;
 
@@ -26,10 +26,10 @@ namespace EcommerceDDD.Application.Payments
                 .GetById(paymentId, cancellationToken);
 
             if (payment == null)
-                throw new InvalidDataException("Payment not found.");
+                throw new ApplicationDataException("Payment not found.");
 
             if (payment.OrderId.Value == Guid.Empty)
-                throw new InvalidDataException("Order not found.");
+                throw new ApplicationDataException("Order not found.");
             
             try
             {

@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.Application.EventSourcing.StoredEventsData
+﻿namespace EcommerceDDD.Application.Core.EventSourcing.StoredEventsData
 {
     /// <summary>
     /// Common fields to display with the stored event payload data
