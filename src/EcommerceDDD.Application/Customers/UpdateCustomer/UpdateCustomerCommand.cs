@@ -1,14 +1,11 @@
-﻿using System;
-using EcommerceDDD.Application.Core.CQRS.CommandHandling;
-using FluentValidation;
-using FluentValidation.Results;
+﻿using EcommerceDDD.Application.Core.CQRS.CommandHandling;
 
 namespace EcommerceDDD.Application.Customers.UpdateCustomer
 {
-    public class UpdateCustomerCommand : Command<Guid>
+    public record class UpdateCustomerCommand : Command<Guid>
     {
-        public Guid CustomerId { get; protected set; }
-        public string Name { get; protected set; }
+        public Guid CustomerId { get; init; }
+        public string Name { get; init; }
 
         public UpdateCustomerCommand(Guid customerId, string name)
         {

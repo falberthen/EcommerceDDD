@@ -1,16 +1,14 @@
-﻿namespace EcommerceDDD.Infrastructure.Domain.CurrencyExchange
+﻿namespace EcommerceDDD.Infrastructure.Domain.CurrencyExchange;
+public record class ExchangeRate
 {
-    public class ExchangeRate
-    {
-        public string FromCurrency { get; private set; }
-        public string ToCurrency { get; private set; }
-        public decimal ConversionRate { get; private set; }
+    public string FromCurrency { get; private set; }
+    public string ToCurrency { get; private set; }
+    public decimal ConversionRate { get; private set; }
 
-        public ExchangeRate(string sourceCurrency, string targetCurrency, decimal conversionRate)
-        {
-            FromCurrency = sourceCurrency;
-            ToCurrency = targetCurrency;
-            ConversionRate = conversionRate;
-        }
+    public ExchangeRate(string sourceCurrency, string targetCurrency, decimal conversionRate)
+    {
+        FromCurrency = sourceCurrency;
+        ToCurrency = targetCurrency;
+        ConversionRate = conversionRate;
     }
 }

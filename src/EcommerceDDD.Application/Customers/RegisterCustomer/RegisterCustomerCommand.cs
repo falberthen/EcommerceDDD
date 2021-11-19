@@ -1,45 +1,41 @@
-﻿using System;
-using FluentValidation.Results;
-using FluentValidation;
-using EcommerceDDD.Application.Core.CQRS.CommandHandling;
+﻿using EcommerceDDD.Application.Core.CQRS.CommandHandling;
 
-namespace EcommerceDDD.Application.Customers.RegisterCustomer
+namespace EcommerceDDD.Application.Customers.RegisterCustomer;
+
+public record class RegisterCustomerCommand : Command<Guid>
 {
-    public class RegisterCustomerCommand : Command<Guid>
+    public string Email { get; init; }
+    public string Password { get; init; }
+    public string PasswordConfirm { get; init; }
+    public string Name { get; init; }
+
+    public RegisterCustomerCommand(string email, string name, string password, string passwordConfirm)
     {
-        public string Email { get; protected set; }
-        public string Password { get; protected set; }
-        public string PasswordConfirm { get; protected set; }
-        public string Name { get; protected set; }
-
-        public RegisterCustomerCommand(string email, string name, string password, string passwordConfirm)
-        {
-            Name = name;
-            Email = email;
-            Password = password;
-            PasswordConfirm = passwordConfirm;
-        }
-
-        public override ValidationResult Validate()
-        {
-            return new RegisterCustomerCommandValidator().Validate(this);
-        }
+        Name = name;
+        Email = email;
+        Password = password;
+        PasswordConfirm = passwordConfirm;
     }
 
-    public class RegisterCustomerCommandValidator : AbstractValidator<RegisterCustomerCommand>
+    public override ValidationResult Validate()
     {
-        public RegisterCustomerCommandValidator()
-        {
-            RuleFor(c => c.Email)
-            .NotEmpty().WithMessage("Email is empty.")
-            .Length(5, 100).WithMessage("The Email must have between 5 and 100 characters.");
+        return new RegisterCustomerCommandValidator().Validate(this);
+    }
+}
 
-            RuleFor(c => c.Name)
-            .NotEmpty().WithMessage("Name is empty.")
-            .Length(2, 100).WithMessage("The Name must have between 2 and 100 characters.");
+public class RegisterCustomerCommandValidator : AbstractValidator<RegisterCustomerCommand>
+{
+    public RegisterCustomerCommandValidator()
+    {
+        RuleFor(c => c.Email)
+        .NotEmpty().WithMessage("Email is empty.")
+        .Length(5, 100).WithMessage("The Email must have between 5 and 100 characters.");
 
-            RuleFor(x => x.Password).NotEmpty().WithMessage("Password is empty.");
-            RuleFor(x => x.PasswordConfirm).NotEmpty().WithMessage("PasswordConfirm is empty.");
-        }
+        RuleFor(c => c.Name)
+        .NotEmpty().WithMessage("Name is empty.")
+        .Length(2, 100).WithMessage("The Name must have between 2 and 100 characters.");
+
+        RuleFor(x => x.Password).NotEmpty().WithMessage("Password is empty.");
+        RuleFor(x => x.PasswordConfirm).NotEmpty().WithMessage("PasswordConfirm is empty.");
     }
 }

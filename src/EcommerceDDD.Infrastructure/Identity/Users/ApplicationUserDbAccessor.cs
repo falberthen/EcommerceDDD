@@ -1,26 +1,25 @@
 ﻿using System.Threading.Tasks;
-using EcommerceDDD.Infrastructure.Database.Context;
 using Microsoft.EntityFrameworkCore;
+using EcommerceDDD.Infrastructure.Database.Context;
 
-namespace EcommerceDDD.Infrastructure.Identity.Users
+namespace EcommerceDDD.Infrastructure.Identity.Users;
+
+public interface IApplicationUserDbAccessor
 {
-    public interface IApplicationUserDbAccessor
+    Task<ApplicationUser> GetUserByEmail(string email);
+}
+
+public class ApplicationUserDbAccessor : IApplicationUserDbAccessor
+{
+    private readonly IdentityContext _dbContext;
+
+    public ApplicationUserDbAccessor(IdentityContext dbContext)
     {
-        Task<ApplicationUser> GetUserByEmail(string email);
+        _dbContext = dbContext;
     }
 
-    public class ApplicationUserDbAccessor : IApplicationUserDbAccessor
+    public async Task<ApplicationUser> GetUserByEmail(string email)
     {
-        private readonly IdentityContext _dbContext;
-
-        public ApplicationUserDbAccessor(IdentityContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
-
-        public async Task<ApplicationUser> GetUserByEmail(string email)
-        {
-            return await _dbContext.Users.FirstOrDefaultAsync(c => c.Email == email);
-        }
+        return await _dbContext.Users.FirstOrDefaultAsync(c => c.Email == email);
     }
 }

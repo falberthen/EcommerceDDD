@@ -1,11 +1,8 @@
-﻿using System;
+﻿namespace EcommerceDDD.Application.Quotes.ChangeQuote;
 
-namespace EcommerceDDD.Application.Quotes.SaveQuote
+public record ChangeQuoteRequest
 {
-    public record ChangeQuoteRequest
-    {
-        public Guid QuoteId { get; set; }
-        public ProductDto Product { get; set; }
-        public string Currency { get; set; }
-    }
+    public Guid QuoteId { get; init; }
+    public ProductDto Product { get; init; }
+    public string Currency { get; init; }
 }

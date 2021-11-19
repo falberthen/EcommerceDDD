@@ -1,22 +1,19 @@
-﻿using EcommerceDDD.Domain.Customers;
+﻿using System.Linq.Expressions;
+using EcommerceDDD.Domain.Customers;
 using EcommerceDDD.Domain.SeedWork;
-using System;
-using System.Linq.Expressions;
 
-namespace EcommerceDDD.Domain.Orders.Specifications
-{    
-    public class IsOrderPlacedByCustomer : Specification<Order>
+namespace EcommerceDDD.Domain.Orders.Specifications;   
+public class IsOrderPlacedByCustomer : Specification<Order>
+{
+    private readonly CustomerId _customerId;
+
+    public IsOrderPlacedByCustomer(CustomerId customerId)
     {
-        private CustomerId CustomerId;
+        _customerId = customerId;
+    }
 
-        public IsOrderPlacedByCustomer(CustomerId customerId)
-        {
-            CustomerId = customerId;
-        }
-
-        public override Expression<Func<Order, bool>> ToExpression()
-        {
-            return order => order.CustomerId == CustomerId;
-        }
+    public override Expression<Func<Order, bool>> ToExpression()
+    {
+        return order => order.CustomerId == _customerId;
     }
 }

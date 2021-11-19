@@ -1,30 +1,26 @@
-﻿using System;
-using EcommerceDDD.Application.Core.CQRS.QueryHandling;
-using FluentValidation;
-using FluentValidation.Results;
+﻿using EcommerceDDD.Application.Core.CQRS.QueryHandling;
 
-namespace EcommerceDDD.Application.Quotes.GetCurrentQuote
+namespace EcommerceDDD.Application.Quotes.GetCurrentQuote;
+
+public record class GetCurrentQuoteQuery : Query<Guid>
 {
-    public class GetCurrentQuoteQuery : Query<Guid>
+    public Guid CustomerId { get; init; }
+
+    public GetCurrentQuoteQuery(Guid customerId)
     {
-        public Guid CustomerId { get; set; }
-
-        public GetCurrentQuoteQuery(Guid customerId)
-        {
-            CustomerId = customerId;
-        }
-
-        public override ValidationResult Validate()
-        {
-            return new GetCurrentQuoteQueryValidator().Validate(this);
-        }
+        CustomerId = customerId;
     }
 
-    public class GetCurrentQuoteQueryValidator : AbstractValidator<GetCurrentQuoteQuery>
+    public override ValidationResult Validate()
     {
-        public GetCurrentQuoteQueryValidator()
-        {
-            RuleFor(x => x.CustomerId).NotEqual(Guid.Empty).WithMessage("Customer is empty.");
-        }
+        return new GetCurrentQuoteQueryValidator().Validate(this);
+    }
+}
+
+public class GetCurrentQuoteQueryValidator : AbstractValidator<GetCurrentQuoteQuery>
+{
+    public GetCurrentQuoteQueryValidator()
+    {
+        RuleFor(x => x.CustomerId).NotEqual(Guid.Empty).WithMessage("Customer is empty.");
     }
 }

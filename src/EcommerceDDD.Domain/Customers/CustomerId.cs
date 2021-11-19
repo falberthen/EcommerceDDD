@@ -1,20 +1,18 @@
 ﻿using EcommerceDDD.Domain.SeedWork;
-using System;
 
-namespace EcommerceDDD.Domain.Customers
+namespace EcommerceDDD.Domain.Customers;
+
+public class CustomerId : StronglyTypedId<CustomerId>
 {
-    public class CustomerId : StronglyTypedId<CustomerId>
+    public CustomerId(Guid value) : base(value)
     {
-        public CustomerId(Guid value) : base(value)
-        {
-        }
+    }
 
-        public static CustomerId Of(Guid customerId)
-        {
-            if (customerId == Guid.Empty)
-                throw new BusinessRuleException("Customer Id must be provided.");
+    public static CustomerId Of(Guid customerId)
+    {
+        if (customerId == Guid.Empty)
+            throw new BusinessRuleException("Customer Id must be provided.");
 
-            return new CustomerId(customerId);
-        }
+        return new CustomerId(customerId);
     }
 }

@@ -1,30 +1,26 @@
-﻿using System;
-using EcommerceDDD.Application.Core.CQRS.CommandHandling;
-using FluentValidation;
-using FluentValidation.Results;
+﻿using EcommerceDDD.Application.Core.CQRS.CommandHandling;
 
-namespace EcommerceDDD.Application.Payments
+namespace EcommerceDDD.Application.Payments;
+
+public record class MakePaymentCommand : Command<Guid>
 {
-    public class MakePaymentCommand : Command<Guid>
+    public Guid PaymentId { get; init; }
+
+    public MakePaymentCommand(Guid paymentId)
     {
-        public Guid PaymentId { get; private set; }
-
-        public MakePaymentCommand(Guid paymentId)
-        {
-            PaymentId = paymentId;
-        }
-
-        public override ValidationResult Validate()
-        {
-            return new MakePaymentCommandValidator().Validate(this);
-        }
+        PaymentId = paymentId;
     }
 
-    public class MakePaymentCommandValidator : AbstractValidator<MakePaymentCommand>
+    public override ValidationResult Validate()
     {
-        public MakePaymentCommandValidator()
-        {
-            RuleFor(x => x.PaymentId).NotEqual(Guid.Empty).WithMessage("PaymentId is empty.");
-        }
+        return new MakePaymentCommandValidator().Validate(this);
+    }
+}
+
+public class MakePaymentCommandValidator : AbstractValidator<MakePaymentCommand>
+{
+    public MakePaymentCommandValidator()
+    {
+        RuleFor(x => x.PaymentId).NotEqual(Guid.Empty).WithMessage("PaymentId is empty.");
     }
 }
