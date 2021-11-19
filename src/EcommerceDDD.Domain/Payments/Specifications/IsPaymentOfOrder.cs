@@ -1,22 +1,20 @@
-﻿using EcommerceDDD.Domain.Orders;
+﻿using System.Linq.Expressions;
+using EcommerceDDD.Domain.Orders;
 using EcommerceDDD.Domain.SeedWork;
-using System;
-using System.Linq.Expressions;
 
-namespace EcommerceDDD.Domain.Payments.Specifications
-{    
-    public class IsPaymentOfOrder : Specification<Payment>
+namespace EcommerceDDD.Domain.Payments.Specifications;
+
+public class IsPaymentOfOrder : Specification<Payment>
+{
+    private readonly OrderId _orderId;
+
+    public IsPaymentOfOrder(OrderId orderId)
     {
-        private OrderId OrderId;
+        _orderId = orderId;
+    }
 
-        public IsPaymentOfOrder(OrderId orderId)
-        {
-            OrderId = orderId;
-        }
-
-        public override Expression<Func<Payment, bool>> ToExpression()
-        {
-            return payment => payment.OrderId == OrderId;
-        }
+    public override Expression<Func<Payment, bool>> ToExpression()
+    {
+        return payment => payment.OrderId == _orderId;
     }
 }

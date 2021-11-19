@@ -1,20 +1,17 @@
-﻿using System;
-using System.Text.Json.Serialization;
-using FluentValidation.Results;
+﻿using System.Text.Json.Serialization;
 
-namespace EcommerceDDD.Application.Customers.ViewModels
+namespace EcommerceDDD.Application.Customers;
+
+public record class CustomerViewModel
 {
-    public class CustomerViewModel
-    {
-        public Guid Id { get; set; }
-        public string Email { get; set; }
-        public string Name { get; set; }
-        public string Password { get; set; }
-        public string Token { get; set; }
+    public Guid Id { get; set; }
+    public string Email { get; set; }
+    public string Name { get; set; }
+    public string Password { get; set; }
+    public string Token { get; set; }
 
-        public ValidationResult ValidationResult { get; set; } = new ValidationResult();
+    public ValidationResult ValidationResult { get; set; } = new ValidationResult();
 
-        [JsonIgnore]
-        public bool LoginSucceeded { get; set; }
-    }
+    [JsonIgnore]
+    public bool LoginSucceeded { get; set; }
 }

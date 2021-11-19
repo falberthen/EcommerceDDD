@@ -1,46 +1,45 @@
-﻿using EcommerceDDD.Domain.SharedKernel;
+﻿using System.Linq;
 using System.Collections.Generic;
-using System.Linq;
+using EcommerceDDD.Domain.SharedKernel;
 
-namespace EcommerceDDD.Infrastructure.Domain.CurrencyExchange
+namespace EcommerceDDD.Infrastructure.Domain.CurrencyExchange;
+
+public class CurrencyConverter : ICurrencyConverter
 {
-    public class CurrencyConverter : ICurrencyConverter
+    private Currency _baseCurrency = Currency.USDollar;
+
+    public Currency GetBaseCurrency()
     {
-        public Currency BaseCurrency = Currency.USDollar;
+        return _baseCurrency;
+    }
 
-        public Currency GetBaseCurrency()
-        {
-            return BaseCurrency;
-        }
+    public Money Convert(Currency currency, Money value)
+    {
+        // Do not convert 
+        if (currency.Code == _baseCurrency.Code)
+            return Money.Of(value.Value, currency.Code);
 
-        public Money Convert(Currency currency, Money value)
-        {
-            //Do not convert 
-            if (currency.Code == BaseCurrency.Code)
-                return Money.Of(value.Value, currency.Code);
+        var conversionRate = GetExchangeRates()
+            .SingleOrDefault(x => x.FromCurrency == currency.Code && x.ToCurrency == _baseCurrency.Code);
 
-            var conversionRate = GetExchangeRates()
-                .SingleOrDefault(x => x.FromCurrency == currency.Code && x.ToCurrency == BaseCurrency.Code);
+        // Rate not found
+        if(conversionRate == null)
+            return value;
 
-            // Rate not found
-            if(conversionRate == null)
-                return value;
+        var convertedValue = conversionRate.ConversionRate * value;
+        return Money.Of(convertedValue.Value, currency.Code);
+    }
 
-            var convertedValue = conversionRate.ConversionRate * value;
-            return Money.Of(convertedValue.Value, currency.Code);
-        }
+    private List<ExchangeRate> GetExchangeRates()
+    {
+        var conversionRates = new List<ExchangeRate>();
 
-        private List<ExchangeRate> GetExchangeRates()
-        {
-            var conversionRates = new List<ExchangeRate>();
+        conversionRates.Add(new ExchangeRate(Currency.USDollar.Code, Currency.CanadianDollar.Code, (decimal)0.76));
+        conversionRates.Add(new ExchangeRate(Currency.CanadianDollar.Code, Currency.USDollar.Code, (decimal)1.32));
 
-            conversionRates.Add(new ExchangeRate(Currency.USDollar.Code, Currency.CanadianDollar.Code, (decimal)0.76));
-            conversionRates.Add(new ExchangeRate(Currency.CanadianDollar.Code, Currency.USDollar.Code, (decimal)1.32));
+        conversionRates.Add(new ExchangeRate(Currency.USDollar.Code, Currency.Euro.Code, (decimal)0.84));
+        conversionRates.Add(new ExchangeRate(Currency.Euro.Code, Currency.USDollar.Code, (decimal)1.19));
 
-            conversionRates.Add(new ExchangeRate(Currency.USDollar.Code, Currency.Euro.Code, (decimal)0.84));
-            conversionRates.Add(new ExchangeRate(Currency.Euro.Code, Currency.USDollar.Code, (decimal)1.19));
-
-            return conversionRates;
-        }
+        return conversionRates;
     }
 }

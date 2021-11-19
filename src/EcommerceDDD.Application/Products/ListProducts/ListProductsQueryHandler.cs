@@ -1,55 +1,54 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
-using EcommerceDDD.Application.Customers.ViewModels;
-using EcommerceDDD.Application.Products.ListProducts;
 using EcommerceDDD.Domain;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 using EcommerceDDD.Domain.SharedKernel;
-using System;
+using EcommerceDDD.Application.Products;
+using EcommerceDDD.Application.Products.ListProducts;
 using EcommerceDDD.Application.Core.CQRS.QueryHandling;
 using EcommerceDDD.Application.Core.ExceptionHandling;
 
-namespace EcommerceDDD.Application.Customers.ListCustomerEventHistory
+namespace EcommerceDDD.Application.Customers.ListCustomerEventHistory;
+
+public class ListProductsQueryHandler : QueryHandler<ListProductsQuery, IList<ProductViewModel>> 
 {
-    public class ListProductsQueryHandler : QueryHandler<ListProductsQuery, IList<ProductViewModel>> 
+    private readonly IEcommerceUnitOfWork _unitOfWork;
+    private readonly ICurrencyConverter _currencyConverter;
+
+    public ListProductsQueryHandler(
+        IEcommerceUnitOfWork unitOfWork,
+        ICurrencyConverter currencyConverter)
     {
-        private readonly IEcommerceUnitOfWork _unitOfWork;
-        private readonly ICurrencyConverter _currencyConverter;
+        _unitOfWork = unitOfWork;
+        _currencyConverter = currencyConverter;
+    }
 
-        public ListProductsQueryHandler(
-            IEcommerceUnitOfWork unitOfWork,
-            ICurrencyConverter currencyConverter)
+    public override async Task<IList<ProductViewModel>> ExecuteQuery(ListProductsQuery query, 
+        CancellationToken cancellationToken)
+    {
+        IList<ProductViewModel> productsViewModel = new List<ProductViewModel>();
+        var products = await _unitOfWork.Products
+            .ListAll(cancellationToken);
+
+        if (string.IsNullOrEmpty(query.Currency))
+            throw new ApplicationDataException("Currency code cannot be empty.");
+
+        var currency = Currency.FromCode(query.Currency);
+        foreach (var product in products)
         {
-            _unitOfWork = unitOfWork;
-            _currencyConverter = currencyConverter;
-        }
+            var convertedPrice = _currencyConverter
+                .Convert(currency, product.Price);
 
-        public override async Task<IList<ProductViewModel>> ExecuteQuery(ListProductsQuery query, 
-            CancellationToken cancellationToken)
-        {
-            IList<ProductViewModel> productsViewModel = new List<ProductViewModel>();
-            var products = await _unitOfWork.Products
-                .ListAll(cancellationToken);
-
-            if (string.IsNullOrEmpty(query.Currency))
-                throw new ApplicationDataException("Currency code cannot be empty.");
-
-            var currency = Currency.FromCode(query.Currency);
-            foreach (var product in products)
+            productsViewModel.Add(new ProductViewModel
             {
-                var convertedPrice = _currencyConverter
-                    .Convert(currency, product.Price);
-
-                productsViewModel.Add(new ProductViewModel
-                {
-                    Id = product.Id.Value,
-                    Name = product.Name,
-                    Price = Math.Round(convertedPrice.Value, 2).ToString(),
-                    CurrencySymbol = currency.Symbol
-                });
-            }
-
-            return productsViewModel;
+                Id = product.Id.Value,
+                Name = product.Name,
+                Price = Math.Round(convertedPrice.Value, 2).ToString(),
+                CurrencySymbol = currency.Symbol
+            });
         }
+
+        return productsViewModel;
     }
 }

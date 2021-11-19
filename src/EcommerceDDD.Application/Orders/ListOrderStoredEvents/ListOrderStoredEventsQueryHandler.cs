@@ -1,53 +1,55 @@
-﻿using EcommerceDDD.Application.Core.CQRS.QueryHandling;
-using EcommerceDDD.Application.Core.EventSourcing;
-using EcommerceDDD.Application.Core.EventSourcing.StoredEventsData;
+﻿using System.Threading;
 using EcommerceDDD.Domain;
-using EcommerceDDD.Domain.Orders;
-using EcommerceDDD.Domain.Payments.Specifications;
-using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
+using EcommerceDDD.Domain.Orders;
+using System.Collections.Generic;
+using EcommerceDDD.Application.Core.EventSourcing;
+using EcommerceDDD.Domain.Payments.Specifications;
+using EcommerceDDD.Application.Core.CQRS.QueryHandling;
+using EcommerceDDD.Application.Core.EventSourcing.StoredEventsData;
+using EcommerceDDD.Infrastructure.Events;
 
-namespace EcommerceDDD.Application.Orders.ListOrderStoredEvents
+namespace EcommerceDDD.Application.Orders.ListOrderStoredEvents;
+
+public class ListOrderStoredEventsQueryHandler : QueryHandler<ListOrderStoredEventsQuery, 
+    IList<StoredEventData>>
 {
-    public class ListOrderStoredEventsQueryHandler : QueryHandler<ListOrderStoredEventsQuery, 
-        IList<StoredEventData>>
+    private readonly IEcommerceUnitOfWork _unitOfWork;
+    private readonly IStoredEvents _storedEvents;
+
+    public ListOrderStoredEventsQueryHandler(IEcommerceUnitOfWork unitOfWork, IStoredEvents storedEvents)
     {
-        private readonly IEcommerceUnitOfWork _unitOfWork;
+        _unitOfWork = unitOfWork;
+        _storedEvents = storedEvents;
+    }
 
-        public ListOrderStoredEventsQueryHandler(IEcommerceUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
-
-        public override async Task<IList<StoredEventData>> ExecuteQuery(ListOrderStoredEventsQuery request, 
-            CancellationToken cancellationToken)
-        {
-            List<StoredEventData> storedEvents = new List<StoredEventData>();
+    public override async Task<IList<StoredEventData>> ExecuteQuery(ListOrderStoredEventsQuery request, 
+        CancellationToken cancellationToken)
+    {
+        List<StoredEventData> storedEvents = new List<StoredEventData>();
             
-            var orderStoredEvents = await _unitOfWork.StoredEvents
-                .GetByAggregateId(request.OrderId, cancellationToken);
+        var orderStoredEvents = await _storedEvents
+            .GetByAggregateId(request.OrderId, cancellationToken);
 
-            storedEvents.AddRange(
-                StoredEventPrettier<StoredEventData>
-                .ToPretty(orderStoredEvents)
-            );
+        storedEvents.AddRange(
+            StoredEventPrettier<StoredEventData>
+            .ToPretty(orderStoredEvents)
+        );
 
-            var orderId = OrderId.Of(request.OrderId);
-            var isPaymentOfOrder = new IsPaymentOfOrder(orderId);
-            var payment = await _unitOfWork.Payments
-                .Find(isPaymentOfOrder, cancellationToken);
+        var orderId = OrderId.Of(request.OrderId);
+        var isPaymentOfOrder = new IsPaymentOfOrder(orderId);
+        var payment = await _unitOfWork.Payments
+            .Find(isPaymentOfOrder, cancellationToken);
 
-            if(payment.Count > 0)
-            {
-                var paymentStoredEvents = await _unitOfWork.StoredEvents
-                    .GetByAggregateId(payment[0].Id.Value, cancellationToken);
+        if(payment.Count > 0)
+        {
+            var paymentStoredEvents = await _storedEvents
+                .GetByAggregateId(payment[0].Id.Value, cancellationToken);
 
-                storedEvents.AddRange(StoredEventPrettier<StoredEventData>
-                    .ToPretty(paymentStoredEvents));
-            }
-                        
-            return storedEvents;
+            storedEvents.AddRange(StoredEventPrettier<StoredEventData>
+                .ToPretty(paymentStoredEvents));
         }
+                        
+        return storedEvents;
     }
 }

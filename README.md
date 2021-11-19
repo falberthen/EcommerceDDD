@@ -60,11 +60,11 @@ It takes care of the application's infrastructure and issues not related to the 
 
 <ul>
   <li>
-    <a href='https://get.asp.net' target="_blank">ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx' target="_blank">C#</a>
+    <a href='https://get.asp.net' target="_blank">ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx' target="_blank">C# 10</a>
     for cross-platform back-end with:
     <ul>
-      <li>.NET 5</li>
-      <li>Entity Framework Core 5.0.5</li>
+      <li>.NET 6</li>
+      <li>Entity Framework Core 6</li>
       <li>ASP.NET Core Web API</li>
       <li>ASP.NET Core Identity</li>
       <li>SignalR Core</li>
@@ -74,7 +74,6 @@ It takes care of the application's infrastructure and issues not related to the 
       <li>Automapper</li>
       <li>NSubstitute</li>
       <li>Swagger</li>
-      <li>HealthChecks</li>
       <li>Docker Compose</li>
     </ul>
   </li>

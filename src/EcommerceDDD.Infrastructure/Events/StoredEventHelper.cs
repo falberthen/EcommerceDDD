@@ -1,9 +1,8 @@
-﻿using System;
+﻿using MediatR;
+using Newtonsoft.Json;
 using System.Reflection;
 using EcommerceDDD.Domain.Core.Events;
 using EcommerceDDD.Domain.Customers.Events;
-using MediatR;
-using Newtonsoft.Json;
 
 namespace EcommerceDDD.Infrastructure.Events
 {

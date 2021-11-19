@@ -1,31 +1,27 @@
 ﻿using System.Collections.Generic;
 using EcommerceDDD.Application.Core.CQRS.QueryHandling;
-using EcommerceDDD.Application.Customers.ViewModels;
-using FluentValidation;
-using FluentValidation.Results;
 
-namespace EcommerceDDD.Application.Products.ListProducts
+namespace EcommerceDDD.Application.Products.ListProducts;
+
+public record class ListProductsQuery : Query<IList<ProductViewModel>>
 {
-    public class ListProductsQuery : Query<IList<ProductViewModel>>
+    public string Currency { get; init;  }
+
+    public ListProductsQuery(string currency)
     {
-        public string Currency { get; }
-
-        public ListProductsQuery(string currency)
-        {
-            Currency = currency;
-        }
-
-        public override ValidationResult Validate()
-        {
-            return new ListProductsQueryValidator().Validate(this);
-        }
+        Currency = currency;
     }
 
-    public class ListProductsQueryValidator : AbstractValidator<ListProductsQuery>
+    public override ValidationResult Validate()
     {
-        public ListProductsQueryValidator()
-        {
-            RuleFor(x => x.Currency).NotEmpty().WithMessage("Currency is empty.");
-        }
+        return new ListProductsQueryValidator().Validate(this);
+    }
+}
+
+public class ListProductsQueryValidator : AbstractValidator<ListProductsQuery>
+{
+    public ListProductsQueryValidator()
+    {
+        RuleFor(x => x.Currency).NotEmpty().WithMessage("Currency is empty.");
     }
 }

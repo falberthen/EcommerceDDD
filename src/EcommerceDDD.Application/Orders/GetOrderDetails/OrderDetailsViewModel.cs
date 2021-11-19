@@ -1,11 +1,9 @@
-﻿using EcommerceDDD.Application.Customers.ViewModels;
-using System;
+﻿using System.Linq;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace EcommerceDDD.Application.Orders.GetOrderDetails
 {
-    public class OrderDetailsViewModel
+    public record class OrderDetailsViewModel
     {
         public Guid OrderId { get; set; }
         public List<OrderLinesDetailsViewModel> OrderLines { get; set; } = new List<OrderLinesDetailsViewModel>();
@@ -20,24 +18,24 @@ namespace EcommerceDDD.Application.Orders.GetOrderDetails
         }
     }
 
-    public class OrderLinesDetailsViewModel
+    public record class OrderLinesDetailsViewModel
     {
-        public Guid ProductId { get; set; }
-        public string ProductName { get; set; }
-        public decimal ProductPrice { get; set; }
-        public int ProductQuantity { get; set; }
-        public string CurrencySymbol { get; set; }
+        public Guid ProductId { get; init; }
+        public string ProductName { get; init; }
+        public decimal ProductPrice { get; init; }
+        public int ProductQuantity { get; init; }
+        public string CurrencySymbol { get; init; }
     }
 
-    public class OrderStatusViewModel
+    public record class OrderStatusViewModel
     {
+        public int StatusCode { get; init; }
+        public string StatusText { get; init; }
+
         public OrderStatusViewModel(int statusCode, string statusText)
         {
             StatusCode = statusCode;
             StatusText = statusText;
         }
-
-        public int StatusCode { get; set; }
-        public string StatusText { get; set; }
     }
 }

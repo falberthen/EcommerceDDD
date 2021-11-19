@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace EcommerceDDD.Domain.Payments;
 
-namespace EcommerceDDD.Domain.Payments
+public enum PaymentStatus
 {
-    public enum PaymentStatus
-    {
-        ToPay = 1,
-        Paid = 2,
-        PaymentNotAuthorized = 3
-    }
+    ToPay = 1,
+    Paid = 2,
+    PaymentNotAuthorized = 3
 }
