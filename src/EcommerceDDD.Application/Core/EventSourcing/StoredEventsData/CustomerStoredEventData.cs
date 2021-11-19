@@ -1,7 +1,7 @@
-﻿namespace EcommerceDDD.Application.Core.EventSourcing.StoredEventsData
+﻿namespace EcommerceDDD.Application.Core.EventSourcing.StoredEventsData;
+
+public record CustomerStoredEventData : StoredEventData
 {
-    public class CustomerStoredEventData : StoredEventData
-    {
-        public string Name { get; set; }
-    }
+    public string Name { get; set; }
 }
+

@@ -1,26 +1,25 @@
-﻿using FluentValidation.Results;
-using MediatR;
+﻿using MediatR;
+using FluentValidation.Results;
 
-namespace EcommerceDDD.Application.Core.CQRS.QueryHandling
+namespace EcommerceDDD.Application.Core.CQRS.QueryHandling;
+
+/// <summary>
+/// Interface for Query implementation
+/// </summary>
+public interface IQuery<out TResult> : IRequest<TResult>
 {
-    /// <summary>
-    /// Interface for Query implementation
-    /// </summary>
-    public interface IQuery<out TResult> : IRequest<TResult>
-    {
-        public abstract ValidationResult Validate();
-    }
+    public abstract ValidationResult Validate();
+}
 
-    /// <summary>
-    /// Abstract class to be inherited by Queries
-    /// </summary>
-    public abstract class Query<TResult> : IQuery<QueryHandlerResult<TResult>>
-    {
-        public ValidationResult ValidationResult { get; set; }
+/// <summary>
+/// Abstract class to be inherited by Queries
+/// </summary>
+public abstract class Query<TResult> : IQuery<QueryHandlerResult<TResult>>
+{
+    public ValidationResult ValidationResult { get; set; }
 
-        public virtual ValidationResult Validate()
-        {
-            return ValidationResult;
-        }
+    public virtual ValidationResult Validate()
+    {
+        return ValidationResult;
     }
 }

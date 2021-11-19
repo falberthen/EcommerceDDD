@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace EcommerceDDD.Application.Core.ExceptionHandling
+namespace EcommerceDDD.Application.Core.ExceptionHandling;
+
+public class ApplicationDataException : Exception
 {
-    public class ApplicationDataException : Exception
-    {
-        public ApplicationDataException(string message) : base(message) { }
-    }
+    public ApplicationDataException(string message) : base(message) { }
 }

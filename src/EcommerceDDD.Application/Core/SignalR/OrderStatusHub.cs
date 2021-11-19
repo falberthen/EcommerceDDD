@@ -1,19 +1,19 @@
-﻿using EcommerceDDD.Application.Orders.GetOrderDetails;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
-using System.Threading.Tasks;
+using EcommerceDDD.Application.Orders.GetOrderDetails;
 
-namespace EcommerceDDD.Application.Core.SignalR
+namespace EcommerceDDD.Application.Core.SignalR;
+
+public interface IOrderStatusHubClient
 {
-    public interface IOrderStatusHubClient
-    {
-        Task UpdateOrderStatus(string orderId, OrderStatusViewModel orderStatus);
-    }
-
-    public class OrderStatusHub : Hub<IOrderStatusHubClient>
-    {
-        public Task JoinCustomerToGroup(string customerId)
-        {
-            return Groups.AddToGroupAsync(Context.ConnectionId, customerId);
-        }
-    }    
+    Task UpdateOrderStatus(string orderId, OrderStatusViewModel orderStatus);
 }
+
+public class OrderStatusHub : Hub<IOrderStatusHubClient>
+{
+    public Task JoinCustomerToGroup(string customerId)
+    {
+        return Groups.AddToGroupAsync(Context.ConnectionId, customerId);
+    }
+}    
+

@@ -1,7 +1,6 @@
-﻿namespace EcommerceDDD.Domain.Customers
+﻿namespace EcommerceDDD.Domain.Customers;
+
+public interface ICustomerUniquenessChecker
 {
-    public interface ICustomerUniquenessChecker
-    {
-        bool IsUserUnique(string customerEmail);
-    }
+    bool IsUserUnique(string customerEmail);
 }

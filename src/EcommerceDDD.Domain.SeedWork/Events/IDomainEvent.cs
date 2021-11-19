@@ -1,10 +1,9 @@
-﻿using MediatR;
-using System;
+﻿using System;
+using MediatR;
 
-namespace EcommerceDDD.Domain.Core.Events
+namespace EcommerceDDD.Domain.Core.Events;
+
+public interface IDomainEvent : INotification
 {
-    public interface IDomainEvent : INotification
-    {
-        DateTime CreatedAt { get; }
-    }
+    DateTime CreatedAt { get; }
 }

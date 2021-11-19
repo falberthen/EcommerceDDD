@@ -1,10 +1,7 @@
-﻿using System;
+﻿namespace EcommerceDDD.WebApi.BackgroundServices;
 
-namespace EcommerceDDD.WebApi.BackgroundServices
+public class MessageProcessorServiceOptions
 {
-    public class MessageProcessorServiceOptions
-    {
-        public double IntervalOnSeconds { get; set; }
-        public int BatchSize { get; set; }
-    }
+    public double IntervalOnSeconds { get; set; }
+    public int BatchSize { get; set; }
 }

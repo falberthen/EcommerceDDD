@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace EcommerceDDD.Application.Orders.PlaceOrder
+namespace EcommerceDDD.Application.Orders.GetOrderDetails
 {
     public class GetOrderDetailsRequest
     {

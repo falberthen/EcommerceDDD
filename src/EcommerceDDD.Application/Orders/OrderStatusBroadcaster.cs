@@ -1,55 +1,54 @@
-﻿using EcommerceDDD.Application.Core.SignalR;
-using EcommerceDDD.Domain.Customers;
+﻿using System;
+using System.Threading.Tasks;
 using EcommerceDDD.Domain.Orders;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
+using EcommerceDDD.Domain.Customers;
+using EcommerceDDD.Application.Core.SignalR;
 
-namespace EcommerceDDD.Application.Orders
+namespace EcommerceDDD.Application.Orders;
+
+public interface IOrderStatusBroadcaster
 {
-    public interface IOrderStatusBroadcaster
+    Task BroadcastOrderStatus(CustomerId customerId, OrderId orderId, OrderStatus orderStatus);
+}
+
+/// <summary>
+/// Broadcasting service for Order status
+/// </summary>
+public class OrderStatusBroadcaster : IOrderStatusBroadcaster
+{
+    private readonly IHubContext<OrderStatusHub, IOrderStatusHubClient> _broadCastHub;
+    private readonly ILogger<OrderStatusBroadcaster> _logger;
+
+    public OrderStatusBroadcaster(
+        IHubContext<OrderStatusHub, IOrderStatusHubClient> broadCastHub,
+        ILogger<OrderStatusBroadcaster> logger)
     {
-        Task BroadcastOrderStatus(CustomerId customerId, OrderId orderId, OrderStatus orderStatus);
+        _broadCastHub = broadCastHub;
+        _logger = logger;
     }
 
-    /// <summary>
-    /// Broadcasting service for Order status
-    /// </summary>
-    public class OrderStatusBroadcaster : IOrderStatusBroadcaster
+    public async Task BroadcastOrderStatus(
+        CustomerId customerId, 
+        OrderId orderId, 
+        OrderStatus orderStatus)
     {
-        private readonly IHubContext<OrderStatusHub, IOrderStatusHubClient> _broadCastHub;
-        private readonly ILogger<OrderStatusBroadcaster> _logger;
-
-        public OrderStatusBroadcaster(
-            IHubContext<OrderStatusHub, IOrderStatusHubClient> broadCastHub,
-            ILogger<OrderStatusBroadcaster> logger)
+        try
         {
-            _broadCastHub = broadCastHub;
-            _logger = logger;
+            var prettyStatus = OrderStatusPrettier
+                .Prettify(orderStatus);
+
+            await _broadCastHub.Clients
+                .Groups(customerId.Value.ToString())
+                .UpdateOrderStatus(
+                    orderId.Value.ToString(),
+                    prettyStatus
+                );
         }
-
-        public async Task BroadcastOrderStatus(
-            CustomerId customerId, 
-            OrderId orderId, 
-            OrderStatus orderStatus)
+        catch (Exception ex)
         {
-            try
-            {
-                var prettyStatus = OrderStatusPrettier
-                    .Prettify(orderStatus);
-
-                await _broadCastHub.Clients
-                    .Groups(customerId.Value.ToString())
-                    .UpdateOrderStatus(
-                        orderId.Value.ToString(),
-                        prettyStatus
-                    );
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"\n--- An error has occurred while broadcasting status for order {orderId.Value}: {ex.Message}\n");
-            }
+            _logger.LogError($"\n--- An error has occurred while broadcasting status for order {orderId.Value}: {ex.Message}\n");
         }
     }
 }

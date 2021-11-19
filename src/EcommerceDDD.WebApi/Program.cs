@@ -1,32 +1,31 @@
-using EcommerceDDD.Infrastructure.Database;
-using EcommerceDDD.Infrastructure.Database.Context;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Hosting;
+using EcommerceDDD.Infrastructure.Database;
+using Microsoft.Extensions.DependencyInjection;
+using EcommerceDDD.Infrastructure.Database.Context;
 
-namespace EcommerceDDD.WebApi
+namespace EcommerceDDD.WebApi;
+
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
+        var host = CreateHostBuilder(args).Build();
+
+        using (var scope = host.Services.CreateScope())
         {
-            var host = CreateHostBuilder(args).Build();
-
-            using (var scope = host.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                var context = scope.ServiceProvider.GetService<EcommerceDDDContext>();
-                DataSeeder.SeedData(context);
-            }
-
-            host.Run();
+            var services = scope.ServiceProvider;
+            var context = scope.ServiceProvider.GetService<EcommerceDDDContext>();
+            DataSeeder.SeedData(context);
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();                    
-                });        
+        host.Run();
     }
+
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();                    
+            });        
 }
