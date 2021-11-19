@@ -1,22 +1,20 @@
-﻿using EcommerceDDD.Domain.Quotes;
+﻿using System.Linq.Expressions;
+using EcommerceDDD.Domain.Quotes;
 using EcommerceDDD.Domain.SeedWork;
-using System;
-using System.Linq.Expressions;
 
-namespace EcommerceDDD.Domain.Orders.Specifications
-{    
-    public class IsOrderFromQuote : Specification<Order>
+namespace EcommerceDDD.Domain.Orders.Specifications;
+
+public class IsOrderFromQuote : Specification<Order>
+{
+    private readonly QuoteId _quoteId;
+
+    public IsOrderFromQuote(QuoteId quoteId)
     {
-        private QuoteId QuoteId;
+        _quoteId = quoteId;
+    }
 
-        public IsOrderFromQuote(QuoteId quoteId)
-        {
-            QuoteId = quoteId;
-        }
-
-        public override Expression<Func<Order, bool>> ToExpression()
-        {
-            return order => order.QuoteId == QuoteId;
-        }
+    public override Expression<Func<Order, bool>> ToExpression()
+    {
+        return order => order.QuoteId == _quoteId;
     }
 }

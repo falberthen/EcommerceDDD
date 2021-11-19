@@ -1,14 +1,13 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace EcommerceDDD.Application.Orders.PlaceOrder
 {
-    public record PlaceOrderRequest
+    public record class PlaceOrderRequest
     {
         [Required(ErrorMessage = "The {0} field is required.")]
-        public Guid CustomerId { get; set; }
+        public Guid CustomerId { get; init; }
 
         [Required(ErrorMessage = "The {0} field is required.")]
-        public string Currency { get; set; }
+        public string Currency { get; init; }
     }
 }

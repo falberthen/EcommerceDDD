@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace EcommerceDDD.Application.Orders.PlaceOrder
+namespace EcommerceDDD.Application.Orders.GetOrderDetails
 {
-    public class GetOrderDetailsRequest
+    public record class GetOrderDetailsRequest
     {
         [Required(ErrorMessage = "The {0} field is required.")]
-        public Guid OrderId { get; set; }
+        public Guid OrderId { get; init; }
 
         [Required(ErrorMessage = "The {0} field is required.")]
-        public string Currency { get; set; }
+        public string Currency { get; init; }
     }
 }

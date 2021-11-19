@@ -1,31 +1,29 @@
-﻿using FluentValidation.Results;
-using MediatR;
+﻿global using MediatR;
 
-namespace EcommerceDDD.Application.Core.CQRS.CommandHandling
+namespace EcommerceDDD.Application.Core.CQRS.CommandHandling;
+
+/// <summary>
+/// Interface for Command implementation
+/// </summary>
+public interface ICommand<out TResult> : IRequest<TResult>
 {
-    /// <summary>
-    /// Interface for Command implementation
-    /// </summary>
-    public interface ICommand<out TResult> : IRequest<TResult>
-    {
-        public abstract ValidationResult Validate();
-    }
+    public abstract ValidationResult Validate();
+}
+
+/// <summary>
+/// Abstract classes meant to be inherited by Commands
+/// </summary>
+public abstract record class Command<TID> : ICommand<CommandHandlerResult<TID>> 
+    where TID : struct 
+{
+    public ValidationResult ValidationResult { get; init; }
 
     /// <summary>
-    /// Abstract classes meant to be inherited by Commands
+    /// Validation method
     /// </summary>
-    public abstract class Command<TID> : ICommand<CommandHandlerResult<TID>> 
-        where TID : struct 
+    /// <returns></returns>
+    public virtual ValidationResult Validate()
     {
-        public ValidationResult ValidationResult { get; set; }
-
-        /// <summary>
-        /// Validation method
-        /// </summary>
-        /// <returns></returns>
-        public virtual ValidationResult Validate()
-        {
-            return ValidationResult;
-        }
+        return ValidationResult;
     }
 }

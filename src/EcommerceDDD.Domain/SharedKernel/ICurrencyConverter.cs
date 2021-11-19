@@ -1,8 +1,7 @@
-﻿namespace EcommerceDDD.Domain.SharedKernel
+﻿namespace EcommerceDDD.Domain.SharedKernel;
+
+public interface ICurrencyConverter
 {
-    public interface ICurrencyConverter
-    {
-        Currency GetBaseCurrency();
-        Money Convert(Currency currency, Money value);
-    }
+    Currency GetBaseCurrency();
+    Money Convert(Currency currency, Money value);
 }

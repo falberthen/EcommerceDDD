@@ -1,41 +1,39 @@
-﻿using EcommerceDDD.Domain.Customers;
+﻿using Xunit;
+using NSubstitute;
+using FluentAssertions;
+using EcommerceDDD.Domain.Customers;
 using EcommerceDDD.Domain.Products;
 using EcommerceDDD.Domain.SharedKernel;
-using FluentAssertions;
-using NSubstitute;
-using System;
-using Xunit;
 
-namespace EcommerceDDD.Tests.Domain
+namespace EcommerceDDD.Tests.Domain;
+
+public class EntityTests
 {
-    public class EntityTests
+    [Fact]
+    public void Entities_arent_equal_with_different_types()
     {
-        [Fact]
-        public void Entities_arent_equal_with_different_types()
-        {
-            var email = "email@domain.com";
-            var customerUniquenessChecker = Substitute.For<ICustomerUniquenessChecker>();
-            customerUniquenessChecker.IsUserUnique(email).Returns(true);
+        var email = "email@domain.com";
+        var customerUniquenessChecker = Substitute.For<ICustomerUniquenessChecker>();
+        customerUniquenessChecker.IsUserUnique(email).Returns(true);
 
-            var product = Product.CreateNew("Product X", Money.Of(10, Currency.USDollar.Code));
-            var customer = Customer.CreateNew(email, "Customer X", customerUniquenessChecker);
+        var product = Product.CreateNew("Product X", Money.Of(10, Currency.USDollar.Code));
+        var customer = Customer.CreateNew(email, "Customer X", customerUniquenessChecker);
 
-            (product.GetHashCode() == customer.GetHashCode()).Should().BeFalse();
-            product.Equals(customer).Should().BeFalse();
-        }
+        (product.GetHashCode() == customer.GetHashCode()).Should().BeFalse();
+        product.Equals(customer).Should().BeFalse();
+    }
 
 
-        [Fact]
-        public void Entities_arent_equal_with_different_ids()
-        {
-            var money = Money.Of(10, Currency.USDollar.Code);
-            var productName = "Product X";
+    [Fact]
+    public void Entities_arent_equal_with_different_ids()
+    {
+        var money = Money.Of(10, Currency.USDollar.Code);
+        var productName = "Product X";
 
-            var productX = Product.CreateNew(productName, money);
-            var productY = Product.CreateNew(productName, money);
+        var productX = Product.CreateNew(productName, money);
+        var productY = Product.CreateNew(productName, money);
 
-            (productX.GetHashCode() == productY.GetHashCode()).Should().BeTrue();
-            productX.Equals(productY).Should().BeFalse();
-        }
+        (productX.GetHashCode() == productY.GetHashCode()).Should().BeTrue();
+        productX.Equals(productY).Should().BeFalse();
     }
 }

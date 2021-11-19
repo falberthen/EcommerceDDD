@@ -1,19 +1,18 @@
 ﻿using EcommerceDDD.Domain.Products;
 using EcommerceDDD.Domain.SharedKernel;
 
-namespace EcommerceDDD.Domain.Quotes
-{
-    public class QuoteItemProductData
-    {
-        public ProductId ProductId { get; }
-        public Money ProductPrice { get; }
-        public int Quantity { get; }
+namespace EcommerceDDD.Domain.Quotes;
 
-        public QuoteItemProductData(ProductId productId, Money productPrice, int quantity)
-        {
-            ProductId = productId;
-            ProductPrice = productPrice;
-            Quantity = quantity;
-        }
+public record class QuoteItemProductData
+{
+    public ProductId ProductId { get; init; }
+    public Money ProductPrice { get; init; }
+    public int Quantity { get; init; }
+
+    public QuoteItemProductData(ProductId productId, Money productPrice, int quantity)
+    {
+        ProductId = productId;
+        ProductPrice = productPrice;
+        Quantity = quantity;
     }
 }
