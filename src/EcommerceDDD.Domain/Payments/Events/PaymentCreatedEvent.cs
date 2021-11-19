@@ -1,15 +1,14 @@
 ﻿using EcommerceDDD.Domain.Core.Events;
 
-namespace EcommerceDDD.Domain.Payments.Events
-{
-    public class PaymentCreatedEvent : DomainEvent
-    {
-        public PaymentId PaymentId { get; private set; }
+namespace EcommerceDDD.Domain.Payments.Events;
 
-        public PaymentCreatedEvent(PaymentId paymentId)
-        {
-            PaymentId = paymentId;
-            AggregateId = paymentId.Value;
-        }
+public record class PaymentCreatedEvent : DomainEvent
+{
+    public PaymentId PaymentId { get; init; }
+
+    public PaymentCreatedEvent(PaymentId paymentId)
+    {
+        PaymentId = paymentId;
+        AggregateId = paymentId.Value;
     }
 }

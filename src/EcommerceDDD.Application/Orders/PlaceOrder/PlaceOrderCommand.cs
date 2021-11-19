@@ -1,16 +1,13 @@
-﻿using System;
-using FluentValidation;
-using FluentValidation.Results;
-using EcommerceDDD.Domain.SharedKernel;
+﻿using EcommerceDDD.Domain.SharedKernel;
 using EcommerceDDD.Application.Core.CQRS.CommandHandling;
 
 namespace EcommerceDDD.Application.Orders.PlaceOrder
 {
-    public class PlaceOrderCommand : Command<Guid>
+    public record class PlaceOrderCommand : Command<Guid>
     {
-        public Guid QuoteId { get; private set; }
-        public Guid CustomerId { get; private set; }
-        public string Currency { get; private set; }
+        public Guid QuoteId { get; init; }
+        public Guid CustomerId { get; init; }
+        public string Currency { get; init; }
 
         public PlaceOrderCommand(Guid quoteId, Guid customerId, string currency)
         {

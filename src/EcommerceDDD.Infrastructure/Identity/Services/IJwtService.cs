@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-namespace EcommerceDDD.Infrastructure.Identity.Services
+namespace EcommerceDDD.Infrastructure.Identity.Services;
+
+public interface IJwtService
 {
-    public interface IJwtService
-    {
-        Task<string> GenerateJwt(string email);
-    }
+    Task<string> GenerateJwt(string email);
 }

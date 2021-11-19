@@ -340,3 +340,5 @@ ASALocalRun/
 healthchecksdb
 /EcommerceDDD.WebApp/.vscode/tasks.json
 /EcommerceDDD.WebApp/.vscode/launch.json
+/NDependOut
+*.ndproj

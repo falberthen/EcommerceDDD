@@ -1,9 +1,8 @@
 ﻿using EcommerceDDD.Domain.Payments;
 
-namespace EcommerceDDD.Domain.Orders
+namespace EcommerceDDD.Domain.Orders;
+
+public interface IOrderStatusWorkflow
 {
-    public interface IOrderStatusWorkflow
-    {
-        void CalculateOrderStatus(Order order, Payment payment);
-    }
+    void CalculateOrderStatus(Order order, Payment payment);
 }

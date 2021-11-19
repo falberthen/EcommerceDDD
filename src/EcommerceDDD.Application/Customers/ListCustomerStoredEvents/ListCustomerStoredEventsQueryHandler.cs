@@ -1,33 +1,32 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
-using EcommerceDDD.Domain;
+using System.Collections.Generic;
 using EcommerceDDD.Application.Core.CQRS.QueryHandling;
-using EcommerceDDD.Application.Core.EventSourcing.StoredEventsData;
 using EcommerceDDD.Application.Core.EventSourcing;
+using EcommerceDDD.Application.Core.EventSourcing.StoredEventsData;
+using EcommerceDDD.Infrastructure.Events;
 
-namespace EcommerceDDD.Application.Customers.ListCustomerStoredEvents
+namespace EcommerceDDD.Application.Customers.ListCustomerStoredEvents;
+
+public class ListCustomerStoredEventsQueryHandler : QueryHandler<ListCustomerStoredEventsQuery, 
+    IList<CustomerStoredEventData>> 
 {
-    public class ListCustomerStoredEventsQueryHandler : QueryHandler<ListCustomerStoredEventsQuery, 
-        IList<CustomerStoredEventData>> 
+    private readonly IStoredEvents _storedEvents;
+
+    public ListCustomerStoredEventsQueryHandler(IStoredEvents storedEvents)
     {
-        private readonly IEcommerceUnitOfWork _unitOfWork;
+        _storedEvents = storedEvents;
+    }
 
-        public ListCustomerStoredEventsQueryHandler(IEcommerceUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
+    public override async Task<IList<CustomerStoredEventData>> ExecuteQuery(ListCustomerStoredEventsQuery request, 
+        CancellationToken cancellationToken)
+    {
+        var storedEvents = await _storedEvents
+            .GetByAggregateId(request.CustomerId, cancellationToken);
 
-        public override async Task<IList<CustomerStoredEventData>> ExecuteQuery(ListCustomerStoredEventsQuery request, 
-            CancellationToken cancellationToken)
-        {
-            var storedEvents = await _unitOfWork.StoredEvents
-                .GetByAggregateId(request.CustomerId, cancellationToken);
+        IList<CustomerStoredEventData> customerStoredEvents = StoredEventPrettier<CustomerStoredEventData>
+            .ToPretty(storedEvents);
 
-            IList<CustomerStoredEventData> customerStoredEvents = StoredEventPrettier<CustomerStoredEventData>
-                .ToPretty(storedEvents);
-
-            return customerStoredEvents;
-        }
+        return customerStoredEvents;
     }
 }

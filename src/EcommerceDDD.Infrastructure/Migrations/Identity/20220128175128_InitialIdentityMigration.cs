@@ -1,9 +1,11 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace EcommerceDDD.Infrastructure.Database.Migrations
+#nullable disable
+
+namespace EcommerceDDD.Infrastructure.Migrations.Identity
 {
-    public partial class InitialCreate : Migration
+    public partial class InitialIdentityMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

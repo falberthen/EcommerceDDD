@@ -1,15 +1,12 @@
-﻿using System;
+﻿namespace EcommerceDDD.Domain.Core.Events;
 
-namespace EcommerceDDD.Domain.Core.Events
+public abstract record class Message
 {
-    public abstract class Message
-    {
-        public string MessageType { get; protected set; }
-        public Guid AggregateId { get; protected set; }
+    public string MessageType { get; init; }
+    public Guid AggregateId { get; init; }
 
-        protected Message()
-        {
-            MessageType = GetType().FullName;
-        }
+    protected Message()
+    {
+        MessageType = GetType().FullName;
     }
 }

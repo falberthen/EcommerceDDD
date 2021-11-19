@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Domain;
@@ -9,49 +8,48 @@ using EcommerceDDD.Domain.Products;
 using EcommerceDDD.Application.Core.ExceptionHandling;
 using EcommerceDDD.Application.Core.CQRS.CommandHandling;
 
-namespace EcommerceDDD.Application.Quotes.SaveQuote
+namespace EcommerceDDD.Application.Quotes.SaveQuote;
+
+public class CreateQuoteCommandHandler : CommandHandler<CreateQuoteCommand, Guid>
 {
-    public class CreateQuoteCommandHandler : CommandHandler<CreateQuoteCommand, Guid>
+    private readonly IEcommerceUnitOfWork _unitOfWork;
+
+    public CreateQuoteCommandHandler(
+        IEcommerceUnitOfWork unitOfWork)
     {
-        private readonly IEcommerceUnitOfWork _unitOfWork;
+        _unitOfWork = unitOfWork;
+    }
 
-        public CreateQuoteCommandHandler(
-            IEcommerceUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
+    public override async Task<Guid> ExecuteCommand(CreateQuoteCommand command, 
+        CancellationToken cancellationToken)
+    {
+        var customerId = CustomerId.Of(command.CustomerId);
+        var customer = await _unitOfWork.Customers
+            .GetById(customerId, cancellationToken);
 
-        public override async Task<Guid> ExecuteCommand(CreateQuoteCommand command, 
-            CancellationToken cancellationToken)
-        {
-            var customerId = CustomerId.Of(command.CustomerId);
-            var customer = await _unitOfWork.Customers
-                .GetById(customerId, cancellationToken);
+        var productId = ProductId.Of(command.Product.Id);
+        var product = await _unitOfWork.Products
+            .GetById(productId, cancellationToken);
 
-            var productId = ProductId.Of(command.Product.Id);
-            var product = await _unitOfWork.Products
-                .GetById(productId, cancellationToken);
+        if (customer == null)
+            throw new ApplicationDataException("Customer not found.");
 
-            if (customer == null)
-                throw new ApplicationDataException("Customer not found.");
+        if (product == null)
+            throw new ApplicationDataException("Product not found.");
 
-            if (product == null)
-                throw new ApplicationDataException("Product not found.");
+        var quantity = command.Product.Quantity;
+        var quotetemProductData = new QuoteItemProductData(
+            product.Id, 
+            product.Price, quantity
+        );
 
-            var quantity = command.Product.Quantity;
-            var quotetemProductData = new QuoteItemProductData(
-                product.Id, 
-                product.Price, quantity
-            );
+        var quote = Quote.CreateNew(customerId);
+        quote.AddItem(quotetemProductData);
 
-            var quote = Quote.CreateNew(customerId);
-            quote.AddItem(quotetemProductData);
-
-            await _unitOfWork.Quotes
-                .Add(quote, cancellationToken);
+        await _unitOfWork.Quotes
+            .Add(quote, cancellationToken);
    
-            await _unitOfWork.CommitAsync();
-            return quote.Id.Value;
-        }
+        await _unitOfWork.CommitAsync();
+        return quote.Id.Value;
     }
 }

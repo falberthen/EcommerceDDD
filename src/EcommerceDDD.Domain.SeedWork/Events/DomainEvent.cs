@@ -1,14 +1,17 @@
-﻿using System;
+﻿using MediatR;
+namespace EcommerceDDD.Domain.Core.Events;
 
-namespace EcommerceDDD.Domain.Core.Events
+public interface IDomainEvent : INotification
 {
-    public abstract class DomainEvent : Message, IDomainEvent
-    {
-        public DateTime CreatedAt { get; private set; }
+    DateTime CreatedAt { get; }
+}
 
-        public DomainEvent()
-        {
-            CreatedAt = DateTime.Now;
-        }
+public abstract record class DomainEvent : Message, IDomainEvent
+{
+    public DateTime CreatedAt { get; init; }
+
+    public DomainEvent()
+    {
+        CreatedAt = DateTime.Now;
     }
 }

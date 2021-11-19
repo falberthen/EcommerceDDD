@@ -1,12 +1,9 @@
-﻿using System;
+﻿namespace EcommerceDDD.Application.Products;
 
-namespace EcommerceDDD.Application.Customers.ViewModels
+public record ProductViewModel
 {
-    public class ProductViewModel
-    {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Price { get; set; }
-        public string CurrencySymbol { get; set; }
-    }
+    public Guid Id { get; init; }
+    public string Name { get; init; }
+    public string Price { get; init; }
+    public string CurrencySymbol { get; init; }
 }
