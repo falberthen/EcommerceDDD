@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using EcommerceDDD.Domain.Orders;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;

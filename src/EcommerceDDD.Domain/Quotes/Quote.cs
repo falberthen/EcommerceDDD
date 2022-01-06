@@ -15,7 +15,7 @@ public class Quote : AggregateRoot<QuoteId>
 
     public static Quote CreateNew(CustomerId customerId)
     {
-        return new Quote(QuoteId.Of(Guid.NewGuid()), customerId);
+        return new Quote(new QuoteId(Guid.NewGuid()), customerId);
     }
 
     public QuoteItem AddItem(QuoteItemProductData productData)

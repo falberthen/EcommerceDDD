@@ -18,7 +18,8 @@ public class Payment : AggregateRoot<PaymentId>
         if (orderId.Value == Guid.Empty)
             throw new BusinessRuleException("The order is required.");
 
-        return new Payment(PaymentId.Of(Guid.NewGuid()), customerId, orderId);
+        var paymentId = new PaymentId(Guid.NewGuid());
+        return new Payment(paymentId, customerId, orderId);
     }
 
     public void MarkAsPaid()
