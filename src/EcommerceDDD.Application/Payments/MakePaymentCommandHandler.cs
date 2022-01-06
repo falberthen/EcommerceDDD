@@ -4,7 +4,7 @@ using EcommerceDDD.Domain;
 using System.Threading.Tasks;
 using EcommerceDDD.Domain.Payments;
 using EcommerceDDD.Application.Core.CQRS.CommandHandling;
-using EcommerceDDD.Application.Core.ExceptionHandling;
+using EcommerceDDD.Application.Core.Exceptions;
 
 namespace EcommerceDDD.Application.Payments;
 
@@ -21,7 +21,7 @@ public class MakePaymentCommandHandler : CommandHandler<MakePaymentCommand, Guid
     public override async Task<Guid> ExecuteCommand(MakePaymentCommand command, 
         CancellationToken cancellationToken)
     {
-        var paymentId = PaymentId.Of(command.PaymentId);
+        var paymentId = new PaymentId(command.PaymentId);
         var payment = await _unitOfWork.Payments
             .GetById(paymentId, cancellationToken);
 

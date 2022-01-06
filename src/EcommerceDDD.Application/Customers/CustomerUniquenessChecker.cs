@@ -1,5 +1,6 @@
 ﻿using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.Customers;
+using System.Threading.Tasks;
 
 namespace EcommerceDDD.Application.Customers.DomainServices;
 
@@ -12,10 +13,10 @@ public class CustomerUniquenessChecker : ICustomerUniquenessChecker
         _unitOfWork = unitOfWork;
     }
 
-    public bool IsUserUnique(string customerEmail)
+    public async Task<bool> IsUserUnique(string customerEmail)
     {
-        var customer = _unitOfWork.Customers
-            .GetByEmail(customerEmail).Result;
+        var customer = await _unitOfWork.Customers
+            .GetByEmail(customerEmail);
 
         return customer == null;
     }

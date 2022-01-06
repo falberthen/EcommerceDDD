@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using EcommerceDDD.Domain.Orders;
 using EcommerceDDD.Domain.SharedKernel;
 using EcommerceDDD.Application.Core.CQRS.QueryHandling;
-using EcommerceDDD.Application.Core.ExceptionHandling;
+using EcommerceDDD.Application.Core.Exceptions;
 
 namespace EcommerceDDD.Application.Orders.GetOrderDetails;
 
@@ -23,7 +23,7 @@ public class GetOrderDetailsQueryHandler : QueryHandler<GetOrderDetailsQuery, Or
         CancellationToken cancellationToken)
     {
         OrderDetailsViewModel viewModel = new OrderDetailsViewModel();
-        var orderId = OrderId.Of(query.OrderId);
+        var orderId = new OrderId(query.OrderId);
         var order = await _unitOfWork.Orders
             .GetById(orderId, cancellationToken);
             

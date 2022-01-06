@@ -21,7 +21,8 @@ public class Order : AggregateRoot<OrderId>
     internal static Order CreateNew(CustomerId customerId, QuoteId quoteId, List<QuoteItemProductData> products, 
         Currency currency, ICurrencyConverter converter)
     {
-        return new Order(OrderId.Of(Guid.NewGuid()), customerId, quoteId, products, currency, converter);
+        var orderId = new OrderId(Guid.NewGuid());
+        return new Order(orderId, customerId, quoteId, products, currency, converter);
     }
 
     public static Order PlaceOrder(CustomerId customerId, QuoteId quoteId, List<QuoteItemProductData> products,

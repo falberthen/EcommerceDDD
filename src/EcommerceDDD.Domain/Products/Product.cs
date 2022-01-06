@@ -11,7 +11,8 @@ public class Product : AggregateRoot<ProductId>
 
     public static Product CreateNew(string name, Money price)
     {
-        return new Product(ProductId.Of(Guid.NewGuid()), name, price);
+        var productId = new ProductId(Guid.NewGuid());
+        return new Product(productId, name, price);
     }
 
     private Product(ProductId id, string name, Money price)
