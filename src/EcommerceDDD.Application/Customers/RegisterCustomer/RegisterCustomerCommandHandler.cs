@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using EcommerceDDD.Infrastructure.Identity.Users;
 using EcommerceDDD.Application.Core.CQRS.CommandHandling;
-using EcommerceDDD.Application.Core.ExceptionHandling;
+using EcommerceDDD.Application.Core.Exceptions;
 
 namespace EcommerceDDD.Application.Customers.RegisterCustomer;
 
@@ -35,7 +35,7 @@ public class RegisterCustomerCommandHandler : CommandHandler<RegisterCustomerCom
     {
         try
         {
-            var customer = Customer.CreateNew(
+            var customer = await Customer.CreateNew(
                 command.Email, 
                 command.Name, 
                 _uniquenessChecker

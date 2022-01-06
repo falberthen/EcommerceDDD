@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace EcommerceDDD.Application.Core.ExceptionHandling;
+﻿namespace EcommerceDDD.Application.Core.Exceptions;
 
 public class ApplicationDataException : Exception
 {

@@ -14,7 +14,7 @@ public abstract class Entity<TKey>
     {
         var entity = obj as Entity<TKey>;
         return entity != null &&
-            this.GetType() == entity.GetType() &&
+            GetType() == entity.GetType() &&
             EqualityComparer<TKey>.Default.Equals(Id, entity.Id);
     }
         
@@ -36,6 +36,6 @@ public abstract class Entity<TKey>
 
     public override int GetHashCode()
     {
-        return (GetType().ToString() + Id).GetHashCode();
+        return HashCode.Combine(GetType(), Id);
     }
 }

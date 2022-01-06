@@ -36,7 +36,7 @@ public class ListOrderStoredEventsQueryHandler : QueryHandler<ListOrderStoredEve
             .ToPretty(orderStoredEvents)
         );
 
-        var orderId = OrderId.Of(request.OrderId);
+        var orderId = new OrderId(request.OrderId);
         var isPaymentOfOrder = new IsPaymentOfOrder(orderId);
         var payment = await _unitOfWork.Payments
             .Find(isPaymentOfOrder, cancellationToken);

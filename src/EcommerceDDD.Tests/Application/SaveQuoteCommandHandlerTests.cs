@@ -46,7 +46,7 @@ public class SaveQuoteCommandHandlerTests
         customerUniquenessChecker.IsUserUnique(customerEmail).Returns(true);
 
         var productMoney = Money.Of(Convert.ToDecimal(productPrice), currency.Code);
-        var customer = Customer
+        var customer = await Customer
             .CreateNew(customerEmail, "Customer X", customerUniquenessChecker);
 
         _customers

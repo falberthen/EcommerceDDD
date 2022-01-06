@@ -19,7 +19,6 @@ public static class DataSeeder
             for (char c = 'A'; c <= 'Z'; c++)
             {
                 var price = new decimal(rand.NextDouble());
-                var productId = ProductId.Of(Guid.NewGuid());
                 var product = Product.CreateNew($"Product {c}", Money.Of(price, Currency.USDollar.Code));
                 products.Add(product);
             }

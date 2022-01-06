@@ -1,6 +1,7 @@
 ﻿global using System;
 using EcommerceDDD.Domain.SeedWork;
 using EcommerceDDD.Domain.Customers.Events;
+using System.Threading.Tasks;
 
 namespace EcommerceDDD.Domain.Customers;
 
@@ -9,16 +10,17 @@ public class Customer : AggregateRoot<CustomerId>
     public string Email { get; private set; }
     public string Name { get; private set; }
 
-    public static Customer CreateNew(string email, string name,
+    public static async Task<Customer> CreateNew(string email, string name,
         ICustomerUniquenessChecker customerUniquenessChecker)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Customer name cannot be null or whitespace.", nameof(name));
 
-        if (!customerUniquenessChecker.IsUserUnique(email))
+        if (!await customerUniquenessChecker.IsUserUnique(email))
             throw new BusinessRuleException("This e-mail is already in use.");
 
-        return new Customer(CustomerId.Of(Guid.NewGuid()), email, name);
+        var customerId = new CustomerId(Guid.NewGuid());
+        return new Customer(customerId, email, name);
     }
 
     public void SetName(string value)

@@ -1,15 +1,14 @@
-﻿using System;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.Customers;
 using EcommerceDDD.Domain.Quotes;
-using System.Linq;
 using System.Collections.Generic;
 using EcommerceDDD.Domain.SharedKernel;
 using EcommerceDDD.Domain.Orders;
 using EcommerceDDD.Application.Core.CQRS.CommandHandling;
-using EcommerceDDD.Application.Core.ExceptionHandling;
+using EcommerceDDD.Application.Core.Exceptions;
 
 namespace EcommerceDDD.Application.Orders.PlaceOrder
 {
@@ -29,9 +28,9 @@ namespace EcommerceDDD.Application.Orders.PlaceOrder
         public override async Task<Guid> ExecuteCommand(PlaceOrderCommand command, 
             CancellationToken cancellationToken)
         {
-            var customerId = CustomerId.Of(command.CustomerId);
+            var customerId = new CustomerId(command.CustomerId);
             var productsData = new List<QuoteItemProductData>();
-            var quoteId = QuoteId.Of(command.QuoteId);
+            var quoteId = new QuoteId(command.QuoteId);
             var quote = await _unitOfWork.Quotes
                 .GetById(quoteId, cancellationToken);            
             var customer = await _unitOfWork.Customers

@@ -2,7 +2,19 @@
 
 public abstract class StronglyTypedId<T> : ValueObject<StronglyTypedId<T>>
 {
-    public Guid Value { get; }
+    private Guid _id;
+
+    public Guid Value
+    {
+        get { return _id; }
+        private set
+        {
+            if (value == Guid.Empty)
+                throw new BusinessRuleException("A valid id must be provided.");
+
+            _id = value;
+        }
+    }
 
     protected StronglyTypedId(Guid value)
     {
@@ -11,7 +23,7 @@ public abstract class StronglyTypedId<T> : ValueObject<StronglyTypedId<T>>
 
     protected override bool EqualsCore(StronglyTypedId<T> other)
     {
-        return this.Value == other.Value;
+        return Value == other.Value;
     }
 
     protected override int GetHashCodeCore()

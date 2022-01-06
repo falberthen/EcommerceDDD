@@ -7,7 +7,7 @@ using EcommerceDDD.Domain.Customers;
 using EcommerceDDD.Domain.SharedKernel;
 using EcommerceDDD.Domain.Orders.Specifications;
 using EcommerceDDD.Application.Core.CQRS.QueryHandling;
-using EcommerceDDD.Application.Core.ExceptionHandling;
+using EcommerceDDD.Application.Core.Exceptions;
 using EcommerceDDD.Application.Orders.GetOrderDetails;
 
 namespace EcommerceDDD.Application.Orders.GetOrders;
@@ -28,7 +28,7 @@ public class GetOrdersQueryHandler : QueryHandler<GetOrdersQuery,
     {
         List<OrderDetailsViewModel> viewModelList = new List<OrderDetailsViewModel>();
 
-        var customerId = CustomerId.Of(query.CustomerId);
+        var customerId = new CustomerId(query.CustomerId);
         var customer = await _unitOfWork.Customers
             .GetById(customerId, cancellationToken);
 

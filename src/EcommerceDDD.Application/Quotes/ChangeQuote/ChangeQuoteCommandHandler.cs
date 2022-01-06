@@ -1,11 +1,10 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.Quotes;
 using EcommerceDDD.Domain.Products;
 using EcommerceDDD.Application.Core.CQRS.CommandHandling;
-using EcommerceDDD.Application.Core.ExceptionHandling;
+using EcommerceDDD.Application.Core.Exceptions;
 
 namespace EcommerceDDD.Application.Quotes.ChangeQuote;
 
@@ -22,11 +21,11 @@ public class ChangeQuoteCommandHandler : CommandHandler<ChangeQuoteCommand, Guid
     public override async Task<Guid> ExecuteCommand(ChangeQuoteCommand command, 
         CancellationToken cancellationToken)
     {
-        var quoteId = QuoteId.Of(command.QuoteId);
+        var quoteId = new QuoteId(command.QuoteId);
         var quote = await _unitOfWork.Quotes.
             GetById(quoteId, cancellationToken);
 
-        var productId = ProductId.Of(command.Product.Id);
+        var productId = new ProductId(command.Product.Id);
         var product = await _unitOfWork.Products
             .GetById(productId, cancellationToken);
 
