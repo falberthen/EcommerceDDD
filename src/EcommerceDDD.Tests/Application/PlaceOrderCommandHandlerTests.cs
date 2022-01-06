@@ -50,7 +50,7 @@ public class PlaceOrderCommandHandlerTests
         var customerUniquenessChecker = Substitute.For<ICustomerUniquenessChecker>();
         customerUniquenessChecker.IsUserUnique(customerEmail).Returns(true);
 
-        var customerId = CustomerId.Of(Guid.NewGuid());
+        var customerId = new CustomerId(Guid.NewGuid());
         var customer = Customer.CreateNew(customerEmail, "Customer X", customerUniquenessChecker);
 
         _customers.GetById(Arg.Any<CustomerId>()).Returns(customer);

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.Quotes;
 using EcommerceDDD.Domain.Customers;
 using EcommerceDDD.Domain.Products;
-using EcommerceDDD.Application.Core.ExceptionHandling;
+using EcommerceDDD.Application.Core.Exceptions;
 using EcommerceDDD.Application.Core.CQRS.CommandHandling;
 
 namespace EcommerceDDD.Application.Quotes.SaveQuote;
@@ -23,11 +22,11 @@ public class CreateQuoteCommandHandler : CommandHandler<CreateQuoteCommand, Guid
     public override async Task<Guid> ExecuteCommand(CreateQuoteCommand command, 
         CancellationToken cancellationToken)
     {
-        var customerId = CustomerId.Of(command.CustomerId);
+        var customerId = new CustomerId(command.CustomerId);
         var customer = await _unitOfWork.Customers
             .GetById(customerId, cancellationToken);
 
-        var productId = ProductId.Of(command.Product.Id);
+        var productId = new ProductId(command.Product.Id);
         var product = await _unitOfWork.Products
             .GetById(productId, cancellationToken);
 

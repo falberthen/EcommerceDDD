@@ -1,11 +1,10 @@
-﻿using MediatR;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.Orders;
 using EcommerceDDD.Application.Orders;
 using EcommerceDDD.Domain.Payments.Events;
-using EcommerceDDD.Application.Core.ExceptionHandling;
+using EcommerceDDD.Application.Core.Exceptions;
 
 namespace EcommerceDDD.Application.Payments;
 

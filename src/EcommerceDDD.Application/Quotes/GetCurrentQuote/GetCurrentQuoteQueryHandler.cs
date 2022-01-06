@@ -20,7 +20,7 @@ public class GetCurrentQuoteQueryHandler : QueryHandler<GetCurrentQuoteQuery, Gu
     public async override Task<Guid> ExecuteQuery(GetCurrentQuoteQuery query, 
         CancellationToken cancellationToken)
     {
-        var customerId = CustomerId.Of(query.CustomerId);
+        var customerId = new CustomerId(query.CustomerId);
         var currentQuote = await _unitOfWork.Quotes
             .GetCurrentQuote(customerId, cancellationToken);
 

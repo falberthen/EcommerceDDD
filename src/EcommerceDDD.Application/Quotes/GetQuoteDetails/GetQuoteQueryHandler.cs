@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.SharedKernel;
 using EcommerceDDD.Domain.Quotes;
-using EcommerceDDD.Domain.Customers;
 using EcommerceDDD.Application.Core.CQRS.QueryHandling;
-using EcommerceDDD.Application.Core.ExceptionHandling;
+using EcommerceDDD.Application.Core.Exceptions;
 
 namespace EcommerceDDD.Application.Quotes.GetQuoteDetails;
 
@@ -27,7 +26,7 @@ public class GetQuoteQueryHandler : QueryHandler<GetQuoteDetailsQuery, QuoteDeta
     {
         QuoteDetailsViewModel viewModel = new QuoteDetailsViewModel();
 
-        var quoteId = QuoteId.Of(query.QuoteId);
+        var quoteId = new QuoteId(query.QuoteId);
         var quote = await _unitOfWork.Quotes
             .GetById(quoteId, cancellationToken);
 

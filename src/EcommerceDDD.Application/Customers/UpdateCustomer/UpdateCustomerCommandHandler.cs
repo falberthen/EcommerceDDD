@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.Customers;
 using EcommerceDDD.Application.Core.CQRS.CommandHandling;
-using EcommerceDDD.Application.Core.ExceptionHandling;
+using EcommerceDDD.Application.Core.Exceptions;
 
 namespace EcommerceDDD.Application.Customers.UpdateCustomer
 {
@@ -20,7 +20,7 @@ namespace EcommerceDDD.Application.Customers.UpdateCustomer
         public override async Task<Guid> ExecuteCommand(UpdateCustomerCommand request, 
             CancellationToken cancellationToken)
         {
-            var customerId = CustomerId.Of(request.CustomerId);
+            var customerId = new CustomerId(request.CustomerId);
             var customer = await _unitOfWork.Customers
                 .GetById(customerId, cancellationToken);
 
