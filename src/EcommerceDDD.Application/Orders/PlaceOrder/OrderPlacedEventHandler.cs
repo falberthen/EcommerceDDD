@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using EcommerceDDD.Domain;
 using EcommerceDDD.Domain.Payments;
 using EcommerceDDD.Domain.Orders.Events;
-using EcommerceDDD.Application.Core.ExceptionHandling;
+using EcommerceDDD.Application.Core.Exceptions;
 
 namespace EcommerceDDD.Application.Orders.PlaceOrder
 {

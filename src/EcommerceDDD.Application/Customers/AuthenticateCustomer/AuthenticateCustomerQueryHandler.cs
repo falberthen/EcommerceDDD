@@ -1,12 +1,11 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using EcommerceDDD.Domain.Customers;
-using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
 using EcommerceDDD.Infrastructure.Identity.Services;
 using EcommerceDDD.Infrastructure.Identity.Users;
 using EcommerceDDD.Application.Core.CQRS.QueryHandling;
-using EcommerceDDD.Application.Core.ExceptionHandling;
+using EcommerceDDD.Application.Core.Exceptions;
 
 namespace EcommerceDDD.Application.Customers.AuthenticateCustomer;
 

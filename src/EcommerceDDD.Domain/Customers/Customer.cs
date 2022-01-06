@@ -18,7 +18,8 @@ public class Customer : AggregateRoot<CustomerId>
         if (!customerUniquenessChecker.IsUserUnique(email))
             throw new BusinessRuleException("This e-mail is already in use.");
 
-        return new Customer(CustomerId.Of(Guid.NewGuid()), email, name);
+        var customerId = new CustomerId(Guid.NewGuid());
+        return new Customer(customerId, email, name);
     }
 
     public void SetName(string value)

@@ -7,7 +7,7 @@ using EcommerceDDD.Domain.SharedKernel;
 using EcommerceDDD.Application.Products;
 using EcommerceDDD.Application.Products.ListProducts;
 using EcommerceDDD.Application.Core.CQRS.QueryHandling;
-using EcommerceDDD.Application.Core.ExceptionHandling;
+using EcommerceDDD.Application.Core.Exceptions;
 
 namespace EcommerceDDD.Application.Customers.ListCustomerEventHistory;
 
