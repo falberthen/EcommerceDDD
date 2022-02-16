@@ -1,6 +1,8 @@
-﻿namespace EcommerceDDD.Domain.Customers;
+﻿using System.Threading.Tasks;
+
+namespace EcommerceDDD.Domain.Customers;
 
 public interface ICustomerUniquenessChecker
 {
-    bool IsUserUnique(string customerEmail);
+    Task<bool> IsUserUnique(string customerEmail);
 }

@@ -35,7 +35,7 @@ public class RegisterCustomerCommandHandler : CommandHandler<RegisterCustomerCom
     {
         try
         {
-            var customer = Customer.CreateNew(
+            var customer = await Customer.CreateNew(
                 command.Email, 
                 command.Name, 
                 _uniquenessChecker
