@@ -23,7 +23,7 @@ public abstract class StronglyTypedId<T> : ValueObject<StronglyTypedId<T>>
 
     protected override bool EqualsCore(StronglyTypedId<T> other)
     {
-        return this.Value == other.Value;
+        return Value == other.Value;
     }
 
     protected override int GetHashCodeCore()
