@@ -342,3 +342,6 @@ healthchecksdb
 /EcommerceDDD.WebApp/.vscode/launch.json
 /NDependOut
 *.ndproj
+/src/EcommerceDDD.Spa/.angular/cache/13.2.3/babel-webpack
+/src/EcommerceDDD.Spa/.angular/cache/13.2.3/angular-webpack/a9b3841e221270e35b958187b961091435c4f437
+/src/EcommerceDDD.Spa/.angular/cache/13.2.3/angular-webpack/fd4f2680fb46138d972bdda970909045f3123ec3
