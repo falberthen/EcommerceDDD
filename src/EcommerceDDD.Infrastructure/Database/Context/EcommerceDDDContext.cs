@@ -3,7 +3,6 @@ using EcommerceDDD.Domain.Orders;
 using EcommerceDDD.Domain.Payments;
 using EcommerceDDD.Domain.Products;
 using EcommerceDDD.Domain.Customers;
-using Microsoft.EntityFrameworkCore;
 using EcommerceDDD.Domain.Core.Events;
 
 namespace EcommerceDDD.Infrastructure.Database.Context;
@@ -20,7 +19,7 @@ public sealed class EcommerceDDDContext : DbContext
     public EcommerceDDDContext(DbContextOptions<EcommerceDDDContext> options)
         : base(options)
     {
-        Database.Migrate();
+        Database.EnsureCreated();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
