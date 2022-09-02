@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Crosscutting\EcommerceDDD.Services\EcommerceDDD.IntegrationServices.csproj" />
+    <ProjectReference Include="..\..\Crosscutting\EcommerceDDD.IntegrationServices\EcommerceDDD.IntegrationServices.csproj" />
     <ProjectReference Include="..\EcommerceDDD.Core.Infrastructure\EcommerceDDD.Core.Infrastructure.csproj" />
   </ItemGroup>
 
