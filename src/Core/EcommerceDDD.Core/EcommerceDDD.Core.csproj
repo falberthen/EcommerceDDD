@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="HttpRequests\**" />
+    <EmbeddedResource Remove="HttpRequests\**" />
+    <None Remove="HttpRequests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<PackageReference Include="FluentAssertions" Version="6.7.0" />
+	<PackageReference Include="Marten" Version="5.8.0" />
+	<PackageReference Include="MediatR" Version="10.0.1" />
+	<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+  	<PackageReference Include="FluentValidation" Version="11.2.0" />
+	<PackageReference Include="FluentValidation.AspNetCore" Version="11.2.1" />
+	<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.2.0" />
+  </ItemGroup>
+
+</Project>
