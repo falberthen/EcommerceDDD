@@ -2,7 +2,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Location } from '@angular/common';
-import { environment } from 'src/environments/environment';
 
 export abstract class RestService {
   apiBaseUrl: string;
@@ -12,7 +11,7 @@ export abstract class RestService {
   }
 
   constructor(private http: HttpClient, baseUrl: string) {
-    this.apiBaseUrl = environment.apiUrl;
+    this.apiBaseUrl = baseUrl;
   }
 
   protected get(relativeUrl: string, httpParams?: HttpParams, responseTypeInput?: any): Observable<any> {
@@ -42,7 +41,7 @@ export abstract class RestService {
     );
   }
 
-  protected put(relativeUrl: string, body: any, httpParams?: HttpParams): Observable<any> {
+  protected put(relativeUrl: string, body?: any, httpParams?: HttpParams): Observable<any> {
     const fullUrl = Location.joinWithSlash(this.apiBaseUrl, relativeUrl);
     return this.http.put(fullUrl, body, this.httpHeaders).pipe(
       map((response: any) => {

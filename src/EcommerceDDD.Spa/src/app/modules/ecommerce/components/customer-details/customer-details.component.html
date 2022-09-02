@@ -1,0 +1,27 @@
+<div class="wrapper fadeInDown">
+  <div class="form-content details-form">
+    <form [formGroup]="customerDetailsForm!">
+      <div class="form-group mt-3 mb-3">
+        <label><b>{{customer!.email}}</b></label>
+      </div>
+      <div class="form-group">
+        <input type="text" id="name" name="name" formControlName="name" value="{{customer!.name}}" placeholder="Name"
+               [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <input type="text" id="address" name="address" formControlName="address" value="{{customer!.address}}" placeholder="Address"
+               [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
+        <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
+          <div *ngIf="f.address.errors.required">Address is required</div>
+        </div>
+      </div>
+      <div class="form-footer">
+        <input type="button" value="Cancel" class="btn btn-secondary" [routerLink]="['/home']" />
+        <input type="button" value="Update" class="btn btn-primary" (click)="saveDetails()" [disabled]="isLoading"/>
+      </div>
+    </form>
+  </div>
+</div>

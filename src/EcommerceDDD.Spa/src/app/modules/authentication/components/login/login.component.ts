@@ -12,18 +12,17 @@ import { AuthService } from 'src/app/core/services/auth.service';
 export class LoginComponent implements OnInit {
 
   loginForm!: FormGroup;
-  loading = false;
   submitted = false;
   returnUrl!: string;
 
   constructor(
+    private router: Router,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
-    private router: Router,
     private authenticationService: AuthService
   ) {
     // redirect to home if already logged in
-    if (this.authenticationService.currentCustomer) {
+    if (this.authenticationService.currentUser) {
       this.router.navigate(['/home']);
     }
   }
@@ -40,21 +39,13 @@ export class LoginComponent implements OnInit {
       .queryParams['returnUrl'] || '/';
   }
 
-  // getter for easy access to form fields
-  get f() {
-    return this.loginForm.controls;
-  }
-
   onSubmit() {
-
     this.submitted = true;
-
     // stop here if form is invalid
     if (this.loginForm.invalid) {
       return;
     }
 
-    this.loading = true;
     this.authenticationService
       .login(this.f.email.value, this.f.password.value)
       .subscribe(
@@ -66,7 +57,11 @@ export class LoginComponent implements OnInit {
         }
       );
 
-    this.loading = false;
     this.submitted = false;
+  }
+
+  // getter for easy access to form fields
+  get f() {
+    return this.loginForm.controls;
   }
 }

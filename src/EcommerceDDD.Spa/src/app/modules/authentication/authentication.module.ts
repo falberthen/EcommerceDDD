@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoginComponent } from './components/login/login.component';
-import { AccountComponent } from './components/account/account.component';
+import { CustomerAccountComponent } from './components/customer-account/customer-account.component';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [
     LoginComponent,
-    AccountComponent
+    CustomerAccountComponent
   ],
   imports: [
     RouterModule,

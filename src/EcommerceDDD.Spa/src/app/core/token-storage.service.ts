@@ -10,10 +10,7 @@ export class TokenStorageService {
 
   constructor(private localStorageService: LocalStorageService) { }
 
-  public saveToken(token: string) {
-    this.localStorageService
-      .clearKey(TOKEN_KEY);
-
+  public setToken(token: string) {
     this.localStorageService
       .setValue(TOKEN_KEY, token);
   }
@@ -24,8 +21,8 @@ export class TokenStorageService {
   }
 
   public clearToken() {
-    return this.localStorageService
+    this.localStorageService
       .clearKey(TOKEN_KEY);
+      return;
   }
-
 }

@@ -7,10 +7,10 @@
   <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
     <div class="container custom-container">
       <button class="navbar-toggler"
-              type="button"
-              data-toggle="collapse"
-              data-target=".navbar-collapse"
-              aria-label="Toggle navigation">
+          type="button"
+          data-toggle="collapse"
+          data-target=".navbar-collapse"
+          aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse" *ngIf="isLoggedIn"
@@ -46,7 +46,6 @@
             <a class="nav-link text-secondary underlineHover" [routerLink]="['/products']">
               <fa-icon [icon]="faShoppingCart"></fa-icon>
               Products
-
               <span class="badge badge-primary">{{quoteItems}}</span>
             </a>
           </li>
@@ -56,7 +55,7 @@
           <li class="nav-item"
               [routerLinkActive]="['link-active']"
               [routerLinkActiveOptions]="{ exact: true }">
-            <a class="nav-link text-secondary underlineHover" [routerLink]="['/customer-profile']">
+            <a class="nav-link text-secondary underlineHover" [routerLink]="['/customer-details']">
               <fa-icon [icon]="faUser"></fa-icon>
               My Profile
             </a>
@@ -64,7 +63,7 @@
           <li class="nav-item" [routerLinkActive]="['link-active']" style="margin-left: 30px;">
             <a class="nav-link text-primary underlineHover" (click)="logout()" style="cursor: pointer;">
               <fa-icon [icon]="faSignOutAlt"></fa-icon>
-              Logout {{customer!.name}}
+              Logout
             </a>
           </li>
         </ul>

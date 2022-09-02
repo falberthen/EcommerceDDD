@@ -1,11 +1,22 @@
 <div class="form-content cart-details-container">
+  <div *ngIf="quote">
+    <a class="quote-history nav-link text-secondary underlineHover" (click)="showQuoteStoredEvents()">
+      <fa-icon [icon]="faList"></fa-icon>
+      Quote Events
+    </a>
+  </div>
   <div class="cart-title">
     <h4>Cart</h4>
+    <div *ngIf="quote" class="cancel-quote">
+      <button (click)="cancelQuote(quote!)" class="btn remove-item">
+        <fa-icon [icon]="faMinusCircle" title="Cancel quote"></fa-icon>
+      </button>
+    </div>
   </div>
-  <div *ngIf="!quote || quote.quoteItems.length == 0" class="empty-cart-message alert alert-danger">
-    Empty cart
+  <div *ngIf="!quote || quote.items.length == 0" class="empty-cart-message alert alert-danger">
+    No items
   </div>
-  <div *ngIf="quote && quote.quoteItems.length > 0">
+  <div *ngIf="quote && quote.items.length > 0">
     <div class="table-responsive">
       <table class="table table-hover">
         <thead>
@@ -13,26 +24,26 @@
             <th scope="col" class="table-header"></th>
             <th scope="col" class="table-header">Product</th>
             <th scope="col" class="table-header">Quantity</th>
-            <th scope="col" class="table-header">Price</th>
+            <th scope="col" class="table-header">Unit price</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let quoteItem of quote.quoteItems; index as i">
+          <tr *ngFor="let quoteItem of quote.items; index as i">
             <td class="table-row">
               <button (click)="removeItem(quoteItem)" class="btn remove-item">
                 <fa-icon [icon]="faMinusCircle" title="Remove"></fa-icon>
               </button>
             </td>
             <td class="table-row">{{ quoteItem.productName }}</td>
-            <td class="table-row">{{ quoteItem.productQuantity }}</td>
-            <td class="table-row">{{ quoteItem.currencySymbol }} {{ quoteItem.productPrice }}</td>
+            <td class="table-row">{{ quoteItem.quantity }}</td>
+            <td class="table-row">{{ quoteItem.currencySymbol }} {{ quoteItem.unitPrice.toFixed(2) }}</td>
           </tr>
           <tr>
             <td colspan="4" class="table-row">
               <div class="total-to-pay-container">
                 <b>Total:</b>
                 <span class="total-to-pay-text" >
-                  {{quote.quoteItems[0].currencySymbol}} {{quote.totalPrice.toFixed(2)}}
+                  {{quote.currencySymbol}} {{quote.totalPrice.toFixed(2)}}
                 </span>
               </div>
             </td>
@@ -41,7 +52,12 @@
       </table>
     </div>
     <div class="place-order-container">
-      <button (click)="placeOrder()" class="btn btn-primary">Place Order</button>
+      <button (click)="placeOrder()" class="btn btn-primary" [disabled]="isLoading">Place Order</button>
     </div>
   </div>
+</div>
+
+<!-- Stored Event Viewer container-->
+<div class="stored-event-viewer-container">
+  <template #storedEventViewerContainer></template>
 </div>

@@ -8,12 +8,11 @@ import { environment } from 'src/environments/environment';
 export class SignalrService {
   connection!: signalR.HubConnection;
 
-  constructor() {
-    this.connection = this.buildConnection();
-  }
+  constructor() {}
 
-  public addCustomerToGroup(customerId: string){
-
+  //TODO: REFATORAR
+  public addCustomerToGroup(customerId: string, hubUrl: string) {
+    this.connection = this.buildConnection(hubUrl);
     if(this.connection &&
       this.connection.state != 'Disconnected')
       return;
@@ -29,10 +28,10 @@ export class SignalrService {
   }
 
   // Start Hub Connection and Register events
-  private buildConnection = () => {
+  private buildConnection = (hubUrl: string) => {
     return new signalR.HubConnectionBuilder()
-      .configureLogging(signalR.LogLevel.Trace)
-      .withUrl(environment.apiUrl + 'orderstatushub')
+      //.configureLogging(signalR.LogLevel.Trace)
+      .withUrl(hubUrl)
       .build();
     }
 }

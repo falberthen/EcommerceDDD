@@ -2,13 +2,13 @@
 export class Customer {
   id: string;
   name: string;
+  address: string;
   email: string;
-  token?: string;
 
-  constructor(id: string, name: string, email: string, token: string) {
+  constructor(id: string, name: string, email: string, address: string) {
     this.id = id;
     this.name = name;
     this.email = email;
-    this.token = token;
+    this.address = address;
   }
 }

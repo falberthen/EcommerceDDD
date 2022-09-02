@@ -51,11 +51,10 @@
   }
 }
 
-.stored-event-viewer-container{
+.stored-event-viewer-container {
   margin: auto;
-  position: absolute;
-  left:0;
-  right: 0;
-  top: 15%;
   z-index:999999;
+  margin-bottom: 20px;
+  margin-top: 40px;
+  width: 100%;
 }
