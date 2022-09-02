@@ -1,11 +1,12 @@
-
 export class Quote {
   quoteId: string;
-  quoteItems: QuoteItem[] = [];
+  items: QuoteItem[] = [];
+  currencySymbol: string;
   totalPrice: number;
 
-  constructor(quoteId: string, totalPrice: number) {
+  constructor(quoteId: string, currencySymbol: string, totalPrice: number) {
     this.quoteId = quoteId;
+    this.currencySymbol = currencySymbol;
     this.totalPrice = totalPrice;
   }
 }
@@ -13,15 +14,18 @@ export class Quote {
 export class QuoteItem{
   productId: string;
   productName: string;
-  productPrice: number;
-  productQuantity: number;
+  unitPrice: number;
+  quantity: number;
   currencySymbol: string;
+  totalPrice: number;
 
-  constructor(productId: string, productName: string, productPrice: number, productQuantity: number, currencySymbol: string) {
+  constructor(productId: string, productName: string, unitPrice: number,
+    quantity: number, currencySymbol: string, totalPrice: number) {
     this.productId = productId;
     this.productName = productName;
-    this.productQuantity = productQuantity;
-    this.productPrice = productPrice;
+    this.quantity = quantity;
+    this.unitPrice = unitPrice;
     this.currencySymbol = currencySymbol;
+    this.totalPrice = totalPrice;
   }
 }

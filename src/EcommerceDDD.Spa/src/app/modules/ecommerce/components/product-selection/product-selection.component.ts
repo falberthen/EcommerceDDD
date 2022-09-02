@@ -1,16 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ProductService } from '../../product.service';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { CartComponent } from '../cart/cart.component';
-import { OrderService } from '../../order.service';
-import { Router } from '@angular/router';
 import { Product } from 'src/app/core/models/Product';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { NotificationService } from 'src/app/core/services/notification.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { CurrencyNotificationService } from 'src/app/core/services/currency-notification.service';
 import { appConstants } from 'src/app/core/constants/appConstants';
 import { Quote, QuoteItem } from 'src/app/core/models/Quote';
+import { GetProductsRequest } from 'src/app/core/models/requests/GetProductsRequest';
+import { LoaderService } from 'src/app/core/services/loader.service';
+import { ProductService } from '../../services/product.service';
 
 @Component({
   selector: 'app-products',
@@ -18,27 +17,29 @@ import { Quote, QuoteItem } from 'src/app/core/models/Quote';
   styleUrls: ['./product-selection.component.scss'],
 })
 export class ProductSelectionComponent implements OnInit {
-
-  @ViewChild('cart') cartDetails!: CartComponent;
+  @ViewChild('cart') cart!: CartComponent;
   currentCurrency!:string;
   storedCurrency!: string;
   customerId!: string;
   products!: Product[];
   faPlusCircle = faPlusCircle;
+  isLoading = false;
 
   constructor(
     private authService: AuthService,
+    private loaderService: LoaderService,
     private productService: ProductService,
     private localStorageService: LocalStorageService,
     private currencyNotificationService: CurrencyNotificationService
   ) {}
 
-  ngOnInit() {
-    this.storedCurrency = this.localStorageService.getValueByKey(appConstants.storedCurrency);
+  async ngOnInit() {
+    this.storedCurrency = this.localStorageService
+      .getValueByKey(appConstants.storedCurrency);
 
     if(this.authService.currentCustomer) {
       this.customerId = this.authService.currentCustomer.id;
-      this.loadProducts();
+      await this.loadProducts();
     }
 
     // Currency change listener
@@ -52,11 +53,16 @@ export class ProductSelectionComponent implements OnInit {
     );
   }
 
+  ngAfterViewInit() {
+    this.loaderService.httpProgress().subscribe((status: boolean) => {
+      this.isLoading = status;
+    });
+  }
+
   async loadProducts() {
     this.productService
-    .getProducts(this.storedCurrency)
-    .then(
-      (result: any) => {
+    .getProducts(new GetProductsRequest(this.storedCurrency))
+    .then((result: any) => {
         this.products = result.data;
         this.products.forEach((product) => { product.quantity = 0 });
       },
@@ -64,18 +70,18 @@ export class ProductSelectionComponent implements OnInit {
     );
   }
 
-  syncronizeQuoteToProductList(quote: Quote) {
+  async syncronizeQuoteToProductList(quote: Quote) {
     if(this.products) {
-      if(quote.quoteItems.length == 0)
+      if(quote.items.length == 0)
         this.products.forEach((product) => { product.quantity = 0 });
 
       this.products.forEach((product) => {
-        var productFound = quote.quoteItems.filter(
+        var productFound = quote.items.filter(
           (quoteItem: QuoteItem) => quoteItem.productId == product.id
         );
 
         if(productFound.length > 0)
-          product.quantity = productFound[0].productQuantity;
+          product.quantity = productFound[0].quantity;
         else
           product.quantity  = 0;
       });
@@ -83,14 +89,10 @@ export class ProductSelectionComponent implements OnInit {
   }
 
   async saveCart(product: Product) {
-    product.quantity = product.quantity == 0
-      ? 1
-      : Number(product.quantity);
-
-    await this.cartDetails.saveQuote(product);
+    await this.cart.saveQuote(product);
   }
 
   async placeOrder() {
-    await this.cartDetails.placeOrder();
+    await this.cart.placeOrder();
   }
 }

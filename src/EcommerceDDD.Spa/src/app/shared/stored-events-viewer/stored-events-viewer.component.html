@@ -1,0 +1,26 @@
+<div class="wrapper fadeInDown stored-event-viewer-container">
+  <div class="stored-events-viewer-content">
+    <div *ngIf="storedEventData && storedEventData.length == 0" class="alert alert-danger">
+      No events to display
+    </div>
+    <div>
+      <table class="table table-responsive table-scroll">
+        <thead class="thead-light">
+          <tr>
+            <th>Event</th>
+            <th>Data</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of storedEventData" style="width:1px; white-space:nowrap;">
+            <td><span class="event-type">{{row.eventTypeName}}</span></td>
+            <td><span class="event-data">{{row.eventData}}</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="form-footer">
+      <input type="button" class="btn btn-secondary" (click)="close()" value="Close">
+    </div>
+  </div>
+</div>

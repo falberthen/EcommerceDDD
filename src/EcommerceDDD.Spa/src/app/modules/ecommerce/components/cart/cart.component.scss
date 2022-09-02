@@ -5,6 +5,11 @@
   position: relative;
   border-radius: 5px;
 
+  .quote-history{
+    cursor: pointer;
+    position: absolute;
+  }
+
   .remove-item {
     color: red;
   }
@@ -12,6 +17,12 @@
   .cart-title {
     padding-bottom: 10px;
     padding-top: 10px;
+
+    .cancel-quote {
+      top:0;
+      right:0;
+      position: absolute;
+    }
   }
 
   .place-order-container{
@@ -36,4 +47,10 @@
     line-height: 40px;
     font-size: 15px;
   }
+}
+
+.stored-event-viewer-container{
+  margin: auto;
+  z-index:999999;
+  margin-top: 5%;
 }

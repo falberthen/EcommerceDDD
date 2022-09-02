@@ -1,8 +1,8 @@
 export const appConstants = {
+  storedUser: 'user',
   storedCustomer: 'customer',
   storedCurrency: 'currency',
-  storedQuoteId: 'quoteId',
-  storedQuoteItems: 'quoteItems',
+  storedOpenQuote: 'openQuote',
   defaultCurrency: 'USD'
 };
 

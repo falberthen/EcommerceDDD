@@ -1,41 +1,36 @@
 
 export class Order {
   orderId: string;
+  quoteId: string;
   orderLines: OrderLine[] = [];
   createdAt: Date;
   totalPrice: number;
-  status: OrderStatus;
+  currencySymbol: string;
+  statusText: string;
+  statusCode: number;
 
-  constructor(orderId: string, createdAt: Date, totalPrice: number, status: OrderStatus) {
+  constructor(orderId: string, quoteId: string, createdAt: Date, totalPrice: number, currencySymbol: string,
+    statusText: string, statusCode: number) {
     this.orderId = orderId;
+    this.quoteId = quoteId;
     this.createdAt = createdAt;
     this.totalPrice = totalPrice;
-    this.status = status;
+    this.currencySymbol = currencySymbol;
+    this.statusText = statusText;
+    this.statusCode = statusCode;
   }
 }
 
 export class OrderLine{
   productId: string;
   productName: string;
-  productPrice: number;
-  productQuantity: number;
-  currencySymbol: string;
+  unitPrice: number;
+  quantity: number;
 
-  constructor(productId: string, productName: string, productPrice: number, productQuantity: number, currencySymbol: string) {
+  constructor(productId: string, productName: string, unitPrice: number, quantity: number) {
     this.productId = productId;
     this.productName = productName;
-    this.productQuantity = productQuantity;
-    this.productPrice = productPrice;
-    this.currencySymbol = currencySymbol;
-  }
-}
-
-export class OrderStatus {
-  statusCode: number;
-  statusText: string;
-
-  constructor(statusCode: number, statusText: string) {
-    this.statusCode = statusCode;
-    this.statusText = statusText;
+    this.quantity = quantity;
+    this.unitPrice = unitPrice;
   }
 }

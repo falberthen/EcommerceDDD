@@ -2,10 +2,10 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './modules/ecommerce/components/home/home.component';
 import { LoginComponent } from './modules/authentication/components/login/login.component';
 import { AuthGuard } from './core/guards/auth.guard';
-import { AccountComponent } from './modules/authentication/components/account/account.component';
+import { CustomerAccountComponent } from './modules/authentication/components/customer-account/customer-account.component';
 import { ProductSelectionComponent } from './modules/ecommerce/components/product-selection/product-selection.component';
 import { OrdersComponent } from './modules/ecommerce/components/orders/orders.component';
-import { CustomerProfileComponent } from './modules/ecommerce/components/customer-profile/customer-profile.component';
+import { CustomerDetailsComponent } from './modules/ecommerce/components/customer-details/customer-details.component';
 
 export const APP_ROUTES: Routes = [
   {
@@ -13,8 +13,8 @@ export const APP_ROUTES: Routes = [
     component: LoginComponent
   },
   {
-    path: 'account',
-    component: AccountComponent
+    path: 'customer-account',
+    component: CustomerAccountComponent
   },
   {
     path: 'home',
@@ -41,14 +41,8 @@ export const APP_ROUTES: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'orders/:customerId/:orderId',
-    component: OrdersComponent,
-    canActivate: [AuthGuard],
-    pathMatch: 'full'
-  },
-  {
-    path: 'customer-profile',
-    component: CustomerProfileComponent,
+    path: 'customer-details',
+    component: CustomerDetailsComponent,
     canActivate: [AuthGuard],
     pathMatch: 'full'
   },
