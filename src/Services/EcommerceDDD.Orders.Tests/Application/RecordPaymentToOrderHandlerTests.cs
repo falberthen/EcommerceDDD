@@ -2,19 +2,19 @@ using MediatR;
 using EcommerceDDD.Core.Testing;
 using EcommerceDDD.Core.Persistence;
 using Microsoft.Extensions.DependencyInjection;
-using EcommerceDDD.Orders.Application.Orders.SettingPayment;
 using EcommerceDDD.IntegrationServices.Orders;
 using EcommerceDDD.Orders.Application.Quotes;
 using EcommerceDDD.IntegrationServices.Orders.Requests;
 using Microsoft.Extensions.Options;
 using EcommerceDDD.IntegrationServices;
+using EcommerceDDD.Orders.Application.Orders.RecordingPayment;
 
 namespace EcommerceDDD.Orders.Tests.Application;
 
-public class SetPaymentToOrderHandlerTests
+public class RecordPaymentToOrderHandlerTests
 {
     [Fact]
-    public async Task SetPaymentToOrder_WithCommand_ShouldSetOrderPaid()
+    public async Task RecordPaymentToOrder_WithCommand_ShouldRecordOrderPaid()
     {
         // Given
         var quoteId = QuoteId.Of(Guid.NewGuid());
@@ -48,15 +48,15 @@ public class SetPaymentToOrderHandlerTests
         await orderWriteRepository
             .AppendEventsAsync(order, CancellationToken.None);
 
-        SetupScope();
-        _serviceProvider
+        var serviceProvider = DummyServiceProvider.Setup();
+        serviceProvider
             .Setup(x => x.GetService(typeof(IEventStoreRepository<Order>)))
             .Returns(orderWriteRepository);
 
         _ordersService.Setup(p => p.UpdateOrderStatus(It.IsAny<string>(), It.IsAny<UpdateOrderStatusRequest>()))
             .Returns(Task.CompletedTask);
 
-        _serviceProvider
+        serviceProvider
             .Setup(x => x.GetService(typeof(IOrdersService)))
             .Returns(_ordersService.Object);
 
@@ -64,11 +64,11 @@ public class SetPaymentToOrderHandlerTests
         options.Setup(p => p.Value)
             .Returns(new IntegrationServicesSettings() { ApiGatewayBaseUrl = "http://url" });
 
-        var setPaymentToOrder = new SetPaymentToOrder(paymentId, orderId, totalPaid);
-        var setPaymentToOrderHandler = new SetPaymentToOrderHandler(_mediator.Object, _serviceProvider.Object, options.Object);
+        var recordPaymentToOrder = new RecordPaymentToOrder(paymentId, orderId, totalPaid);
+        var recordPaymentToOrderHandler = new RecordPaymentToOrderHandler(_mediator.Object, serviceProvider.Object, options.Object);
 
         // When
-        await setPaymentToOrderHandler.Handle(setPaymentToOrder, CancellationToken.None);
+        await recordPaymentToOrderHandler.Handle(recordPaymentToOrder, CancellationToken.None);
 
         // Then
         var paidOrder = orderWriteRepository.AggregateStream.First().Aggregate;
@@ -77,22 +77,7 @@ public class SetPaymentToOrderHandlerTests
         paidOrder.Status.Should().Be(OrderStatus.Paid);
     }
     
-    private void SetupScope()
-    {
-        var scope = new Mock<IServiceScope>();
-        scope.SetupGet(s => s.ServiceProvider)
-            .Returns(_serviceProvider.Object);
-
-        var serviceScopeFactory = new Mock<IServiceScopeFactory>();
-        serviceScopeFactory.Setup(x => x.CreateScope())
-            .Returns(scope.Object);
-
-        _serviceProvider.Setup(s => s.GetService(typeof(IServiceScopeFactory)))
-            .Returns(serviceScopeFactory.Object);
-    }
-
     private Mock<IOrdersService> _ordersService = new();
     private Mock<IOrderProductsChecker> _checker = new();
-    private Mock<IServiceProvider> _serviceProvider = new();
     private Mock<IMediator> _mediator = new();
 }

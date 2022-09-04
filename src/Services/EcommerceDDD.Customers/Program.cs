@@ -1,4 +1,5 @@
 using MediatR;
+using EcommerceDDD.Core.Testing;
 using EcommerceDDD.Core.Persistence;
 using EcommerceDDD.Customers.Domain;
 using EcommerceDDD.Customers.API.Configurations;
@@ -8,7 +9,7 @@ using EcommerceDDD.Core.Infrastructure.Identity;
 using EcommerceDDD.Core.Infrastructure;
 using EcommerceDDD.Core.Infrastructure.Http;
 using EcommerceDDD.Customers.Application.RegisteringCustomer;
-using EcommerceDDD.Core.Testing;
+using EcommerceDDD.Core.EventBus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,7 @@ builder.Services.AddScoped<IEventStoreRepository<Customer>, MartenRepository<Cus
 builder.Services.AddScoped<IEventStoreRepository<DummyAggregateRoot>, 
     DummyEventStoreRepository<DummyAggregateRoot>>();
 builder.Services.AddMarten(builder.Configuration, options => options.ConfigureProjections());
+builder.Services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
 
 builder.Services.AddHttpClient();
 builder.Services.AddAuthentication(builder.Configuration);

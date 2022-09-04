@@ -2,7 +2,7 @@
 using EcommerceDDD.Orders.Domain;
 using EcommerceDDD.Orders.Domain.Events;
 using EcommerceDDD.Orders.Application.Orders.RequestingPayment;
-using EcommerceDDD.Orders.Application.Orders.SettingPayment;
+using EcommerceDDD.Orders.Application.Orders.RecordingPayment;
 using EcommerceDDD.Orders.Application.Payments.FinalizingPayment;
 using EcommerceDDD.Orders.Application.Orders.CompletingOrder;
 using EcommerceDDD.Orders.Application.Shipments.FinalizingShipment;
@@ -39,7 +39,7 @@ public class OrderSaga :
         var paymentId = PaymentId.Of(@event.PaymentId);
         var orderId = OrderId.Of(@event.OrderId);
         var totalPaid = Money.Of(@event.TotalAmount, @event.CurrencyCode);
-        var command = new SetPaymentToOrder(paymentId, orderId, totalPaid);
+        var command = new RecordPaymentToOrder(paymentId, orderId, totalPaid);
 
         await _mediator.Send(command);
     }

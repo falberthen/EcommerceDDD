@@ -1,23 +1,22 @@
 ﻿using MediatR;
 using EcommerceDDD.Core.Persistence;
 using EcommerceDDD.Orders.Domain;
+using Microsoft.Extensions.Options;
+using EcommerceDDD.IntegrationServices;
 using EcommerceDDD.Core.CQRS.CommandHandling;
 using EcommerceDDD.IntegrationServices.Orders;
 using EcommerceDDD.IntegrationServices.Orders.Requests;
 using EcommerceDDD.Orders.Application.Orders.RequestingShipment;
-using EcommerceDDD.IntegrationServices;
-using Microsoft.Extensions.Options;
-using EcommerceDDD.Core.Infrastructure.Kafka.Consumer;
 
-namespace EcommerceDDD.Orders.Application.Orders.SettingPayment;
+namespace EcommerceDDD.Orders.Application.Orders.RecordingPayment;
 
-public class SetPaymentToOrderHandler : CommandHandler<SetPaymentToOrder>
+public class RecordPaymentToOrderHandler : CommandHandler<RecordPaymentToOrder>
 {
     private readonly IMediator _mediator;
     private readonly IServiceProvider _serviceProvider;
     private readonly IntegrationServicesSettings _integrationServicesSettings;
 
-    public SetPaymentToOrderHandler(
+    public RecordPaymentToOrderHandler(
         IMediator mediator,
         IServiceProvider serviceProvider,
         IOptions<IntegrationServicesSettings> integrationServicesSettings)
@@ -30,7 +29,7 @@ public class SetPaymentToOrderHandler : CommandHandler<SetPaymentToOrder>
         _integrationServicesSettings = integrationServicesSettings.Value;
     }
 
-    public override async Task Handle(SetPaymentToOrder command, CancellationToken cancellationToken)
+    public override async Task Handle(RecordPaymentToOrder command, CancellationToken cancellationToken)
     {
         if (_serviceProvider == null)
             throw new ArgumentNullException(nameof(_serviceProvider));

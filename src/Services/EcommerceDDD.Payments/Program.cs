@@ -15,7 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddSingleton(typeof(IEventProducer), typeof(KafkaProducer));
 builder.Services.AddScoped<IEventStoreRepository<Payment>, MartenRepository<Payment>>();
-builder.Services.AddScoped<IEventStoreRepository<DummyAggregateRoot>, 
+builder.Services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+builder.Services.AddScoped<IEventStoreRepository<DummyAggregateRoot>,
     DummyEventStoreRepository<DummyAggregateRoot>>();
 
 builder.Services.AddControllers();

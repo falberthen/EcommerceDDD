@@ -3,32 +3,37 @@ using EcommerceDDD.Core.Persistence;
 using EcommerceDDD.Payments.Domain;
 using EcommerceDDD.Core.EventBus;
 using EcommerceDDD.Payments.Domain.Events;
+using EcommerceDDD.Core.Domain;
 
 namespace EcommerceDDD.Payments.Application.FinalizingPayment;
 
-public class PaymentProcessedHandler : INotificationHandler<PaymentProcessed>
+public class PaymentProcessedHandler : INotificationHandler<DomainEventNotification<PaymentProcessed>>
 {
-    private readonly IEventStoreRepository<Payment> _paymentWriteRepository;
-    private readonly IEventProducer _eventProducer;
+    private readonly IServiceProvider _serviceProvider;
 
-    public PaymentProcessedHandler(
-        IEventStoreRepository<Payment> paymentWriteRepository,
-        IEventProducer eventProducer)
+    public PaymentProcessedHandler(IServiceProvider serviceProvider)
     {
-        _paymentWriteRepository = paymentWriteRepository;
-        _eventProducer = eventProducer;
+        _serviceProvider = serviceProvider;
     }
 
-    public async Task Handle(PaymentProcessed @event, CancellationToken cancellationToken)
+    public async Task Handle(DomainEventNotification<PaymentProcessed> notification, CancellationToken cancellationToken)
     {
-        var payment = await _paymentWriteRepository
+        using var scopedService = _serviceProvider.CreateScope();
+        var paymentWriteRepository = scopedService
+           .ServiceProvider.GetRequiredService<IEventStoreRepository<Payment>>();
+        var eventProducer = scopedService
+           .ServiceProvider.GetRequiredService<IEventProducer>();
+
+        var @event = notification.DomainEvent;
+
+        var payment = await paymentWriteRepository
             .FetchStream(@event.PaymentId.Value);
 
         if (payment == null)
             throw new ApplicationException($"Cannot find payment {@event.PaymentId}.");
 
         // Notifying Order Saga
-        await _eventProducer
+        await eventProducer
             .PublishAsync(new PaymentFinalized(
                 payment.Id.Value,
                 payment.OrderId.Value,

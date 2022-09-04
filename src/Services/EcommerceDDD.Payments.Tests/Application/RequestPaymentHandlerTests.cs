@@ -1,9 +1,6 @@
-using MediatR;
 using EcommerceDDD.Core.Testing;
 using EcommerceDDD.Payments.Domain;
 using EcommerceDDD.Payments.Application.RequestingPayment;
-using EcommerceDDD.Payments.Domain.Events;
-using EcommerceDDD.Payments.Application.CompletingPayment;
 
 namespace EcommerceDDD.Payments.Tests.Application;
 
@@ -21,7 +18,7 @@ public class RequestPaymentHandlerTests
         var paymentWriteRepository = new DummyEventStoreRepository<Payment>();
 
         var requestPayment = new RequestPayment(customerId, orderId, totalAmount, currency);
-        var requestPaymentHandler = new RequestPaymentHandler(_mediator.Object, paymentWriteRepository);
+        var requestPaymentHandler = new RequestPaymentHandler(paymentWriteRepository);
 
         // When
         await requestPaymentHandler.Handle(requestPayment, CancellationToken.None);
@@ -34,6 +31,4 @@ public class RequestPaymentHandlerTests
         payment.TotalAmount.Value.Should().Be(totalAmount.Value);
         payment.Status.Should().Be(PaymentStatus.Pending);
     }
-
-    private Mock<IMediator> _mediator = new();
 }

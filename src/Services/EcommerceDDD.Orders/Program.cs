@@ -30,8 +30,6 @@ builder.Services.Configure<IntegrationServicesSettings>(integrationServicesSetti
 builder.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddSingleton(typeof(IEventConsumer), typeof(KafkaConsumer));
 builder.Services.AddScoped<IEventStoreRepository<Order>, MartenRepository<Order>>();
-builder.Services.AddScoped<IEventStoreRepository<DummyAggregateRoot>, 
-    DummyEventStoreRepository<DummyAggregateRoot>>();
 builder.Services.AddTransient<IOrderProductsChecker, OrderProductsChecker>();
 builder.Services.AddTransient<IOrdersService, OrdersService>();
 builder.Services.AddTransient<IProductsService, ProductsService>();
@@ -39,6 +37,9 @@ builder.Services.AddTransient<IPaymentsService, PaymentsService>();
 builder.Services.AddTransient<IShipmentsService, ShipmentsService>();
 builder.Services.AddTransient<IHttpRequester, HttpRequester>();
 builder.Services.AddTransient<ITokenRequester, TokenRequester>();
+builder.Services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+builder.Services.AddScoped<IEventStoreRepository<DummyAggregateRoot>,
+    DummyEventStoreRepository<DummyAggregateRoot>>();
 
 builder.Services.AddHttpClient();
 builder.Services.AddControllers();

@@ -22,7 +22,7 @@ public class Payment : AggregateRoot<PaymentId>
         return new Payment(orderId, totalAmount);
     }
 
-    public PaymentProcessed RecordProcessement()
+    public void RecordProcessement()
     {
         if (Status != PaymentStatus.Pending)
             throw new DomainException($"Payment cannot be processed when '{Status}'");
@@ -31,7 +31,6 @@ public class Payment : AggregateRoot<PaymentId>
 
         AppendEvent(@event);
         Apply(@event);
-        return @event;
     }
 
     private void Apply(PaymentRequested requested)
