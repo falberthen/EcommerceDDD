@@ -51,12 +51,12 @@ public class AddQuoteItemHandler : CommandHandler<AddQuoteItem>
 
     private async Task ValidateProduct(AddQuoteItem command, CancellationToken cancellationToken)
     {
-        var producIds = new Guid[] { command.ProductId.Value };
+        var productIds = new Guid[] { command.ProductId.Value };
         var products = await _productsService
             .GetProductByIds(_integrationServicesSettings.ApiGatewayBaseUrl,
-                producIds, command.CurrencyCode);
+                productIds, command.CurrencyCode);
 
-        if (products == null || producIds.Count() == 0)
+        if (products == null || productIds.Count() == 0)
             throw new ApplicationException($"The product {command.ProductId} is invalid.");
     }
 }

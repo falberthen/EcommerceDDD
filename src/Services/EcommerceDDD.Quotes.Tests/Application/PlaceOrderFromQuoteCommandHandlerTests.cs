@@ -6,9 +6,9 @@ using EcommerceDDD.IntegrationServices.Products;
 using EcommerceDDD.Quotes.Application.AddingQuoteItem;
 using EcommerceDDD.Quotes.Application.PlacingOrderFromQuote;
 using EcommerceDDD.IntegrationServices.Orders.Requests;
-using static EcommerceDDD.IntegrationServices.Products.ProductsResponse;
 using EcommerceDDD.IntegrationServices;
 using Microsoft.Extensions.Options;
+using static EcommerceDDD.IntegrationServices.Products.Responses.ProductsResponse;
 
 namespace EcommerceDDD.Quotes.Tests.Application;
 

@@ -61,13 +61,13 @@ public class GetOpenQuoteHandler : QueryHandler<GetOpenQuote, QuoteViewModel>
                 var catalogItems = new List<QuoteItemViewModel>();
                 foreach (var quoteItem in projectedQuote.Items)
                 {
-                    var product = products.FirstOrDefault(p => p.Id == quoteItem.ProductId);
+                    var product = products.FirstOrDefault(p => p.ProductId == quoteItem.ProductId);
                     if (product == null)
-                        throw new ApplicationException($"The product {product.Id} is invalid.");
+                        throw new ApplicationException($"The product {quoteItem.ProductId} is invalid.");
 
                     catalogItems.Add(new QuoteItemViewModel()
                     {
-                        ProductId = product.Id,
+                        ProductId = product.ProductId,
                         ProductName = product.Name,
                         UnitPrice = product.Price,
                         CurrencySymbol = currency.Symbol,
