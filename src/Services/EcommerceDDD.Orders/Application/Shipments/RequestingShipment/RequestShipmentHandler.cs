@@ -4,7 +4,7 @@ using EcommerceDDD.IntegrationServices.Shipments;
 using EcommerceDDD.IntegrationServices.Shipments.Requests;
 using Microsoft.Extensions.Options;
 
-namespace EcommerceDDD.Orders.Application.Orders.RequestingShipment;
+namespace EcommerceDDD.Orders.Application.Shipments.RequestingShipment;
 
 public class RequestShipmentHandler : CommandHandler<RequestShipment>
 {

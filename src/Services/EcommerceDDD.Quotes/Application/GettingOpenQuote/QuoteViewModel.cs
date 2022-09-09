@@ -8,7 +8,7 @@ public record QuoteViewModel()
     public string QuoteStatus { get; set; }
     public List<QuoteItemViewModel> Items { get; set; }
     public string CurrencySymbol { get; set; }
-    public decimal TotalPrice => Items.Sum(i => i.UnitPrice);
+    public decimal TotalPrice => Items.Sum(qi => { return qi.UnitPrice * qi.Quantity; });
 }
 
 public record class QuoteItemViewModel
@@ -18,5 +18,4 @@ public record class QuoteItemViewModel
     public decimal UnitPrice { get; set; }
     public int Quantity { get; set; }
     public string CurrencySymbol { get; set; }
-    public decimal TotalPrice { get; set; }
 }

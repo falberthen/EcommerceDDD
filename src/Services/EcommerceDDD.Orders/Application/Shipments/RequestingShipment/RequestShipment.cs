@@ -3,7 +3,7 @@ using FluentValidation.Results;
 using EcommerceDDD.Orders.Domain;
 using EcommerceDDD.Core.CQRS.CommandHandling;
 
-namespace EcommerceDDD.Orders.Application.Orders.RequestingShipment;
+namespace EcommerceDDD.Orders.Application.Shipments.RequestingShipment;
 
 public record class RequestShipment(
     OrderId OrderId,

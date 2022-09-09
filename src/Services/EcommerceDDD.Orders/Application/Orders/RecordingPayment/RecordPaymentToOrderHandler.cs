@@ -6,7 +6,7 @@ using EcommerceDDD.IntegrationServices;
 using EcommerceDDD.Core.CQRS.CommandHandling;
 using EcommerceDDD.IntegrationServices.Orders;
 using EcommerceDDD.IntegrationServices.Orders.Requests;
-using EcommerceDDD.Orders.Application.Orders.RequestingShipment;
+using EcommerceDDD.Orders.Application.Shipments.RequestingShipment;
 
 namespace EcommerceDDD.Orders.Application.Orders.RecordingPayment;
 

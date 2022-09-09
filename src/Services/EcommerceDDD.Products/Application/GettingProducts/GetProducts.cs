@@ -7,7 +7,7 @@ namespace EcommerceDDD.Products.Application.Products.GettingProducts;
 
 public record class GetProducts(
     string CurrencyCode,
-    IList<ProductId> productIds) : Query<IList<ProductViewModel>>
+    IList<ProductId> ProductIds) : Query<IList<ProductViewModel>>
 {
     public override ValidationResult Validate()
     {

@@ -4,7 +4,6 @@ using EcommerceDDD.Core.Infrastructure.Identity;
 using EcommerceDDD.IntegrationServices.Base;
 using EcommerceDDD.IntegrationServices.Payments.Requests;
 using Microsoft.Extensions.Options;
-using Remotion.Linq.Clauses;
 
 namespace EcommerceDDD.IntegrationServices.Payments;
 
@@ -22,6 +21,22 @@ public class PaymentsService : IPaymentsService
         _httpRequester = httpRequester;
         _tokenRequester = tokenRequester;
         _tokenIssuerSettings = tokenIssuerSettings.Value;
+    }
+
+    public async Task<IntegrationServiceResponse> CancelPayment(string apiGatewayUrl, Guid paymentId, CancelPaymentRequest request)
+    {
+        var tokenResponse = await _tokenRequester
+            .GetApplicationToken(_tokenIssuerSettings);
+
+        var response = await _httpRequester.DeleteAsync<IntegrationServiceResponse>(
+            $"{apiGatewayUrl}/api/payments/{paymentId}",
+            request,
+            tokenResponse.AccessToken);
+
+        if (!response.Success)
+            throw new Exception(response.Message);
+
+        return response;
     }
 
     public async Task<IntegrationServiceResponse> RequestPayment(string apiGatewayUrl, PaymentRequest request)

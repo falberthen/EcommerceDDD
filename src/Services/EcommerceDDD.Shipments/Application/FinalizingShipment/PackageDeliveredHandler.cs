@@ -1,22 +1,29 @@
 ﻿using MediatR;
 using EcommerceDDD.Core.EventBus;
 using EcommerceDDD.Shipments.Domain.Events;
+using EcommerceDDD.Core.Domain;
 
 namespace EcommerceDDD.Shipments.Application.FinalizingShipment;
 
-public class PackageDeliveredHandler : INotificationHandler<PackageDelivered>
+public class PackageDeliveredHandler : INotificationHandler<DomainEventNotification<PackageDelivered>>
 {
-    private readonly IEventProducer _eventProducer;
+    private readonly IServiceProvider _serviceProvider;
 
-    public PackageDeliveredHandler(IEventProducer eventProducer)
+    public PackageDeliveredHandler(IServiceProvider serviceProvider)
     {
-        _eventProducer = eventProducer;
+        _serviceProvider = serviceProvider;
     }
 
-    public async Task Handle(PackageDelivered @event, CancellationToken cancellationToken)
+    public async Task Handle(DomainEventNotification<PackageDelivered> notification, CancellationToken cancellationToken)
     {
+        using var scopedService = _serviceProvider.CreateScope();
+        var eventProducer = scopedService
+           .ServiceProvider.GetRequiredService<IEventProducer>();
+
+        var @event = notification.DomainEvent;
+
         // Notifying Order Saga
-        await _eventProducer.PublishAsync(
+        await eventProducer.PublishAsync(
             new OrderDelivered(
                 @event.ShipmentId.Value,
                 @event.OrderId.Value),

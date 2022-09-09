@@ -23,14 +23,13 @@ public class Shipment : AggregateRoot<ShipmentId>
         return new Shipment(orderId, productItems);
     }
 
-    public PackageDelivered RecordDelivery()
+    public void RecordDelivery()
     {        
         var @event = PackageDelivered
             .Create(Id, OrderId, DateTime.UtcNow);
 
         AppendEvent(@event);
         Apply(@event);
-        return @event;
     }
 
     private void Apply(PackageShipped shipped)

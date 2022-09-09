@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
+using static System.Net.WebRequestMethods;
 
 namespace EcommerceDDD.Core.Infrastructure.Http;
 
@@ -32,12 +33,16 @@ public class HttpRequester : IHttpRequester
         return DeserializeResponse<T>(response);
     }
 
-    public async Task<T?> DeleteAsync<T>(string url, string? bearerToken = null) where T : class
+    public async Task<T?> DeleteAsync<T>(string url, object? body = null, string? bearerToken = null) where T : class
     {
         if (!string.IsNullOrEmpty(bearerToken))
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_scheme, bearerToken);
 
-        var response = await _httpClient.DeleteAsync(url);
+        var httpMessage = new HttpRequestMessage(HttpMethod.Delete, url);
+        if (body != null)
+            httpMessage.Content = SerializeBody(body);
+        
+        var response = await _httpClient.SendAsync(httpMessage);
         return DeserializeResponse<T>(response);
     }
 

@@ -2,9 +2,9 @@ using EcommerceDDD.Core.Testing;
 using EcommerceDDD.Quotes.Domain;
 using EcommerceDDD.Quotes.Application.AddingQuoteItem;
 using EcommerceDDD.IntegrationServices.Products;
-using static EcommerceDDD.IntegrationServices.Products.ProductsResponse;
 using EcommerceDDD.IntegrationServices;
 using Microsoft.Extensions.Options;
+using static EcommerceDDD.IntegrationServices.Products.Responses.ProductsResponse;
 
 namespace EcommerceDDD.Quotes.Tests.Application;
 

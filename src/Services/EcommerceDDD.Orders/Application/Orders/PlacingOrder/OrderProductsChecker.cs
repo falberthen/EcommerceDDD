@@ -35,12 +35,12 @@ public class OrderProductsChecker : IOrderProductsChecker
 
         foreach (var quoteItem in confirmedQuote.Items)
         {
-            var product = products.FirstOrDefault(p => p.Id == quoteItem.ProductId.Value);
+            var product = products.FirstOrDefault(p => p.ProductId == quoteItem.ProductId.Value);
             if (product == null)
-                throw new ApplicationException($"The product {product.Id} is invalid.");
+                throw new ApplicationException($"The product {quoteItem.ProductId.Value} is invalid.");
 
             if (string.IsNullOrEmpty(product.Name))
-                throw new ApplicationException($"The product {product.Id} has no name.");
+                throw new ApplicationException($"The product {product.ProductId} has no name.");
 
             // Sets the latest product name and price as a projected snapshot
             quoteItem.SetName(product.Name);

@@ -13,8 +13,7 @@ public class QuoteDetails
     public DateTime? CancelledAt { get; set; } = default;
     public QuoteStatus QuoteStatus { get; set; }
     public IList<QuoteItemDetails> Items { get; set; } = default!;
-    //public decimal TotalPrice { get; set; }
-
+    
     public void Apply(QuoteCreated created)
     {
         QuoteStatus = QuoteStatus.Open;

@@ -3,7 +3,7 @@ using FluentValidation.Results;
 using EcommerceDDD.Orders.Domain;
 using EcommerceDDD.Core.CQRS.CommandHandling;
 
-namespace EcommerceDDD.Orders.Application.Orders.RequestingPayment;
+namespace EcommerceDDD.Orders.Application.Payments.RequestingPayment;
 
 public record class RequestPayment(
     CustomerId CustomerId,
