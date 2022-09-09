@@ -3,7 +3,9 @@ using EcommerceDDD.Core.Infrastructure.Http;
 using EcommerceDDD.Core.Infrastructure.Identity;
 using EcommerceDDD.IntegrationServices.Products.Requests;
 using Microsoft.Extensions.Options;
-using static EcommerceDDD.IntegrationServices.Products.ProductsResponse;
+using static EcommerceDDD.IntegrationServices.Products.Responses.ProductsResponse;
+using static EcommerceDDD.IntegrationServices.Products.Responses.ProductStockAvailabilityResponse;
+using EcommerceDDD.IntegrationServices.Products.Responses;
 
 namespace EcommerceDDD.IntegrationServices.Products;
 
@@ -31,10 +33,26 @@ public class ProductsService : IProductsService
         var response = await _httpRequester.PostAsync<ProductsResponse>(
             $"{apiGatewayUrl}/api/products",
             new GetProductsRequest(currencyCode, productIds),
-            tokenResponse.AccessToken); ;
+            tokenResponse.AccessToken);
 
         if (!response.Success)
             throw new Exception("Error retrieving products");
+
+        return response.Data;
+    }
+
+    public async Task<List<ProductInStockViewModel>> CheckProducStockAvailability(string apiGatewayUrl, Guid[] productIds)
+    {
+        var tokenResponse = await _tokenRequester
+            .GetApplicationToken(_tokenIssuerSettings);
+
+        var response = await _httpRequester.PostAsync<ProductStockAvailabilityResponse>(
+            $"{apiGatewayUrl}/api/products/stockavailability",
+            new ProductStockAvailabilityRequest(productIds),
+            tokenResponse.AccessToken);
+
+        if (!response.Success)
+            throw new Exception("Error retrieving products stock availability");
 
         return response.Data;
     }

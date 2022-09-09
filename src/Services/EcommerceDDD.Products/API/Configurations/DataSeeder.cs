@@ -18,10 +18,12 @@ public static class DataSeeder
             // Creating products
             var products = new List<Product>();
             var rand = new Random();
+            double minPrice = 1.99;
+            double maxPrice = 100;
 
             for (char c = 'A'; c <= 'Z'; c++)
             {
-                var price = new decimal(rand.NextDouble());
+                var price = new decimal(rand.NextDouble() * (maxPrice - minPrice) + minPrice);
                 var product = Product.CreateNew($"Product {c}", Money.Of(price, Currency.USDollar.Code));
                 products.Add(product);
             }

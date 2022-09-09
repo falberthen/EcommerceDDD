@@ -174,7 +174,7 @@ export class CartComponent implements OnInit {
 
   private async addQuoteItem(product: Product) {
     product.quantity = product.quantity == 0 ? 1 : Number(product.quantity);
-    let request = new AddQuoteItemRequest(product.id, product.quantity, this.storedCurrency);
+    let request = new AddQuoteItemRequest(product.productId, product.quantity, this.storedCurrency);
     await this.quoteService.addQuoteItem(this.quote!.quoteId, request).then(
       async (result: any) => {
         await this.getOpenQuote();

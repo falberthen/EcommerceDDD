@@ -1,14 +1,14 @@
 
 export class Product {
-  id: string;
+  productId: string;
   name: string;
   unitPrice: number;
   currency: string;
   currencySymbol: string;
   quantity: number;
 
-  constructor(id: string, name: string, unitPrice: number, currency: string, currencySymbol: string, quantity: number) {
-    this.id = id;
+  constructor(productId: string, name: string, unitPrice: number, currency: string, currencySymbol: string, quantity: number) {
+    this.productId = productId;
     this.name = name;
     this.unitPrice = unitPrice;
     this.currency = currency;

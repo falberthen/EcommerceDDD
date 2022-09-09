@@ -38,6 +38,18 @@
       ],
       "UpstreamHttpMethod": [ "Post" ]
     },
+    {
+      "UpstreamPathTemplate": "/api/products/{everything}",
+      "DownstreamPathTemplate": "/api/products/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-products",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [ "Post" ]
+    },
     // Quotes
     {
       "DownstreamPathTemplate": "/api/quotes",
@@ -100,6 +112,18 @@
         }
       ],
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/payments/{id}",
+      "UpstreamPathTemplate": "/api/payments/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-payments",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [ "DELETE" ]
     },
     // Shipments
     {

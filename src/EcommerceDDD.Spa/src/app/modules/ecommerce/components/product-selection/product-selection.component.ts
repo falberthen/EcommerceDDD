@@ -77,7 +77,7 @@ export class ProductSelectionComponent implements OnInit {
 
       this.products.forEach((product) => {
         var productFound = quote.items.filter(
-          (quoteItem: QuoteItem) => quoteItem.productId == product.id
+          (quoteItem: QuoteItem) => quoteItem.productId == product.productId
         );
 
         if(productFound.length > 0)
