@@ -6,8 +6,7 @@ public record PackageShipped(
     ShipmentId ShipmentId,
     OrderId OrderId,
     IReadOnlyList<ProductItem> ProductItems,
-    DateTime ShippedAt
-    ) : IDomainEvent
+    DateTime ShippedAt) : IDomainEvent
 {
     public static PackageShipped Create(
         ShipmentId shipmentId,

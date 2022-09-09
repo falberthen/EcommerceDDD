@@ -2,30 +2,32 @@
 using EcommerceDDD.Shipments.Domain;
 using EcommerceDDD.Core.Persistence;
 using EcommerceDDD.Shipments.Domain.Events;
+using EcommerceDDD.Core.Domain;
 
 namespace EcommerceDDD.Shipments.Application.DeliveringPackage;
 
-public class PackageShippedHandler : INotificationHandler<PackageShipped>
+public class PackageShippedHandler : INotificationHandler<DomainEventNotification<PackageShipped>>
 {
-    private readonly IMediator _mediator;
-    private readonly IEventStoreRepository<Shipment> _shipmentWriteRepository;
+    private readonly IServiceProvider _serviceProvider;
 
-    public PackageShippedHandler(
-        IMediator mediator,
-        IEventStoreRepository<Shipment> shipmentWriteRepository)
+    public PackageShippedHandler(IServiceProvider serviceProvider)
     {
-        _mediator = mediator;
-        _shipmentWriteRepository = shipmentWriteRepository;
+        _serviceProvider = serviceProvider;
     }
 
-    public async Task Handle(PackageShipped @event, CancellationToken cancellationToken)
+    public async Task Handle(DomainEventNotification<PackageShipped> notification, CancellationToken cancellationToken)
     {
-        // Delivery happened magically well
-        var shipment = await _shipmentWriteRepository
+        var @event = notification.DomainEvent;
+        using var scopedService = _serviceProvider.CreateScope();
+        var shipmentWriteRepository = scopedService
+           .ServiceProvider.GetRequiredService<IEventStoreRepository<Shipment>>();
+
+        var shipment = await shipmentWriteRepository
             .FetchStream(@event.ShipmentId.Value);
 
-        var packageDeliveredEvent = shipment.RecordDelivery();
-        
-        await _mediator.Publish(packageDeliveredEvent);
+        shipment.RecordDelivery();
+
+        await shipmentWriteRepository
+            .AppendEventsAsync(shipment, cancellationToken);
     }
 }
