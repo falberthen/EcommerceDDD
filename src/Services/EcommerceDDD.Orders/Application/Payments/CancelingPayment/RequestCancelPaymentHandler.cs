@@ -4,14 +4,14 @@ using EcommerceDDD.IntegrationServices.Payments;
 using EcommerceDDD.IntegrationServices.Payments.Requests;
 using Microsoft.Extensions.Options;
 
-namespace EcommerceDDD.Orders.Application.Orders.RequestingPayment;
+namespace EcommerceDDD.Orders.Application.Payments.CancelingPayment;
 
-public class RequestPaymentHandler : CommandHandler<RequestPayment>
+public class RequestCancelPaymentHandler : CommandHandler<RequestCancelPayment>
 {
     private readonly IPaymentsService _paymentsService;
     private readonly IntegrationServicesSettings _integrationServicesSettings;
 
-    public RequestPaymentHandler(
+    public RequestCancelPaymentHandler(
         IPaymentsService paymentService,
         IOptions<IntegrationServicesSettings> integrationServicesSettings)
     {
@@ -22,14 +22,11 @@ public class RequestPaymentHandler : CommandHandler<RequestPayment>
         _integrationServicesSettings = integrationServicesSettings.Value;
     }
 
-    public override async Task Handle(RequestPayment command, CancellationToken cancellationToken)
+    public override async Task Handle(RequestCancelPayment command, CancellationToken cancellationToken)
     {
-        await _paymentsService.RequestPayment(
+        await _paymentsService.CancelPayment(
             _integrationServicesSettings.ApiGatewayBaseUrl,
-            new PaymentRequest(
-                command.CustomerId.Value,
-                command.OrderId.Value,
-                command.TotalPrice.Value,
-                command.CurrencyCode));
+            command.PaymentId.Value,
+            new CancelPaymentRequest((int)command.PaymentCancellationReason));
     }
 }

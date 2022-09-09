@@ -53,7 +53,7 @@ public class OrderEventsTests
         var order = await Order.CreateNew(_orderId, confirmedQuote, _checker.Object);
 
         // When
-        order.Cancel();
+        order.Cancel(OrderCancellationReason.CanceledByUser);
 
         // Then
         var @event = order.GetUncommittedEvents().LastOrDefault() as OrderCanceled;

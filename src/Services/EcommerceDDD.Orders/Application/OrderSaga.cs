@@ -1,11 +1,11 @@
 ﻿using MediatR;
 using EcommerceDDD.Orders.Domain;
 using EcommerceDDD.Orders.Domain.Events;
-using EcommerceDDD.Orders.Application.Orders.RequestingPayment;
 using EcommerceDDD.Orders.Application.Orders.RecordingPayment;
 using EcommerceDDD.Orders.Application.Payments.FinalizingPayment;
 using EcommerceDDD.Orders.Application.Orders.CompletingOrder;
 using EcommerceDDD.Orders.Application.Shipments.FinalizingShipment;
+using EcommerceDDD.Orders.Application.Payments.RequestingPayment;
 
 namespace EcommerceDDD.Orders.Application;
 
@@ -34,7 +34,7 @@ public class OrderSaga :
 
     public async Task Handle(PaymentFinalized @event, CancellationToken cancellationToken)
     {
-        await DelayOnPurpose(3000);
+        await DelayOnPurpose(5000);
 
         var paymentId = PaymentId.Of(@event.PaymentId);
         var orderId = OrderId.Of(@event.OrderId);
@@ -46,7 +46,7 @@ public class OrderSaga :
 
     public async Task Handle(OrderDelivered @event, CancellationToken cancellationToken)
     {
-        await DelayOnPurpose(3000);
+        await DelayOnPurpose(5000);
 
         var orderId = OrderId.Of(@event.OrderId);
         var command = new CompleteOrder(orderId);

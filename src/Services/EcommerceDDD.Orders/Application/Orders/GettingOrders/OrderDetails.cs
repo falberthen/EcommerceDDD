@@ -44,7 +44,7 @@ public class OrderDetails
 
     public void Apply(OrderCanceled canceled)
     {
-        OrderStatus = OrderStatus.Completed;
+        OrderStatus = OrderStatus.Canceled;
         CanceledAt = canceled.CanceledAt;
     }
 
@@ -71,6 +71,7 @@ public class OrderDetailsProjection : SingleStreamAggregation<OrderDetails>
     {
         ProjectEvent<OrderPlaced>((item, @event) => item.Apply(@event));
         ProjectEvent<OrderPaid>((item, @event) => item.Apply(@event));
+        ProjectEvent<OrderCanceled>((item, @event) => item.Apply(@event));
     }
 }
 

@@ -65,9 +65,12 @@ public class Order : AggregateRoot<OrderId>
         Apply(@event);
     }
 
-    public void Cancel()
+    public void Cancel(OrderCancellationReason cancellationReason)
     {
-        var @event = OrderCanceled.Create(Id, DateTime.UtcNow);
+        if (Status == OrderStatus.Completed || Status == OrderStatus.Canceled)
+            throw new DomainException("The order cannot be cancelled at this point.");
+        
+        var @event = OrderCanceled.Create(Id, PaymentId, cancellationReason, DateTime.UtcNow);
 
         AppendEvent(@event);
         Apply(@event);
