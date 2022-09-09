@@ -4,7 +4,6 @@ using EcommerceDDD.Payments.Domain;
 using EcommerceDDD.Payments.Domain.Events;
 using EcommerceDDD.Payments.Application.RequestingPayment;
 using EcommerceDDD.Payments.Application.ProcessingPayment;
-using Microsoft.Extensions.DependencyInjection;
 using EcommerceDDD.Core.Persistence;
 
 namespace EcommerceDDD.Payments.Tests.Application;

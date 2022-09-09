@@ -33,6 +33,17 @@ public class Payment : AggregateRoot<PaymentId>
         Apply(@event);
     }
 
+    public void Cancel(PaymentCancellationReason PaymentCancellationReason)
+    {
+        if (Status == PaymentStatus.Canceled)
+            throw new DomainException($"Payment cannot be canceled when '{Status}'");
+
+        var @event = PaymentCanceled.Create(Id, PaymentCancellationReason);
+
+        AppendEvent(@event);
+        Apply(@event);
+    }
+
     private void Apply(PaymentRequested requested)
     {
         Status = PaymentStatus.Pending;
@@ -45,6 +56,11 @@ public class Payment : AggregateRoot<PaymentId>
     {
         Status = PaymentStatus.Processed;
         ProcessedAt = processed.ProcessedAt;
+    }
+
+    private void Apply(PaymentCanceled canceled)
+    {
+        Status = PaymentStatus.Canceled;
     }
 
     private Payment(OrderId orderId, Money totalAmount)

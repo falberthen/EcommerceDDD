@@ -4,5 +4,5 @@ public enum PaymentStatus
 {
     Pending = 1,
     Processed = 2,
-    Refused = 3,
+    Canceled = 3,
 }
