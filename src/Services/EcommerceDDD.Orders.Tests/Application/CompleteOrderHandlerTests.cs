@@ -9,6 +9,8 @@ using EcommerceDDD.Core.Persistence;
 using EcommerceDDD.IntegrationServices.Orders;
 using EcommerceDDD.Orders.Application.Orders.CompletingOrder;
 using EcommerceDDD.Orders.Application.Orders.RecordingPayment;
+using EcommerceDDD.Orders.Application.Shipments.RequestingShipment;
+using EcommerceDDD.IntegrationServices.Shipments;
 
 namespace EcommerceDDD.Orders.Tests.Application;
 
@@ -28,7 +30,6 @@ public class CompleteOrderHandlerTests
 
         var quoteItems = new List<ConfirmedQuoteItem>() {
             new ConfirmedQuoteItem() {
-                Id = Guid.NewGuid(),
                 ProductId = productId,
                 ProductName = productName,
                 Quantity = 1,
@@ -56,17 +57,26 @@ public class CompleteOrderHandlerTests
         serviceProvider
             .Setup(x => x.GetService(typeof(IEventStoreRepository<Order>)))
             .Returns(orderWriteRepository);
-
         serviceProvider
             .Setup(x => x.GetService(typeof(IOrdersService)))
             .Returns(_ordersService.Object);
-
+        serviceProvider
+            .Setup(x => x.GetService(typeof(IShipmentsService)))
+            .Returns(_shipmentsService.Object);
+        
             // Payment
         var totalPaid = Money.Of(100, currency.Code);
         var paymentId = PaymentId.Of(Guid.NewGuid());
         var recordPaymentToOrder = new RecordPaymentToOrder(paymentId, orderId, totalPaid);
-        var recordPaymentToOrderHandler = new RecordPaymentToOrderHandler(_mediator.Object, serviceProvider.Object, options.Object);
+        var recordPaymentToOrderHandler = new RecordPaymentToOrderHandler(_mediator.Object, serviceProvider.Object);
         await recordPaymentToOrderHandler.Handle(recordPaymentToOrder, CancellationToken.None);
+
+            // Shipment
+        var orderLines = orderWriteRepository.AggregateStream.First()
+            .Aggregate.OrderLines;
+        var requestShipment = new RequestShipment(orderId, orderLines);
+        var requestShipmentHandler = new RequestShipmentHandler(serviceProvider.Object, options.Object);
+        await requestShipmentHandler.Handle(requestShipment, CancellationToken.None);
 
             // Completion
         var completeOrder = new CompleteOrder(orderId);
@@ -84,6 +94,7 @@ public class CompleteOrderHandlerTests
     }
 
     private Mock<IOrdersService> _ordersService = new();
+    private Mock<IShipmentsService> _shipmentsService = new();    
     private Mock<IOrderProductsChecker> _checker = new();
     private Mock<IMediator> _mediator = new();
 }

@@ -5,15 +5,17 @@ using EcommerceDDD.Orders.Application.Shipments.ShippingPackage;
 using EcommerceDDD.Orders.Application.Orders.CancelingOrder;
 using EcommerceDDD.Orders.Application.Payments.CancelingPayment;
 using EcommerceDDD.Core.Domain;
+using EcommerceDDD.Orders.Application.Payments.ProcessingPayment;
 
 namespace EcommerceDDD.Orders.Application;
 
 /// <summary>
 /// Handles compensation events for OrderSaga
 /// </summary>
-public class OrderSagaCompensation : 
+public class OrderSagaCompensation :     
+    INotificationHandler<DomainEventNotification<OrderCanceled>>,
     INotificationHandler<ProductWasOutOfStock>,
-    INotificationHandler<DomainEventNotification<OrderCanceled>>
+    INotificationHandler<CustomerReachedCreditLimit>
 {
     private readonly IMediator _mediator;
 
@@ -22,13 +24,23 @@ public class OrderSagaCompensation :
         _mediator = mediator;
     }
     
+    // Order canceled from Shipments
     public async Task Handle(ProductWasOutOfStock @event, CancellationToken cancellationToken)
     {
         var orderId = OrderId.Of(@event.OrderId);
         var command = new CancelOrder(orderId, OrderCancellationReason.ProductWasOutOfStock);
-        await _mediator.Send(command);
+        await _mediator.Send(command, cancellationToken);
     }
 
+    // Order canceled from Payments
+    public async Task Handle(CustomerReachedCreditLimit @event, CancellationToken cancellationToken)
+    {
+        var orderId = OrderId.Of(@event.OrderId);
+        var command = new CancelOrder(orderId, OrderCancellationReason.CustomerReachedCreditLimit);
+        await _mediator.Send(command, cancellationToken);
+    }
+
+    // Requesting cancelling payment
     public async Task Handle(DomainEventNotification<OrderCanceled> notification, CancellationToken cancellationToken)
     {
         var @event = notification.DomainEvent;

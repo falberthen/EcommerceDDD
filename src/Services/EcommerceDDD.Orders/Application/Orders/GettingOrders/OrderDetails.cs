@@ -12,6 +12,7 @@ public class OrderDetails
     public Guid PaymentId { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? CompletedAt { get; set; } = default;
+    public DateTime? ShippedAt { get; set; } = default;
     public DateTime? CanceledAt { get; set; } = default;
     public OrderStatus OrderStatus { get; set; }
     public IList<OrderLineDetails> OrderLines { get; set; } = default!;
@@ -36,6 +37,12 @@ public class OrderDetails
         OrderStatus = OrderStatus.Paid;
     }
 
+    public void Apply(OrderShipped shipped)
+    {
+        ShippedAt = shipped.ShippedAt;
+        OrderStatus = OrderStatus.Shipped;
+    }
+
     public void Apply(OrderCompleted completed)
     {
         OrderStatus = OrderStatus.Completed;
@@ -52,7 +59,6 @@ public class OrderDetails
     {
         var orderLinesDetails = orderLines.Select(c =>
             new OrderLineDetails(
-                c.Id,
                 c.ProductItem.ProductId.Value,
                 c.ProductItem.ProductName,
                 c.ProductItem.UnitPrice.Value,                
@@ -62,7 +68,7 @@ public class OrderDetails
         return orderLinesDetails;
     }
 
-    public record OrderLineDetails(Guid Id, Guid ProductId, string ProductName, decimal UnitPrice, int Quantity);
+    public record OrderLineDetails(Guid ProductId, string ProductName, decimal UnitPrice, int Quantity);
 }
 
 public class OrderDetailsProjection : SingleStreamAggregation<OrderDetails>
@@ -71,6 +77,7 @@ public class OrderDetailsProjection : SingleStreamAggregation<OrderDetails>
     {
         ProjectEvent<OrderPlaced>((item, @event) => item.Apply(@event));
         ProjectEvent<OrderPaid>((item, @event) => item.Apply(@event));
+        ProjectEvent<OrderShipped>((item, @event) => item.Apply(@event));
         ProjectEvent<OrderCanceled>((item, @event) => item.Apply(@event));
     }
 }

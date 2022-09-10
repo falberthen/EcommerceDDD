@@ -12,7 +12,6 @@ public class OrderEventsTests
         // Given        
         var quoteItems = new List<ConfirmedQuoteItem>() {
             new ConfirmedQuoteItem() {
-                Id = Guid.NewGuid(),
                 ProductId = _productId,
                 ProductName = productName,
                 Quantity = 1,
@@ -39,7 +38,6 @@ public class OrderEventsTests
         // Given        
         var quoteItems = new List<ConfirmedQuoteItem>() {
             new ConfirmedQuoteItem() {
-                Id = Guid.NewGuid(),
                 ProductId = _productId,
                 ProductName = productName,
                 Quantity = 1,
@@ -69,7 +67,6 @@ public class OrderEventsTests
 
         var quoteItems = new List<ConfirmedQuoteItem>() {
             new ConfirmedQuoteItem() {
-                Id = Guid.NewGuid(),
                 ProductId = _productId,
                 ProductName = productName,
                 Quantity = 1,
@@ -99,7 +96,6 @@ public class OrderEventsTests
 
         var quoteItems = new List<ConfirmedQuoteItem>() {
             new ConfirmedQuoteItem() {
-                Id = Guid.NewGuid(),
                 ProductId = _productId,
                 ProductName = productName,
                 Quantity = 1,
@@ -113,6 +109,7 @@ public class OrderEventsTests
 
         var order = await Order.CreateNew(_orderId, confirmedQuote, _checker.Object);
         order.RecordPayment(_paymentId, totalPaid);
+        order.RecordShipped();
 
         // When
         order.Complete();

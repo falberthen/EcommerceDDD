@@ -8,6 +8,8 @@ export const appConstants = {
 
 export const orderStatusCodes = {
   placed: 1,
-  waitingForPayment: 2,
-  readyToShip: 3
+  paid: 2,
+  shipped: 3,
+  completed: 4,
+  canceled: 0
 }

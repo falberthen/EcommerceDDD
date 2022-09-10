@@ -26,7 +26,6 @@ public class CancelOrderHandlerTests
 
         var quoteItems = new List<ConfirmedQuoteItem>() {
             new ConfirmedQuoteItem() {
-                Id = Guid.NewGuid(),
                 ProductId = productId,
                 ProductName = productName,
                 Quantity = 1,

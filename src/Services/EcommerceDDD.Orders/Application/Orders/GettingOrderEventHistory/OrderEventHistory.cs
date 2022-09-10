@@ -32,6 +32,9 @@ public class OrderEventHistoryTransformation : EventProjection
     public OrderEventHistory Transform(IEvent<OrderPaid> @event) =>
         OrderEventHistory.Create(@event, @event.Data.OrderId.Value);
 
+    public OrderEventHistory Transform(IEvent<OrderShipped> @event) =>
+        OrderEventHistory.Create(@event, @event.Data.OrderId.Value);
+
     public OrderEventHistory Transform(IEvent<OrderCompleted> @event) =>
         OrderEventHistory.Create(@event, @event.Data.OrderId.Value);
 

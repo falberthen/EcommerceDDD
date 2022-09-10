@@ -26,7 +26,6 @@ public class RecordPaymentToOrderHandlerTests
         var currency = Currency.OfCode(Currency.USDollar.Code);        
         var quoteItems = new List<ConfirmedQuoteItem>() {
             new ConfirmedQuoteItem() {
-                Id = Guid.NewGuid(),
                 ProductId = productId,
                 ProductName = productName,
                 Quantity = 1,
@@ -48,24 +47,19 @@ public class RecordPaymentToOrderHandlerTests
         await orderWriteRepository
             .AppendEventsAsync(order, CancellationToken.None);
 
+        _ordersService.Setup(p => p.UpdateOrderStatus(It.IsAny<string>(), It.IsAny<UpdateOrderStatusRequest>()))
+            .Returns(Task.CompletedTask);
+
         var serviceProvider = DummyServiceProvider.Setup();
         serviceProvider
             .Setup(x => x.GetService(typeof(IEventStoreRepository<Order>)))
             .Returns(orderWriteRepository);
-
-        _ordersService.Setup(p => p.UpdateOrderStatus(It.IsAny<string>(), It.IsAny<UpdateOrderStatusRequest>()))
-            .Returns(Task.CompletedTask);
-
         serviceProvider
             .Setup(x => x.GetService(typeof(IOrdersService)))
             .Returns(_ordersService.Object);
 
-        var options = new Mock<IOptions<IntegrationServicesSettings>>();
-        options.Setup(p => p.Value)
-            .Returns(new IntegrationServicesSettings() { ApiGatewayBaseUrl = "http://url" });
-
         var recordPaymentToOrder = new RecordPaymentToOrder(paymentId, orderId, totalPaid);
-        var recordPaymentToOrderHandler = new RecordPaymentToOrderHandler(_mediator.Object, serviceProvider.Object, options.Object);
+        var recordPaymentToOrderHandler = new RecordPaymentToOrderHandler(_mediator.Object, serviceProvider.Object);
 
         // When
         await recordPaymentToOrderHandler.Handle(recordPaymentToOrder, CancellationToken.None);

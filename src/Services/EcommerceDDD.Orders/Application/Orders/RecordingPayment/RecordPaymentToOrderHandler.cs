@@ -1,11 +1,8 @@
 ﻿using MediatR;
 using EcommerceDDD.Core.Persistence;
 using EcommerceDDD.Orders.Domain;
-using Microsoft.Extensions.Options;
-using EcommerceDDD.IntegrationServices;
 using EcommerceDDD.Core.CQRS.CommandHandling;
 using EcommerceDDD.IntegrationServices.Orders;
-using EcommerceDDD.IntegrationServices.Orders.Requests;
 using EcommerceDDD.Orders.Application.Shipments.RequestingShipment;
 
 namespace EcommerceDDD.Orders.Application.Orders.RecordingPayment;
@@ -14,19 +11,13 @@ public class RecordPaymentToOrderHandler : CommandHandler<RecordPaymentToOrder>
 {
     private readonly IMediator _mediator;
     private readonly IServiceProvider _serviceProvider;
-    private readonly IntegrationServicesSettings _integrationServicesSettings;
 
     public RecordPaymentToOrderHandler(
         IMediator mediator,
-        IServiceProvider serviceProvider,
-        IOptions<IntegrationServicesSettings> integrationServicesSettings)
+        IServiceProvider serviceProvider)
     {
-        if (integrationServicesSettings == null)
-            throw new ArgumentNullException(nameof(integrationServicesSettings));
-        
         _mediator = mediator;
         _serviceProvider = serviceProvider;
-        _integrationServicesSettings = integrationServicesSettings.Value;
     }
 
     public override async Task Handle(RecordPaymentToOrder command, CancellationToken cancellationToken)
@@ -54,14 +45,5 @@ public class RecordPaymentToOrderHandler : CommandHandler<RecordPaymentToOrder>
         // Requesting shipment
         var requestShipment = new RequestShipment(order.Id, order.OrderLines);
         await _mediator.Send(requestShipment);
-
-        // Updating order status on the UI with SignalR
-        await ordersService.UpdateOrderStatus(
-            _integrationServicesSettings.ApiGatewayBaseUrl,
-            new UpdateOrderStatusRequest(
-                order.CustomerId.Value,
-                command.OrderId.Value,
-                order.Status.ToString(),
-                (int)order.Status));
     }
 }

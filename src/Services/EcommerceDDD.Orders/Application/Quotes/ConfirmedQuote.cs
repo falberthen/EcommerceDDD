@@ -19,7 +19,6 @@ public record class ConfirmedQuote(
         var items = request.Items.Select(qi =>
             new ConfirmedQuoteItem()
             {
-                Id = qi.QuoteItemId,
                 ProductId = ProductId.Of(qi.ProductId),
                 ProductName = string.Empty,
                 Quantity = qi.Quantity
@@ -34,7 +33,6 @@ public record class ConfirmedQuote(
 
 public record class ConfirmedQuoteItem()
 {
-    public Guid Id { get; set; }
     public ProductId ProductId { get; set; }
     public string ProductName { get; set; }
     public int Quantity { get; set; }

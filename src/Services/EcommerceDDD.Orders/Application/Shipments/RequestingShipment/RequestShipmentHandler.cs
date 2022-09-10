@@ -1,7 +1,11 @@
 ﻿using EcommerceDDD.Core.CQRS.CommandHandling;
+using EcommerceDDD.Core.Persistence;
 using EcommerceDDD.IntegrationServices;
+using EcommerceDDD.IntegrationServices.Orders;
+using EcommerceDDD.IntegrationServices.Orders.Requests;
 using EcommerceDDD.IntegrationServices.Shipments;
 using EcommerceDDD.IntegrationServices.Shipments.Requests;
+using EcommerceDDD.Orders.Domain;
 using Microsoft.Extensions.Options;
 
 namespace EcommerceDDD.Orders.Application.Shipments.RequestingShipment;
@@ -30,6 +34,11 @@ public class RequestShipmentHandler : CommandHandler<RequestShipment>
         using var scopedService = _serviceProvider.CreateScope();
         var shipmentsService = scopedService
            .ServiceProvider.GetRequiredService<IShipmentsService>();
+        var ordersService = scopedService
+           .ServiceProvider.GetRequiredService<IOrdersService>();
+
+        var orderWriteRepository = scopedService
+            .ServiceProvider.GetRequiredService<IEventStoreRepository<Order>>();
 
         var productItemsRequest = command.OrderLines
             .Select(ol => new ProductItemRequest(
@@ -39,8 +48,29 @@ public class RequestShipmentHandler : CommandHandler<RequestShipment>
                 ol.ProductItem.Quantity))
             .ToList();
 
+        var order = await orderWriteRepository
+            .FetchStream(command.OrderId.Value);
+
+        if (order == null)
+            throw new ApplicationException($"Failed to find the order {command.OrderId}.");
+
+        // Recording shipped event
+        order.RecordShipped();
+
+        await orderWriteRepository
+            .AppendEventsAsync(order);
+        
         var request = new ShipOrderRequest(command.OrderId.Value, productItemsRequest);
         await shipmentsService.RequestShipOrder(_integrationServicesSettings.ApiGatewayBaseUrl,
             request);
+
+        // Updating order status on the UI with SignalR
+        await ordersService.UpdateOrderStatus(
+            _integrationServicesSettings.ApiGatewayBaseUrl,
+            new UpdateOrderStatusRequest(
+                order.CustomerId.Value,
+                command.OrderId.Value,
+                order.Status.ToString(),
+                (int)order.Status));
     }
 }

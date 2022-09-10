@@ -34,7 +34,7 @@ public class OrderSaga :
 
     public async Task Handle(PaymentFinalized @event, CancellationToken cancellationToken)
     {
-        await DelayOnPurpose(5000);
+        await DelayOnPurpose(3000);
 
         var paymentId = PaymentId.Of(@event.PaymentId);
         var orderId = OrderId.Of(@event.OrderId);

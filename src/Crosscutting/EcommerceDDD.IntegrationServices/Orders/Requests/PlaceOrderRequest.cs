@@ -7,6 +7,5 @@ public record class PlaceOrderRequest(
     string CurrencyCode);
 
 public record class QuoteItemRequest(
-    Guid QuoteItemId,
     Guid ProductId,
     int Quantity);

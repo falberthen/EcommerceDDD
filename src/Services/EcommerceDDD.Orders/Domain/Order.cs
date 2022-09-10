@@ -14,6 +14,7 @@ public class Order : AggregateRoot<OrderId>
     public Money TotalPrice { get; private set; }
     public PaymentId PaymentId { get; private set; }
     public DateTime CreatedAt { get; private set; }
+    public DateTime? ShippedAt { get; private set; }
     public DateTime? CanceledAt { get; private set; }
     public DateTime? CompletedAt { get; private set; }
 
@@ -54,10 +55,21 @@ public class Order : AggregateRoot<OrderId>
         Apply(@event);
     }
 
-    public void Complete()
+    public void RecordShipped()
     {
         if (Status != OrderStatus.Paid)
-            throw new DomainException("The order must be paid before completed.");
+            throw new DomainException("The order must be paid before shipped.");
+
+        var @event = OrderShipped.Create(Id, DateTime.UtcNow);
+        
+        AppendEvent(@event);
+        Apply(@event);
+    }
+
+    public void Complete()
+    {
+        if (Status != OrderStatus.Shipped)
+            throw new DomainException("The order must be shipped before completed.");
 
         var @event = OrderCompleted.Create(Id, DateTime.UtcNow);
 
@@ -118,6 +130,12 @@ public class Order : AggregateRoot<OrderId>
     {
         Status = OrderStatus.Canceled;
         CanceledAt = canceled.CanceledAt;
+    }
+
+    private void Apply(OrderShipped shipped)
+    {
+        Status = OrderStatus.Shipped;
+        ShippedAt = shipped.ShippedAt;
     }
 
     private Money CalculateTotalPrice(List<OrderLine> orderLines, string currencyCode)
