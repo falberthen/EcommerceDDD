@@ -9,6 +9,7 @@ public class CustomerDetails
     public string Email { get; set; }
     public string Name { get; set; }
     public string Address { get; set; }
+    public decimal AvailableCreditLimit { get; set; }
 
     internal void Apply(CustomerRegistered registered)
     {
@@ -16,12 +17,14 @@ public class CustomerDetails
         Email = registered.Email;
         Name = registered.Name;
         Address = registered.Address;
+        AvailableCreditLimit = registered.AvailableCreditLimit;
     }
 
     internal void Apply(CustomerUpdated updated)
     {
         Name = updated.Name;
         Address = updated.Address;
+        AvailableCreditLimit = updated.AvailableCreditLimit;
     }
 }
 

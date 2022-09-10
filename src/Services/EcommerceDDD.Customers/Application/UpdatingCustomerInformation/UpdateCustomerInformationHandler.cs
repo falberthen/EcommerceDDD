@@ -22,7 +22,8 @@ public class UpdateCustomerInformationHandler : CommandHandler<UpdateCustomerInf
         if (customer == null)
             throw new ApplicationException("Customer not found.");
 
-        customer.UpdateCustomerInfo(command.CustomerId, command.Name, command.Address);
+        customer.UpdateCustomerInfo(command.CustomerId, command.Name, command.Address,
+            command.AvailableCreditLimit);
 
         await _customerWriteRepository
             .AppendEventsAsync(customer, cancellationToken);

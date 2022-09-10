@@ -25,10 +25,11 @@ public class GetCustomerDetailsHandler : QueryHandler<GetCustomerDetails, Custom
 
     public override async Task<CustomerDetails> Handle(GetCustomerDetails query, CancellationToken cancellationToken)
     {
-        var client = new HttpClient();
         var uri = $"{_tokenIssuerSettings.Authority}/connect/userinfo";
 
-        var response = await _requester.GetAsync<UserInfoResponse>(uri, query.Token);
+        var response = await _requester
+            .GetAsync<UserInfoResponse>(uri, query.UserAccessToken);
+
         if (response == null)
             throw new ApplicationException("Cannot retrieve customer's user info.");
 
@@ -43,6 +44,7 @@ public class GetCustomerDetailsHandler : QueryHandler<GetCustomerDetails, Custom
         details.Email = customer.Email;
         details.Name = customer.Name;
         details.Address = customer.Address;
+        details.AvailableCreditLimit = customer.AvailableCreditLimit;
 
         return details;
     }

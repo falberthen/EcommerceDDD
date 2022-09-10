@@ -18,6 +18,13 @@
           <div *ngIf="f.address.errors.required">Address is required</div>
         </div>
       </div>
+      <div class="form-group">
+        <input type="text" id="availableCreditLimit" name="availableCreditLimit" formControlName="availableCreditLimit" placeholder="Limit of credit"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"> $
+        <div *ngIf="submitted && f.availableCreditLimit.errors" class="invalid-feedback">
+          <div *ngIf="f.availableCreditLimit.errors.required">Available Credit Limit is required</div>
+        </div>
+      </div>
       <div class="form-footer">
         <input type="button" value="Cancel" class="btn btn-secondary" [routerLink]="['/home']" />
         <input type="button" value="Update" class="btn btn-primary" (click)="saveDetails()" [disabled]="isLoading"/>

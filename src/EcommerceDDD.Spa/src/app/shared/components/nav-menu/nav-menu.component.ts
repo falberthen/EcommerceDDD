@@ -81,13 +81,12 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     this.accountService.loadCustomerDetails()
     .then(result => {
         var data = result.data;
-        let latestCustomerDetails = new Customer(
+        this.customer = new Customer(
           data.id,
           data.name,
           data.email,
-          data.address);
-
-        this.customer = latestCustomerDetails;
+          data.address,
+          data.availableCreditLimit);;
 
         // storing customer in the localstorage
         this.localStorageService.setValue(appConstants.storedCustomer,

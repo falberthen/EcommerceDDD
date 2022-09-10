@@ -13,7 +13,8 @@ public class CustomerEventsTests
             .Returns(true);
 
         // When
-        var customer = Customer.CreateNew(_email, _name, _address, _checker.Object);
+        var customer = Customer.CreateNew(_email, _name, _address, _availableCreditLimit,
+            _checker.Object);
 
         // Then
         var @event = customer.GetUncommittedEvents().LastOrDefault() as CustomerRegistered;
@@ -30,10 +31,11 @@ public class CustomerEventsTests
 
         const string newName = "A new name";
         const string newAddress = "A new address";
-        var customer = Customer.CreateNew(_email, _name, _address, _checker.Object);
+        var customer = Customer.CreateNew(_email, _name, _address, _availableCreditLimit,
+            _checker.Object);
 
         // When
-        customer.UpdateCustomerInfo(customer.Id, newName, newAddress);
+        customer.UpdateCustomerInfo(customer.Id, newName, newAddress, _availableCreditLimit);
 
         // Then
         var @event = customer.GetUncommittedEvents().LastOrDefault() as CustomerUpdated;
@@ -44,5 +46,6 @@ public class CustomerEventsTests
     private const string _email = "email@test.com";
     private const string _name = "UserTest";
     private const string _address = "Rue XYZ";
+    private const decimal _availableCreditLimit = 1000;
     private Mock<ICustomerUniquenessChecker> _checker = new();
 }

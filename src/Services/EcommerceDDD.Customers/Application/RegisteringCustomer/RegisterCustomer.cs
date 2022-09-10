@@ -9,7 +9,8 @@ public record class RegisterCustomer(
     string Password, 
     string PasswordConfirm, 
     string Name, 
-    string Address) : Command
+    string Address,
+    decimal AvailableCreditLimit) : Command
 {
     public override ValidationResult Validate()
     {
@@ -41,5 +42,8 @@ public class RegisterCustomerCommandValidator : AbstractValidator<RegisterCustom
 
         RuleFor(c => c.Address)
         .NotEmpty().WithMessage("Address is empty.");
+
+        RuleFor(c => c.AvailableCreditLimit)
+        .GreaterThan(0).WithMessage("AvailableCreditLimit must be greater than 0.");
     }
 }

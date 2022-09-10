@@ -29,7 +29,7 @@ public class RegisterCustomerCommandHandlerTests
         string password, confirmation;
         password = confirmation = "p4ssw0rd";
 
-        var command = new RegisterCustomer(_email, password, confirmation, _name, _address);
+        var command = new RegisterCustomer(_email, password, confirmation, _name, _address, _availableCreditLimit);
         var commandHandler = new RegisterCustomerHandler(
             requester.Object,
             _checker.Object, 
@@ -49,5 +49,6 @@ public class RegisterCustomerCommandHandlerTests
     private const string _email = "email@test.com";
     private const string _name = "UserTest";
     private const string _address = "Rue XYZ";
+    private const decimal _availableCreditLimit = 1000;
     private Mock<ICustomerUniquenessChecker> _checker = new();
 }

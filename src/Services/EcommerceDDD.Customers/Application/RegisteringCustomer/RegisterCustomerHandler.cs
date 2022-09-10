@@ -33,6 +33,7 @@ public class RegisterCustomerHandler : CommandHandler<RegisterCustomer>
             command.Email,
             command.Name,
             command.Address,
+            command.AvailableCreditLimit,
             _uniquenessChecker);
         
         var response = await CreateUserForCustomer(command);

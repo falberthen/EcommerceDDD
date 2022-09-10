@@ -13,7 +13,8 @@ public class CustomerCreationTests
             .Returns(true);
 
         // When
-        var customer = Customer.CreateNew(_email, _name, _address, _checker.Object);
+        var customer = Customer.CreateNew(_email, _name, _address, _availableCreditLimit,
+            _checker.Object);
 
         // Then
         Assert.NotNull(customer);
@@ -21,6 +22,7 @@ public class CustomerCreationTests
         customer.Email.Should().Be(_email);
         customer.Name.Should().Be(_name);
         customer.Address.Should().Be(_address);
+        customer.Wallet.Should().Be(DummyWallet.CreateNew(_availableCreditLimit));
     }
 
     [Fact]
@@ -32,7 +34,8 @@ public class CustomerCreationTests
 
         // When
         Func<Customer> action = () =>
-            Customer.CreateNew(_email, _name, _address, _checker.Object);
+            Customer.CreateNew(_email, _name, _address, _availableCreditLimit, 
+            _checker.Object);
 
         // Then
         action.Should().Throw<DomainException>();
@@ -41,5 +44,6 @@ public class CustomerCreationTests
     private const string _email = "email@test.com";
     private const string _name = "UserTest";
     private const string _address = "Rue XYZ";
+    private const decimal _availableCreditLimit = 1000;
     private Mock<ICustomerUniquenessChecker> _checker = new();
 }

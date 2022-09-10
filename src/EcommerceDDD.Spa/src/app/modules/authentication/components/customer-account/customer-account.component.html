@@ -31,10 +31,17 @@
       </div>
       <div class="form-group">
         <input type="password" id="passwordConfirm" name="passwordConfirm" formControlName="passwordConfirm"
-               placeholder="Confirmation"
-               [ngClass]="{ 'is-invalid': submitted && f.passwordConfirm.errors }">
+          placeholder="Confirmation"
+          [ngClass]="{ 'is-invalid': submitted && f.passwordConfirm.errors }">
         <div *ngIf="submitted && f.passwordConfirm.errors" class="invalid-feedback">
           <div *ngIf="f.passwordConfirm.errors.required">Password confirm is required</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <input type="text" id="availableCreditLimit" name="availableCreditLimit" formControlName="availableCreditLimit" placeholder="Limit of credit"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"> $
+        <div *ngIf="submitted && f.availableCreditLimit.errors" class="invalid-feedback">
+          <div *ngIf="f.availableCreditLimit.errors.required">Available Credit Limit is required</div>
         </div>
       </div>
       <div class="form-footer">

@@ -37,14 +37,16 @@
         font-weight:bolder;
 
         .placed {
-          color: rgba(32, 67, 221, 0.801);
+          color: #000000;
         }
-        .waitingForPayment {
-          color: rgb(206, 148, 13);
+        .shipped {
+          color: rgb(7, 73, 195);
         }
-
-        .readyToShip {
+        .completed {
           color: green;
+        }
+        .canceled {
+          color: rgb(255, 0, 0);
         }
       }
     }

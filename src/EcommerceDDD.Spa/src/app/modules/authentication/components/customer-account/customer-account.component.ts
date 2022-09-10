@@ -33,9 +33,10 @@ export class CustomerAccountComponent implements OnInit {
     this.accountForm = this.formBuilder.group({
       email: ['', Validators.required],
       name: ['', Validators.required],
-      address: ['', Validators.required],
+      address: ['404 Rue Infinite Loop', Validators.required],
       password: ['', Validators.required],
       passwordConfirm: ['', Validators.required],
+      availableCreditLimit: ['1000', Validators.required]
     });
 
     // get return url from route parameters or default to '/'
@@ -61,7 +62,8 @@ export class CustomerAccountComponent implements OnInit {
       this.f.name.value,
       this.f.address.value,
       this.f.password.value,
-      this.f.passwordConfirm.value);
+      this.f.passwordConfirm.value,
+      this.f.availableCreditLimit.value);
 
     this.accountService.registerAccount(customerRegistration)
     .then(data => {

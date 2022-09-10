@@ -6,14 +6,16 @@ public record class CustomerRegistered(
     CustomerId CustomerId,
     string Name, 
     string Email, 
-    string Address) : IDomainEvent
+    string Address,
+    decimal AvailableCreditLimit) : IDomainEvent
 {
-    public static CustomerRegistered Create(Customer customer)
+    public static CustomerRegistered Create(Customer customer, decimal availableCreditLimit)
     {
         return new CustomerRegistered(
             customer.Id, 
             customer.Name, 
             customer.Email, 
-            customer.Address);            
+            customer.Address,
+            availableCreditLimit);            
     }
 }

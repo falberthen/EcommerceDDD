@@ -68,10 +68,12 @@ export class OrdersComponent implements OnInit {
     switch (statusCode) {
       case orderStatusCodes.placed:
         return 'placed';
-      case orderStatusCodes.readyToShip:
-        return 'readyToShip';
-        case orderStatusCodes.waitingForPayment:
-        return 'waitingForPayment';
+      case orderStatusCodes.shipped:
+        return 'shipped';
+      case orderStatusCodes.canceled:
+        return 'canceled';
+      case orderStatusCodes.completed:
+        return 'completed';
       default:
         return '';
     }

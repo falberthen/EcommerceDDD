@@ -14,12 +14,14 @@ public class UpdateCustomerCommandHandlerTests
             .Returns(true);
         
         var customerWriteRepository = new DummyEventStoreRepository<Customer>();
-        var customer = Customer.CreateNew(_email, _name, _address, _checker.Object);
+        var customer = Customer.CreateNew(_email, _name, _address, _availableCreditLimit,
+            _checker.Object);
         await customerWriteRepository.AppendEventsAsync(customer);
 
         var newName = "New Name";
         var newAddress = "New Address";
-        var command = new UpdateCustomerInformation(customer.Id, newName, newAddress);
+        var command = new UpdateCustomerInformation(customer.Id, newName, newAddress, 
+            _availableCreditLimit);
         var commandHandler = new UpdateCustomerInformationHandler(customerWriteRepository);
 
         // When
@@ -34,5 +36,6 @@ public class UpdateCustomerCommandHandlerTests
     private const string _email = "email@test.com";
     private const string _name = "UserTest";
     private const string _address = "Rue XYZ";
+    private const decimal _availableCreditLimit = 1000;
     private Mock<ICustomerUniquenessChecker> _checker = new();
 }

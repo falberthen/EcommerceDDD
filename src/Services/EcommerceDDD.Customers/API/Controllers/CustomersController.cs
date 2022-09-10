@@ -11,9 +11,12 @@ using EcommerceDDD.Customers.Api.Application.GettingCustomerDetails;
 using EcommerceDDD.Customers.Application.GettingCustomerEventHistory;
 using EcommerceDDD.Customers.Api.Application.RegisteringCustomer;
 using EcommerceDDD.Customers.Api.Application.UpdatingCustomerInformation;
+using EcommerceDDD.Customers.Api.Application.GettingAvailableCreditLimit;
+using EcommerceDDD.Customers.Application.GettingAvailableCreditLimit;
 
 namespace EcommerceDDD.Customers.API.Controllers;
 
+[Authorize]
 [Route("api/customers")]
 [ApiController]
 public class CustomersController : CustomControllerBase
@@ -26,14 +29,27 @@ public class CustomersController : CustomControllerBase
     /// </summary>
     /// <param name="customerId"></param>
     /// <returns></returns>
-    [Authorize]
     [HttpGet]
     [ProducesResponseType(typeof(CustomerDetails), (int)HttpStatusCode.OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetDetails()
     {
-        var accessToken = await HttpContext.GetTokenAsync("access_token");
-        var query = new GetCustomerDetails(accessToken!);
+        var userAccessToken = await HttpContext.GetTokenAsync("access_token");
+        var query = new GetCustomerDetails(userAccessToken!);
+        return await Response(query);
+    }
+
+    /// <summary>
+    /// Get customer available credit limit
+    /// </summary>
+    /// <param name="customerId"></param>
+    /// <returns></returns>
+    [HttpGet, Route("{customerId}/credit")]
+    [ProducesResponseType(typeof(AvailableCreditLimitModel), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> GetAvailableCreditLimit([FromRoute] Guid customerId)
+    {
+        var query = new GetAvailableCreditLimit(customerId);
         return await Response(query);
     }
 
@@ -42,7 +58,6 @@ public class CustomersController : CustomControllerBase
     /// </summary>
     /// <param name="customerId"></param>
     /// <returns></returns>
-    [Authorize]
     [HttpGet, Route("{customerId}/history")]
     [ProducesResponseType(typeof(IList<CustomerEventHistory>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -68,7 +83,8 @@ public class CustomersController : CustomControllerBase
             request.Password,
             request.PasswordConfirm,
             request.Name,
-            request.Address);
+            request.Address,
+            request.AvailableCreditLimit);
 
         return await Response(command);
     }
@@ -78,7 +94,6 @@ public class CustomersController : CustomControllerBase
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    [Authorize]
     [HttpPut, Route("{customerId}")]
     [ProducesResponseType((int)HttpStatusCode.Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -87,7 +102,8 @@ public class CustomersController : CustomControllerBase
         var command = new UpdateCustomerInformation(
             new CustomerId(customerId),
             request.Name,
-            request.Address);
+            request.Address,
+            request.AvailableCreditLimit);
 
         return await Response(command);
     }

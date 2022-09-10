@@ -8,7 +8,8 @@ namespace EcommerceDDD.Customers.Api.Application.UpdatingCustomerInformation;
 public record class UpdateCustomerInformation(
     CustomerId CustomerId,
     string Name,
-    string Address) : Command
+    string Address,
+    decimal AvailableCreditLimit) : Command
 {
     public override ValidationResult Validate()
     {
@@ -29,5 +30,8 @@ public class UpdateCustomerCommandValidator : AbstractValidator<UpdateCustomerIn
 
         RuleFor(c => c.Address)
         .NotEmpty().WithMessage("Address is empty.");
+
+        RuleFor(c => c.AvailableCreditLimit)
+        .GreaterThan(0).WithMessage("AvailableCreditLimit must be greater than 0.");
     }
 }

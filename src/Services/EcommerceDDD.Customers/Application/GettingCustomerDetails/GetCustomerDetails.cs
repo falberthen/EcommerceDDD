@@ -5,7 +5,7 @@ using EcommerceDDD.Customers.Application.GettingCustomerDetails;
 
 namespace EcommerceDDD.Customers.Api.Application.GettingCustomerDetails;
 
-public record class GetCustomerDetails(string Token) : Query<CustomerDetails>
+public record class GetCustomerDetails(string UserAccessToken) : Query<CustomerDetails>
 {
     public override ValidationResult Validate()
     {
@@ -17,6 +17,6 @@ public class GetCustomerDetailsValidator : AbstractValidator<GetCustomerDetails>
 {
     public GetCustomerDetailsValidator()
     {
-        RuleFor(x => x.Token).NotEmpty().WithMessage("Token is empty.");
+        RuleFor(x => x.UserAccessToken).NotEmpty().WithMessage("UserAccessToken is empty.");
     }
 }

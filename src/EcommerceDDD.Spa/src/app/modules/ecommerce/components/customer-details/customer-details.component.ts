@@ -36,6 +36,7 @@ export class CustomerDetailsComponent implements OnInit {
       this.customerDetailsForm = this.formBuilder.group({
         name: [this.customer.name, Validators.required],
         address: [this.customer.address, Validators.required],
+        availableCreditLimit: [this.customer.availableCreditLimit, Validators.required]
       });
     }
   }
@@ -54,7 +55,9 @@ export class CustomerDetailsComponent implements OnInit {
         return;
     }
 
-    const customerUpdate = new UpdateCustomerRequest(this.f.name.value, this.f.address.value);
+    const customerUpdate = new UpdateCustomerRequest(this.f.name.value, this.f.address.value,
+      this.f.availableCreditLimit.value);
+
     if(this.customer) {
       this.accountService.updateCustomer(this.customer.id, customerUpdate)
       .then(data => {
