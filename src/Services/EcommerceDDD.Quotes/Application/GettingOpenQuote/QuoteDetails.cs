@@ -27,7 +27,6 @@ public class QuoteDetails
     {
         Id = itemAdded.QuoteId.Value;
         var quoteItem = new QuoteItemDetails(
-            itemAdded.Id,
             itemAdded.ProductId.Value,
             itemAdded.Quantity);
         
@@ -70,7 +69,7 @@ public class QuoteDetails
         ConfirmedAt = confirmed.ConfirmedAt;
     }
 
-    public record QuoteItemDetails(Guid Id, Guid ProductId, int Quantity);
+    public record QuoteItemDetails(Guid ProductId, int Quantity);
 }
 
 public class QuoteDetailsProjection : SingleStreamAggregation<QuoteDetails>

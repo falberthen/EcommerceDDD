@@ -49,9 +49,7 @@ public class Quote : AggregateRoot<QuoteId>
         if (quoteItem == null)
             throw new DomainException("Quote item not found.");
 
-        var @event = QuoteItemRemoved.Create(Id,
-            quoteItem.Id,
-            quoteItem.ProductId);
+        var @event = QuoteItemRemoved.Create(Id, quoteItem.ProductId);
 
         AppendEvent(@event);
         Apply(@event);

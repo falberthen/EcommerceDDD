@@ -1,10 +1,10 @@
-﻿using EcommerceDDD.Core.Exceptions;
+﻿using EcommerceDDD.Core.Domain;
+using EcommerceDDD.Core.Exceptions;
 
 namespace EcommerceDDD.Quotes.Domain;
 
-public record class QuoteItem
+public class QuoteItem : ValueObject<QuoteItem>
 {
-    public Guid Id { get; private set; }
     public ProductId ProductId { get; private set; }
     public int Quantity { get; private set; }
 
@@ -16,7 +16,6 @@ public record class QuoteItem
         if (quantity <= 0)
             throw new DomainException("Product quantity must be > 0.");
 
-        Id = Guid.NewGuid();
         ProductId = productId;
         Quantity = quantity;
     }
@@ -27,5 +26,11 @@ public record class QuoteItem
             throw new DomainException("The product quantity must be at last 1.");
 
         Quantity = quantity;
+    }
+
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return ProductId;
+        yield return Quantity;
     }
 }

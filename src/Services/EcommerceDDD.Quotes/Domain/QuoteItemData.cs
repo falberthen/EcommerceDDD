@@ -1,3 +1,3 @@
 ﻿namespace EcommerceDDD.Quotes.Domain;
 
-public record class QuoteItemData(Guid Id, QuoteId QuoteId, ProductId ProductId, int Quantity);
+public record class QuoteItemData(QuoteId QuoteId, ProductId ProductId, int Quantity);

@@ -5,6 +5,7 @@ using EcommerceDDD.IntegrationServices.Products;
 using EcommerceDDD.IntegrationServices;
 using Microsoft.Extensions.Options;
 using static EcommerceDDD.IntegrationServices.Products.Responses.ProductsResponse;
+using EcommerceDDD.IntegrationServices.Products.Responses;
 
 namespace EcommerceDDD.Quotes.Tests.Application;
 

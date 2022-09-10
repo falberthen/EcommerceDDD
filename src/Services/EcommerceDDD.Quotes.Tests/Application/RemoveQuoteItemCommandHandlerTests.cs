@@ -15,7 +15,7 @@ public class RemoveQuoteItemCommandHandlerTests
         var productId = ProductId.Of(Guid.NewGuid());
         var _productQuantity = 1;
 
-        var quoteItemData = new QuoteItemData(Guid.NewGuid(), QuoteId.Of(Guid.NewGuid()), productId, _productQuantity);
+        var quoteItemData = new QuoteItemData(QuoteId.Of(Guid.NewGuid()), productId, _productQuantity);
         _checker.Setup(p => p.CanCustomerOpenNewQuote(_customerId))
             .Returns(Task.FromResult(true));
 

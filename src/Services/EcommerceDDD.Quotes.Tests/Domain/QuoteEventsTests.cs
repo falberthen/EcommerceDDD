@@ -49,7 +49,7 @@ public class QuoteEventsTests
 
         // When
         var quote = await Quote.CreateNew(customerId, _checker.Object);
-        quote.AddQuoteItem(new QuoteItemData(Guid.NewGuid(), QuoteId.Of(Guid.NewGuid()), ProductId.Of(Guid.NewGuid()), 1));
+        quote.AddQuoteItem(new QuoteItemData(QuoteId.Of(Guid.NewGuid()), ProductId.Of(Guid.NewGuid()), 1));
 
         // Then
         var @event = quote.GetUncommittedEvents().LastOrDefault() as QuoteItemAdded;
@@ -61,7 +61,7 @@ public class QuoteEventsTests
     public async Task RemovingItemFromQuote_ReturnsQuoteItemRemovedEvent()
     {
         // Given
-        var quoteItemData = new QuoteItemData(Guid.NewGuid(), QuoteId.Of(Guid.NewGuid()), _productId, 1);
+        var quoteItemData = new QuoteItemData(QuoteId.Of(Guid.NewGuid()), _productId, 1);
 
         _checker.Setup(p => p.CanCustomerOpenNewQuote(_customerId))
             .Returns(Task.FromResult(true));
@@ -81,7 +81,7 @@ public class QuoteEventsTests
     public async Task ChangingQuoteItemQuantity_ReturnsQuoteItemQuantityChangedEvent()
     {
         // Given
-        var quoteItemData = new QuoteItemData(Guid.NewGuid(), QuoteId.Of(Guid.NewGuid()), _productId, 1);
+        var quoteItemData = new QuoteItemData(QuoteId.Of(Guid.NewGuid()), _productId, 1);
         _checker.Setup(p => p.CanCustomerOpenNewQuote(_customerId))
             .Returns(Task.FromResult(true));
 
@@ -101,7 +101,7 @@ public class QuoteEventsTests
     public async Task ConfirmingQuote_ReturnsQuoteConfirmedEvent()
     {
         // Given
-        var quoteItemData = new QuoteItemData(Guid.NewGuid(), QuoteId.Of(Guid.NewGuid()), _productId, 1);
+        var quoteItemData = new QuoteItemData(QuoteId.Of(Guid.NewGuid()), _productId, 1);
         _checker.Setup(p => p.CanCustomerOpenNewQuote(_customerId))
             .Returns(Task.FromResult(true));
 

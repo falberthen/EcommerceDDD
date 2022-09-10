@@ -49,7 +49,6 @@ public class PlaceOrderFromQuoteHandler : CommandHandler<PlaceOrderFromQuote>
     {                
         var quoteItems = quote.Items.Select(qi =>
             new QuoteItemRequest(
-                qi.Id,
                 qi.ProductId.Value,
                 qi.Quantity)
             ).ToList();

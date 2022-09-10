@@ -38,7 +38,6 @@ public class AddQuoteItemHandler : CommandHandler<AddQuoteItem>
         await ValidateProduct(command, cancellationToken);
 
         var quotetemData = new QuoteItemData(
-            Guid.NewGuid(),
             command.QuoteId,
             command.ProductId,
             command.Quantity);

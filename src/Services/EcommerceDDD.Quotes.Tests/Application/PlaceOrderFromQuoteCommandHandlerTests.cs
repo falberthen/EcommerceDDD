@@ -8,7 +8,7 @@ using EcommerceDDD.Quotes.Application.PlacingOrderFromQuote;
 using EcommerceDDD.IntegrationServices.Orders.Requests;
 using EcommerceDDD.IntegrationServices;
 using Microsoft.Extensions.Options;
-using static EcommerceDDD.IntegrationServices.Products.Responses.ProductsResponse;
+using EcommerceDDD.IntegrationServices.Products.Responses;
 
 namespace EcommerceDDD.Quotes.Tests.Application;
 
@@ -47,7 +47,7 @@ public class PlaceOrderFromQuoteCommandHandlerTests
         await quoteWriteRepository.AppendEventsAsync(quote);
 
         var quoteItemRequest = quote.Items.Select(q =>
-            new QuoteItemRequest(q.Id, q.ProductId.Value, q.Quantity))
+            new QuoteItemRequest(q.ProductId.Value, q.Quantity))
             .ToList();
 
         var ordersService = new Mock<IOrdersService>();
