@@ -8,8 +8,8 @@ using EcommerceDDD.IntegrationServices;
 using Microsoft.Extensions.Options;
 using EcommerceDDD.Core.Domain;
 using EcommerceDDD.Core.EventBus;
-using static EcommerceDDD.IntegrationServices.Products.Responses.ProductStockAvailabilityResponse;
 using EcommerceDDD.Core.Persistence;
+using EcommerceDDD.IntegrationServices.Products.Responses;
 
 namespace EcommerceDDD.Shipments.Tests.Application;
 
