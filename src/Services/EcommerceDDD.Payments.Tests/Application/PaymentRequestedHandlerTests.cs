@@ -5,6 +5,11 @@ using EcommerceDDD.Payments.Domain.Events;
 using EcommerceDDD.Payments.Application.RequestingPayment;
 using EcommerceDDD.Payments.Application.ProcessingPayment;
 using EcommerceDDD.Core.Persistence;
+using EcommerceDDD.IntegrationServices;
+using Microsoft.Extensions.Options;
+using EcommerceDDD.IntegrationServices.Customers;
+using EcommerceDDD.IntegrationServices.Customers.Responses;
+using EcommerceDDD.Core.EventBus;
 
 namespace EcommerceDDD.Payments.Tests.Application;
 
@@ -18,6 +23,7 @@ public class PaymentRequestedHandlerTests
         var customerId = CustomerId.Of(Guid.NewGuid());
         var currency = Currency.OfCode(Currency.USDollar.Code);
         var totalAmount = Money.Of(100, currency.Code);
+        var availableCreditLimit = 1000;
 
         var paymentWriteRepository = new DummyEventStoreRepository<Payment>();
 
@@ -29,10 +35,27 @@ public class PaymentRequestedHandlerTests
         var @event = payment.GetUncommittedEvents().LastOrDefault() as PaymentRequested;
         Assert.NotNull(@event);
 
+        var options = new Mock<IOptions<IntegrationServicesSettings>>();
+        options.Setup(p => p.Value)
+            .Returns(new IntegrationServicesSettings() { ApiGatewayBaseUrl = "http://url" });
+
+        _customersService.Setup(p => p.RequestAvailableCreditLimit(It.IsAny<string>(), It.IsAny<Guid>()))
+            .Returns(Task.FromResult(new AvailableCreditLimitModel(customerId.Value, availableCreditLimit)));
+
         var serviceProvider = DummyServiceProvider.Setup();
         serviceProvider
             .Setup(x => x.GetService(typeof(IEventStoreRepository<Payment>)))
             .Returns(paymentWriteRepository);
+
+        serviceProvider
+            .Setup(x => x.GetService(typeof(IOptions<IntegrationServicesSettings>)))
+            .Returns(options.Object);        
+        serviceProvider
+            .Setup(x => x.GetService(typeof(ICustomersService)))
+            .Returns(_customersService.Object);
+        serviceProvider
+            .Setup(x => x.GetService(typeof(IEventProducer)))
+            .Returns(_eventProducer.Object);
 
         var domainNotification = new DomainEventNotification<PaymentRequested>(@event!);
         var paymentRequestedHandler = new PaymentRequestedHandler(serviceProvider.Object);
@@ -47,4 +70,7 @@ public class PaymentRequestedHandlerTests
         payment.TotalAmount.Value.Should().Be(totalAmount.Value);
         payment.Status.Should().Be(PaymentStatus.Processed);
     }
+
+    private Mock<ICustomersService> _customersService = new();
+    private Mock<IEventProducer> _eventProducer = new();
 }

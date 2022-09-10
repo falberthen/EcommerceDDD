@@ -8,11 +8,12 @@ public class PaymentCreationTests
     public void Create_FromOrder_ReturnsPayment()
     {
         // Given
+        var customerId = CustomerId.Of(Guid.NewGuid());
         var orderId = OrderId.Of(Guid.NewGuid());
         var totalAmount = Money.Of(100, Currency.USDollar.Code);
 
         // When
-        var payment = Payment.CreateNew(orderId, totalAmount);
+        var payment = Payment.CreateNew(customerId, orderId, totalAmount);
 
         // Then
         Assert.NotNull(payment);
