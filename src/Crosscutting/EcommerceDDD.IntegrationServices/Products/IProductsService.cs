@@ -1,5 +1,4 @@
-﻿using static EcommerceDDD.IntegrationServices.Products.Responses.ProductsResponse;
-using static EcommerceDDD.IntegrationServices.Products.Responses.ProductStockAvailabilityResponse;
+﻿using EcommerceDDD.IntegrationServices.Products.Responses;
 
 namespace EcommerceDDD.IntegrationServices.Products;
 

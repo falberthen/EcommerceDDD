@@ -3,8 +3,6 @@ using EcommerceDDD.Core.Infrastructure.Http;
 using EcommerceDDD.Core.Infrastructure.Identity;
 using EcommerceDDD.IntegrationServices.Products.Requests;
 using Microsoft.Extensions.Options;
-using static EcommerceDDD.IntegrationServices.Products.Responses.ProductsResponse;
-using static EcommerceDDD.IntegrationServices.Products.Responses.ProductStockAvailabilityResponse;
 using EcommerceDDD.IntegrationServices.Products.Responses;
 
 namespace EcommerceDDD.IntegrationServices.Products;
