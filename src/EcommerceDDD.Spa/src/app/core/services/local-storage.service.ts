@@ -9,12 +9,9 @@ export class LocalStorageService {
     localStorage.setItem(key, value);
   }
 
-  public getValueByKey(key: string): string {
+  public getValueByKey(key: string): string | null {
     const value = localStorage.getItem(key);
-    if(value)
-      return value;
-
-    return "";
+    return value;
   }
 
   public clearKey(key: string): void {

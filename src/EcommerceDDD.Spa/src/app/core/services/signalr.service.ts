@@ -7,32 +7,15 @@ import { environment } from 'src/environments/environment';
 })
 export class SignalrService {
   connection!: signalR.HubConnection;
-
   constructor() {
-    this.connection = this.buildConnection();
-  }
-
-  public addCustomerToGroup(customerId: string){
-
-    if(this.connection &&
-      this.connection.state != 'Disconnected')
-      return;
-
-    this.connection.start()
-    .then((data: any) => {
-      console.log('SignalR Connected!');
-      this.connection.invoke('JoinCustomerToGroup', customerId);
-    })
-    .catch(function (err) {
-      return console.error(err.toString());
-    });
+    this.connection = this.buildConnection(environment.signalrOrdersHubUrl);
   }
 
   // Start Hub Connection and Register events
-  private buildConnection = () => {
+  private buildConnection = (hubUrl: string) => {
     return new signalR.HubConnectionBuilder()
-      .configureLogging(signalR.LogLevel.Trace)
-      .withUrl(environment.apiUrl + 'orderstatushub')
+      //.configureLogging(signalR.LogLevel.Trace)
+      .withUrl(hubUrl)
       .build();
     }
 }

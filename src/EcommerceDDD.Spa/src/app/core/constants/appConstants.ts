@@ -1,13 +1,21 @@
 export const appConstants = {
+  storedUser: 'user',
   storedCustomer: 'customer',
   storedCurrency: 'currency',
-  storedQuoteId: 'quoteId',
-  storedQuoteItems: 'quoteItems',
+  storedOpenQuote: 'openQuote',
   defaultCurrency: 'USD'
 };
 
 export const orderStatusCodes = {
   placed: 1,
-  waitingForPayment: 2,
-  readyToShip: 3
+  paid: 2,
+  shipped: 3,
+  completed: 4,
+  canceled: 0
+}
+
+export const boundedContexts = {
+  Customers: "Customers",
+  Quotes: "Quotes",
+  Orders: "Orders"
 }

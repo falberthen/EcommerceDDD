@@ -1,19 +1,22 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { faMinusCircle } from '@fortawesome/free-solid-svg-icons';
+import { Router } from '@angular/router';
+import { Component, OnInit, Output, EventEmitter, ViewContainerRef, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { faList, faMinusCircle } from '@fortawesome/free-solid-svg-icons';
 import { appConstants } from 'src/app/core/constants/appConstants';
-import { Quote, QuoteItem } from 'src/app/core/models/Quote';
-import { Product } from 'src/app/core/models/Product';
-import { ChangeQuoteRequest } from 'src/app/core/models/requests/ChangeQuoteRequest';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog.service';
 import { CurrencyNotificationService } from 'src/app/core/services/currency-notification.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { NotificationService } from 'src/app/core/services/notification.service';
-import { QuoteService } from '../../quote.service';
-import { CreateQuoteRequest } from 'src/app/core/models/requests/CreateQuoteRequest';
-import { PlaceOrderRequest } from 'src/app/core/models/requests/PlaceOrderRequest';
-import { OrderService } from '../../order.service';
-import { Router } from '@angular/router';
+import { LoaderService } from 'src/app/core/services/loader.service';
+import { QuotesService } from '../../services/quotes.service';
+import { Quote, QuoteItem } from '../../models/Quote';
+import { Product } from '../../models/Product';
+import { RemoveQuoteItemRequest } from '../../models/requests/RemoveQuoteItemRequest';
+import { OpenQuoteRequest } from '../../models/requests/OpenQuoteRequest';
+import { AddQuoteItemRequest } from '../../models/requests/AddQuoteItemRequest';
+import { firstValueFrom } from 'rxjs';
+import { StoredEventService } from 'src/app/core/services/stored-event.service';
+import { ServiceResponse } from '../../services/ServiceResponse';
 
 @Component({
   selector: 'app-cart',
@@ -21,41 +24,47 @@ import { Router } from '@angular/router';
   styleUrls: ['./cart.component.scss']
 })
 export class CartComponent implements OnInit {
+  @ViewChild("storedEventViewerContainer", { read: ViewContainerRef })
+  storedEventViewerContainer!: ViewContainerRef;
 
   @Output() sendQuoteItemsEvent = new EventEmitter();
   @Output() placeOrderEvent = new EventEmitter();
+  @Output() reloadProductsEvent = new EventEmitter();
 
-  quote!: Quote;
+  quote?: Quote;
   storedCurrency!: string;
   customerId!: string;
-
   faMinusCircle = faMinusCircle;
+  faList = faList;
+  isExpanded = false;
+  isModalOpen = false;
+  storedEventsViewerComponentRef: any;
+  isLoading = false;
 
   constructor(
-    private quoteService: QuoteService,
+    private router: Router,
+    private cdr: ChangeDetectorRef,
+    private authService: AuthService,
+    private quotesService: QuotesService,
+    private loaderService: LoaderService,
     private localStorageService: LocalStorageService,
     private confirmationDialogService: ConfirmationDialogService,
     private currencyNotificationService: CurrencyNotificationService,
-    private authService: AuthService,
     private notificationService: NotificationService,
-    private orderService: OrderService,
-    private router: Router) { }
+    private storedEventService: StoredEventService) { }
 
   async ngOnInit() {
-    this.storedCurrency = this.localStorageService
+    var storedCurrency = this.localStorageService
       .getValueByKey(appConstants.storedCurrency);
+
+    if(storedCurrency) {
+      this.storedCurrency = storedCurrency;
+    }
 
     if(this.authService.currentCustomer) {
       const customer = this.authService.currentCustomer;
       this.customerId = customer.id;
-      let quoteId = this.localStorageService
-        .getValueByKey(appConstants.storedQuoteId);
-
-      if(quoteId || quoteId === '') {
-        quoteId = await this.getCurrentQuote();
-      }
-
-      await this.getQuoteDetails(quoteId);
+      await this.getOpenQuote();
     }
 
     // Currency change listener
@@ -63,74 +72,23 @@ export class CartComponent implements OnInit {
       .subscribe(async currencyCode => {
         if(currencyCode != '') {
           this.storedCurrency = currencyCode;
-          if(this.quote)
-            await this.getQuoteDetails(this.quote.quoteId);
+          await this.getOpenQuote();
         }
       }
     );
   }
 
-  async getCurrentQuote() {
-    let quoteId = '';
-    await this.quoteService
-      .getCurrentQuote(this.customerId)
-      .then((result: any) => {
-        quoteId = result.data;
-        if(!this.isGuidEmpty(quoteId)) {
-          this.localStorageService.setValue(appConstants.storedQuoteId, quoteId);
-        }
-      },
-      (error) => console.error(error)
-    );
-
-    return quoteId;
+  ngAfterViewInit() {
+    this.loaderService.httpProgress()
+      .subscribe((status: boolean) => {
+        this.isLoading = status;
+        this.cdr.detectChanges();
+    });
   }
 
-  async getQuoteDetails(quoteId: string) {
-    if(!this.isGuidEmpty(quoteId)) {
-      await this.quoteService
-      .getQuoteDetails(quoteId, this.storedCurrency)
-      .then(
-        (result: any) => {
-          if(result.data){
-            this.quote = result.data;
-            this.localStorageService.setValue(appConstants.storedQuoteItems, this.quote.quoteItems.length);
-            this.sendQuoteItemsEvent.emit(this.quote);
-          }
-        },
-        (error) => console.error(error)
-      );
-    }
-  }
-
-  async saveQuote(product: Product) {
-    if(!this.quote)
-      await this.createQuote(product);
-    else
-      await this.changeQuote(product);
-  }
-
-  async createQuote(product: Product) {
-    let request = new CreateQuoteRequest(this.customerId, product, this.storedCurrency);
-    this.quoteService.createQuote(request).then(
-      async (result: any) => {
-        const quoteId = result.data;
-        this.localStorageService.setValue(appConstants.storedQuoteId, quoteId);
-        await this.getQuoteDetails(quoteId);
-      },
-      (error) => console.error(error)
-    );
-  }
-
-  async changeQuote(product: Product) {
-    let request = new ChangeQuoteRequest(this.quote.quoteId, product, this.storedCurrency);
-    this.quoteService.changeQuote(request).then(
-      async (result: any) => {
-        const quoteId = result.data;
-        await this.getQuoteDetails(quoteId);
-      },
-      (error) => console.error(error)
-    );
+  showQuoteStoredEvents() {
+    this.storedEventService.showStoredEvents(this.storedEventViewerContainer,
+      "Quotes", this.quote!.quoteId);
   }
 
   async removeItem(quoteItem: QuoteItem) {
@@ -138,34 +96,87 @@ export class CartComponent implements OnInit {
       .confirm('Please confirm', 'Do you confirm you want to remove this item?')
       .then(async (confirmed) => {
         if (confirmed) {
-          let product = new Product(quoteItem.productId, "", 0, "", "", 0);
-          let request = new ChangeQuoteRequest(this.quote.quoteId, product, this.storedCurrency);
+          let request = new RemoveQuoteItemRequest(this.quote!.quoteId, quoteItem.productId);
+          await firstValueFrom(await this.quotesService
+            .removeQuoteItem(request))
+            .then(async result => {
+              if(result.success){
+                await this.getOpenQuote();
+              }
+            });
+          }
+        });
+  }
 
-          await this.quoteService.changeQuote(request)
-          .then(async (result: any) => {
-            const quoteId = result.data;
-            await this.getQuoteDetails(quoteId);
-          },
-          (error) => console.error(error)
-        );
-      }
-    });
+  async cancelQuote(quote: Quote) {
+    this.confirmationDialogService
+      .confirm('Please confirm', 'Do you confirm you want to cancel this quote?')
+      .then(async (confirmed) => {
+        if (confirmed) {
+          await firstValueFrom(await this.quotesService
+            .cancelQuote(quote!.quoteId))
+            .then(result => {
+              if(result.success){
+                this.reloadProductsEvent.emit();
+                this.quote = undefined;
+              }
+            });
+          }
+      });
   }
 
   async placeOrder() {
-    let request = new PlaceOrderRequest(this.customerId, this.storedCurrency);
-    await this.orderService.placeOrder(this.quote.quoteId, request)
-      .then((result: any) => {
-        this.localStorageService.clearKey(appConstants.storedQuoteId);
-        this.localStorageService.clearKey(appConstants.storedQuoteItems);
+    await firstValueFrom(this.quotesService
+    .placeOrder(this.quote!.quoteId, this.storedCurrency))
+    .then(result => {
+      if(result.success) {
+        this.localStorageService.clearKey(appConstants.storedOpenQuote);
         this.notificationService.showSuccess('Order placed with success.');
-        this.router.navigate(['/orders/' + this.customerId + '/' + result.data]);
-      },
-      (error) => console.error(error)
-    );
+        this.router.navigate(['/orders']);
+      }
+    })
   }
 
-  private isGuidEmpty(quoteId: string): boolean {
-    return quoteId == '00000000-0000-0000-0000-000000000000';
+  async getOpenQuote(): Promise<ServiceResponse | null> {
+    return firstValueFrom(this.quotesService
+      .getOpenQuote(this.customerId, this.storedCurrency))
+      .then(result => {
+        if(result.success) {
+          this.setQuote(result.data);
+          this.emitQuote(result.data);
+          return result;
+        }
+
+        return null;
+    });
+  }
+
+  async createQuote(): Promise<ServiceResponse> {
+    let request = new OpenQuoteRequest(this.customerId, this.storedCurrency);
+    return await firstValueFrom(this.quotesService
+      .openQuote(request));
+  }
+
+  async addQuoteItem(product: Product): Promise<ServiceResponse> {
+    product.quantity = product.quantity == 0 ? 1 : Number(product.quantity);
+    const request = new AddQuoteItemRequest(product.productId, product.quantity, this.storedCurrency);
+    return await firstValueFrom(this.quotesService
+      .addQuoteItem(this.quote!.quoteId, request));
+  }
+
+  private setQuote(openQuote: Quote) {
+    if(openQuote == null) {
+      this.localStorageService.clearKey(appConstants.storedOpenQuote);
+      return;
+    }
+
+    this.localStorageService
+      .setValue(appConstants.storedOpenQuote, JSON.stringify(openQuote));
+  }
+
+  private emitQuote(openQuote: Quote) {
+    // emiting quote object to product selection
+    this.quote = openQuote;
+    this.sendQuoteItemsEvent.emit(this.quote);
   }
 }

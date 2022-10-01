@@ -31,7 +31,7 @@ html {
   text-align:center;
   width:100%;
   background-color: #2879d0;
-  height: 100%;
+  padding-top: 15px;
 }
 
 .currency-container{
@@ -42,13 +42,4 @@ html {
 .currency-selector-container {
   width:100px;
   float:left;
-}
-
-.stored-event-viewer-container{
-  margin: auto;
-  position: absolute;
-  left:0;
-  right: 0;
-  top: 15%;
-  z-index:999999;
 }

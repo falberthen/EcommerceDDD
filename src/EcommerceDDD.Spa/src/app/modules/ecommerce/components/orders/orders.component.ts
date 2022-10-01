@@ -1,12 +1,12 @@
-import { Component, OnInit, ViewChild, ComponentFactoryResolver, ViewContainerRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { faList } from '@fortawesome/free-solid-svg-icons';
 import { orderStatusCodes } from 'src/app/core/constants/appConstants';
-import { Order, OrderStatus } from 'src/app/core/models/Order';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { SignalrService } from 'src/app/core/services/signalr.service';
-import { OrderService } from '../../order.service';
-import { StoredEventsViewerComponent } from '../stored-events-viewer/stored-events-viewer.component';
+import { OrdersService } from '../../services/orders.service';
+import { Order } from '../../models/Order';
+import { StoredEventService } from 'src/app/core/services/stored-event.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-orders',
@@ -14,101 +14,72 @@ import { StoredEventsViewerComponent } from '../stored-events-viewer/stored-even
   styleUrls: ['./orders.component.scss']
 })
 export class OrdersComponent implements OnInit {
+  @ViewChild('storedEventViewerContainer', { read: ViewContainerRef })
+  storedEventViewerContainer!: ViewContainerRef;
 
   faList = faList;
   customerId!: string;
   orderId!: string;
   orders: Order[] = [];
-  isLoading = false;
-  isModalOpen = false;
   storedEventsViewerComponentRef: any;
   hubHelloMessage!: string;
 
-  @ViewChild('storedEventViewerContainer', { read: ViewContainerRef })
-  storedEventViewerContainer!: ViewContainerRef;
-
   constructor(
-    private orderService: OrderService,
+    private ordersService: OrdersService,
     private authService: AuthService,
-    private route: ActivatedRoute,
-    private resolver: ComponentFactoryResolver,
-    private signalrService: SignalrService) { }
+    private signalrService: SignalrService,
+    private storedEventService: StoredEventService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     if(this.authService.currentCustomer) {
       const customer = this.authService.currentCustomer;
       this.customerId = customer.id;
-      this.route.paramMap.subscribe(params => {
-        const orderIdValue = params.get("orderId");
-        if(orderIdValue) {
-          this.orderId = orderIdValue;
-          this.getOrderDetails();
-        }
-        else
-          this.loadOrders();
-      })
-
-      // SignalR group
-      this.signalrService
-        .addCustomerToGroup(this.customerId);
-
-      this.signalrService.connection
-        .on("UpdateOrderStatus", (orderId: string, status: OrderStatus) => {
-          this.updateOrderStatus(orderId, status);
-        });
+      await this.loadOrders();
     }
+
+    //SignalR
+    this.signalrService.connection
+      .on("updateOrderStatus", (orderId: string, statusText: string, statusCode: number) => {
+        this.updateOrderStatus(orderId, statusText, statusCode);
+      });
   }
 
-  loadOrders() {
-    this.isLoading = true;
-    this.orderService.getOrders(this.customerId)
-      .then((result: any) => {
+  showOrderStoredEvents(orderId : string) {
+    this.storedEventService.showStoredEvents(this.storedEventViewerContainer,
+      "Orders", orderId);
+  }
+
+  async loadOrders() {
+    await firstValueFrom(this.ordersService.getOrders(this.customerId))
+    .then(result => {
+      if(result.success) {
           this.orders = result.data;
-          this.isLoading = false;
-        },
-        (error) => console.error(error)
-      );
+      }
+    });
   }
 
-  getStatusCssClass(status: OrderStatus): string {
-    switch (status.statusCode) {
+  getStatusCssClass(statusCode: number): string {
+    switch (statusCode) {
       case orderStatusCodes.placed:
         return 'placed';
-      case orderStatusCodes.readyToShip:
-        return 'readyToShip';
-        case orderStatusCodes.waitingForPayment:
-        return 'waitingForPayment';
+        case orderStatusCodes.paid:
+          return 'paid';
+      case orderStatusCodes.shipped:
+        return 'shipped';
+      case orderStatusCodes.canceled:
+        return 'canceled';
+      case orderStatusCodes.completed:
+        return 'completed';
       default:
         return '';
     }
   }
 
-  getOrderDetails() {
-    this.orderService.getOrderDetails(this.customerId, this.orderId)
-      .then((result: any) => {
-          this.orders.push(result.data);
-        },
-        (error) => console.error(error)
-      );
-  }
-
-  showOrderStoredEvents(orderId: string) {
-    this.isModalOpen = true;
-    this.storedEventViewerContainer.clear();
-    const factory = this.resolver.resolveComponentFactory(StoredEventsViewerComponent);
-    this.storedEventsViewerComponentRef = this.storedEventViewerContainer.createComponent(factory);
-    this.storedEventsViewerComponentRef.instance.aggregateId = orderId;
-    this.storedEventsViewerComponentRef.instance.aggregateType = "OrderStoredEventData";
-
-    this.storedEventsViewerComponentRef.instance.destroyComponent.subscribe((event: any) => {
-      this.storedEventsViewerComponentRef.destroy();
-      this.isModalOpen = false;
-    });
-  }
-
-  updateOrderStatus(orderId: string, status: OrderStatus){
+  private updateOrderStatus(orderId: string, statusText: string, statusCode: number){
     var order = this.orders.find(e=>e.orderId == orderId);
-    if(order)
-      order.status = status;
+    if(order) {
+      order.statusText = statusText;
+      order.statusCode = statusCode;
+    }
   }
 }

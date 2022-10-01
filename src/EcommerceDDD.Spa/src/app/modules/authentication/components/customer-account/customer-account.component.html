@@ -1,0 +1,53 @@
+<div class="wrapper fadeInDown">
+  <div class="form-content account-form">
+    <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <input type="text" id="email" name="email" formControlName="email" placeholder="E-mail"
+               [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
+        <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+          <div *ngIf="f.email.errors.required">E-mail is required</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <input type="text" id="name" name="name" formControlName="name" placeholder="Name"
+               [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <input type="text" id="shippingAddress" name="shippingAddress" formControlName="shippingAddress" placeholder="Shipping Address"
+               [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
+        <div *ngIf="submitted && f.shippingAddress.errors" class="invalid-feedback">
+          <div *ngIf="f.shippingAddress.errors.required">Shipping Address is required</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <input type="password" id="password" name="password" formControlName="password" placeholder="Password"
+               [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
+        <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+          <div *ngIf="f.password.errors.required">Password is required</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <input type="password" id="passwordConfirm" name="passwordConfirm" formControlName="passwordConfirm"
+          placeholder="Confirmation"
+          [ngClass]="{ 'is-invalid': submitted && f.passwordConfirm.errors }">
+        <div *ngIf="submitted && f.passwordConfirm.errors" class="invalid-feedback">
+          <div *ngIf="f.passwordConfirm.errors.required">Password confirm is required</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <input type="text" id="creditLimit" name="creditLimit" formControlName="creditLimit" placeholder="Credit limit"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"> $
+        <div *ngIf="submitted && f.creditLimit.errors" class="invalid-feedback">
+          <div *ngIf="f.creditLimit.errors.required">Credit Limit is required</div>
+        </div>
+      </div>
+      <div class="form-footer">
+        <input type="button" value="Cancel" class="btn btn-secondary" [routerLink]="['/login']" [disabled]="isLoading"/>
+        <input type="submit" value="Create" class="btn btn-primary" [disabled]="isLoading"/>
+      </div>
+    </form>
+  </div>
+</div>

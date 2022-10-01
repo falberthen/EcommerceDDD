@@ -1,20 +1,20 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { RestService } from './http/rest.service';
 import { HttpClient } from '@angular/common/http';
 import { LocalStorageService } from './local-storage.service';
-import { Customer } from '../models/Customer';
 import { map } from 'rxjs/operators';
-import { TokenStorageService } from '../token-storage.service';
+import { TokenStorageService } from './token-storage.service';
 import { Router } from '@angular/router';
 import { NotificationService } from './notification.service';
 import { appConstants } from '../constants/appConstants';
+import { environment } from 'src/environments/environment';
+import { Customer } from 'src/app/modules/ecommerce/models/Customer';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService extends RestService {
-
     private isLogged = new Subject<boolean>();
 
     // Observable string streams
@@ -24,9 +24,14 @@ export class AuthService extends RestService {
       private tokenStorageToken: TokenStorageService,
       private localStorageService: LocalStorageService,
       private router: Router,
-      private notificationService: NotificationService,
-      @Inject('BASE_URL') baseUrl: string) {
-        super(http, baseUrl);
+      private notificationService: NotificationService) {
+        super(http, environment.authUrl);
+    }
+
+    public get currentUser(): string | null {
+      const storedUser = this.localStorageService
+        .getValueByKey(appConstants.storedUser);
+      return storedUser;
     }
 
     public get currentCustomer(): Customer | null {
@@ -42,29 +47,27 @@ export class AuthService extends RestService {
     }
 
     login(email: string, password: string) {
-      return this.post("customers/login", { email, password })
+      return this.post("accounts/login", { email, password })
         .pipe(map(result => {
-          const data = result.data;
-
           // login successful if there's a jwt token in the response
-          if (data.token) {
-            this.tokenStorageToken.saveToken(data.token);
-
+          if (!result.error) {
+            this.tokenStorageToken.setToken(result.accessToken);
             // store user details and jwt token in local storage to keep user logged in between page refreshes
-            this.localStorageService.setValue(appConstants.storedCustomer, JSON.stringify(data));
+            this.localStorageService.setValue(appConstants.storedUser, email);
             this.isLogged.next(true);
           }
           else {
-            this.notificationService.showError(result.data.validationResult.errors[0].errorMessage);
+            this.notificationService.showError(result.errorDescription);
           }
 
-        return result;
+          return result;
       }));
     }
 
     logout() {
       // remove user from local storage to log user out
       localStorage.removeItem(appConstants.storedCustomer);
+      localStorage.removeItem(appConstants.storedUser);
       this.tokenStorageToken.clearToken();
 
       // broadcasting to listeners
