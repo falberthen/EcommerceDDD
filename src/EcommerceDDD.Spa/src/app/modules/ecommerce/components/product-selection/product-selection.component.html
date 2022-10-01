@@ -7,7 +7,6 @@
       <div *ngIf="products && products.length == 0" class="alert alert-danger no-orders-message">
         You don't have Products.
       </div>
-
       <div *ngIf="products && products.length > 0" class="table-responsive">
         <table class="table table-hover">
           <tbody>
@@ -16,7 +15,7 @@
               <td class="table-row-text price-column">{{ product.currencySymbol }} {{ product.price }}</td>
               <td class="add-column">
                 <div *ngIf="product.quantity == 0">
-                  <button (click)="saveCart(product)" class="btn btn-primary add-change-item-button">
+                  <button (click)="saveCart(product)" class="btn btn-primary add-change-item-button" [disabled]="isLoading">
                     <fa-icon [icon]="faPlusCircle" title="Add to Cart"></fa-icon>
                     Add to Cart
                   </button>
@@ -34,7 +33,7 @@
                     <option value="9">9</option>
                     <option value="10">10</option>
                   </select>
-                  <button (click)="saveCart(product)" class="btn btn-secondary add-change-item-button">
+                  <button (click)="addQuoteItem(product)" class="btn btn-secondary add-change-item-button" [disabled]="isLoading">
                     Change quantity
                   </button>
                 </div>
@@ -48,7 +47,8 @@
   <div class="cart-details-container fadeInDown">
     <app-cart #cart
       (sendQuoteItemsEvent)="syncronizeQuoteToProductList($event)"
-      (placeOrderEvent)="placeOrder()">
+      (placeOrderEvent)="placeOrder()"
+      (reloadProductsEvent)="loadProducts()">
     </app-cart>
   </div>
 </div>

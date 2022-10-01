@@ -1,0 +1,34 @@
+<div class="wrapper fadeInDown">
+  <div class="form-content details-form" *ngIf="customer">
+    <form [formGroup]="customerDetailsForm">
+      <div class="form-group mt-3 mb-3">
+        <label><b>{{customer!.email}}</b></label>
+      </div>
+      <div class="form-group">
+        <input type="text" id="name" name="name" formControlName="name" value="{{customer!.name}}" placeholder="Name"
+               [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <input type="text" id="shippingAddress" name="shippingAddress" formControlName="shippingAddress" value="{{customer!.shippingAddress}}" placeholder="Shipping Address"
+               [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
+        <div *ngIf="submitted && f.shippingAddress.errors" class="invalid-feedback">
+          <div *ngIf="f.shippingAddress.errors.required">Shipping Address is required</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <input type="text" id="creditLimit" name="creditLimit" formControlName="creditLimit" placeholder="Limit of credit"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"> $
+        <div *ngIf="submitted && f.creditLimit.errors" class="invalid-feedback">
+          <div *ngIf="f.creditLimit.errors.required">Credit Limit is required</div>
+        </div>
+      </div>
+      <div class="form-footer">
+        <input type="button" value="Cancel" class="btn btn-secondary" [routerLink]="['/home']" />
+        <input type="button" value="Update" class="btn btn-primary" (click)="saveDetails()" [disabled]="isLoading"/>
+      </div>
+    </form>
+  </div>
+</div>

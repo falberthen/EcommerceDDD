@@ -13,6 +13,7 @@ import { APP_ROUTES } from './app.routes';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { ServerErrorInterceptor } from './core/interceptors/error.interceptor';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { LoaderInterceptor } from './core/interceptors/loader.interceptor';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     NgbModule
   ],
   providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ServerErrorInterceptor, multi: true },
   ],

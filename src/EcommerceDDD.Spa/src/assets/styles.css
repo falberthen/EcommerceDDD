@@ -1,13 +1,7 @@
 @import url("https://fonts.googleapis.com/css?family=Architects+Daughter");
 
-/* STRUCTURE */
-.backgrop-container {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1000000000000000;
+#body {
+  background-color: #cccccc;
 }
 
 .wrapper {
@@ -213,3 +207,10 @@ input[type=text], input[type=password]:placeholder {
   color: #ff8080;
 }
 
+.badge {
+  background-color: rgb(28, 158, 240);
+}
+
+.cursor-loader {
+  cursor: wait !important;
+}

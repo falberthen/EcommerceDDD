@@ -37,25 +37,29 @@
         font-weight:bolder;
 
         .placed {
-          color: rgba(32, 67, 221, 0.801);
+          color: #000000;
         }
-        .waitingForPayment {
-          color: rgb(206, 148, 13);
+        .paid {
+          color: #d39802;
         }
-
-        .readyToShip {
+        .shipped {
+          color: rgb(7, 73, 195);
+        }
+        .completed {
           color: green;
+        }
+        .canceled {
+          color: rgb(255, 0, 0);
         }
       }
     }
   }
 }
 
-.stored-event-viewer-container{
+.stored-event-viewer-container {
   margin: auto;
-  position: absolute;
-  left:0;
-  right: 0;
-  top: 15%;
   z-index:999999;
+  margin-bottom: 20px;
+  margin-top: 40px;
+  width: 100%;
 }

@@ -2,22 +2,20 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { TokenStorageService } from '../services/token-storage.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
-      private router: Router,
-      private authenticationService: AuthService
+      private authService: AuthService,
+      private tokenStorageToken: TokenStorageService
   ) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    const currentCustomer = this.authenticationService.currentCustomer;
-    if (this.authenticationService.currentCustomer) {
-      return true;
+    if (!this.tokenStorageToken.getToken()) {
+      // not logged in so redirect to login page with the return url
+      this.authService.logout();
     }
-
-    // not logged in so redirect to login page with the return url
-    this.authenticationService.logout();
-    return false;
+    return true;
   }
 }

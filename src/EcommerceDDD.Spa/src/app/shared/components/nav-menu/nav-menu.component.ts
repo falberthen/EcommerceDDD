@@ -1,11 +1,15 @@
-import { Component, OnDestroy, OnInit, ComponentFactoryResolver, ViewChild, ViewContainerRef, ComponentFactory } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { faList, faShoppingBasket, faShoppingCart, faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons';
-import { Customer } from 'src/app/core/models/Customer';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { TokenStorageService } from 'src/app/core/token-storage.service';
+import { SignalrService } from 'src/app/core/services/signalr.service';
+import { TokenStorageService } from 'src/app/core/services/token-storage.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
-import { StoredEventsViewerComponent } from 'src/app/modules/ecommerce/components/stored-events-viewer/stored-events-viewer.component';
+import { StoredEventService } from 'src/app/core/services/stored-event.service';
+import { appConstants } from 'src/app/core/constants/appConstants';
+import { CustomersService } from 'src/app/modules/ecommerce/services/customers.service';
+import { Customer } from 'src/app/modules/ecommerce/models/Customer';
+import { Quote } from 'src/app/modules/ecommerce/models/Quote';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { faList, faShoppingBasket, faShoppingCart, faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-nav-menu',
@@ -13,6 +17,8 @@ import { StoredEventsViewerComponent } from 'src/app/modules/ecommerce/component
   styleUrls: ['./nav-menu.component.scss']
 })
 export class NavMenuComponent implements OnInit, OnDestroy {
+  @ViewChild("storedEventViewerContainer", { read: ViewContainerRef })
+  storedEventViewerContainer!: ViewContainerRef;
 
   faList = faList;
   faShoppingBasket = faShoppingBasket;
@@ -20,66 +26,103 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   faUser = faUser;
   faSignOutAlt = faSignOutAlt;
 
-  @ViewChild("storedEventViewerContainer", { read: ViewContainerRef })
-  storedEventViewerContainer!: ViewContainerRef;
-
   isExpanded = false;
   isModalOpen = false;
-  isLoggedIn: boolean;
+  isLoggedIn = false;
   subscription!: Subscription;
   customer!: Customer;
-  storedEventsViewerComponentRef: any;
 
   constructor (
+    private cdr: ChangeDetectorRef,
     private authService: AuthService,
-    private resolver: ComponentFactoryResolver,
+    private customersService: CustomersService,
     private tokenStorageService: TokenStorageService,
-    private localStorageService: LocalStorageService) {
-      this.isLoggedIn = !!this.tokenStorageService.getToken();
-      this.setCustomer();
+    private localStorageService: LocalStorageService,
+    private signalrService: SignalrService,
+    private storedEventService: StoredEventService) {
   }
 
-  ngOnInit(){
-    this.subscription = this.authService.isLoggedAnnounced$.subscribe(
-      response => {
-        this.isLoggedIn = response;
-        this.setCustomer();
-    });
+  async ngOnInit(){
+      this.subscription = this.authService.isLoggedAnnounced$.subscribe(
+        async response => {
+          this.isLoggedIn = response;
+          if(this.isLoggedIn){
+            await this.loadCustomerDetails();
+          }
+      });
   }
 
-  setCustomer() {
-    if(this.isLoggedIn && this.authService.currentCustomer){
-        this.customer = this.authService.currentCustomer;
+  async ngAfterViewInit() {
+    this.isLoggedIn = !!this.tokenStorageService.getToken();
+    if(this.isLoggedIn) {
+      this.customer = this.authService.currentCustomer!;
+      this.addCustomerToSignalrGroup();
     }
+
+    this.cdr.detectChanges();
   }
 
   get quoteItems() {
-    let quoteItems = this.localStorageService.getValueByKey('quoteItems');
-    return quoteItems ? quoteItems : '0';
+    let quoteStr = this.localStorageService.getValueByKey('openQuote');
+    if(quoteStr && quoteStr != "undefined"){
+      var quote = JSON.parse(quoteStr) as Quote;
+      return quote.items.length;
+    }
+
+    return 0;
   }
 
   showCustomerStoredEvents() {
-    this.isModalOpen = true;
-    this.storedEventViewerContainer.clear();
-    const factory = this.resolver.resolveComponentFactory(StoredEventsViewerComponent);
-    this.storedEventsViewerComponentRef = this.storedEventViewerContainer.createComponent(factory);
-    this.storedEventsViewerComponentRef.instance.aggregateId = this.customer.id;
-    this.storedEventsViewerComponentRef.instance.aggregateType = "CustomerStoredEventData";
-
-    this.storedEventsViewerComponentRef.instance.destroyComponent.subscribe((event: any) => {
-      this.storedEventsViewerComponentRef.destroy();
-      this.isModalOpen = false;
-    });
+    this.storedEventService.showStoredEvents(this.storedEventViewerContainer,
+      "Customers", this.customer.id);
   }
 
   logout(){
     this.localStorageService.clearAllKeys();
     this.authService.logout();
+    this.isLoggedIn = !!this.tokenStorageService.getToken();
   }
 
   ngOnDestroy() {
     // prevent memory leak when component destroyed
     this.subscription.unsubscribe();
     this.isModalOpen = false;
+  }
+
+  private async storeLoadedCustomer() {
+    // storing customer in the localstorage
+    this.localStorageService.setValue(appConstants.storedCustomer,
+      JSON.stringify(this.customer));
+  }
+
+  private async addCustomerToSignalrGroup() {
+    if(this.signalrService.connection.state != 'Disconnected')
+      return;
+
+    // SignalR
+    this.signalrService.connection.start()
+      .then(() => {
+        console.log('SignalR Connected!');
+        this.signalrService.connection.invoke('JoinCustomerToGroup', this.customer.id);
+      })
+      .catch(function (err) {
+        return console.error(err.toString());
+      });
+  }
+
+  private async loadCustomerDetails() {
+    await firstValueFrom(this.customersService.loadCustomerDetails())
+    .then(result => {
+      if(result.success) {
+        var data = result.data;
+        this.customer = new Customer(
+          data.id,
+          data.name,
+          data.email,
+          data.shippingAddress,
+          data.creditLimit);
+        this.storeLoadedCustomer();
+      }
+    });
   }
 }

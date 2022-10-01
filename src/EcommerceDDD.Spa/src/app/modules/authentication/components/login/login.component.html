@@ -15,30 +15,19 @@
               <div *ngIf="f.password.errors.required">Password is required</div>
           </div>
       </div>
-      <input [disabled]="loading" type="submit" class="btn btn-primary" value="Log In">
+      <input type="submit" class="btn btn-primary" value="Log In">
     </form>
 
     <div class="form-footer">
-      <a [routerLink]="['/account']" href="" class="underlineHover">Create my account</a>
+      <a [routerLink]="['/customer-account']" href="" class="underlineHover">Create my account</a>
     </div>
   </div>
 </div>
 
-<div class="wrapper mt-5">
+<div class="wrapper mt-3">
   <div class="stargazers-container alert alert-dark">
     Did you like it?<strong> give a star!</strong><br><br>
     <github-button type="stargazers" size="large" namespace="falberthen" repo="EcommerceDDD"></github-button>
   </div>
-  <ul>
-    <li>
-      <a href='https://localhost:5000/swagger/index.html' target="_blank">
-        Check the API using Swagger!
-      </a>
-    <li>
-      <a href='https://localhost:5000/hc-ui' target="_blank">
-        Check the HeathChecks!
-      </a>
-    </li>
-  </ul>
 </div>
 
