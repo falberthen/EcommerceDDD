@@ -1,0 +1,166 @@
+{
+  "Routes": [
+    // Customers
+    {
+      "DownstreamPathTemplate": "/api/customers",
+      "UpstreamPathTemplate": "/api/customers",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-customers",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET", "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/customers/{id}",
+      "UpstreamPathTemplate": "/api/customers/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-customers",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET", "PUT" ]
+    },
+    // Products
+    {
+      "UpstreamPathTemplate": "/api/products",
+      "DownstreamPathTemplate": "/api/products",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-products",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [ "Post" ]
+    },
+    {
+      "UpstreamPathTemplate": "/api/products/{everything}",
+      "DownstreamPathTemplate": "/api/products/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-products",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [ "Post" ]
+    },
+    // Quotes
+    {
+      "DownstreamPathTemplate": "/api/quotes",
+      "UpstreamPathTemplate": "/api/quotes",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-quotes",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET", "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/quotes/{id}",
+      "UpstreamPathTemplate": "/api/quotes/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-quotes",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ]
+    },
+    // Orders
+    {
+      "DownstreamPathTemplate": "/api/orders",
+      "UpstreamPathTemplate": "/api/orders",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-orders",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/orders/{id}",
+      "UpstreamPathTemplate": "/api/orders/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-orders",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE", "POST" ]
+    },
+    // Payments
+    {
+      "DownstreamPathTemplate": "/api/payments",
+      "UpstreamPathTemplate": "/api/payments",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-payments",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/payments/{id}",
+      "UpstreamPathTemplate": "/api/payments/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-payments",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [ "DELETE" ]
+    },
+    // Shipments
+    {
+      "DownstreamPathTemplate": "/api/shipments",
+      "UpstreamPathTemplate": "/api/shipments",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-shipments",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    // SignalR
+    {
+      "DownstreamPathTemplate": "/api/signalr/{everything}",
+      "DownstreamScheme": "ws",
+      "UpstreamPathTemplate": "/api/signalr/{everything}",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-apigateway",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ]
+    }
+  ],
+  "AuthenticationOptions": {
+    "AuthenticationProviderKey": "Bearer",
+    "AllowedScopes": []
+  },
+  "RateLimitOptions": {
+    "ClientWhitelist": [],
+    "EnableRateLimiting": true,
+    "Period": "5s",
+    "PeriodTimespan": 1,
+    "Limit": 1
+  }
+}
