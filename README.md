@@ -1,84 +1,90 @@
-![Build](https://github.com/falberthen/ecommerceddd/actions/workflows/ecommerceddd.yml/badge.svg)
+![Build](https://github.com/falberthen/ecommerceddd/actions/workflows/ecommerceddd-build.yml/badge.svg)
 [![License](https://img.shields.io/github/license/falberthen/ecommerceddd.svg)](LICENSE)
 
 ## Welcome to Ecommerce DDD
-This project is a showcase of a full-stack application I use to combine several cutting-edge technologies and architectural patterns. It is based on Domain-Driven Design at its core for implementing a clean-architectured API that powers up an Angular-based SPA application.
-<br><br>
+This project is an experimental full-stack application I use to combine several cutting-edge technologies and architectural patterns.\
 Thanks for getting here! please <b>give a ⭐</b> if you liked the project. It motivates me to keep improving it.
 <br><br>
 
-## Screenshots
-
-<a href="images/login.png" target="_blank">
-<img src="images/login.png"/>
+<a href="images/ecommerceddd-1.gif" target="_blank">
+<img src="images/ecommerceddd-1.gif" width="600px"/>
 </a>
 
-<br/><a href="images/products.png" target="_blank">
-<img src="images/products.png" />
+<a href="images/ecommerceddd-2.gif" target="_blank">
+<img src="images/ecommerceddd-2.gif" width="600px"/>
 </a>
 
-<br/><a href="images/orders.png" target="_blank">
-<img src="images/orders.png" />
+<a href="images/ecommerceddd-3.gif" target="_blank">
+<img src="images/ecommerceddd-3.gif" width="600px"/>
 </a>
 
-<br/><a href="images/events.png" target="_blank">
-<img src="images/events.png" />
-</a>
+<br/><br/>
 
-<br/><a href="images/order-events.png" target="_blank">
-<img src="images/order-events.png" />
-</a>
+## Architecture
+The overall architecture is organized with `Core`, `Crosscutting` and `Services`.
 
-<br>
-
-## Architecture 
-    
-### Domain
-This is where the business logic resides, with a structured implementation of the domain through aggregates, entities, value objects, domain services, repository definitions, and domain events.
 <br/>
 
-### Domain SeedWork
-It defines the domain building blocks, such as entities, value objects, aggregate root, repositories, services and so on.
+### Core
+It defines all the building blocks and abstractions to be used on every underlying project.
+
+### Core.Infrastructure
+It implements infrastructure matters to be used by microservices. Also, it centralizes third-party packages.
+
 <br/>
 
-### Application
-It orchestrates the interactions between the external world (API/SPA) and the domain. It is concerned with defining the jobs needed to be done to accomplish a certain application task. Since the project is based on CQRS/EventSourcing architecture, it defines and handles commands, queries and events.
+### Crosscutting
+It contains projects with logic needed to cross over the microservices, such as `IdentityServer4` and `API gateway`.
+
 <br/>
 
-### Infrastructure
-It takes care of the application's infrastructure and issues not related to the business itself. It is responsible for database mapping (ORM), domain repository implementation, identity authentication and user claims, JWT authentication, tooling for processing and publishing messages, Inversion of Control and everything needed to support the upper layers.
+### Services
+The microservices composing the back-end, are built to be as compact as possible, meaning they're structured to have not only the business logic related to the domain but also to expose it through a self-contained API.
+
+It is structured with: `Domain`, `Application`, `API`, `Infrastructure` (when apply).
+
+#### - Domain
+This is where the business logic resides, with a structured implementation of the domain through aggregates, commands, value objects, domain services, repository definitions, and domain events.
+
+#### - Application
+It orchestrates the interactions between the external world and the domain to perform application tasks through use cases by handling commands and queries. 
+
+#### - Infrastructure
+It acts as a supporting library for higher layers. It handles infrastructural matters and data persistence.
+
 <br/>
 
-### Presentation
-- <b>Web API</b>: A restful API providing endpoints with secured routes based on user claims. 
-  It also implements and host a <b>Background Service</b> for processing and publishing stored events.
-- <b>SPA</b>: A lightweight Angular-based application providing a functional and user-friendly UI.
+## Presentation
+A lightweight Angular-based `SPA` providing a functional and user-friendly UI.
 
-<br>
+<br/>
 
 ## Technologies used
 
 <ul>
   <li>
-    <a href='https://get.asp.net' target="_blank">ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx' target="_blank">C# 10</a>
+    <a href='https://get.asp.net' target="_blank">ASP.NET</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx' target="_blank">C# 10</a>
     for cross-platform back-end with:
     <ul>
       <li>.NET 6</li>
+      <li>ASP.NET Core Minimal API</li>
+      <li>Ocelot</li>
+      <li>Marten</li>
+      <li>Postgres</li>
       <li>Entity Framework Core 6</li>
-      <li>ASP.NET Core Web API</li>
       <li>ASP.NET Core Identity</li>
-      <li>SignalR Core</li>
       <li>JWT Bearer Authentication</li>
-      <li>MediatR</li> 
-      <li>Fluent Validation</li>
-      <li>Automapper</li>
-      <li>NSubstitute</li>
+      <li>IdentityServer4</li>
+      <li>SignalR Core</li>
+      <li>MediatR</li>
+      <li>XUnit / Mock</li>
       <li>Swagger</li>
+      <li>Kafka</li>
       <li>Docker Compose</li>
     </ul>
   </li>
   <li>
-    <a href='https://angular.io/' target="_blank">Angular 12</a> and <a href='http://www.typescriptlang.org/' target="_blank">TypeScript</a> for the front-end with:
+    <a href='https://angular.io/' target="_blank">Angular 13</a> and <a href='http://www.typescriptlang.org/' target="_blank">TypeScript</a> for the front-end with:
     <ul>
       <li>NgBootstrap</li>
       <li>Font Awesome</li>
@@ -88,30 +94,31 @@ It takes care of the application's infrastructure and issues not related to the 
   </li>
 </ul>
 
-<br>
+<br/>
 
 ## What do you need to run 
 
-- The latest <a href="https://dotnet.microsoft.com/download" target="_blank">.NET Core SDK</a> and <a href="https://www.microsoft.com/en-us/sql-server/sql-server-downloads" target="_blank">SQL Server</a> for the database.
-- <a href='https://nodejs.org' target="_blank">NodeJs</a> for the front-end.
-- Optional: <a href="https://docs.docker.com/docker-for-windows/wsl/" target="_blank">Docker Desktop with support for WLS 2</a>
+### Running the back-end
 
-#### Running the WebAPI
+The project was designed to be easily run within docker containers, hence all you need is 1 command line to up everything. Make sure you have installed `Docker` and have fun!
+
+
+- Download Docker: <a href="https://docs.docker.com/docker-for-windows/wsl/" target="_blank">Docker Desktop with support for WLS 2</a>
     
-Set `EcommerceDDD.Api` as the `Startup project` and run
+Using a terminal, run:
+
 ```console
- $ docker-compose up --build
+ $ docker-compose up
 ``` 
 
-#### Running the Angular SPA
+You can also set the `docker-compose.dcproj` as a Startup project on Visual Studio if you want to run it while debugging. 
+<br/>
+
+### Running the Angular SPA
     
-Using a terminal, navigate to `EcommerceDDD.Spa` and run for the node packages and serving the SPA on `http://localhost:4200` respectively:
+Using a terminal, navigate to `EcommerceDDD.Spa` and run for the following commands the node packages and serving the SPA on `http://localhost:4200` respectively:
 
 ```console
- $ npm install
+ $ npm install #first time only
  $ ng serve
 ```
-
-#### Notes:
-- The `docker-compose.yml` is targeting the OS to `Linux` and setting up the with `SQL Server 2019 for Ubuntu`
-- When registering your first customer, it will create the database structure automatically. DataSeeder will add some products for you if the Products table is empty.
