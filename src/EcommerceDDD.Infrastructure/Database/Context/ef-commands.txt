@@ -1,3 +1,0 @@
-﻿dotnet tool update --global dotnet-ef --version 6.0
-dotnet ef migrations add InitialIdentityMigration --context IdentityContext --startup-project src/EcommerceDDD.WebApi -o "Migrations/Identity" --project src/EcommerceDDD.Infrastructure
-dotnet ef migrations add InitialCommerceMigration --context EcommerceDDDContext --startup-project src/EcommerceDDD.WebApi -o "Migrations/Ecommerce" --project src/EcommerceDDD.Infrastructure
