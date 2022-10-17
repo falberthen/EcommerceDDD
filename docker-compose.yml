@@ -223,7 +223,7 @@ services:
     networks:
       - ecommercedddnet
     depends_on:
-      - kafka_rest
+      - kafka
 
 networks:
   ecommercedddnet:
