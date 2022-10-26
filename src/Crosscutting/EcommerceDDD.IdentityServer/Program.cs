@@ -2,13 +2,12 @@ using MediatR;
 using System.Reflection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using EcommerceDDD.Core.Infrastructure;
 using EcommerceDDD.IdentityServer.Database;
 using EcommerceDDD.IdentityServer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using EcommerceDDD.Core.Infrastructure.Identity;
-using EcommerceDDD.Core.Infrastructure;
-using EcommerceDDD.IdentityServer.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,14 +43,12 @@ builder.Services.AddAuthorization(options =>
 });
 
 builder.Services.AddIdentityServer(opt =>
-        opt.IssuerUri = tokenIssuerSettings.GetValue<string>("Authority"))
+    opt.IssuerUri = tokenIssuerSettings.GetValue<string>("Authority"))
     .AddDeveloperSigningCredential() // without a certificate, for dev only
-    .AddInMemoryApiScopes(IdentityConfiguration.ApiScopes)
-    .AddInMemoryApiResources(IdentityConfiguration.ApiResources)
-    .AddInMemoryClients(IdentityConfiguration.Clients)
     .AddOperationalStore(options =>
     {
-        options.ConfigureDbContext = b => b.UseNpgsql(connectionString);
+        options.ConfigureDbContext = b =>
+            b.UseNpgsql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
         options.EnableTokenCleanup = true;
     })
     .AddConfigurationStore(options =>
@@ -75,10 +72,9 @@ builder.Services.AddCors(o =>
 // ---- App
 var app = builder.Build();
 
-
 app.UseCors("CorsPolicy");
 app.UseIdentityServer();
 app.UseAuthorization();
 app.MapControllers();
 
-app.Run();
+app.MigrateDatabase().Run();
