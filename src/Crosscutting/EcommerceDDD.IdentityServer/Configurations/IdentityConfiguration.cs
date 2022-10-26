@@ -21,16 +21,6 @@ public class IdentityConfiguration
         {
             new ApiScope(api_scope, "EcommerceDDD API")
         };
-
-    public static IEnumerable<ApiResource> ApiResources =>
-        new ApiResource[]
-        {
-            new ApiResource(api_scope, "MyActions API")
-            {
-                Scopes = { api_scope }
-            }
-        };
-    
     
     public static IEnumerable<Client> Clients =>
         new Client[]
