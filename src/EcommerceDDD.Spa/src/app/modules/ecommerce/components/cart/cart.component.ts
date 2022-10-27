@@ -1,10 +1,10 @@
 import { Router } from '@angular/router';
 import { Component, OnInit, Output, EventEmitter, ViewContainerRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { faList, faMinusCircle } from '@fortawesome/free-solid-svg-icons';
-import { appConstants } from 'src/app/core/constants/appConstants';
+import { appConstants } from 'src/app/modules/ecommerce/constants/appConstants';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog.service';
-import { CurrencyNotificationService } from 'src/app/core/services/currency-notification.service';
+import { CurrencyNotificationService } from 'src/app/modules/ecommerce/services/currency-notification.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { LoaderService } from 'src/app/core/services/loader.service';
@@ -15,8 +15,8 @@ import { RemoveQuoteItemRequest } from '../../models/requests/RemoveQuoteItemReq
 import { OpenQuoteRequest } from '../../models/requests/OpenQuoteRequest';
 import { AddQuoteItemRequest } from '../../models/requests/AddQuoteItemRequest';
 import { firstValueFrom } from 'rxjs';
-import { StoredEventService } from 'src/app/core/services/stored-event.service';
 import { ServiceResponse } from '../../services/ServiceResponse';
+import { StoredEventService } from 'src/app/shared/services/stored-event.service';
 
 @Component({
   selector: 'app-cart',
@@ -86,9 +86,15 @@ export class CartComponent implements OnInit {
     });
   }
 
-  showQuoteStoredEvents() {
-    this.storedEventService.showStoredEvents(this.storedEventViewerContainer,
-      "Quotes", this.quote!.quoteId);
+  async showQuoteStoredEvents() {
+    await firstValueFrom((this.quotesService
+      .getQuoteStoredEvents(this.quote!.quoteId)))
+      .then(result => {
+        if(result.success) {
+          this.storedEventService
+            .showStoredEvents(this.storedEventViewerContainer, result.data);
+        }
+      });
   }
 
   async removeItem(quoteItem: QuoteItem) {

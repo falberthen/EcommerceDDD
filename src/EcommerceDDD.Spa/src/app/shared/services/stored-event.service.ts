@@ -1,20 +1,21 @@
 import { Injectable, ViewContainerRef } from '@angular/core';
-import { StoredEventsViewerComponent } from 'src/app/shared/stored-events-viewer/stored-events-viewer.component';
+import { StoredEventData } from 'src/app/modules/ecommerce/models/StoredEventData';
+import { StoredEventsViewerComponent } from 'src/app/shared/components/stored-events-viewer/stored-events-viewer.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StoredEventService {
 
-  public showStoredEvents(storedEventViewContainerRef : ViewContainerRef,
-    aggregateType: string, aggregateId: string) {
+  public showStoredEvents(
+    storedEventViewContainerRef : ViewContainerRef,
+    storedEventData: StoredEventData[]) {
 
     storedEventViewContainerRef.clear();
     const componentRef  = storedEventViewContainerRef
       .createComponent(StoredEventsViewerComponent);
 
-    componentRef.instance.aggregateId = aggregateId;
-    componentRef.instance.aggregateType = aggregateType;
+    componentRef.instance.storedEventData = storedEventData;
     componentRef.instance.destroyComponent.subscribe((event: any) => {
       componentRef.destroy();
     });
