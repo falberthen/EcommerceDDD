@@ -32,7 +32,7 @@ export abstract class RestService {
     );
   }
 
-  protected post(relativeUrl: string, body: any, httpParams?: HttpParams): Observable<any> {
+  protected post(relativeUrl: string, body?: any, httpParams?: HttpParams): Observable<any> {
     const fullUrl = Location.joinWithSlash(this.apiBaseUrl, relativeUrl);
     return this.http.post(fullUrl, body, this.httpHeaders).pipe(
       map((response: any) => {

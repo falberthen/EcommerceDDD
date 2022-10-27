@@ -13,9 +13,3 @@ export const orderStatusCodes = {
   completed: 4,
   canceled: 0
 }
-
-export const boundedContexts = {
-  Customers: "Customers",
-  Quotes: "Quotes",
-  Orders: "Orders"
-}

@@ -1,15 +1,14 @@
 import { firstValueFrom, Subscription } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { SignalrService } from 'src/app/core/services/signalr.service';
 import { TokenStorageService } from 'src/app/core/services/token-storage.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
-import { StoredEventService } from 'src/app/core/services/stored-event.service';
-import { appConstants } from 'src/app/core/constants/appConstants';
+import { appConstants } from 'src/app/modules/ecommerce/constants/appConstants';
 import { CustomersService } from 'src/app/modules/ecommerce/services/customers.service';
 import { Customer } from 'src/app/modules/ecommerce/models/Customer';
 import { Quote } from 'src/app/modules/ecommerce/models/Quote';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { faList, faShoppingBasket, faShoppingCart, faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons';
+import { StoredEventService } from 'src/app/shared/services/stored-event.service';
 
 @Component({
   selector: 'app-nav-menu',
@@ -38,27 +37,21 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     private customersService: CustomersService,
     private tokenStorageService: TokenStorageService,
     private localStorageService: LocalStorageService,
-    private signalrService: SignalrService,
     private storedEventService: StoredEventService) {
   }
 
   async ngOnInit(){
-      this.subscription = this.authService.isLoggedAnnounced$.subscribe(
-        async response => {
-          this.isLoggedIn = response;
-          if(this.isLoggedIn){
-            await this.loadCustomerDetails();
-          }
-      });
+    this.subscription = this.authService.isLoggedAnnounced$.subscribe(
+      async response => {
+        this.isLoggedIn = response;
+        if(this.isLoggedIn){
+          await this.loadCustomerDetails();
+        }
+    });
   }
 
   async ngAfterViewInit() {
     this.isLoggedIn = !!this.tokenStorageService.getToken();
-    if(this.isLoggedIn) {
-      this.customer = this.authService.currentCustomer!;
-      this.addCustomerToSignalrGroup();
-    }
-
     this.cdr.detectChanges();
   }
 
@@ -72,9 +65,15 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     return 0;
   }
 
-  showCustomerStoredEvents() {
-    this.storedEventService.showStoredEvents(this.storedEventViewerContainer,
-      "Customers", this.customer.id);
+  async showCustomerStoredEvents() {
+    await firstValueFrom((this.customersService
+      .getCustomerStoredEvents(this.authService.currentCustomer!.id)))
+      .then(result => {
+        if(result.success) {
+          this.storedEventService
+            .showStoredEvents(this.storedEventViewerContainer, result.data);
+        }
+      });
   }
 
   logout(){
@@ -93,21 +92,6 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     // storing customer in the localstorage
     this.localStorageService.setValue(appConstants.storedCustomer,
       JSON.stringify(this.customer));
-  }
-
-  private async addCustomerToSignalrGroup() {
-    if(this.signalrService.connection.state != 'Disconnected')
-      return;
-
-    // SignalR
-    this.signalrService.connection.start()
-      .then(() => {
-        console.log('SignalR Connected!');
-        this.signalrService.connection.invoke('JoinCustomerToGroup', this.customer.id);
-      })
-      .catch(function (err) {
-        return console.error(err.toString());
-      });
   }
 
   private async loadCustomerDetails() {
