@@ -1,14 +1,14 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
-import { appConstants } from 'src/app/core/constants/appConstants';
-import { AuthService } from 'src/app/core/services/auth.service';
 import { LoaderService } from 'src/app/core/services/loader.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { Customer } from '../../models/Customer';
 import { UpdateCustomerRequest } from '../../models/requests/UpdateCustomerRequest';
 import { CustomersService } from '../../services/customers.service';
+import { StoredEventService } from 'src/app/shared/services/stored-event.service';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { appConstants } from '../../constants/appConstants';
 
 @Component({
   selector: 'app-customer-details',
@@ -16,6 +16,9 @@ import { CustomersService } from '../../services/customers.service';
   styleUrls: ['./customer-details.component.scss']
 })
 export class CustomerDetailsComponent implements OnInit {
+  @ViewChild("storedEventViewerContainer", { read: ViewContainerRef })
+  storedEventViewerContainer!: ViewContainerRef;
+
   customerDetailsForm!: FormGroup;
   submitted = false;
   customer!: Customer;
@@ -27,7 +30,8 @@ export class CustomerDetailsComponent implements OnInit {
     private loaderService: LoaderService,
     private customersService: CustomersService,
     private notificationService: NotificationService,
-    private localStorageService: LocalStorageService) {}
+    private localStorageService: LocalStorageService,
+    private storedEventService: StoredEventService) {}
 
   async ngOnInit() {
     await this.loadCustomerDetails();

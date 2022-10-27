@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
 import { TokenStorageService } from './token-storage.service';
 import { Router } from '@angular/router';
 import { NotificationService } from './notification.service';
-import { appConstants } from '../constants/appConstants';
+import { appConstants } from '../../modules/ecommerce/constants/appConstants';
 import { environment } from 'src/environments/environment';
 import { Customer } from 'src/app/modules/ecommerce/models/Customer';
 
