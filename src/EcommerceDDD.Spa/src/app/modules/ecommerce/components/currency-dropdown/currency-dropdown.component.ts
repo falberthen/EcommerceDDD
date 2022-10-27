@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { faDollarSign } from '@fortawesome/free-solid-svg-icons';
-import { appConstants } from 'src/app/core/constants/appConstants';
-import { CurrencyNotificationService } from 'src/app/core/services/currency-notification.service';
+import { appConstants } from 'src/app/modules/ecommerce/constants/appConstants';
+import { CurrencyNotificationService } from 'src/app/modules/ecommerce/services/currency-notification.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 
 @Component({
