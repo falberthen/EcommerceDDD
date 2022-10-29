@@ -11,6 +11,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
+    restart: on-failure
     networks:
       - ecommercedddnet
     ports:
@@ -26,6 +27,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       #- ASPNETCORE_URLS=https://+:443;http://+:80
       - ASPNETCORE_URLS=http://+:80
+    restart: on-failure
     networks:
       - ecommercedddnet
     ports:
@@ -147,6 +149,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=P@55w0rd
+    restart: on-failure
     ports:
       - "5432:5432"
     networks:
@@ -196,6 +199,7 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://kafka:9092      
       ADVERTISED_HOST_NAME: kafka
+    restart: on-failure
     depends_on:
       - zookeeper
 
@@ -209,6 +213,7 @@ services:
         kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic Payments --replication-factor 1 --partitions 1
         kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic Shipments --replication-factor 1 --partitions 1
         "
+    restart: on-failure
     depends_on:
       - kafka
 

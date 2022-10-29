@@ -1,7 +1,7 @@
-﻿using EcommerceDDD.IdentityServer.Configurations;
-using IdentityServer4.EntityFramework.DbContexts;
+﻿using Microsoft.EntityFrameworkCore;
 using IdentityServer4.EntityFramework.Mappers;
-using Microsoft.EntityFrameworkCore;
+using EcommerceDDD.IdentityServer.Configurations;
+using IdentityServer4.EntityFramework.DbContexts;
 
 namespace EcommerceDDD.IdentityServer.Database;
 
@@ -24,29 +24,41 @@ public static class MigrationManager
                     {
                         foreach (var client in IdentityConfiguration.Clients)
                             context.Clients.Add(client.ToEntity());
+
+                        context.SaveChanges();
                     }
 
                     if (!context.IdentityResources.Any())
                     {
                         foreach (var resource in IdentityConfiguration.IdentityResources)
                             context.IdentityResources.Add(resource.ToEntity());
+
+                        context.SaveChanges();
+                    }
+
+                    if (!context.ApiResources.Any())
+                    {
+                        foreach (var resource in IdentityConfiguration.ApiResources)
+                            context.ApiResources.Add(resource.ToEntity());
+
+                        context.SaveChanges();
                     }
 
                     if (!context.ApiScopes.Any())
                     {
                         foreach (var apiScope in IdentityConfiguration.ApiScopes)
                             context.ApiScopes.Add(apiScope.ToEntity());
-                    }
 
-                    context.SaveChanges();
+                        context.SaveChanges();
+                    }
                 }
                 catch (Exception ex)
                 {
-                    //Log errors or do anything you think it's needed
                     throw;
                 }
             }
         }
+
         return host;
     }
 }
