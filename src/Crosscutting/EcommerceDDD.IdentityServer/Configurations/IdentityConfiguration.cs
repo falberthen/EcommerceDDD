@@ -1,12 +1,12 @@
-﻿//https://identityserver4.readthedocs.io/en/latest/topics/deployment.html?highlight=operational%20store#configuration-data
-using IdentityServer4;
+﻿using IdentityServer4;
 using IdentityServer4.Models;
 
 namespace EcommerceDDD.IdentityServer.Configurations;
 
 public class IdentityConfiguration
 {
-    private const string api_scope = "ecommerceddd-api";
+    private const string _apiDescription = "EcommerceDDD API";
+    private const string _apiScope = "ecommerceddd-api.scope";
 
     public static IEnumerable<IdentityResource> IdentityResources =>
         new IdentityResource[]
@@ -16,15 +16,35 @@ public class IdentityConfiguration
             new IdentityResources.Email()
         };
 
+    public static IEnumerable<ApiResource> ApiResources =>
+        new ApiResource[]
+        {
+            new ApiResource("ecommerceddd-api", _apiDescription)
+            {
+                Scopes = new List<string> { _apiScope },
+                Description = "Allow the application to access Weather Api on your behalf",
+                ApiSecrets = new List<Secret> {new Secret("ProCodeGuide".Sha256())},
+            }
+        };
+
+
     public static IEnumerable<ApiScope> ApiScopes =>
         new[]
         {
-            new ApiScope(api_scope, "EcommerceDDD API")
+            new ApiScope(_apiScope, "EcommerceDDD API Scope"),
         };
-    
+
     public static IEnumerable<Client> Clients =>
         new Client[]
-        {
+        {            
+            // machine to machine client
+            new Client
+            {
+                ClientId = "ecommerceddd.applicationclient",
+                AllowedGrantTypes = GrantTypes.ClientCredentials,
+                ClientSecrets = new List<Secret> { new Secret("secret33587^&%&^%&^f3%%%".Sha256()) },
+                AllowedScopes = new List<string> { _apiScope }
+            },
             // User's client
             new Client
             {
@@ -41,20 +61,11 @@ public class IdentityConfiguration
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
                     IdentityServerConstants.StandardScopes.Email,
-                    api_scope
+                    _apiScope
                 },
-                AccessTokenLifetime = 86400
+                AccessTokenLifetime = 86400,
+                RequirePkce = true,
+                AllowPlainTextPkce = false
             },
-            // machine to machine client
-            new Client
-            {
-                ClientId = "ecommerceddd.applicationclient",
-                AllowedGrantTypes = GrantTypes.ClientCredentials,
-                ClientSecrets =
-                {
-                    new Secret("secret33587^&%&^%&^f3%%%".Sha256())
-                },
-                AllowedScopes = { api_scope }
-            }
         };    
 }
