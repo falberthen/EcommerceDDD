@@ -1,29 +1,24 @@
 ﻿using MediatR;
-using EcommerceDDD.Core.Domain;
-using EcommerceDDD.Core.EventBus;
 using EcommerceDDD.Shipments.Domain.Events;
+using EcommerceDDD.Core.Infrastructure.Outbox.Services;
 
 namespace EcommerceDDD.Shipments.Application.FinalizingShipment;
 
-public class PackageDeliveredHandler : INotificationHandler<DomainNotification<PackageDelivered>>
+public class PackageDeliveredHandler : INotificationHandler<PackageDelivered>
 {
-    private readonly IEventProducer _eventProducer;
+    private readonly IOutboxMessageService _outboxMessageService;
 
-    public PackageDeliveredHandler(IEventProducer eventProducer)
+    public PackageDeliveredHandler(IOutboxMessageService outboxMessageService)
     {
-        _eventProducer = eventProducer;
+        _outboxMessageService = outboxMessageService;
     }
 
-    public async Task Handle(DomainNotification<PackageDelivered> notification, CancellationToken cancellationToken)
+    public async Task Handle(PackageDelivered @event, CancellationToken cancellationToken)
     {
-        var @event = notification.DomainEvent;
-
-        // Notifying Order Saga
-        await _eventProducer.PublishAsync(
+        await _outboxMessageService.SaveAsOutboxMessageAsync(
             new OrderDelivered(
                 @event.ShipmentId,
-                @event.OrderId),
-                cancellationToken
-            );
+                @event.OrderId)
+        );
     }
 }

@@ -4,6 +4,7 @@ using EcommerceDDD.Payments.Domain;
 using EcommerceDDD.Payments.Domain.Commands;
 using EcommerceDDD.Core.Infrastructure.Integration;
 using EcommerceDDD.Payments.Application.RequestingPayment;
+using EcommerceDDD.Core.Infrastructure.Outbox.Services;
 
 namespace EcommerceDDD.Payments.Tests.Application;
 
@@ -31,8 +32,7 @@ public class RequestPaymentHandlerTests
             .Returns(Task.FromResult(true));
 
         var requestPayment = RequestPayment.Create(customerId, orderId, totalAmount, currency);
-        var requestPaymentHandler = new RequestPaymentHandler(_eventProducer.Object, _customerCreditChecker.Object,
-            paymentWriteRepository);
+        var requestPaymentHandler = new RequestPaymentHandler(_customerCreditChecker.Object, paymentWriteRepository, _outboxMessageService.Object);
 
         // When
         await requestPaymentHandler.Handle(requestPayment, CancellationToken.None);
@@ -46,6 +46,6 @@ public class RequestPaymentHandlerTests
         payment.Status.Should().Be(PaymentStatus.Processed);
     }
 
-    private Mock<IEventProducer> _eventProducer = new();
+    private Mock<IOutboxMessageService> _outboxMessageService = new();
     private Mock<ICustomerCreditChecker> _customerCreditChecker = new();
 }

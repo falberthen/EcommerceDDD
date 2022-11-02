@@ -4,6 +4,7 @@ using EcommerceDDD.Shipments.Domain;
 using EcommerceDDD.Shipments.Domain.Commands;
 using EcommerceDDD.Core.Infrastructure.Integration;
 using EcommerceDDD.Shipments.Application.ShippingPackage;
+using EcommerceDDD.Core.Infrastructure.Outbox.Services;
 
 namespace EcommerceDDD.Shipments.Tests.Application;
 
@@ -36,7 +37,7 @@ public class ShipPackageHandlerTests
             .Returns(Task.FromResult(true));
 
         var shipPackage = ShipPackage.Create(orderId, productItems);
-        var shipPackageHandler = new ShipPackageHandler(_eventProducer.Object, _availabilityChecker.Object, shipmentWriteRepository);
+        var shipPackageHandler = new ShipPackageHandler(_availabilityChecker.Object, shipmentWriteRepository, _outboxMessageService.Object);
 
         // When
         await shipPackageHandler.Handle(shipPackage, CancellationToken.None);
@@ -51,6 +52,6 @@ public class ShipPackageHandlerTests
         shipment.Status.Should().Be(ShipmentStatus.Shipped);
     }
 
-    private Mock<IEventProducer> _eventProducer = new();
+    private Mock<IOutboxMessageService> _outboxMessageService = new();
     private Mock<IProductAvailabilityChecker> _availabilityChecker = new();
 }
