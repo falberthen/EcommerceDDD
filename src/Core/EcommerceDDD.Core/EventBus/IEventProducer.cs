@@ -1,8 +1,9 @@
-﻿using System.Threading;
+﻿using MediatR;
+using System.Threading;
 
 namespace EcommerceDDD.Core.EventBus;
 
 public interface IEventProducer
 {
-    Task PublishAsync(IIntegrationEvent @event, CancellationToken cancellationToken = default);
+    Task PublishAsync(INotification @event, CancellationToken cancellationToken = default);
 }
