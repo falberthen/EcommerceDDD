@@ -1,28 +1,27 @@
 ﻿using MediatR;
-using EcommerceDDD.Core.EventBus;
 using EcommerceDDD.Shipments.Domain;
 using EcommerceDDD.Core.Exceptions;
 using EcommerceDDD.Core.Persistence;
 using EcommerceDDD.Core.CQRS.CommandHandling;
 using EcommerceDDD.Shipments.Domain.Commands;
-using EcommerceDDD.Core.Infrastructure.Integration;
+using EcommerceDDD.Core.Infrastructure.Outbox.Services;
 
 namespace EcommerceDDD.Shipments.Application.ShippingPackage;
 
 public class ShipPackageHandler : ICommandHandler<ShipPackage>
 {
-    private readonly IEventProducer _eventProducer;
     private readonly IProductAvailabilityChecker _productAvailabilityChecker;
     private readonly IEventStoreRepository<Shipment> _shipmentWriteRepository;
+    private readonly IOutboxMessageService _outboxMessageService;
 
     public ShipPackageHandler(
-        IEventProducer eventProducer,
         IProductAvailabilityChecker productAvailabilityChecker,
-        IEventStoreRepository<Shipment> shipmentWriteRepository)
+        IEventStoreRepository<Shipment> shipmentWriteRepository,
+        IOutboxMessageService outboxMessageService)
     {
-        _eventProducer = eventProducer;
         _productAvailabilityChecker = productAvailabilityChecker;
         _shipmentWriteRepository = shipmentWriteRepository;
+        _outboxMessageService = outboxMessageService;
     }
 
     public async Task<Unit> Handle(ShipPackage command, CancellationToken cancellationToken)
@@ -34,8 +33,7 @@ public class ShipPackageHandler : ICommandHandler<ShipPackage>
         // Checking if all items are in stock
         if(!await _productAvailabilityChecker.EnsureProductsInStock(command.ProductItems))
         {
-            await _eventProducer
-                   .PublishAsync(new ProductWasOutOfStock(command.OrderId.Value), cancellationToken);
+            await _outboxMessageService.SaveAsOutboxMessageAsync(new ProductWasOutOfStock(command.OrderId.Value));
             throw new ApplicationLogicException($"One of the items is out of stock");
         }
 

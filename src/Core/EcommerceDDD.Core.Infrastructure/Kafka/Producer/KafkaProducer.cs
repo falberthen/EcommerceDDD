@@ -30,7 +30,7 @@ public class KafkaProducer : IEventProducer
         _producer = producerBuilder.Build();
     }
 
-    public async Task PublishAsync(IIntegrationEvent @event, CancellationToken cancellationToken = default)
+    public async Task PublishAsync(INotification @event, CancellationToken cancellationToken = default)
     {
         try
         {

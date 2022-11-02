@@ -5,6 +5,7 @@ using EcommerceDDD.Payments.Domain.Commands;
 using EcommerceDDD.Core.Infrastructure.Integration;
 using EcommerceDDD.Payments.Application.RequestingPayment;
 using EcommerceDDD.Payments.Application.CancelingPayment;
+using EcommerceDDD.Core.Infrastructure.Outbox.Services;
 
 namespace EcommerceDDD.Payments.Tests.Application;
 
@@ -32,7 +33,7 @@ public class CancelPaymentHandlerTests
             .Returns(Task.FromResult(true));
 
         var requestPayment = RequestPayment.Create(customerId, orderId, totalAmount, currency);
-        var requestPaymentHandler = new RequestPaymentHandler(_eventProducer.Object, _customerCreditChecker.Object, paymentWriteRepository);
+        var requestPaymentHandler = new RequestPaymentHandler(_customerCreditChecker.Object, paymentWriteRepository, _outboxMessageService.Object);
         await requestPaymentHandler.Handle(requestPayment, CancellationToken.None);
 
         var payment = paymentWriteRepository.AggregateStream.First().Aggregate;
@@ -50,6 +51,6 @@ public class CancelPaymentHandlerTests
         payment.Status.Should().Be(PaymentStatus.Canceled);
     }
 
-    private Mock<IEventProducer> _eventProducer = new();
+    private Mock<IOutboxMessageService> _outboxMessageService = new();
     private Mock<ICustomerCreditChecker> _customerCreditChecker = new();
 }
