@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using EcommerceDDD.Core.Domain;
 using EcommerceDDD.Orders.Domain;
 using EcommerceDDD.Orders.Domain.Events;
 using EcommerceDDD.Orders.Domain.Commands;
@@ -11,8 +10,8 @@ using EcommerceDDD.Orders.Application.Shipments.RequestingShipment;
 namespace EcommerceDDD.Orders.Application;
 
 public class OrderSaga : 
-    INotificationHandler<DomainNotification<OrderPlaced>>,
-    INotificationHandler<DomainNotification<OrderPaid>>,
+    INotificationHandler<OrderPlaced>,
+    INotificationHandler<OrderPaid>,
     INotificationHandler<PaymentFinalized>,
     INotificationHandler<OrderDelivered>
 {
@@ -23,9 +22,8 @@ public class OrderSaga :
         _mediator = mediator;
     }
 
-    public async Task Handle(DomainNotification<OrderPlaced> notification, CancellationToken cancellationToken)
+    public async Task Handle(OrderPlaced @event, CancellationToken cancellationToken)
     {
-        var @event = notification.DomainEvent;
         var command = RequestPayment.Create(
             CustomerId.Of(@event.CustomerId),
             OrderId.Of(@event.OrderId),
@@ -47,11 +45,10 @@ public class OrderSaga :
         await _mediator.Send(command, cancellationToken);
     }
 
-    public async Task Handle(DomainNotification<OrderPaid> notification, CancellationToken cancellationToken)
+    public async Task Handle(OrderPaid @event, CancellationToken cancellationToken)
     {
         await DelayOnPurpose(3000);
 
-        var @event = notification.DomainEvent;
         var command = RequestShipment.Create(OrderId.Of(@event.OrderId));
         await _mediator.Send(command, cancellationToken);
     }
