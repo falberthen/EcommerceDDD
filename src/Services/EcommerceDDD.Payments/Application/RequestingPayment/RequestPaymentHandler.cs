@@ -1,27 +1,27 @@
 ﻿using MediatR;
-using EcommerceDDD.Core.EventBus;
 using EcommerceDDD.Payments.Domain;
 using EcommerceDDD.Core.Exceptions;
 using EcommerceDDD.Core.Persistence;
 using EcommerceDDD.Payments.Domain.Commands;
 using EcommerceDDD.Core.CQRS.CommandHandling;
+using EcommerceDDD.Core.Infrastructure.Outbox.Services;
 
 namespace EcommerceDDD.Payments.Application.RequestingPayment;
 
 public class RequestPaymentHandler : ICommandHandler<RequestPayment>
 {
-    private readonly IEventProducer _eventProducer;
     private readonly ICustomerCreditChecker _creditChecker;
     private readonly IEventStoreRepository<Payment> _paymentWriteRepository;
+    private readonly IOutboxMessageService _outboxMessageService;
 
     public RequestPaymentHandler(
-        IEventProducer eventProducer,
         ICustomerCreditChecker creditChecker,
-        IEventStoreRepository<Payment> paymentWriteRepository)
+        IEventStoreRepository<Payment> paymentWriteRepository,
+        IOutboxMessageService outboxMessageService)
     {
-        _eventProducer = eventProducer;
         _creditChecker = creditChecker;
         _paymentWriteRepository = paymentWriteRepository;
+        _outboxMessageService = outboxMessageService;
     }
 
     public async Task<Unit> Handle(RequestPayment command, CancellationToken cancellationToken)
@@ -33,8 +33,7 @@ public class RequestPaymentHandler : ICommandHandler<RequestPayment>
 
         if(!await _creditChecker.EnsureEnoughCredit(command.CustomerId, command.TotalAmount))
         {
-            await _eventProducer
-                .PublishAsync(new CustomerReachedCreditLimit(command.OrderId.Value), cancellationToken);
+            await _outboxMessageService.SaveAsOutboxMessageAsync(new CustomerReachedCreditLimit(command.OrderId.Value));
             throw new BusinessRuleException($"Customer credit limit is not enough.");
         }
         

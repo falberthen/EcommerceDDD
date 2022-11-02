@@ -1,4 +1,3 @@
-using EcommerceDDD.Core.CQRS;
 using EcommerceDDD.Core.Testing;
 using EcommerceDDD.Core.Persistence;
 using EcommerceDDD.Shipments.Domain;
@@ -9,12 +8,13 @@ using EcommerceDDD.Core.Infrastructure.Kafka;
 using EcommerceDDD.Core.Infrastructure.Integration;
 using EcommerceDDD.Shipments.Infrastructure.Projections;
 using EcommerceDDD.Shipments.Application.ShippingPackage;
+using EcommerceDDD.Core.Infrastructure.Outbox;
+using EcommerceDDD.Core.Infrastructure.EventBus;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ---- Configuration
 builder.Services.ConfigureIntegrationHttpService(builder);
-builder.Services.ConfigureCQRS();
 
 // ---- Services
 builder.Services.AddTransient<IProductAvailabilityChecker, ProductAvailabilityChecker>();
@@ -28,6 +28,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAuthentication(builder.Configuration);
 builder.Services.AddSwagger(builder.Configuration);
+builder.Services.AddOutboxSetup(builder.Configuration);
+builder.Services.AddEventDispatcher();
 builder.Services.AddMarten(builder.Configuration, options =>
     options.ConfigureProjections());
 

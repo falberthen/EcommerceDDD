@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using EcommerceDDD.Core.Domain;
 using EcommerceDDD.Orders.Domain;
 using EcommerceDDD.Orders.Domain.Events;
 using EcommerceDDD.Orders.Domain.Commands;
@@ -13,7 +12,7 @@ namespace EcommerceDDD.Orders.Application;
 /// Handles compensation events for OrderSaga
 /// </summary>
 public class OrderSagaCompensation :     
-    INotificationHandler<DomainNotification<OrderCanceled>>,
+    INotificationHandler<OrderCanceled>,
     INotificationHandler<ProductWasOutOfStock>,
     INotificationHandler<CustomerReachedCreditLimit>
 {
@@ -45,9 +44,8 @@ public class OrderSagaCompensation :
     }
 
     // Requesting cancelling payment
-    public async Task Handle(DomainNotification<OrderCanceled> notification, CancellationToken cancellationToken)
+    public async Task Handle(OrderCanceled @event, CancellationToken cancellationToken)
     {
-        var @event = notification.DomainEvent;
         switch (@event.OrderCancellationReason)
         {
             case OrderCancellationReason.ProductWasOutOfStock:

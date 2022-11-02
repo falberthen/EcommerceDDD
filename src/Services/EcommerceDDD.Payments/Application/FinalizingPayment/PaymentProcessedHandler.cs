@@ -1,41 +1,37 @@
 ﻿using MediatR;
-using EcommerceDDD.Core.Domain;
 using EcommerceDDD.Core.Persistence;
 using EcommerceDDD.Payments.Domain;
-using EcommerceDDD.Core.EventBus;
-using EcommerceDDD.Payments.Domain.Events;
 using EcommerceDDD.Core.Exceptions;
+using EcommerceDDD.Payments.Domain.Events;
+using EcommerceDDD.Core.Infrastructure.Outbox.Services;
 
 namespace EcommerceDDD.Payments.Application.FinalizingPayment;
 
-public class PaymentProcessedHandler : INotificationHandler<DomainNotification<PaymentProcessed>>
+public class PaymentProcessedHandler : INotificationHandler<PaymentProcessed>
 {
-    private readonly IEventProducer _eventProducer;
+    private readonly IOutboxMessageService _outboxMessageService;
     private readonly IEventStoreRepository<Payment> _paymentWriteRepository;
 
     public PaymentProcessedHandler(
-        IEventProducer eventProducer,
+        IOutboxMessageService outboxMessageService,
         IEventStoreRepository<Payment> paymentWriteRepository)
     {
-        _eventProducer = eventProducer;
+        _outboxMessageService = outboxMessageService;
         _paymentWriteRepository = paymentWriteRepository;
     }
 
-    public async Task Handle(DomainNotification<PaymentProcessed> notification, CancellationToken cancellationToken)
+    public async Task Handle(PaymentProcessed @event, CancellationToken cancellationToken)
     {
-        var @event = notification.DomainEvent;
-
         var payment = await _paymentWriteRepository
             .FetchStreamAsync(@event.PaymentId)
             ?? throw new ApplicationLogicException($"Cannot find payment {@event.PaymentId}.");
 
-        // Notifying Order Saga
-        await _eventProducer
-            .PublishAsync(new PaymentFinalized(
+        await _outboxMessageService.SaveAsOutboxMessageAsync(
+           new PaymentFinalized(
                 payment.Id.Value,
                 payment.OrderId.Value,
                 payment.TotalAmount.Amount,
-                payment.TotalAmount.Currency.Code),
-                cancellationToken);
+                payment.TotalAmount.Currency.Code)
+       );
     }
 }
