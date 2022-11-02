@@ -1,5 +1,4 @@
 using Marten;
-using EcommerceDDD.Core.CQRS;
 using EcommerceDDD.Core.Testing;
 using EcommerceDDD.Quotes.Domain;
 using EcommerceDDD.Core.Persistence;
@@ -9,12 +8,12 @@ using EcommerceDDD.Core.Infrastructure.WebApi;
 using EcommerceDDD.Core.Infrastructure.Identity;
 using EcommerceDDD.Core.Infrastructure.Integration;
 using EcommerceDDD.Quotes.Application.Quotes.OpeningQuote;
+using EcommerceDDD.Core.Infrastructure.EventBus;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ---- Configuration
 builder.Services.ConfigureIntegrationHttpService(builder);
-builder.Services.ConfigureCQRS();
 
 // ---- Services
 builder.Services.AddTransient<ICustomerOpenQuoteChecker, CustomerOpenQuoteChecker>();
@@ -27,6 +26,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAuthentication(builder.Configuration);
 builder.Services.AddSwagger(builder.Configuration);
+builder.Services.AddEventDispatcher();
 builder.Services.AddMarten(builder.Configuration, 
     options => options.ConfigureProjections());
 
