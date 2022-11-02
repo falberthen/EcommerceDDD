@@ -9,9 +9,9 @@ public class MartenRepository<TA> : IEventStoreRepository<TA>
     where TA : class, IAggregateRoot<StronglyTypedId<Guid>>
 {
     private readonly IDocumentStore _store;
-    private readonly IDomainEventDispatcher _dispatcher;
+    private readonly IEventDispatcher _dispatcher;
 
-    public MartenRepository(IDocumentStore store, IDomainEventDispatcher dispatcher)
+    public MartenRepository(IDocumentStore store, IEventDispatcher dispatcher)
     {
         _store = store;
         _dispatcher = dispatcher;

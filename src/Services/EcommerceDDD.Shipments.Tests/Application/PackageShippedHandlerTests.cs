@@ -1,12 +1,11 @@
-using EcommerceDDD.Core.Domain;
 using EcommerceDDD.Core.EventBus;
 using EcommerceDDD.Core.Testing;
 using EcommerceDDD.Shipments.Domain;
 using EcommerceDDD.Shipments.Domain.Events;
 using EcommerceDDD.Shipments.Domain.Commands;
-using EcommerceDDD.Core.Infrastructure.Integration;
 using EcommerceDDD.Shipments.Application.ShippingPackage;
 using EcommerceDDD.Shipments.Application.DeliveringPackage;
+using EcommerceDDD.Core.Infrastructure.Outbox.Services;
 
 namespace EcommerceDDD.Shipments.Tests.Application;
 
@@ -29,7 +28,7 @@ public class PackageShippedHandlerTests
             .Returns(Task.FromResult(true));
 
         var shipPackage = ShipPackage.Create(orderId, productItems);
-        var shipPackageHandler = new ShipPackageHandler(_eventProducer.Object, _availabilityChecker.Object, shipmentWriteRepository);
+        var shipPackageHandler = new ShipPackageHandler(_availabilityChecker.Object, shipmentWriteRepository, _outboxMessageService.Object);
         await shipPackageHandler.Handle(shipPackage, CancellationToken.None);
 
         var shipment = shipmentWriteRepository.AggregateStream.First().Aggregate;
@@ -37,10 +36,9 @@ public class PackageShippedHandlerTests
         Assert.NotNull(@event);
 
         var packageShippedHandler = new PackageShippedHandler(shipmentWriteRepository);
-        var domainNotification = new DomainNotification<PackageShipped>(@event!);
 
         // When
-        await packageShippedHandler.Handle(domainNotification, CancellationToken.None);
+        await packageShippedHandler.Handle(@event!, CancellationToken.None);
 
         // Then
         Assert.NotNull(shipment);
@@ -50,7 +48,7 @@ public class PackageShippedHandlerTests
         shipment.DeliveredAt.Should().NotBe(null);
         shipment.Status.Should().Be(ShipmentStatus.Delivered);
     }
-    
-    private Mock<IEventProducer> _eventProducer = new();
+
+    private Mock<IOutboxMessageService> _outboxMessageService = new();
     private Mock<IProductAvailabilityChecker> _availabilityChecker = new();
 }

@@ -9,17 +9,17 @@ namespace EcommerceDDD.Core.Infrastructure.Kafka.Consumer;
 
 public class KafkaConsumer : IEventConsumer
 {
-    private readonly IMediator _mediator;
+    private readonly IEventDispatcher _eventDispatcher;
     private readonly IConsumer<string, string> _consumer;
     private readonly ILogger<KafkaConsumer> _logger;
 
     public KafkaConsumer(
-        IMediator mediator,
+        IEventDispatcher eventDispatcher,
         IOptions<KafkaConsumerConfig> kafkaConsumerConfig,
         ILogger<KafkaConsumer> logger)
     {
         _logger = logger;
-        _mediator = mediator;
+        _eventDispatcher = eventDispatcher;
 
         if (kafkaConsumerConfig is null)
             throw new ArgumentNullException(nameof(kafkaConsumerConfig));
@@ -66,7 +66,7 @@ public class KafkaConsumer : IEventConsumer
             await Task.CompletedTask;
         }
                 
-        await _mediator.Publish(@event!, cancellationToken);
+        await _eventDispatcher.DispatchAsync(@event!);
         consumer.Commit();                                       
     }
 }

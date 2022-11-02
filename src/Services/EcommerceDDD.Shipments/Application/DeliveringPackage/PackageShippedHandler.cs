@@ -1,12 +1,11 @@
 ﻿using MediatR;
-using EcommerceDDD.Core.Domain;
 using EcommerceDDD.Shipments.Domain;
 using EcommerceDDD.Core.Persistence;
 using EcommerceDDD.Shipments.Domain.Events;
 
 namespace EcommerceDDD.Shipments.Application.DeliveringPackage;
 
-public class PackageShippedHandler : INotificationHandler<DomainNotification<PackageShipped>>
+public class PackageShippedHandler : INotificationHandler<PackageShipped>
 {
     private readonly IEventStoreRepository<Shipment> _shipmentWriteRepository;
 
@@ -15,10 +14,8 @@ public class PackageShippedHandler : INotificationHandler<DomainNotification<Pac
         _shipmentWriteRepository = shipmentWriteRepository;
     }
 
-    public async Task Handle(DomainNotification<PackageShipped> notification, CancellationToken cancellationToken)
-    {
-        var @event = notification.DomainEvent;
-       
+    public async Task Handle(PackageShipped @event, CancellationToken cancellationToken)
+    {       
         var shipment = await _shipmentWriteRepository
             .FetchStreamAsync(@event.ShipmentId);
 
