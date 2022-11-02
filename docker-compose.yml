@@ -11,11 +11,11 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-    restart: on-failure
-    networks:
-      - ecommercedddnet
+    restart: on-failure    
     ports:
       - '5000:80'
+    networks:
+      - ecommercedddnet
 
   ecommerceddd-identityserver:
     image: ${DOCKER_REGISTRY-}ecommerceddd-identityserver
@@ -27,12 +27,12 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       #- ASPNETCORE_URLS=https://+:443;http://+:80
       - ASPNETCORE_URLS=http://+:80
-    restart: on-failure
-    networks:
-      - ecommercedddnet
+    restart: on-failure    
     ports:
       #- '5001:443'
       - '5001:80'
+    networks:
+      - ecommercedddnet
 
   ecommerceddd-customers:
     image: ${DOCKER_REGISTRY-}ecommerceddd-customers
@@ -43,12 +43,11 @@ services:
     environment:                      
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-    restart: 
-        always
-    networks:
-      - ecommercedddnet
+    restart: on-failure    
     ports:
       - '8001:80'
+    networks:
+      - ecommercedddnet
     depends_on:
       - postgres
 
@@ -61,12 +60,11 @@ services:
     environment:                      
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-    restart: 
-      always
-    networks:
-      - ecommercedddnet
+    restart: on-failure    
     ports:
       - '8002:80'
+    networks:
+    - ecommercedddnet
     depends_on:
       - postgres
 
@@ -79,12 +77,11 @@ services:
     environment:                      
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-    restart: 
-      always
-    networks:
-      - ecommercedddnet
+    restart: on-failure    
     ports:
       - '8003:80'
+    networks:
+      - ecommercedddnet
     depends_on:
       - postgres
 
@@ -97,12 +94,11 @@ services:
     environment:                      
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-    restart: 
-      always
-    networks:
-      - ecommercedddnet
+    restart: on-failure    
     ports:
       - '8004:80'
+    networks:
+      - ecommercedddnet
     depends_on:
       - postgres
 
@@ -115,12 +111,11 @@ services:
     environment:                      
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-    restart: 
-      always
-    networks:
-      - ecommercedddnet
+    restart: on-failure    
     ports:
       - '8005:80'
+    networks:
+      - ecommercedddnet
     depends_on:
       - postgres
 
@@ -132,13 +127,12 @@ services:
       dockerfile: src/Services/EcommerceDDD.Shipments/Dockerfile
     environment:                      
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-    restart: 
-      always
-    networks:
-      - ecommercedddnet
+      - ASPNETCORE_URLS=http://+:80    
+    restart: on-failure
     ports:
       - '8006:80'
+    networks:
+      - ecommercedddnet
     depends_on:
       - postgres
 
@@ -154,6 +148,8 @@ services:
       - "5432:5432"
     networks:
       - ecommercedddnet
+    volumes:
+        - ./scripts/db_init.sql:/docker-entrypoint-initdb.d/db_init.sql
 
   pgadmin:
     image: dpage/pgadmin4
@@ -189,6 +185,7 @@ services:
     container_name: kafka    
     networks:
       - ecommercedddnet
+    restart: on-failure
     ports:
       - "9092:9092"
     environment:
@@ -199,7 +196,6 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://kafka:9092      
       ADVERTISED_HOST_NAME: kafka
-    restart: on-failure
     depends_on:
       - zookeeper
 
