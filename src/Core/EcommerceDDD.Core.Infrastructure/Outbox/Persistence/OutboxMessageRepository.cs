@@ -1,5 +1,4 @@
-﻿using Marten;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Immutable;
 
 namespace EcommerceDDD.Core.Infrastructure.Outbox.Persistence;
@@ -23,7 +22,6 @@ public class OutboxMessageRepository : IOutboxMessageRepository
     {
         var messages = await _context.OutboxMessages
             .Where(m => null == m.ProcessedAt)
-               .OrderBy(m => m.CreatedAt)
                .Take(batchSize)
                .ToArrayAsync(cancellationToken);
 
