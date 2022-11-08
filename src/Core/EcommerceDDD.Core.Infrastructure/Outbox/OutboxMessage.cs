@@ -1,20 +1,30 @@
 ﻿namespace EcommerceDDD.Core.Infrastructure.Outbox;
 
-public record class OutboxMessage
+public class OutboxMessage
 {
-    public Guid Id { get; private set; }
-    public DateTime CreatedAt { get; private set; }
-    public string Type { get; private set; }
-    public string Data { get; private set; }
-    public DateTime? ProcessedAt { get; set; }
-
-    public OutboxMessage(DateTime createdAt, string type, string data)
+    public OutboxMessage(string data, string aggregateType)
     {
         Id = Guid.NewGuid();
-        CreatedAt = createdAt;
-        Type = type;
-        Data = data;
+        Payload = data;
+        AggregateId = Guid.NewGuid().ToString();
+        AggregateType = aggregateType;
+        Type = aggregateType;
+        Timestamp = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
     }
 
-    private OutboxMessage() {}
+    public Guid Id { get; }
+
+    public string Payload { get; }
+
+    public string AggregateId { get; }
+
+    public string AggregateType { get; }
+
+    public string Type { get; }
+
+    public DateTime Timestamp { get; }
+
+    public DateTime? ProcessedAt { get; set; }
+
+    private OutboxMessage() { }
 }

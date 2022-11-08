@@ -1,4 +1,5 @@
-﻿using Confluent.Kafka;
+﻿using System.Text;
+using Confluent.Kafka;
 using Newtonsoft.Json;
 using EcommerceDDD.Core.Reflection;
 using EcommerceDDD.Core.EventBus;
@@ -12,7 +13,8 @@ public static class KafkaEventExtensions
         if (message.Message is null)
             return null;
 
-        var eventType = TypeGetter.GetTypeFromCurrencDomainAssembly(message.Message.Key);
+        var eventTypeName = RemoveEncoding(message.Key);
+        var eventType = TypeGetter.GetTypeFromCurrencDomainAssembly(eventTypeName);
 
         if (eventType is null)
             return null;
@@ -24,8 +26,17 @@ public static class KafkaEventExtensions
         };
 
         var @event = JsonConvert
-            .DeserializeObject(message.Message.Value, eventType, settings) as IIntegrationEvent;
+            .DeserializeObject(RemoveEncoding(message.Message.Value), eventType, settings) as IIntegrationEvent;
 
         return @event;
+    }
+
+    private static string RemoveEncoding(string encodedJson)
+    {
+        var sb = new StringBuilder(encodedJson.Trim('"'));
+        sb.Replace("\\", string.Empty);
+        sb.Replace("\"[", "[");
+        sb.Replace("]\"", "]");
+        return sb.ToString();
     }
 }
