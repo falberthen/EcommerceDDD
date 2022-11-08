@@ -1,4 +1,5 @@
-﻿using Confluent.Kafka;
+﻿global using MediatR;
+using Confluent.Kafka;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -34,13 +35,15 @@ public class KafkaProducer : IEventProducer
     {
         try
         {
-            await _producer.ProduceAsync(_kafkaConfig.Topic,
-                new Message<string, string>
-                {
-                    Key = @event.GetType().Name,
-                    Value = JsonConvert.SerializeObject(@event)
-                }, 
-                cancellationToken).ConfigureAwait(false);
+            var message = new Message<string, string>
+            {
+                Key = @event.GetType().Name,
+                Value = JsonConvert.SerializeObject(@event)
+            };
+
+            _logger.LogInformation("Publishing message {message} to topic {Topic}...", message, _kafkaConfig.Topic);
+            await _producer.ProduceAsync(_kafkaConfig.Topic, message, cancellationToken)
+                .ConfigureAwait(false);
         }
         catch (Exception e)
         {
