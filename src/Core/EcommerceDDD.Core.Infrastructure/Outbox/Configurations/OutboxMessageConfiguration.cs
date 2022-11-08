@@ -6,19 +6,21 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
 {
     public void Configure(EntityTypeBuilder<OutboxMessage> builder)
     {
-        builder.ToTable("OutboxMessages");
+        builder.HasKey(e => e.Id);
 
-        builder.HasKey(x => x.Id);
+        builder
+            .Property(e => e.Payload)            
+            .HasColumnType("jsonb");
 
-        builder.Property(e => e.CreatedAt)
-            .IsRequired();
+        builder.Property(e => e.AggregateId);
+
+        builder.Property(e => e.AggregateType);
+
+        builder.Property(e => e.Type);
 
         builder.Property(e => e.ProcessedAt);
 
-        builder.Property(e => e.Type)
-            .IsRequired();
-
-        builder.Property(e => e.Data)
-            .IsRequired();
+        builder.Property(e => e.Timestamp)
+            .HasColumnType("Timestamp");                    
     }
 }

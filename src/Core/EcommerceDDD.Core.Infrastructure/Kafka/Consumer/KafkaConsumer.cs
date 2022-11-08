@@ -1,11 +1,16 @@
-﻿global using MediatR;
+﻿using Polly;
 using Confluent.Kafka;
+using EcommerceDDD.Core.EventBus;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using EcommerceDDD.Core.EventBus;
 using EcommerceDDD.Core.Infrastructure.Kafka.Events;
 
 namespace EcommerceDDD.Core.Infrastructure.Kafka.Consumer;
+
+public interface IEventConsumer
+{
+    Task StartConsumeAsync(CancellationToken cancellationToken = default);
+}
 
 public class KafkaConsumer : IEventConsumer
 {
@@ -34,6 +39,7 @@ public class KafkaConsumer : IEventConsumer
         };
 
         var consumerBuilder = new ConsumerBuilder<string, string>(consumerConfig);
+
         _consumer = consumerBuilder.Build();
         _consumer.Subscribe(config.Topics);
     }
@@ -56,17 +62,27 @@ public class KafkaConsumer : IEventConsumer
 
     private async Task ConsumeNextMessage(IConsumer<string, string> consumer, CancellationToken cancellationToken)
     {
-        await Task.Yield();
-        var result = consumer.Consume(cancellationToken);
-        var @event = result.ToIntegrationEvent();
+        var policy = Policy
+           .Handle<Exception>()
+           .WaitAndRetryForeverAsync(retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
 
-        if(@event is null)
-        {
-            _logger.LogError("Unable to deserialize integration event.", result);
-            await Task.CompletedTask;
-        }
-                
-        await _eventDispatcher.DispatchAsync(@event!);
-        consumer.Commit();                                       
+        await policy.ExecuteAsync(
+           async () =>
+           {
+               await Task.Yield();
+               var result = _consumer.Consume(cancellationToken);
+               var @event = result.ToIntegrationEvent();
+
+               if (@event is null)
+               {
+                   _logger.LogError("Unable to deserialize integration event.", consumer);
+                   await Task.CompletedTask;
+               }
+
+               _logger.LogInformation("Dispatching event: {event}", @event);
+
+               await _eventDispatcher.DispatchAsync(@event!);
+               consumer.Commit();
+           });
     }
 }
