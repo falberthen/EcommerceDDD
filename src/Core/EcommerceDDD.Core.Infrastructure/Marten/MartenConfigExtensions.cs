@@ -14,10 +14,11 @@ public static class MartenConfigExtensions
         if (services is null)
             throw new ArgumentNullException(nameof(services));
 
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
         var martenConfig = configuration.GetSection("EventStore")
             .Get<MartenSettings>();
 
-        if (string.IsNullOrEmpty(martenConfig.ConnectionString))
+        if (string.IsNullOrEmpty(connectionString))
             throw new ArgumentNullException("EventStore connection string is missing");
 
         if (string.IsNullOrEmpty(martenConfig.WriteSchema))
@@ -25,7 +26,7 @@ public static class MartenConfigExtensions
 
         services.AddMarten(options =>
         {
-            options.Connection(martenConfig.ConnectionString);
+            options.Connection(connectionString);
             options.AutoCreateSchemaObjects = AutoCreate.All;            
             options.UseDefaultSerialization(nonPublicMembersStorage: NonPublicMembersStorage.All);
             options.Events.DatabaseSchemaName = martenConfig.WriteSchema;
