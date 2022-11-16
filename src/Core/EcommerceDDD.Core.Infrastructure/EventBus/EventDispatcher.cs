@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.DependencyInjection;
 using EcommerceDDD.Core.EventBus;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EcommerceDDD.Core.Infrastructure.EventBus;
 
@@ -15,7 +15,7 @@ public class EventDispatcher : IEventDispatcher
         _logger = logger;
     }
 
-    public async Task DispatchAsync(INotification @event)
+    public async Task DispatchAsync(INotification @event, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Publishing event {@event}", @event);
 
@@ -25,7 +25,7 @@ public class EventDispatcher : IEventDispatcher
             var scopedServices = scope.ServiceProvider;
             var mediator = scopedServices.GetRequiredService<IMediator>();
 
-            await mediator.Publish(@event);
+            await mediator.Publish(@event, cancellationToken);
         }
         catch (Exception e)
         {
