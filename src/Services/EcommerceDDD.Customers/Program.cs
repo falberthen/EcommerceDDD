@@ -1,31 +1,20 @@
-using EcommerceDDD.Core.Testing;
-using EcommerceDDD.Core.EventBus;
 using EcommerceDDD.Core.Persistence;
 using EcommerceDDD.Customers.Domain;
+using EcommerceDDD.Core.Infrastructure;
 using EcommerceDDD.Core.Infrastructure.Marten;
 using EcommerceDDD.Core.Infrastructure.WebApi;
-using EcommerceDDD.Core.Infrastructure.Identity;
-using EcommerceDDD.Core.Infrastructure.Integration;
 using EcommerceDDD.Customers.Application.RegisteringCustomer;
 using EcommerceDDD.Customers.Infrastructure.Projections;
-using EcommerceDDD.Core.Infrastructure.EventBus;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ---- Configuration
-builder.Services.ConfigureIntegrationHttpService(builder);
-
-// ---- Services
-builder.Services.AddTransient<IEmailUniquenessChecker, EmailUniquenessChecker>();
-builder.Services.AddTransient<IEventStoreRepository<Customer>, MartenRepository<Customer>>();
-builder.Services.AddTransient<IEventStoreRepository<DummyAggregateRoot>,
-    DummyEventStoreRepository<DummyAggregateRoot>>();
-
-builder.Services.AddAuthentication(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwagger(builder.Configuration);
-builder.Services.AddEventDispatcher();
+
+// ---- Services
+builder.Services.AddInfrastructureExtension(builder.Configuration);
+builder.Services.AddScoped<IEmailUniquenessChecker, EmailUniquenessChecker>();
+builder.Services.AddScoped<IEventStoreRepository<Customer>, MartenRepository<Customer>>();
 builder.Services.AddMarten(builder.Configuration,
     options => options.ConfigureProjections());
 

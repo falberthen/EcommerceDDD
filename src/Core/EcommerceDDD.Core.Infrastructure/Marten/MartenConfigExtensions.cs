@@ -2,6 +2,8 @@
 using Weasel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using LamarCodeGeneration.Frames;
+using EcommerceDDD.Core.EventBus;
 
 namespace EcommerceDDD.Core.Infrastructure.Marten;
 
@@ -30,9 +32,14 @@ public static class MartenConfigExtensions
             options.AutoCreateSchemaObjects = AutoCreate.All;            
             options.UseDefaultSerialization(nonPublicMembersStorage: NonPublicMembersStorage.All);
             options.Events.DatabaseSchemaName = martenConfig.WriteSchema;
-
+            
             if (!string.IsNullOrEmpty(martenConfig.ReadSchema))
                 options.DatabaseSchemaName = martenConfig.ReadSchema;
+
+            // outbox
+            options.Schema.For<IntegrationEvent>()
+                .DatabaseSchemaName("public")
+                .DocumentAlias("outboxmessages");
 
             // Custom store options
             configureOptions?.Invoke(options);
