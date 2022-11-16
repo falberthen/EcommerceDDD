@@ -17,7 +17,7 @@ public class OrderEventsTests
             }
         };
 
-        var orderData = new OrderData(_orderId, _quoteId, _customerId, quoteItems, currency);
+        var orderData = new OrderData(_quoteId, _customerId, quoteItems, currency);
 
         // When
         var order = Order.Create(orderData);
@@ -41,7 +41,7 @@ public class OrderEventsTests
             }
         };
 
-        var orderData = new OrderData(_orderId, _quoteId, _customerId, quoteItems, currency);
+        var orderData = new OrderData(_quoteId, _customerId, quoteItems, currency);
         var order = Order.Create(orderData);
 
         // When
@@ -68,7 +68,7 @@ public class OrderEventsTests
             }
         };
 
-        var orderData = new OrderData(_orderId, _quoteId, _customerId, quoteItems, currency);
+        var orderData = new OrderData(_quoteId, _customerId, quoteItems, currency);
         var order = Order.Create(orderData);
 
         // When
@@ -95,7 +95,7 @@ public class OrderEventsTests
             }
         };
 
-        var orderData = new OrderData(_orderId, _quoteId, _customerId, quoteItems, currency);
+        var orderData = new OrderData(_quoteId, _customerId, quoteItems, currency);
 
         var order = Order.Create(orderData);
         order.RecordPayment(_paymentId, totalPaid);
@@ -112,7 +112,6 @@ public class OrderEventsTests
 
     const string productName = "Product XYZ";
     private CustomerId _customerId = CustomerId.Of(Guid.NewGuid());
-    private OrderId _orderId = OrderId.Of(Guid.NewGuid());
     private QuoteId _quoteId = QuoteId.Of(Guid.NewGuid());
     private ProductId _productId = ProductId.Of(Guid.NewGuid());
     private PaymentId _paymentId = PaymentId.Of(Guid.NewGuid());

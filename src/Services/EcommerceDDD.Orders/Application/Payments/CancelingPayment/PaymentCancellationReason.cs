@@ -2,5 +2,6 @@
 
 public enum PaymentCancellationReason
 {
-    OrderCanceled = 1
+    OrderCanceled = 1,
+    ProcessmentError = 2
 }

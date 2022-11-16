@@ -1,25 +1,26 @@
-﻿using MediatR;
+﻿using EcommerceDDD.Core.EventBus;
 using EcommerceDDD.Orders.Domain;
 using EcommerceDDD.Orders.Domain.Events;
 using EcommerceDDD.Orders.Domain.Commands;
-using EcommerceDDD.Orders.Application.Payments.FinalizingPayment;
-using EcommerceDDD.Orders.Application.Shipments.FinalizingShipment;
+using EcommerceDDD.Core.CQRS.CommandHandling;
 using EcommerceDDD.Orders.Application.Payments.RequestingPayment;
 using EcommerceDDD.Orders.Application.Shipments.RequestingShipment;
+using EcommerceDDD.Orders.Application.Shipments.ShippingPackage;
+using EcommerceDDD.Orders.Application.Payments.ProcessingPayment;
 
 namespace EcommerceDDD.Orders.Application;
 
-public class OrderSaga : 
-    INotificationHandler<OrderPlaced>,
-    INotificationHandler<OrderPaid>,
-    INotificationHandler<PaymentFinalized>,
-    INotificationHandler<OrderDelivered>
+public class OrderSaga :
+    IEventHandler<OrderPlaced>,
+    IEventHandler<OrderPaid>,
+    IEventHandler<PaymentCompleted>,
+    IEventHandler<PackageShipped>
 {
-    private readonly IMediator _mediator;
+    private readonly ICommandBus _commandBus;
 
-    public OrderSaga(IMediator mediator)
+    public OrderSaga(ICommandBus commandBus)
     {
-        _mediator = mediator;
+        _commandBus = commandBus;
     }
 
     public async Task Handle(OrderPlaced @event, CancellationToken cancellationToken)
@@ -30,19 +31,19 @@ public class OrderSaga :
             Money.Of(@event.TotalPrice, @event.CurrencyCode),
             Currency.OfCode(@event.CurrencyCode));
 
-        await _mediator.Send(command, cancellationToken);
+        await _commandBus.Send(command);
     }
 
-    public async Task Handle(PaymentFinalized @event, CancellationToken cancellationToken)
+    public async Task Handle(PaymentCompleted @event, CancellationToken cancellationToken)
     {
         await DelayOnPurpose(3000);
 
         var command = RecordPayment.Create(
-            PaymentId.Of(@event.PaymentId),
             OrderId.Of(@event.OrderId),
+            PaymentId.Of(@event.PaymentId),
             Money.Of(@event.TotalAmount, @event.CurrencyCode));
 
-        await _mediator.Send(command, cancellationToken);
+        await _commandBus.Send(command);
     }
 
     public async Task Handle(OrderPaid @event, CancellationToken cancellationToken)
@@ -50,18 +51,18 @@ public class OrderSaga :
         await DelayOnPurpose(3000);
 
         var command = RequestShipment.Create(OrderId.Of(@event.OrderId));
-        await _mediator.Send(command, cancellationToken);
+        await _commandBus.Send(command);
     }
 
-    public async Task Handle(OrderDelivered @event, CancellationToken cancellationToken)
+    public async Task Handle(PackageShipped @event, CancellationToken cancellationToken)
     {
         await DelayOnPurpose(3000);
 
         var command = CompleteOrder.Create(
-            OrderId.Of(@event.OrderId), 
+            OrderId.Of(@event.OrderId),
             ShipmentId.Of(@event.ShipmentId));
 
-        await _mediator.Send(command, cancellationToken);
+        await _commandBus.Send(command);
     }
 
     // Delaying just to allow you to see the statuses changing on the UI =)
