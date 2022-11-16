@@ -1,21 +1,18 @@
 ﻿using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Builder;
 
 namespace EcommerceDDD.Core.Infrastructure.WebApi;
 
 public static class SwaggerExtensions
 {
-    public static void AddSwagger(this IServiceCollection services, 
-        ConfigurationManager configuration)
+    public static void AddSwagger(this IServiceCollection services, IConfiguration configuration)
     {
         if (services is null)
             throw new ArgumentNullException(nameof(services));
 
-        var swaggerSettings = configuration
-            .GetSection("SwaggerSettings").Get<SwaggerGenSettings>();
-
+        var swaggerSettings = configuration.GetSection("SwaggerSettings").Get<SwaggerGenSettings>();
         services.AddSwaggerGen(s =>
         {
             s.SwaggerDoc(swaggerSettings.Version, new OpenApiInfo

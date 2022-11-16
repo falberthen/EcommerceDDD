@@ -1,10 +1,13 @@
 using Ocelot.Middleware;
 using Ocelot.DependencyInjection;
 using Ocelot.Cache.CacheManager;
-using EcommerceDDD.Core.Infrastructure.Identity;
 using EcommerceDDD.ApiGateway.SignalR.Hubs.Order;
+using EcommerceDDD.Core.Infrastructure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
 
 // ---- Ocelot
 builder.Configuration.AddJsonFile("ocelot.json");
@@ -17,10 +20,7 @@ builder.Services.AddOcelot(builder.Configuration)
 
 // ---- Services
 builder.Services.AddSignalR();
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddAuthentication(builder.Configuration);
+builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddScoped<IOrderStatusUpdater, OrderStatusUpdater>();
 
 // ---- Cors

@@ -1,33 +1,23 @@
-using EcommerceDDD.Core.Testing;
 using EcommerceDDD.Orders.Domain;
 using EcommerceDDD.Core.Persistence;
+using EcommerceDDD.Core.Infrastructure;
 using EcommerceDDD.Core.Infrastructure.WebApi;
 using EcommerceDDD.Core.Infrastructure.Kafka;
 using EcommerceDDD.Core.Infrastructure.Marten;
-using EcommerceDDD.Core.Infrastructure.Identity;
 using EcommerceDDD.Core.Infrastructure.SignalR;
-using EcommerceDDD.Core.Infrastructure.Integration;
 using EcommerceDDD.Orders.Infrastructure.Projections;
 using EcommerceDDD.Orders.Application.Orders.PlacingOrder;
-using EcommerceDDD.Core.Infrastructure.EventBus;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ---- Configuration
-builder.Services.ConfigureIntegrationHttpService(builder);
-
-// ---- Services
-builder.Services.AddTransient<IOrderStatusBroadcaster, OrderStatusBroadcaster>();
-builder.Services.AddTransient<IProductItemsChecker, ProductItemsChecker>();
-builder.Services.AddTransient<IEventStoreRepository<Order>, MartenRepository<Order>>();
-builder.Services.AddTransient<IEventStoreRepository<DummyAggregateRoot>, 
-    DummyEventStoreRepository<DummyAggregateRoot>>();
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddAuthentication(builder.Configuration);
-builder.Services.AddSwagger(builder.Configuration);
-builder.Services.AddEventDispatcher();
+
+// ---- Services
+builder.Services.AddInfrastructureExtension(builder.Configuration);
+builder.Services.AddScoped<IOrderStatusBroadcaster, OrderStatusBroadcaster>();
+builder.Services.AddScoped<IProductItemsMapper, ProductItemsMapper>();
+builder.Services.AddScoped<IEventStoreRepository<Order>, MartenRepository<Order>>();
 builder.Services.AddKafkaConsumer(builder.Configuration);
 builder.Services.AddMarten(builder.Configuration, options =>
     options.ConfigureProjections());

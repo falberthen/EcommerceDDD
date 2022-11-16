@@ -1,73 +1,29 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using EcommerceDDD.Core.Infrastructure.Workers;
 using EcommerceDDD.Core.Infrastructure.Outbox.Workers;
 using EcommerceDDD.Core.Infrastructure.Outbox.Services;
-using EcommerceDDD.Core.Infrastructure.Outbox.Persistence;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace EcommerceDDD.Core.Infrastructure.Outbox;
 
 public static class OutboxExtensions
 {
-
-    public static IHost EnsureDatabaseCreated(this IHost host, WebApplicationBuilder builder)
-    {
-        using (var scope = host.Services.CreateScope())
-        {
-            scope.ServiceProvider
-                .GetRequiredService<OutboxDbContext>().Database.EnsureCreated();
-        }
-
-        return host;
-    }
-
-    public static void AddOutboxDebeziumConnector(this IServiceCollection services, WebApplicationBuilder builder)
-    {
-        AddOutboxSetup(services, builder);
-
-        services.AddHostedService(serviceProvider =>
-        {
-            var consumer = serviceProvider.GetRequiredService<IDebeziumConnectorSetup>();
-            return new BackgroundWorker(consumer.StartConfiguringAsync);
-        });
-    }
-
-    public static void AddOutboxPollingService(this IServiceCollection services, WebApplicationBuilder builder)
-    {
-        AddOutboxSetup(services, builder);
-
-        services.AddHostedService(serviceProvider =>
-        {
-            var consumer = serviceProvider.GetRequiredService<IOutboxMessageProcessor>();
-            return new BackgroundWorker(consumer.StartProcessingAsync);
-        });
-    }
-
-    private static void AddOutboxSetup(this IServiceCollection services, WebApplicationBuilder builder)
+    public static void AddOutboxService(this IServiceCollection services, IConfiguration configuration)
     {
         if (services is null)
             throw new ArgumentNullException(nameof(services));
 
         // ---- Settings
-        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-        var outboxSettings = builder.Configuration.GetSection("OutboxSettings");
-        builder.Services.Configure<OutboxSettings>(outboxSettings);
+        var debeziumSettings = configuration.GetSection("DebeziumSettings");
+        services.Configure<DebeziumSettings>(debeziumSettings);
 
-        services.AddTransient<IOutboxMessageRepository, OutboxMessageRepository>();
-        services.AddTransient<IOutboxMessageService, OutboxMessageService>();
-        services.AddTransient<IOutboxMessageProcessor, OutboxMessageProcessor>();
-        services.AddTransient<IDebeziumConnectorSetup, DebeziumConnectorSetup>();
-        
-        services.AddDbContext<OutboxDbContext>(options =>
+        services.AddScoped<IOutboxMessageService, OutboxMessageService>();
+        services.TryAddSingleton<IDebeziumConnectorSetup, DebeziumConnectorSetup>();
+        services.AddHostedService(serviceProvider =>
         {
-            options.UseNpgsql(connectionString,
-                npgsqlOptionsAction: sqlOptions =>
-                {
-                    sqlOptions.EnableRetryOnFailure();
-                });
+            var consumer = serviceProvider.GetRequiredService<IDebeziumConnectorSetup>();
+            return new BackgroundWorker(consumer.StartConfiguringAsync);
         });
     }
 }
