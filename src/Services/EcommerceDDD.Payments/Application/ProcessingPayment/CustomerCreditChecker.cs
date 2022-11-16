@@ -2,7 +2,7 @@
 using EcommerceDDD.Payments.Domain;
 using EcommerceDDD.Core.Infrastructure.Integration;
 
-namespace EcommerceDDD.Payments.Application.RequestingPayment;
+namespace EcommerceDDD.Payments.Application.ProcessingPayment;
 
 public class CustomerCreditChecker : ICustomerCreditChecker
 {
@@ -13,7 +13,7 @@ public class CustomerCreditChecker : ICustomerCreditChecker
         _integrationHttpService = integrationHttpService;
     }
 
-    public async Task<bool> EnsureEnoughCredit(CustomerId customerId, Money totalAmount)
+    public async Task<bool> IsCreditEnough(CustomerId customerId, Money totalAmount)
     {
         // Checking customer's credit        
         var response = await _integrationHttpService
@@ -27,6 +27,6 @@ public class CustomerCreditChecker : ICustomerCreditChecker
             ?? throw new RecordNotFoundException("No data was provided for customer credit limit.");
 
         // Simply comparing with the customer credit limit
-        return totalAmount.Amount < customerCreditLimit.CreditLimit;        
+        return totalAmount.Amount < customerCreditLimit.CreditLimit;
     }
 }
