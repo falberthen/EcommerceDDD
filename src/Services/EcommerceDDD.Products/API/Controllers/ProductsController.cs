@@ -1,8 +1,9 @@
-﻿using MediatR;
-using System.Net;
+﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using EcommerceDDD.Products.Domain;
 using Microsoft.AspNetCore.Authorization;
+using EcommerceDDD.Core.CQRS.QueryHandling;
+using EcommerceDDD.Core.CQRS.CommandHandling;
 using EcommerceDDD.Core.Infrastructure.WebApi;
 using EcommerceDDD.Products.API.Controllers.Requests;
 using EcommerceDDD.Products.Application.Products.GettingProducts;
@@ -15,22 +16,24 @@ namespace EcommerceDDD.Products.API.Controllers;
 [ApiController]
 public class ProductsController : CustomControllerBase
 {
-    public ProductsController(IMediator mediator)
-        : base(mediator) {}
+    public ProductsController(
+        ICommandBus commandBus,
+        IQueryBus queryBus)
+        : base(commandBus, queryBus) { }
 
     [HttpPost]
-    [ProducesResponseType(typeof(IList<ProductViewModel>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ListProducts([FromBody] GetProductsRequest request)
-    {        
-        var query = GetProducts.Create(request.CurrencyCode, 
+    {
+        var query = GetProducts.Create(request.CurrencyCode,
             ProductId.Of(request.ProductIds).ToList());
 
         return await Response(query);
     }
 
     [HttpPost("stockavailability")]
-    [ProducesResponseType(typeof(IList<ProductInStockViewModel>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> CheckStockAvailability([FromBody] ProductStockAvailabilityRequest request)
     {

@@ -1,13 +1,13 @@
-﻿using MediatR;
-using System.Net;
+﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using EcommerceDDD.Customers.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
+using EcommerceDDD.Core.CQRS.QueryHandling;
 using EcommerceDDD.Customers.Domain.Commands;
+using EcommerceDDD.Core.CQRS.CommandHandling;
 using EcommerceDDD.Core.Infrastructure.WebApi;
 using EcommerceDDD.Customers.API.Controllers.Requests;
-using EcommerceDDD.Customers.Infrastructure.Projections;
 using EcommerceDDD.Customers.Application.GettingCreditLimit;
 using EcommerceDDD.Customers.Application.GettingCustomerEventHistory;
 using EcommerceDDD.Customers.Api.Application.GettingCustomerDetails;
@@ -19,15 +19,17 @@ namespace EcommerceDDD.Customers.API.Controllers;
 [ApiController]
 public class CustomersController : CustomControllerBase
 {
-    public CustomersController(IMediator mediator) 
-        : base(mediator) {}
+    public CustomersController(
+        ICommandBus commandBus, 
+        IQueryBus queryBus)
+        : base(commandBus, queryBus) { }
 
     /// <summary>
     /// Get customer details
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    [ProducesResponseType(typeof(CustomerDetails), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetDetails()
     {
@@ -42,7 +44,7 @@ public class CustomersController : CustomControllerBase
     /// <param name="customerId"></param>
     /// <returns></returns>
     [HttpGet, Route("{customerId}/credit")]
-    [ProducesResponseType(typeof(CreditLimitModel), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetCustomerCreditLimit([FromRoute] Guid customerId)
     {
@@ -56,7 +58,7 @@ public class CustomersController : CustomControllerBase
     /// <param name="customerId"></param>
     /// <returns></returns>
     [HttpGet, Route("{customerId}/history")]
-    [ProducesResponseType(typeof(IList<CustomerEventHistory>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ListHistory([FromRoute] Guid customerId)
     {

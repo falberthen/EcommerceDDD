@@ -1,14 +1,15 @@
-using MediatR;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using EcommerceDDD.Quotes.Domain;
 using Microsoft.AspNetCore.Authorization;
 using EcommerceDDD.Quotes.Domain.Commands;
+using EcommerceDDD.Core.CQRS.QueryHandling;
+using EcommerceDDD.Core.CQRS.CommandHandling;
 using EcommerceDDD.Core.Infrastructure.WebApi;
 using EcommerceDDD.Quotes.API.Controllers.Requests;
-using EcommerceDDD.Quotes.Infrastructure.Projections;
 using EcommerceDDD.Quotes.Application.Quotes.GettingOpenQuote;
 using EcommerceDDD.Quotes.Application.Quotes.GettingQuoteHistory;
+using EcommerceDDD.Quotes.Application.Quotes.GettingConfirmedQuote;
 
 namespace EcommerceDDD.Quotes.API.Controllers;
 
@@ -17,20 +18,32 @@ namespace EcommerceDDD.Quotes.API.Controllers;
 [ApiController]
 public class QuotesController : CustomControllerBase
 {
-    public QuotesController(IMediator mediator)
-        : base(mediator) {}
+    public QuotesController(
+        ICommandBus commandBus,
+        IQueryBus queryBus)
+        : base(commandBus, queryBus) { }
 
     /// <summary>
-    /// Get customer's open quote
+    /// Get the current customer's quote
     /// </summary>
     /// <param name="customerId"></param>
     /// <returns></returns>
     [HttpGet, Route("{customerId:guid}/quote/{currencyCode}")]
-    [ProducesResponseType(typeof(QuoteDetails), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> GetDetails([FromRoute] Guid customerId, [FromRoute] string currencyCode)
+    public async Task<IActionResult> GetCustomerOpenQuote([FromRoute] Guid customerId, [FromRoute] string currencyCode)
     {
-        var query = GetOpenQuote.Create(CustomerId.Of(customerId), currencyCode);
+        var query = GetOpenQuote
+            .Create(CustomerId.Of(customerId), currencyCode);
+        return await Response(query);
+    }
+
+    [HttpGet, Route("{quoteId}")]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> GetById([FromRoute] Guid quoteId)
+    {
+        var query = GetConfirmedQuoteById.Create(QuoteId.Of(quoteId));
         return await Response(query);
     }
 
@@ -40,7 +53,7 @@ public class QuotesController : CustomControllerBase
     /// <param name="quoteId"></param>
     /// <returns></returns>
     [HttpGet, Route("{quoteId}/history")]
-    [ProducesResponseType(typeof(IList<QuoteEventHistory>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ListHistory([FromRoute] Guid quoteId)
     {
@@ -76,7 +89,7 @@ public class QuotesController : CustomControllerBase
     {
         var command = AddQuoteItem.Create(
             QuoteId.Of(quoteId),
-            ProductId.Of(request.ProductId), 
+            ProductId.Of(request.ProductId),
             request.Quantity,
             Currency.OfCode(request.CurrencyCode));
 
@@ -115,16 +128,16 @@ public class QuotesController : CustomControllerBase
     }
 
     /// <summary>
-    /// Place an order from a quote
+    /// Confirms the quote
     /// </summary>
     /// <param name="quoteId"></param>
     /// <returns></returns>
-    [HttpPut, Route("{quoteId:guid}/placeorder/{currencyCode}")]
+    [HttpPut, Route("{quoteId:guid}/confirm/{currencyCode}")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> PlaceOrder([FromRoute] Guid quoteId, [FromRoute] string currencyCode)
-    {        
-        var command = PlaceOrderFromQuote.Create(
+    public async Task<IActionResult> Confirm([FromRoute] Guid quoteId, [FromRoute] string currencyCode)
+    {
+        var command = ConfirmQuote.Create(
             QuoteId.Of(quoteId), Currency.OfCode(currencyCode));
 
         return await Response(command);
