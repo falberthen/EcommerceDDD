@@ -8,24 +8,24 @@ namespace EcommerceDDD.Core.Infrastructure.Marten;
 public class MartenRepository<TA> : IEventStoreRepository<TA>
     where TA : class, IAggregateRoot<StronglyTypedId<Guid>>
 {
-    private readonly IDocumentStore _store;
+    private readonly IDocumentSession _documentSession;
     private readonly IEventDispatcher _dispatcher;
 
-    public MartenRepository(IDocumentStore store, IEventDispatcher dispatcher)
+    public MartenRepository(IDocumentSession documentSession, IEventDispatcher dispatcher)
     {
-        _store = store;
+        _documentSession = documentSession;
         _dispatcher = dispatcher;
     }
 
     public async Task<long> AppendEventsAsync(TA aggregate, CancellationToken cancellationToken = default)
     {
-        using var session = _store.OpenSession();
         var events = aggregate.GetUncommittedEvents().ToArray();
         var nextVersion = aggregate.Version + events.Length;
 
         aggregate.ClearUncommittedEvents();
-        session.Events.Append(aggregate.Id.Value, nextVersion, events);
-        await session.SaveChangesAsync();
+        _documentSession.Events.Append(aggregate.Id.Value, nextVersion, events);
+
+        await _documentSession.SaveChangesAsync();
 
         // Dispatching events after saving changes
         DispatchEvents(events);
@@ -35,8 +35,7 @@ public class MartenRepository<TA> : IEventStoreRepository<TA>
 
     public async Task<TA> FetchStreamAsync(Guid id, int? version = null, CancellationToken cancellationToken = default)
     {
-        using var session = _store.LightweightSession();
-        var aggregate = await session.Events.AggregateStreamAsync<TA>(id, version ?? 0);
+        var aggregate = await _documentSession.Events.AggregateStreamAsync<TA>(id, version ?? 0);
         return aggregate ?? throw new InvalidOperationException($"No aggregate found with id {id}.");
     }
 

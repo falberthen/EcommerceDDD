@@ -116,8 +116,4 @@ export class ProductSelectionComponent implements OnInit {
       }
     });
   }
-
-  async placeOrder() {
-    await this.cart.placeOrder();
-  }
 }
