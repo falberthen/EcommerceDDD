@@ -6,13 +6,17 @@ namespace EcommerceDDD.Core.Infrastructure.WebApi;
 
 public class CustomControllerBase : ControllerBase
 {
-    private readonly IMediator _mediator;
+    private readonly ICommandBus _commandBus;
+    private readonly IQueryBus _queryBus;
 
-    public CustomControllerBase() {}
+    public CustomControllerBase() { }
 
-    protected CustomControllerBase(IMediator mediator)
+    protected CustomControllerBase(
+        ICommandBus commandBus,
+        IQueryBus queryBus)
     {
-        _mediator = mediator;
+        _commandBus = commandBus;
+        _queryBus = queryBus;
     }
 
     protected async new Task<IActionResult> Response<TResult>(IQuery<TResult> query)
@@ -24,7 +28,7 @@ public class CustomControllerBase : ControllerBase
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            result = await _mediator.Send(query);
+            result = await _queryBus.Send(query);
         }
         catch (Exception e)
         {
@@ -45,7 +49,7 @@ public class CustomControllerBase : ControllerBase
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            await _mediator.Send(command);
+            await _commandBus.Send(command);
         }
         catch (Exception e)
         {
