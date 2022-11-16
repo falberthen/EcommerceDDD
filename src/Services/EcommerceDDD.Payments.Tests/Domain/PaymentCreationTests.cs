@@ -23,7 +23,7 @@ public class PaymentCreationTests
         Assert.NotNull(payment);
         payment.OrderId.Value.Should().Be(orderId.Value);
         payment.TotalAmount.Amount.Should().Be(totalAmount.Amount);
-        payment.ProcessedAt.Should().Be(null);
+        payment.CompletedAt.Should().Be(null);
         payment.Status.Should().Be(PaymentStatus.Pending);
     }
 }

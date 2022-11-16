@@ -1,8 +1,8 @@
 ﻿using EcommerceDDD.Core.EventBus;
 
-namespace EcommerceDDD.Payments.Application.RequestingPayment;
+namespace EcommerceDDD.Payments.Application.ProcessingPayment;
 
-public class CustomerReachedCreditLimit : IIntegrationEvent
+public class CustomerReachedCreditLimit : IntegrationEvent
 {
     public Guid OrderId { get; private set; }
     public DateTime CheckedAt { get; private set; }

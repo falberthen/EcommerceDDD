@@ -1,16 +1,16 @@
 ﻿using EcommerceDDD.Core.EventBus;
 
-namespace EcommerceDDD.Payments.Application.FinalizingPayment;
+namespace EcommerceDDD.Payments.Application.ProcessingPayment;
 
-public class PaymentFinalized : IIntegrationEvent
+public class PaymentFailed : IntegrationEvent
 {
     public Guid PaymentId { get; }
     public Guid OrderId { get; }
     public decimal TotalAmount { get; }
     public string CurrencyCode { get; }
-    public DateTime FinalizedAt { get; }
+    public DateTime FailedAt { get; }
 
-    public PaymentFinalized(
+    public PaymentFailed(
         Guid paymentId, 
         Guid orderId, 
         decimal totalAmount, 
@@ -20,6 +20,6 @@ public class PaymentFinalized : IIntegrationEvent
         OrderId = orderId;
         TotalAmount = totalAmount;
         CurrencyCode = currencyCode;
-        FinalizedAt = DateTime.UtcNow;
+        FailedAt = DateTime.UtcNow;
     }
 }

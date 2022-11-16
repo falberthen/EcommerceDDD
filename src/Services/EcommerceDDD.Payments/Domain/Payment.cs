@@ -9,7 +9,8 @@ public class Payment : AggregateRoot<PaymentId>
     public CustomerId CustomerId { get; private set; }
     public OrderId OrderId { get; private set; }
     public PaymentStatus Status { get; private set; }
-    public DateTime? ProcessedAt { get; private set; }
+    public DateTime? CreatedAt { get; private set; }
+    public DateTime? CompletedAt { get; private set; }
     public DateTime? CanceledAt { get; private set; }
     public Money TotalAmount { get; private set; }
 
@@ -30,12 +31,12 @@ public class Payment : AggregateRoot<PaymentId>
         return new Payment(paymentData);
     }
 
-    public void RecordProcessement()
+    public void Complete()
     {
         if (Status != PaymentStatus.Pending)
-            throw new BusinessRuleException($"Payment cannot be processed when '{Status}'");
+            throw new BusinessRuleException($"Payment cannot be completed when '{Status}'");
 
-        var @event = PaymentProcessed.Create(
+        var @event = PaymentCompleted.Create(
             Id.Value,
             DateTime.UtcNow);
 
@@ -57,21 +58,22 @@ public class Payment : AggregateRoot<PaymentId>
         Apply(@event);
     }
 
-    private void Apply(PaymentRequested requested)
+    private void Apply(PaymentCreated created)
     {
         Status = PaymentStatus.Pending;
-        Id = PaymentId.Of(requested.PaymentId);
-        CustomerId = CustomerId.Of(requested.CustomerId);
-        OrderId = OrderId.Of(requested.OrderId);
+        Id = PaymentId.Of(created.PaymentId);
+        CustomerId = CustomerId.Of(created.CustomerId);
+        OrderId = OrderId.Of(created.OrderId);
         TotalAmount = Money.Of(
-            requested.TotalAmount, 
-            requested.CurrencyCode);
+            created.TotalAmount,
+            created.CurrencyCode);
+        CreatedAt = created.CreatedAt;
     }
 
-    private void Apply(PaymentProcessed processed)
+    private void Apply(PaymentCompleted completed)
     {
-        Status = PaymentStatus.Processed;
-        ProcessedAt = processed.ProcessedAt;
+        Status = PaymentStatus.Completed;
+        CompletedAt = completed.CompletedAt;
     }
 
     private void Apply(PaymentCanceled canceled)
@@ -82,12 +84,13 @@ public class Payment : AggregateRoot<PaymentId>
 
     private Payment(PaymentData paymentData)
     {       
-        var @event = PaymentRequested.Create(
+        var @event = PaymentCreated.Create(
             Guid.NewGuid(),
             paymentData.CustomerId.Value,
             paymentData.OrderId.Value,
             paymentData.TotalAmount.Amount,
-            paymentData.TotalAmount.Currency.Code);
+            paymentData.TotalAmount.Currency.Code,
+            DateTime.UtcNow);
 
         AppendEvent(@event);
         Apply(@event);
