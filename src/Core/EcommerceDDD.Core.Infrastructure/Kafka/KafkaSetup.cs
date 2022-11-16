@@ -1,6 +1,7 @@
 ﻿using EcommerceDDD.Core.EventBus;
 using EcommerceDDD.Core.Infrastructure.Kafka.Consumer;
 using EcommerceDDD.Core.Infrastructure.Kafka.Producer;
+using EcommerceDDD.Core.Infrastructure.Kafka.Serialization;
 using EcommerceDDD.Core.Infrastructure.Workers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +23,7 @@ public static class KafkaSetup
     {
         var consumerConfig = configuration.GetSection("KafkaConsumer");
         services.Configure<KafkaConsumerConfig>(consumerConfig);
+        services.AddSingleton(typeof(JsonEventSerializer<>));
         services.TryAddSingleton<IEventConsumer, KafkaConsumer>();
 
         return services.AddHostedService(serviceProvider =>
