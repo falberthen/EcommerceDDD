@@ -1,14 +1,14 @@
 using EcommerceDDD.Core.Testing;
 using EcommerceDDD.Quotes.Domain;
-using EcommerceDDD.Quotes.Application.Quotes.OpeningQuote;
 using EcommerceDDD.Quotes.Domain.Commands;
+using EcommerceDDD.Quotes.Application.Quotes.OpeningQuote;
 
 namespace EcommerceDDD.Quotes.Tests.Application;
 
 public class OpenQuoteHandlerTests
 {
     [Fact]
-    public async Task Open_WithCommand_ShouldCreateQuote()
+    public async Task OpenQuote_WithCommand_ShouldCreateQuote()
     {
         // Given
         var customerId = CustomerId.Of(Guid.NewGuid());

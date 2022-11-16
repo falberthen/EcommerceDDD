@@ -9,7 +9,9 @@ public class Quote : AggregateRoot<QuoteId>
     public CustomerId CustomerId { get; private set; }
     public IList<QuoteItem> Items { get; private set; } = default!;
     public DateTime CreatedAt { get; private set; }
+    public DateTime ConfirmedAt { get; private set; }
     public QuoteStatus Status { get; private set; }
+    public Currency? Currency { get; private set; }
 
     public static Quote Create(CustomerId customerId)
     {
@@ -81,7 +83,7 @@ public class Quote : AggregateRoot<QuoteId>
         Apply(@event);
     }
 
-    public void Confirm()
+    public void Confirm(Currency currency)
     {
         if (Status != QuoteStatus.Open)
             throw new BusinessRuleException("Quote cannot be confirmed at this point.");
@@ -91,6 +93,7 @@ public class Quote : AggregateRoot<QuoteId>
 
         var @event = QuoteConfirmed.Create(
             Id.Value,
+            currency.Code,
             DateTime.UtcNow);
 
         AppendEvent(@event);
@@ -124,7 +127,7 @@ public class Quote : AggregateRoot<QuoteId>
     private void Apply(QuoteItemRemoved removed)
     {
         var quoteItem = Items
-            .FirstOrDefault(p => p.ProductId == ProductId.Of(removed.ProductId));
+            .First(p => p.ProductId == ProductId.Of(removed.ProductId));
 
         Items.Remove(quoteItem);
     }
@@ -137,6 +140,8 @@ public class Quote : AggregateRoot<QuoteId>
     private void Apply(QuoteConfirmed confirmed)
     {
         Status = QuoteStatus.Confirmed;
+        ConfirmedAt = confirmed.ConfirmedAt;
+        Currency = Currency.OfCode(confirmed.CurrencyCode);
     }
 
     private Quote(CustomerId customerId)

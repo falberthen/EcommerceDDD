@@ -26,6 +26,7 @@ public class AddQuoteItemHandlerTests
                 )
             }
         };
+
         _integrationHttpService.Setup(p =>
             p.FilterAsync<List<ProductViewModel>>(It.IsAny<string>(), It.IsAny<object>()))
             .Returns(Task.FromResult(response));
