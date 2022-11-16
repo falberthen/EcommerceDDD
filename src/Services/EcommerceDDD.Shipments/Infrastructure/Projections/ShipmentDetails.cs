@@ -8,11 +8,11 @@ public class ShipmentDetails
     public Guid Id { get; set; }
     public Guid OrderId { get; set; }
     public IReadOnlyList<ProductItemDetails> ProductItems { get; set; } = default!;
+    public DateTime? CreatedAt { get; set; }
     public DateTime? ShippedAt { get; set; }
-    public DateTime? DeliveredAt { get; set; }
     public ShipmentStatus Status { get; set; }
 
-    public void Apply(PackageShipped shipped)
+    public void Apply(ShipmentCreated shipped)
     {
         var productItems = shipped.ProductItems.Select(c =>
             new ProductItemDetails(
@@ -23,13 +23,13 @@ public class ShipmentDetails
         Id = shipped.ShipmentId;
         OrderId = shipped.OrderId;
         ProductItems = productItems;
-        ShippedAt = shipped.ShippedAt;
+        CreatedAt = shipped.CreatedAt;
         Status = ShipmentStatus.Shipped;
     }
 
-    public void Apply(PackageDelivered delivered)
+    public void Apply(PackageShipped shipped)
     {
-        DeliveredAt = delivered.DeliveredAt;
-        Status = ShipmentStatus.Delivered;
+        ShippedAt = shipped.ShippedAt;
+        Status = ShipmentStatus.Shipped;
     }
 }

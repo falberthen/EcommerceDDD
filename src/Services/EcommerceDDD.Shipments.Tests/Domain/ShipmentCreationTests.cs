@@ -5,7 +5,7 @@ namespace EcommerceDDD.Shipments.Tests.Domain;
 public class ShipmentCreationTests
 {
     [Fact]
-    public void Create_FromOrder_ReturnsPaymentShipped()
+    public void Create_FromOrder_ReturnsShipmentPending()
     {
         // Given
         var orderId = OrderId.Of(Guid.NewGuid());
@@ -22,9 +22,9 @@ public class ShipmentCreationTests
         // Then
         Assert.NotNull(shipment);
         shipment.OrderId.Value.Should().Be(orderId.Value);
-        shipment.ShippedAt.Should().NotBe(null);
-        shipment.DeliveredAt.Should().Be(null);
+        shipment.CreatedAt.Should().NotBe(null);
+        shipment.ShippedAt.Should().Be(null);
         shipment.ProductItems.Count().Should().Be(productItems.Count());
-        shipment.Status.Should().Be(ShipmentStatus.Shipped);
+        shipment.Status.Should().Be(ShipmentStatus.Pending);
     }
 }

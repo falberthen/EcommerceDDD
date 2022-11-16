@@ -2,6 +2,6 @@
 
 public enum ShipmentStatus
 {
-    Shipped = 1,
-    Delivered = 2
+    Pending = 1,
+    Shipped = 2
 }
