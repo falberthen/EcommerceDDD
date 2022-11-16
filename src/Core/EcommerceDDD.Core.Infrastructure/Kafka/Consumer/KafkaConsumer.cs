@@ -3,23 +3,19 @@ using Confluent.Kafka;
 using EcommerceDDD.Core.EventBus;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using EcommerceDDD.Core.Infrastructure.Kafka.Events;
+using EcommerceDDD.Core.Infrastructure.Kafka.Serialization;
 
 namespace EcommerceDDD.Core.Infrastructure.Kafka.Consumer;
-
-public interface IEventConsumer
-{
-    Task StartConsumeAsync(CancellationToken cancellationToken = default);
-}
 
 public class KafkaConsumer : IEventConsumer
 {
     private readonly IEventDispatcher _eventDispatcher;
-    private readonly IConsumer<string, string> _consumer;
+    private readonly IConsumer<string, IntegrationEvent> _consumer;
     private readonly ILogger<KafkaConsumer> _logger;
 
     public KafkaConsumer(
         IEventDispatcher eventDispatcher,
+        JsonEventSerializer<IntegrationEvent> serializer,
         IOptions<KafkaConsumerConfig> kafkaConsumerConfig,
         ILogger<KafkaConsumer> logger)
     {
@@ -37,10 +33,13 @@ public class KafkaConsumer : IEventConsumer
             AutoOffsetReset = AutoOffsetReset.Earliest,
             EnableAutoCommit = false
         };
+        
+        _consumer =
+            new ConsumerBuilder<string, IntegrationEvent>(consumerConfig)
+            .SetKeyDeserializer(Deserializers.Utf8)
+            .SetValueDeserializer(serializer)
+            .Build();
 
-        var consumerBuilder = new ConsumerBuilder<string, string>(consumerConfig);
-
-        _consumer = consumerBuilder.Build();
         _consumer.Subscribe(config.Topics);
     }
 
@@ -60,7 +59,7 @@ public class KafkaConsumer : IEventConsumer
         }
     }
 
-    private async Task ConsumeNextMessage(IConsumer<string, string> consumer, CancellationToken cancellationToken)
+    private async Task ConsumeNextMessage(IConsumer<string, IntegrationEvent> consumer, CancellationToken cancellationToken)
     {
         var policy = Policy
            .Handle<Exception>()
@@ -70,8 +69,7 @@ public class KafkaConsumer : IEventConsumer
            async () =>
            {
                await Task.Yield();
-               var result = _consumer.Consume(cancellationToken);
-               var @event = result.ToIntegrationEvent();
+               var @event = _consumer.Consume(cancellationToken);
 
                if (@event is null)
                {
@@ -81,7 +79,7 @@ public class KafkaConsumer : IEventConsumer
 
                _logger.LogInformation("Dispatching event: {event}", @event);
 
-               await _eventDispatcher.DispatchAsync(@event!);
+               await _eventDispatcher.DispatchAsync(@event!.Message.Value);
                consumer.Commit();
            });
     }
