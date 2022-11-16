@@ -9,12 +9,12 @@ public class PaymentDetails
     public Guid CustomerId { get; set; }
     public Guid OrderId { get; set; }
     public PaymentStatus Status { get; set; }
-    public DateTime? ProcessedAt { get; set; }
+    public DateTime? CompletedAt { get; set; }
     public DateTime? CanceledAt { get; set; }
     public decimal TotalAmount { get; set; }
     public string CurrencyCode { get; set; }
 
-    public void Apply(PaymentRequested requested)
+    public void Apply(PaymentCreated requested)
     {
         Id = requested.PaymentId;
         CustomerId = requested.CustomerId;
@@ -24,10 +24,10 @@ public class PaymentDetails
         Status = PaymentStatus.Pending;
     }
 
-    public void Apply(PaymentProcessed processed)
+    public void Apply(PaymentCompleted processed)
     {
-        ProcessedAt = processed.ProcessedAt;
-        Status = PaymentStatus.Processed;
+        CompletedAt = processed.CompletedAt;
+        Status = PaymentStatus.Completed;
     }
 
     public void Apply(PaymentCanceled cancelled)

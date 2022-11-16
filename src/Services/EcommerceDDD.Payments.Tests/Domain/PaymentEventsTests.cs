@@ -6,7 +6,7 @@ namespace EcommerceDDD.Payments.Tests.Domain;
 public class PaymentEventsTests
 {
     [Fact]
-    public void RequestedPayment_WithPaymentData_ReturnsPaymentRequestedEvent()
+    public void RequestedPayment_WithPaymentData_ReturnsPaymentCreatedEvent()
     {
         // Given
         var customerId = CustomerId.Of(Guid.NewGuid());
@@ -21,13 +21,13 @@ public class PaymentEventsTests
         var payment = Payment.Create(paymentData);
 
         // Then
-        var @event = payment.GetUncommittedEvents().LastOrDefault() as PaymentRequested;
+        var @event = payment.GetUncommittedEvents().LastOrDefault() as PaymentCreated;
         Assert.NotNull(@event);
-        @event.Should().BeOfType<PaymentRequested>();
+        @event.Should().BeOfType<PaymentCreated>();
     }
 
     [Fact]
-    public void ProcessPayment_WithPaymentData_ReturnsPaymentProcessedEvent()
+    public void CompletePayment_WithPaymentData_ReturnsPaymentCompletedEvent()
     {
         // Given
         var customerId = CustomerId.Of(Guid.NewGuid());
@@ -40,11 +40,11 @@ public class PaymentEventsTests
         var payment = Payment.Create(paymentData);
 
         // When
-        payment.RecordProcessement();
+        payment.Complete();
 
         // Then
-        var @event = payment.GetUncommittedEvents().LastOrDefault() as PaymentProcessed;
+        var @event = payment.GetUncommittedEvents().LastOrDefault() as PaymentCompleted;
         Assert.NotNull(@event);
-        @event.Should().BeOfType<PaymentProcessed>();
+        @event.Should().BeOfType<PaymentCompleted>();
     }
 }
