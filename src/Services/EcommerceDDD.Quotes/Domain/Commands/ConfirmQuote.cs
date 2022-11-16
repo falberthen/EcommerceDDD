@@ -2,12 +2,12 @@
 
 namespace EcommerceDDD.Quotes.Domain.Commands;
 
-public record class PlaceOrderFromQuote : ICommand 
+public record class ConfirmQuote : ICommand 
 {    
     public QuoteId QuoteId { get; private set; }
     public Currency Currency { get; private set; }
 
-    public static PlaceOrderFromQuote Create(
+    public static ConfirmQuote Create(
         QuoteId quoteId,
         Currency currency)
     {
@@ -16,9 +16,9 @@ public record class PlaceOrderFromQuote : ICommand
         if (currency is null)
             throw new ArgumentNullException(nameof(currency));
 
-        return new PlaceOrderFromQuote(quoteId, currency);
+        return new ConfirmQuote(quoteId, currency);
     }
-    private PlaceOrderFromQuote(
+    private ConfirmQuote(
         QuoteId quoteId,
         Currency currency)
     {

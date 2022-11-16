@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.Quotes.Application.Quotes.GettingOpenQuote;
+﻿namespace EcommerceDDD.Quotes.Application.Quotes;
 
 public record QuoteViewModel()
 {
@@ -7,7 +7,7 @@ public record QuoteViewModel()
     public DateTime CreatedAt { get; set; }
     public string QuoteStatus { get; set; }
     public List<QuoteItemViewModel> Items { get; set; }
-    public string CurrencySymbol { get; set; }
+    public string CurrencyCode { get; set; }
     public decimal TotalPrice => Items.Sum(qi => { return qi.UnitPrice * qi.Quantity; });
 }
 

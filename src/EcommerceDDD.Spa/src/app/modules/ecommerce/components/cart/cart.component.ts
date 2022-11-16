@@ -17,6 +17,7 @@ import { AddQuoteItemRequest } from '../../models/requests/AddQuoteItemRequest';
 import { firstValueFrom } from 'rxjs';
 import { ServiceResponse } from '../../services/ServiceResponse';
 import { StoredEventService } from 'src/app/shared/services/stored-event.service';
+import { OrdersService } from '../../services/orders.service';
 
 @Component({
   selector: 'app-cart',
@@ -46,6 +47,7 @@ export class CartComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private authService: AuthService,
     private quotesService: QuotesService,
+    private orderService: OrdersService,
     private loaderService: LoaderService,
     private localStorageService: LocalStorageService,
     private confirmationDialogService: ConfirmationDialogService,
@@ -131,9 +133,15 @@ export class CartComponent implements OnInit {
       });
   }
 
-  async placeOrder() {
+  async confirmQuote() {
     await firstValueFrom(this.quotesService
-    .placeOrder(this.quote!.quoteId, this.storedCurrency))
+      .confirmQuote(this.quote!.quoteId, this.storedCurrency));
+  }
+
+  async placeOrder() {
+    await this.confirmQuote();
+    await firstValueFrom(this.orderService
+    .placeOrderFromQuote(this.quote!.quoteId))
     .then(result => {
       if(result.success) {
         this.localStorageService.clearKey(appConstants.storedOpenQuote);
