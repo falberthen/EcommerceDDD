@@ -1,18 +1,16 @@
-using EcommerceDDD.Core.EventBus;
 using EcommerceDDD.Core.Testing;
 using EcommerceDDD.Shipments.Domain;
-using EcommerceDDD.Shipments.Domain.Events;
 using EcommerceDDD.Shipments.Domain.Commands;
-using EcommerceDDD.Shipments.Application.ShippingPackage;
-using EcommerceDDD.Shipments.Application.DeliveringPackage;
 using EcommerceDDD.Core.Infrastructure.Outbox.Services;
+using EcommerceDDD.Shipments.Application.RequestingShipment;
+using EcommerceDDD.Core.CQRS.CommandHandling;
 
 namespace EcommerceDDD.Shipments.Tests.Application;
 
-public class PackageShippedHandlerTests
+public class RequestShipmentHandlerTests
 {
     [Fact]
-    public async Task PackageShipped_WithDomainEvent_ShouldDeliverPackage()
+    public async Task RequestShipment_WithCommand_ShouldCreatePendingShipment()
     {
         // Given
         var orderId = OrderId.Of(Guid.NewGuid());
@@ -27,28 +25,23 @@ public class PackageShippedHandlerTests
         _availabilityChecker.Setup(p => p.EnsureProductsInStock(It.IsAny<IReadOnlyList<ProductItem>>()))
             .Returns(Task.FromResult(true));
 
-        var shipPackage = ShipPackage.Create(orderId, productItems);
-        var shipPackageHandler = new ShipPackageHandler(_availabilityChecker.Object, shipmentWriteRepository, _outboxMessageService.Object);
-        await shipPackageHandler.Handle(shipPackage, CancellationToken.None);
-
-        var shipment = shipmentWriteRepository.AggregateStream.First().Aggregate;
-        var @event = shipment.GetUncommittedEvents().LastOrDefault() as PackageShipped;
-        Assert.NotNull(@event);
-
-        var packageShippedHandler = new PackageShippedHandler(shipmentWriteRepository);
+        var requestShipment = RequestShipment.Create(orderId, productItems);
+        var requestShipmentHandler = new RequestShipmentHandler(_commandBus.Object, _availabilityChecker.Object, shipmentWriteRepository, _outboxMessageService.Object);
 
         // When
-        await packageShippedHandler.Handle(@event!, CancellationToken.None);
+        await requestShipmentHandler.Handle(requestShipment, CancellationToken.None);
 
         // Then
+        var shipment = shipmentWriteRepository.AggregateStream.First().Aggregate;
         Assert.NotNull(shipment);
         shipment.OrderId.Should().Be(orderId);
         shipment.ProductItems.Count().Should().Be(productItems.Count());
-        shipment.ShippedAt.Should().NotBe(null);
-        shipment.DeliveredAt.Should().NotBe(null);
-        shipment.Status.Should().Be(ShipmentStatus.Delivered);
+        shipment.CreatedAt.Should().NotBe(null);
+        shipment.ShippedAt.Should().Be(null);
+        shipment.Status.Should().Be(ShipmentStatus.Pending);
     }
 
+    private Mock<ICommandBus> _commandBus = new();
     private Mock<IOutboxMessageService> _outboxMessageService = new();
     private Mock<IProductAvailabilityChecker> _availabilityChecker = new();
 }

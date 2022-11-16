@@ -7,8 +7,8 @@ public class ShipmentDetailsProjection : SingleStreamAggregation<ShipmentDetails
 {
     public ShipmentDetailsProjection()
     {
+        ProjectEvent<ShipmentCreated>((item, @event) => item.Apply(@event));
         ProjectEvent<PackageShipped>((item, @event) => item.Apply(@event));
-        ProjectEvent<PackageDelivered>((item, @event) => item.Apply(@event));
     }
 }
 

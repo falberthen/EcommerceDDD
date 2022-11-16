@@ -6,7 +6,7 @@ namespace EcommerceDDD.Shipments.Tests.Domain;
 public class ShipmentEventsTests
 {
     [Fact]
-    public void SendShipment_WithShipmentData_ReturnsPackageSentEvent()
+    public void CreateShipment_WithShipmentData_ReturnsShipmentCreatedEvent()
     {
         // Given
         var orderId = OrderId.Of(Guid.NewGuid());
@@ -14,28 +14,28 @@ public class ShipmentEventsTests
 
         // When
         var shipment = Shipment.Create(shipmentData);
+
+        // Then
+        var @event = shipment.GetUncommittedEvents().LastOrDefault() as ShipmentCreated;
+        Assert.NotNull(@event);
+        @event.Should().BeOfType<ShipmentCreated>();
+    }
+
+    [Fact]
+    public void ShipPackage_WithShipmentData_ReturnsPackageShippedEvent()
+    {
+        // Given
+        var orderId = OrderId.Of(Guid.NewGuid());
+        var shipmentData = new ShipmentData(orderId, _productItems);
+        var shipment = Shipment.Create(shipmentData);
+
+        // When
+        shipment.RecordShipment();
 
         // Then
         var @event = shipment.GetUncommittedEvents().LastOrDefault() as PackageShipped;
         Assert.NotNull(@event);
         @event.Should().BeOfType<PackageShipped>();
-    }
-
-    [Fact]
-    public void DeliverPayment_WithShipmentData_ReturnsPackageDeliveredEvent()
-    {
-        // Given
-        var orderId = OrderId.Of(Guid.NewGuid());
-        var shipmentData = new ShipmentData(orderId, _productItems);
-        var shipment = Shipment.Create(shipmentData);
-
-        // When
-        shipment.RecordDelivery();
-
-        // Then
-        var @event = shipment.GetUncommittedEvents().LastOrDefault() as PackageDelivered;
-        Assert.NotNull(@event);
-        @event.Should().BeOfType<PackageDelivered>();
     }
 
     List<ProductItem> _productItems = new List<ProductItem>() {

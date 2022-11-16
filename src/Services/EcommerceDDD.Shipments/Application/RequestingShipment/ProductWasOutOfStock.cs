@@ -1,8 +1,8 @@
 ﻿using EcommerceDDD.Core.EventBus;
 
-namespace EcommerceDDD.Shipments.Application.ShippingPackage;
+namespace EcommerceDDD.Shipments.Application.RequestingShipment;
 
-public class ProductWasOutOfStock : IIntegrationEvent
+public class ProductWasOutOfStock : IntegrationEvent
 {
     public Guid OrderId { get; private set; }
     public DateTime CheckedAt { get; private set; }
