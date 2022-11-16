@@ -2,5 +2,6 @@ using MediatR;
 
 namespace EcommerceDDD.Core.CQRS.CommandHandling;
 
-public interface ICommandHandler<in T>: IRequestHandler<T>
-    where T : ICommand {}
+public interface ICommandHandler<in TCommand> : IRequestHandler<TCommand>
+    where TCommand : ICommand
+{ }
