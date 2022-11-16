@@ -47,7 +47,6 @@
   <div class="cart-details-container fadeInDown">
     <app-cart #cart
       (sendQuoteItemsEvent)="syncronizeQuoteToProductList($event)"
-      (placeOrderEvent)="placeOrder()"
       (reloadProductsEvent)="loadProducts()">
     </app-cart>
   </div>
