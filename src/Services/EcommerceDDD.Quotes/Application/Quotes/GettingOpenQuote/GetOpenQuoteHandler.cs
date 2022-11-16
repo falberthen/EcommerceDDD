@@ -77,9 +77,10 @@ public class GetOpenQuoteHandler : IQueryHandler<GetOpenQuote, QuoteViewModel>
                 }
 
                 viewModel = viewModel with { Items = catalogItems };
-                viewModel.CurrencySymbol = currency.Symbol;
+                viewModel.CurrencyCode = currency.Symbol;
             }
         }
+
         return viewModel;
     }
 }

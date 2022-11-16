@@ -1,6 +1,5 @@
 ﻿using EcommerceDDD.Quotes.Domain;
 using EcommerceDDD.Quotes.Domain.Events;
-using Marten.Events.Aggregation;
 
 namespace EcommerceDDD.Quotes.Infrastructure.Projections;
 
@@ -13,6 +12,7 @@ public class QuoteDetails
     public DateTime? CancelledAt { get; set; } = default;
     public QuoteStatus QuoteStatus { get; set; }
     public IList<QuoteItemDetails> Items { get; set; } = default!;
+    public string CurrencyCode { get; private set; }
 
     public void Apply(QuoteOpen created)
     {
@@ -67,6 +67,7 @@ public class QuoteDetails
         QuoteStatus = QuoteStatus.Confirmed;
         Id = confirmed.QuoteId;
         ConfirmedAt = confirmed.ConfirmedAt;
+        CurrencyCode = confirmed.CurrencyCode;
     }
 
     public record QuoteItemDetails(Guid ProductId, int Quantity);

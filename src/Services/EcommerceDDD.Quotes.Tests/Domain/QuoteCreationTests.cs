@@ -8,10 +8,10 @@ public class QuoteCreationTests
     public void CreateQuote_WithCustomerId_ReturnsOpenQuote()
     {
         // Given
-        CustomerId _customerId = CustomerId.Of(Guid.NewGuid());
+        var customerId = CustomerId.Of(Guid.NewGuid());
 
         // When
-        var quote = Quote.Create(_customerId);
+        var quote = Quote.Create(customerId);
 
         // Then
         Assert.NotNull(quote);

@@ -35,8 +35,8 @@ export class QuotesService extends RestService {
     return this.delete(this.controllerName + '/' + quoteId);
   }
 
-  public placeOrder(quoteId: string, currencyCode: string): Observable<ServiceResponse>{
-    return this.put(this.controllerName + '/' + quoteId + '/placeorder/' + currencyCode);
+  public confirmQuote(quoteId: string, currencyCode: string): Observable<ServiceResponse>{
+    return this.put(this.controllerName + '/' + quoteId + '/confirm/' + currencyCode);
   }
 
   public getOpenQuote(customerId: string, currency: string): Observable<ServiceResponse>{

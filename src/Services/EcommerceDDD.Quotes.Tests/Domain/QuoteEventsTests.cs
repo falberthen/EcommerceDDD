@@ -87,11 +87,12 @@ public class QuoteEventsTests
     {
         // Given
         var quoteItemData = new QuoteItemData(_quoteId, _productId, 1);
+        var currency = Currency.OfCode(Currency.CanadianDollar.Code);
 
         // When
         var quote = Quote.Create(_customerId);
         quote.AddItem(quoteItemData);
-        quote.Confirm();
+        quote.Confirm(currency);
 
         // Then
         var @event = quote.GetUncommittedEvents().LastOrDefault() as QuoteConfirmed;
