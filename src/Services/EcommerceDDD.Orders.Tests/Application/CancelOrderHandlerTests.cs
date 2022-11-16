@@ -1,7 +1,6 @@
 using EcommerceDDD.Core.Testing;
 using EcommerceDDD.Orders.Domain.Commands;
 using EcommerceDDD.Core.Infrastructure.SignalR;
-using EcommerceDDD.Orders.Application.Orders.PlacingOrder;
 using EcommerceDDD.Orders.Application.Orders.CancelingOrder;
 
 namespace EcommerceDDD.Orders.Tests.Application;
@@ -13,7 +12,6 @@ public class CancelOrderHandlerTests
     {
         // Given
         var quoteId = QuoteId.Of(Guid.NewGuid());
-        var orderId = OrderId.Of(Guid.NewGuid());
         var productId = ProductId.Of(Guid.NewGuid());
         var productName = "Product XYZ";
         var productPrice = Money.Of(10, Currency.USDollar.Code);
@@ -29,18 +27,14 @@ public class CancelOrderHandlerTests
             }
         }.ToList();
 
-        var orderData = new OrderData(orderId, quoteId, customerId, quoteItems, currency);
+        var orderData = new OrderData(quoteId, customerId, quoteItems, currency);
+        var order = Order.Create(orderData);
 
         var orderWriteRepository = new DummyEventStoreRepository<Order>();
+        await orderWriteRepository
+            .AppendEventsAsync(order);
 
-        _productItemsChecker.Setup(p => p.EnsureProductItemsExist(orderData.Items, orderData.Currency))
-            .Returns(Task.FromResult(true));
-
-        var placeOrder = PlaceOrder.Create(orderData);
-        var placeOrderHandler = new PlaceOrderHandler(orderWriteRepository, _productItemsChecker.Object);
-        await placeOrderHandler.Handle(placeOrder, CancellationToken.None);
-
-        var cancelOrder = CancelOrder.Create(orderId, OrderCancellationReason.CanceledByUser);
+        var cancelOrder = CancelOrder.Create(order.Id, OrderCancellationReason.CanceledByUser);
         var cancelOrderHandler = new CancelOrderHandler(_orderStatusBroadcaster.Object, orderWriteRepository);
 
         // When
@@ -54,6 +48,5 @@ public class CancelOrderHandlerTests
         canceledOrder.Status.Should().Be(OrderStatus.Canceled);
     }
 
-    private Mock<IOrderStatusBroadcaster> _orderStatusBroadcaster = new();
-    private Mock<IProductItemsChecker> _productItemsChecker = new();
+    private Mock<IOrderStatusBroadcaster> _orderStatusBroadcaster = new();    
 }
