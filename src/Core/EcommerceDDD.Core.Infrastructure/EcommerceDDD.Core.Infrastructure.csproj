@@ -14,7 +14,7 @@
 	<PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
 	<PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.1.2" />
 	<PackageReference Include="IdentityServer4.EntityFramework" Version="4.1.2" />
-	<PackageReference Include="Marten" Version="5.8.0" />
+	<PackageReference Include="Marten" Version="5.11.0" />
 	<PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9" />
 	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.8" />
 	<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="6.0.8" />
