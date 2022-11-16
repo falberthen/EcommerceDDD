@@ -8,8 +8,8 @@ public class Shipment : AggregateRoot<ShipmentId>
 {
     public OrderId OrderId { get; private set; }
     public IReadOnlyList<ProductItem> ProductItems { get; set; } = default!;
+    public DateTime CreatedAt { get; private set; }
     public DateTime? ShippedAt { get; private set; }
-    public DateTime? DeliveredAt { get; private set; }
     public ShipmentStatus Status { get; private set; }
 
     public static Shipment Create(ShipmentData shipmentData)
@@ -26,38 +26,37 @@ public class Shipment : AggregateRoot<ShipmentId>
         return new Shipment(shipmentData);
     }
 
-    public void RecordDelivery()
-    {        
-        var @event = PackageDelivered.Create(
-            Id.Value, 
-            OrderId.Value, 
+    public void RecordShipment()
+    {
+        var @event = PackageShipped.Create(
+            Id.Value,
             DateTime.UtcNow);
 
         AppendEvent(@event);
         Apply(@event);
     }
 
-    private void Apply(PackageShipped shipped)
+    private void Apply(ShipmentCreated created)
     {
-        Id = ShipmentId.Of(shipped.ShipmentId);
-        OrderId = OrderId.Of(shipped.OrderId);
-        ProductItems = shipped.ProductItems.Select(p =>
+        Id = ShipmentId.Of(created.ShipmentId);
+        OrderId = OrderId.Of(created.OrderId);
+        ProductItems = created.ProductItems.Select(p =>
             new ProductItem(
                 ProductId.Of(p.ProductId),
                 p.Quantity)).ToList();
+        CreatedAt = created.CreatedAt;
+        Status = ShipmentStatus.Pending;
+    }
+
+    private void Apply(PackageShipped shipped)
+    {
         ShippedAt = shipped.ShippedAt;
         Status = ShipmentStatus.Shipped;
     }
 
-    private void Apply(PackageDelivered delivered)
-    {
-        DeliveredAt = delivered.DeliveredAt;
-        Status = ShipmentStatus.Delivered;
-    }
-
     private Shipment(ShipmentData shipmentData)
     {
-        var @event = PackageShipped.Create(
+        var @event = ShipmentCreated.Create(
             Guid.NewGuid(),
             shipmentData.OrderId.Value,
             shipmentData.ProductItems,
