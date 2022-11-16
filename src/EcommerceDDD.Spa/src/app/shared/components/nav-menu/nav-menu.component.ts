@@ -67,7 +67,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
 
   async showCustomerStoredEvents() {
     await firstValueFrom((this.customersService
-      .getCustomerStoredEvents(this.customer.id)))
+      .getCustomerStoredEvents(this.authService.currentCustomer!.id)))
       .then(result => {
         if(result.success) {
           this.storedEventService
