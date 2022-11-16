@@ -7,11 +7,10 @@ namespace EcommerceDDD.Orders.Tests.Application;
 public class RecordPaymentToOrderHandlerTests
 {
     [Fact]
-    public async Task RecordPaymentToOrder_WithCommand_ShouldRecordOrderPaid()
+    public async Task RecordPaymentToOrder_WithCommand_ShouldRecordPaidOrder()
     {
         // Given
         var quoteId = QuoteId.Of(Guid.NewGuid());
-        var orderId = OrderId.Of(Guid.NewGuid());
         var productId = ProductId.Of(Guid.NewGuid());
         var productName = "Product XYZ";
         var productPrice = Money.Of(10, Currency.USDollar.Code);
@@ -26,7 +25,7 @@ public class RecordPaymentToOrderHandlerTests
             }
         };
 
-        var orderData = new OrderData(orderId, quoteId, customerId, quoteItems, currency);
+        var orderData = new OrderData(quoteId, customerId, quoteItems, currency);
         var totalPaid = Money.Of(100, currency.Code);
         var paymentId = PaymentId.Of(Guid.NewGuid());
 
@@ -36,7 +35,7 @@ public class RecordPaymentToOrderHandlerTests
         await orderWriteRepository
             .AppendEventsAsync(order, CancellationToken.None);
 
-        var recordPaymentToOrder = RecordPayment.Create(paymentId, orderId, totalPaid);
+        var recordPaymentToOrder = RecordPayment.Create(order.Id, paymentId, totalPaid);
         var recordPaymentToOrderHandler = new RecordPaymentHandler(orderWriteRepository);
 
         // When
@@ -44,9 +43,9 @@ public class RecordPaymentToOrderHandlerTests
 
         // Then
         var paidOrder = orderWriteRepository.AggregateStream.First().Aggregate;
-        paidOrder.Id.Should().Be(orderId);
+        paidOrder.Id.Should().Be(order.Id);
         paidOrder.PaymentId.Should().Be(paymentId);
         paidOrder.OrderLines.Count.Should().Be(quoteItems.Count);
-        paidOrder.Status.Should().Be(OrderStatus.Paid);        
+        paidOrder.Status.Should().Be(OrderStatus.Paid);
     }
 }

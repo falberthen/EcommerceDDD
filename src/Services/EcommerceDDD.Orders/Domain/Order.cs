@@ -22,12 +22,9 @@ public class Order : AggregateRoot<OrderId>
 
     public static Order Create(OrderData orderData)
     {
-        var (OrderId, QuoteId, CustomerId, Items, Currency) = orderData
+        var (QuoteId, CustomerId, Items, Currency) = orderData
             ?? throw new ArgumentNullException(nameof(orderData));
         
-        if (OrderId is null)
-            throw new BusinessRuleException("The order Id is required.");
-
         if (QuoteId is null)
             throw new BusinessRuleException("The quote Id is required.");
 
@@ -176,7 +173,7 @@ public class Order : AggregateRoot<OrderId>
         var totalPrice = CalculateTotalPrice(orderLines, orderData.Currency);
 
         var @event = OrderPlaced.Create(
-            orderData.OrderId.Value,
+            Guid.NewGuid(),
             orderData.QuoteId.Value,
             orderData.CustomerId.Value,
             DateTime.UtcNow,

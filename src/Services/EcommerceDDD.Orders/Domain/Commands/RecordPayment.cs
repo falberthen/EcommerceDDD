@@ -4,13 +4,13 @@ namespace EcommerceDDD.Orders.Domain.Commands;
 
 public record class RecordPayment : ICommand
 {
-    public PaymentId PaymentId { get; private set; }
     public OrderId OrderId { get; private set; }
+    public PaymentId PaymentId { get; private set; }
     public Money TotalPaid { get; private set; }
 
     public static RecordPayment Create(
-        PaymentId paymentId,
         OrderId orderId,
+        PaymentId paymentId,
         Money totalPaid)
     {
         if (paymentId is null)
@@ -20,12 +20,12 @@ public record class RecordPayment : ICommand
         if (totalPaid is null)
             throw new ArgumentNullException(nameof(totalPaid));
 
-        return new RecordPayment(paymentId, orderId, totalPaid);
+        return new RecordPayment(orderId, paymentId, totalPaid);
     }
 
     private RecordPayment(
-        PaymentId paymentId, 
-        OrderId orderId, 
+        OrderId orderId,
+        PaymentId paymentId,
         Money totalPaid)
     {
         PaymentId = paymentId;

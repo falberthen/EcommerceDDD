@@ -21,7 +21,7 @@ public class OrderCreationTests
             }
         };
 
-        var orderData = new OrderData(_orderId, _quoteId, _customerId, quoteItems, currency);
+        var orderData = new OrderData(_quoteId, _customerId, quoteItems, currency);
 
         // When
         var order = Order.Create(orderData);
@@ -40,7 +40,7 @@ public class OrderCreationTests
         // Given
         var items = new List<ProductItemData>();
 
-        var orderData = new OrderData(_orderId, _quoteId, _customerId, items, currency);
+        var orderData = new OrderData(_quoteId, _customerId, items, currency);
 
         // When
         Func<Order> action = () =>
@@ -51,7 +51,6 @@ public class OrderCreationTests
     }
 
     private CustomerId _customerId = CustomerId.Of(Guid.NewGuid());
-    private OrderId _orderId = OrderId.Of(Guid.NewGuid());
     private QuoteId _quoteId = QuoteId.Of(Guid.NewGuid());
     private Currency currency = Currency.OfCode(Currency.USDollar.Code);
 }

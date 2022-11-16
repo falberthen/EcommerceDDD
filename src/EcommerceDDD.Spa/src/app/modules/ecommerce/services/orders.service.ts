@@ -27,4 +27,8 @@ export class OrdersService extends RestService {
   public getOrderStoredEvents(aggregateId: string): Observable<ServiceResponse>{
     return this.get('orders/' + aggregateId + '/history');
   }
+
+  public placeOrderFromQuote(quoteId: string): Observable<ServiceResponse>{
+    return this.post(this.controllerName + '/' + quoteId);
+  }
 }
