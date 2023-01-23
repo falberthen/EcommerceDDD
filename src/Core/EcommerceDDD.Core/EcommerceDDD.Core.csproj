@@ -16,7 +16,7 @@
 	<PackageReference Include="Marten" Version="5.11.0" />
 	<PackageReference Include="MediatR" Version="10.0.1" />
 	<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
-	<PackageReference Include="Moq" Version="4.18.2" />
+	<PackageReference Include="Moq" Version="4.18.4" />
   </ItemGroup>
 
 </Project>
