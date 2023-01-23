@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Confluent.Kafka" Version="1.9.2" />
-	<PackageReference Include="AutoMapper" Version="10.0.0" />
+	<PackageReference Include="AutoMapper" Version="12.0.1" />
 	<PackageReference Include="FluentAssertions" Version="6.7.0" />
 	<PackageReference Include="IdentityServer4" Version="4.1.2" />
 	<PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
