@@ -29,7 +29,7 @@
     "ng-bootstrap": "^0.46.0",
     "ng-github-button": "^15.0.0",
     "ngx-order-pipe": "^2.2.0",
-    "ngx-toastr": "^14.3.0",
+    "ngx-toastr": "^16.0.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.4.1",
     "zone.js": "~0.12.0"
