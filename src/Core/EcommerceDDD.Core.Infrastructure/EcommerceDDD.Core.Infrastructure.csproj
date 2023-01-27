@@ -8,8 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="Confluent.Kafka" Version="2.0.2" />
-	<PackageReference Include="AutoMapper" Version="10.0.0" />
-	<PackageReference Include="FluentAssertions" Version="6.7.0" />
+	<PackageReference Include="AutoMapper" Version="10.1.1" />
+	<PackageReference Include="FluentAssertions" Version="6.9.0" />
 	<PackageReference Include="IdentityServer4" Version="4.1.2" />
 	<PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
 	<PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.1.2" />
@@ -18,14 +18,14 @@
 	<PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9" />
 	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.2" />
 	<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="7.0.2" />
-	<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.8" />
+	<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.2" />
 	<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.2" />
-	<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.8">
+	<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.2">
 	  <PrivateAssets>all</PrivateAssets>
 	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	</PackageReference>
 	<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.2" />
-	<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.8">
+	<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.2">
 	  <PrivateAssets>all</PrivateAssets>
 	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	</PackageReference>
@@ -34,7 +34,7 @@
 	<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
 	<PackageReference Include="Moq" Version="4.18.4" />
 	<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-	<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.6" />
+	<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.8" />
 	<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
 	<PackageReference Include="Polly" Version="7.2.3" />
 	<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
