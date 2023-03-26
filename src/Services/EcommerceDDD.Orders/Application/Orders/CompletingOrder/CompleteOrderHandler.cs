@@ -21,7 +21,7 @@ public class CompleteOrderHandler : ICommandHandler<CompleteOrder>
         _orderWriteRepository = orderWriteRepository;
     }
 
-    public async Task<Unit> Handle(CompleteOrder command, CancellationToken cancellationToken)
+    public async Task Handle(CompleteOrder command, CancellationToken cancellationToken)
     {       
         var order = await _orderWriteRepository
             .FetchStreamAsync(command.OrderId.Value)
@@ -40,7 +40,5 @@ public class CompleteOrderHandler : ICommandHandler<CompleteOrder>
                 command.OrderId.Value,
                 order.Status.ToString(),
                 (int)order.Status));
-
-        return Unit.Value;
     }
 }

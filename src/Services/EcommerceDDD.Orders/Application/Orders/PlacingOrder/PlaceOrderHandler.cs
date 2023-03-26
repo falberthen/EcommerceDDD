@@ -24,7 +24,7 @@ public class PlaceOrderHandler : ICommandHandler<PlaceOrder>
         _productItemsMapper = productItemsMapper;
     }
 
-    public async Task<Unit> Handle(PlaceOrder command, CancellationToken cancellationToken)
+    public async Task Handle(PlaceOrder command, CancellationToken cancellationToken)
     {
         // Getting quote data
         var quote = await GetConfirmedQuoteById(command.QuoteId);
@@ -44,8 +44,6 @@ public class PlaceOrderHandler : ICommandHandler<PlaceOrder>
 
         await _orderWriteRepository
             .AppendEventsAsync(order);
-
-        return Unit.Value;
     }
 
     private async Task<QuoteViewModelResponse> GetConfirmedQuoteById(QuoteId quoteId)

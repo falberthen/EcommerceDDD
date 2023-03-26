@@ -14,11 +14,9 @@ public class DummyCommandHandler : ICommandHandler<DummyCommand>
         _eventStoreRepository = repository;
     }
 
-    public async Task<Unit> Handle(DummyCommand command, CancellationToken cancellationToken)
+    public async Task Handle(DummyCommand command, CancellationToken cancellationToken)
     {
         var aggregate = new DummyAggregateRoot(command.Id);
         await _eventStoreRepository.AppendEventsAsync(aggregate);
-
-        return Unit.Value;
     }
 }

@@ -13,7 +13,7 @@ public class RequestCancelPaymentHandler : ICommandHandler<RequestCancelPayment>
         _integrationHttpService = integrationHttpService;     
     }
 
-    public async Task<Unit> Handle(RequestCancelPayment command, CancellationToken cancellationToken)
+    public async Task Handle(RequestCancelPayment command, CancellationToken cancellationToken)
     {
         var response = await _integrationHttpService.DeleteAsync(
             $"api/payments/{command.PaymentId.Value}",
@@ -21,8 +21,6 @@ public class RequestCancelPaymentHandler : ICommandHandler<RequestCancelPayment>
 
         if (response is null || !response!.Success)
             throw new Core.Exceptions.ApplicationLogicException($"An error occurred requesting cancelling payment {command.PaymentId.Value}.");
-
-        return Unit.Value;
     }
 }
 

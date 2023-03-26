@@ -14,6 +14,10 @@ builder.Services.AddHttpClient();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
+// Mediator        
+builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(typeof(RequestShipmentHandler).Assembly));
+
 // ---- Services
 builder.Services.AddInfrastructureExtension(builder.Configuration);
 builder.Services.AddTransient<IProductAvailabilityChecker, ProductAvailabilityChecker>();

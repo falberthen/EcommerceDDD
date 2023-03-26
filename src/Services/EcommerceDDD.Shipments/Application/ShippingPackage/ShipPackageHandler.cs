@@ -20,7 +20,7 @@ public class ShipPackageHandler : ICommandHandler<ShipPackage>
         _outboxMessageService = outboxMessageService;
     }
 
-    public async Task<Unit> Handle(ShipPackage command, CancellationToken cancellationToken)
+    public async Task Handle(ShipPackage command, CancellationToken cancellationToken)
     {
         var shipment = await _shipmentWriteRepository
             .FetchStreamAsync(command.ShipmentId.Value);
@@ -36,7 +36,5 @@ public class ShipPackageHandler : ICommandHandler<ShipPackage>
 
         await _shipmentWriteRepository
             .AppendEventsAsync(shipment);
-
-        return Unit.Value;
     }
 }

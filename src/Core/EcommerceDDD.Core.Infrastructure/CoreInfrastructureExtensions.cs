@@ -20,12 +20,11 @@ public static class CoreInfrastructureExtensions
     {
         if (services is null)
             throw new ArgumentNullException(nameof(services));
-
-        // Mediator
-        services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
-
-        // Bus
+        
+        // EventBus
         services.TryAddSingleton<IEventDispatcher, EventDispatcher>();
+
+        // CQRS
         services.AddScoped<ICommandBus, CommandBus>();
         services.AddScoped<IQueryBus, QueryBus>();
 

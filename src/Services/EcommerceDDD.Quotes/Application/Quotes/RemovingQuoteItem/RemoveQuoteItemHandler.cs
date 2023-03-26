@@ -16,7 +16,7 @@ public class RemoveQuoteItemHandler : ICommandHandler<RemoveQuoteItem>
         _quoteWriteRepository = quoteWriteRepository;
     }
 
-    public async Task<Unit> Handle(RemoveQuoteItem command, CancellationToken cancellationToken)
+    public async Task Handle(RemoveQuoteItem command, CancellationToken cancellationToken)
     {
         var quote = await _quoteWriteRepository
             .FetchStreamAsync(command.QuoteId.Value)
@@ -26,7 +26,5 @@ public class RemoveQuoteItemHandler : ICommandHandler<RemoveQuoteItem>
 
         await _quoteWriteRepository
             .AppendEventsAsync(quote);
-
-        return Unit.Value;
     }
 }

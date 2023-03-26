@@ -13,6 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
+// Mediator        
+builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(typeof(PlaceOrderHandler).Assembly));
+
 // ---- Services
 builder.Services.AddInfrastructureExtension(builder.Configuration);
 builder.Services.AddScoped<IOrderStatusBroadcaster, OrderStatusBroadcaster>();

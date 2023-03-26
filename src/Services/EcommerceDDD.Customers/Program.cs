@@ -5,11 +5,16 @@ using EcommerceDDD.Core.Infrastructure.Marten;
 using EcommerceDDD.Core.Infrastructure.WebApi;
 using EcommerceDDD.Customers.Application.RegisteringCustomer;
 using EcommerceDDD.Customers.Infrastructure.Projections;
+using EcommerceDDD.Customers.Api.Application.RegisteringCustomer;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
+// Mediator        
+builder.Services.AddMediatR(cfg => 
+    cfg.RegisterServicesFromAssembly(typeof(RegisterCustomerHandler).Assembly));
 
 // ---- Services
 builder.Services.AddInfrastructureExtension(builder.Configuration);
