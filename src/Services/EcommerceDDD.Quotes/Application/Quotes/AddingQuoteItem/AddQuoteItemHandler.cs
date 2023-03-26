@@ -22,7 +22,7 @@ public class AddQuoteItemHandler : ICommandHandler<AddQuoteItem>
         _quoteWriteRepository = quoteWriteRepository;
     }
 
-    public async Task<Unit> Handle(AddQuoteItem command, CancellationToken cancellationToken)
+    public async Task Handle(AddQuoteItem command, CancellationToken cancellationToken)
     {
         var quote = await _quoteWriteRepository
             .FetchStreamAsync(command.QuoteId.Value)
@@ -48,7 +48,5 @@ public class AddQuoteItemHandler : ICommandHandler<AddQuoteItem>
 
         await _quoteWriteRepository
             .AppendEventsAsync(quote);
-
-        return Unit.Value;
     }
 }

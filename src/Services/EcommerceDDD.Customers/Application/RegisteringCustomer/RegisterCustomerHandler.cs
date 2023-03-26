@@ -1,5 +1,4 @@
-﻿using MediatR;
-using EcommerceDDD.Core.Exceptions;
+﻿using EcommerceDDD.Core.Exceptions;
 using EcommerceDDD.Customers.Domain;
 using Microsoft.Extensions.Options;
 using EcommerceDDD.Core.Persistence;
@@ -30,7 +29,7 @@ public class RegisterCustomerHandler : ICommandHandler<RegisterCustomer>
         _customerWriteRepository = customerWriteRepository;
     }
 
-    public async Task<Unit> Handle(RegisterCustomer command, CancellationToken cancellationToken)
+    public async Task Handle(RegisterCustomer command, CancellationToken cancellationToken)
     {
         if (!_uniquenessChecker.IsUnique(command.Email))
             throw new BusinessRuleException("This e-mail is already in use.");
@@ -52,8 +51,6 @@ public class RegisterCustomerHandler : ICommandHandler<RegisterCustomer>
 
         await _customerWriteRepository
             .AppendEventsAsync(customer);
-
-        return Unit.Value;
     }
 
     private async Task<IntegrationHttpResponse?> CreateUserForCustomer(RegisterCustomer command)

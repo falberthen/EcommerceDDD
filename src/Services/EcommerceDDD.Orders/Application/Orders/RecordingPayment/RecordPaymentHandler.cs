@@ -16,7 +16,7 @@ public class RecordPaymentHandler : ICommandHandler<RecordPayment>
         _orderWriteRepository = orderWriteRepository;
     }
 
-    public async Task<Unit> Handle(RecordPayment command, CancellationToken cancellationToken)
+    public async Task Handle(RecordPayment command, CancellationToken cancellationToken)
     {
         var order = await _orderWriteRepository
             .FetchStreamAsync(command.OrderId.Value)
@@ -26,7 +26,5 @@ public class RecordPaymentHandler : ICommandHandler<RecordPayment>
         order.RecordPayment(command.PaymentId, command.TotalPaid);
         await _orderWriteRepository
             .AppendEventsAsync(order);
-
-        return Unit.Value;
     }
 }

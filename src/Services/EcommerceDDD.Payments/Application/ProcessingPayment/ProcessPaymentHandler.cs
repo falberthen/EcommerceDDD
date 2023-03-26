@@ -24,7 +24,7 @@ public class ProcessPaymentHandler : ICommandHandler<ProcessPayment>
         _outboxMessageService = outboxMessageService;
     }
 
-    public async Task<Unit> Handle(ProcessPayment command, CancellationToken cancellationToken)
+    public async Task Handle(ProcessPayment command, CancellationToken cancellationToken)
     {
         var payment = await _paymentWriteRepository
             .FetchStreamAsync(command.PaymentId.Value);
@@ -67,8 +67,6 @@ public class ProcessPaymentHandler : ICommandHandler<ProcessPayment>
 
         await _paymentWriteRepository
             .AppendEventsAsync(payment);
-
-        return Unit.Value;
     }
 }
 

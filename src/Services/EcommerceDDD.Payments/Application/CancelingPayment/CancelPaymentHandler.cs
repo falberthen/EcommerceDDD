@@ -17,7 +17,7 @@ public class CancelPaymentHandler : ICommandHandler<CancelPayment>
         _paymentWriteRepository = paymentWriteRepository;
     }
 
-    public async Task<Unit> Handle(CancelPayment command,
+    public async Task Handle(CancelPayment command,
         CancellationToken cancellationToken)
     {
         var payment = await _paymentWriteRepository
@@ -28,7 +28,5 @@ public class CancelPaymentHandler : ICommandHandler<CancelPayment>
         payment.Cancel(command.PaymentCancellationReason);
         await _paymentWriteRepository
             .AppendEventsAsync(payment);
-
-        return Unit.Value;
     }
 }

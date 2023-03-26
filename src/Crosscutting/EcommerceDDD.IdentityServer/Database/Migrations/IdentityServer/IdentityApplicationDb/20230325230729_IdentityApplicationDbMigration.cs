@@ -4,9 +4,9 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace EcommerceDDD.IdentityServer.Migrations
+namespace EcommerceDDD.IdentityServer.Migrations.IdentityServer.IdentityApplicationDb
 {
-    public partial class InitialMigration : Migration
+    public partial class IdentityApplicationDbMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

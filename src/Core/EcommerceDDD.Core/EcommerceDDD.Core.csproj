@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7</TargetFramework>
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
@@ -12,11 +12,11 @@
   </ItemGroup>
 
   <ItemGroup>
-	<PackageReference Include="FluentAssertions" Version="6.7.0" />
-	<PackageReference Include="Marten" Version="5.11.0" />
-	<PackageReference Include="MediatR" Version="10.0.1" />
-	<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
-	<PackageReference Include="Moq" Version="4.18.2" />
+	<PackageReference Include="FluentAssertions" Version="6.10.0" />
+	<PackageReference Include="Marten" Version="6.0.0-alpha.11" />
+	<PackageReference Include="MediatR" Version="12.0.1" />
+	<PackageReference Include="Moq" Version="4.18.4" />
+	<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
 </Project>
