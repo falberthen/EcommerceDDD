@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using IdentityServer4.EntityFramework.Mappers;
 using EcommerceDDD.IdentityServer.Configurations;
-using IdentityServer4.EntityFramework.DbContexts;
+using Duende.IdentityServer.EntityFramework.DbContexts;
+using Duende.IdentityServer.EntityFramework.Mappers;
 
 namespace EcommerceDDD.IdentityServer.Database;
 

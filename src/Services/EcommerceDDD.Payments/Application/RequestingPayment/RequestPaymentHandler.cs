@@ -19,7 +19,7 @@ public class RequestPaymentHandler : ICommandHandler<RequestPayment>
         _paymentWriteRepository = paymentWriteRepository;
     }
 
-    public async Task<Unit> Handle(RequestPayment command, CancellationToken cancellationToken)
+    public async Task Handle(RequestPayment command, CancellationToken cancellationToken)
     {
         var paymentData = new PaymentData(
             command.CustomerId, 
@@ -31,7 +31,6 @@ public class RequestPaymentHandler : ICommandHandler<RequestPayment>
         await _paymentWriteRepository
             .AppendEventsAsync(payment);
 
-        await _commandBus.Send(ProcessPayment.Create(payment.Id));
-        return Unit.Value;
+        await _commandBus.Send(ProcessPayment.Create(payment.Id));        
     }
 }

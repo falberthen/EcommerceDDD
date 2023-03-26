@@ -17,7 +17,7 @@ public class ConfirmQuoteHandler : ICommandHandler<ConfirmQuote>
         _quoteWriteRepository = quoteWriteRepository;
     }
 
-    public async Task<Unit> Handle(ConfirmQuote command, CancellationToken cancellationToken)
+    public async Task Handle(ConfirmQuote command, CancellationToken cancellationToken)
     {
         var quote = await _quoteWriteRepository
             .FetchStreamAsync(command.QuoteId.Value)
@@ -28,7 +28,5 @@ public class ConfirmQuoteHandler : ICommandHandler<ConfirmQuote>
 
         await _quoteWriteRepository
             .AppendEventsAsync(quote);
-
-        return Unit.Value;
     }
 }

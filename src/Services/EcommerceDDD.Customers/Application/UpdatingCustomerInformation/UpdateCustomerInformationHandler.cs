@@ -17,7 +17,7 @@ public class UpdateCustomerInformationHandler : ICommandHandler<UpdateCustomerIn
         _customerWriteRepository = customerWriteRepository;
     }
 
-    public async Task<Unit> Handle(UpdateCustomerInformation command, CancellationToken cancellationToken)
+    public async Task Handle(UpdateCustomerInformation command, CancellationToken cancellationToken)
     {
         var customer = await _customerWriteRepository
             .FetchStreamAsync(command.CustomerId.Value);
@@ -35,8 +35,6 @@ public class UpdateCustomerInformationHandler : ICommandHandler<UpdateCustomerIn
 
         await _customerWriteRepository
             .AppendEventsAsync(customer, cancellationToken);
-
-        return Unit.Value;
     }
 }
 

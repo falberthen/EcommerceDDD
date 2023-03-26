@@ -14,7 +14,7 @@ public class RequestPaymentHandler : ICommandHandler<RequestPayment>
         _integrationHttpService = integrationHttpService;
     }
 
-    public async Task<Unit> Handle(RequestPayment command, CancellationToken cancellationToken)
+    public async Task Handle(RequestPayment command, CancellationToken cancellationToken)
     {
         var response = await _integrationHttpService.PostAsync(
             "api/payments",
@@ -26,8 +26,6 @@ public class RequestPaymentHandler : ICommandHandler<RequestPayment>
 
         if (response is null || !response!.Success)
             throw new ApplicationLogicException($"An error occurred requesting payment for order {command.OrderId}.");
-
-        return Unit.Value;
     }
 }
 

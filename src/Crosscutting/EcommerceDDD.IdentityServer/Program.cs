@@ -1,4 +1,3 @@
-using MediatR;
 using System.Reflection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -13,8 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // ---- Services
 var tokenIssuerSettings = builder.Configuration.GetSection("TokenIssuerSettings");
-builder.Services.Configure<TokenIssuerSettings>(tokenIssuerSettings); 
-builder.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies()); 
+builder.Services.Configure<TokenIssuerSettings>(tokenIssuerSettings);
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
 builder.Services.AddScoped<IdentityApplicationDbContext>();
 builder.Services.AddScoped<ITokenRequester, TokenRequester>();
 

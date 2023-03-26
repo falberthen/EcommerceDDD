@@ -2,7 +2,6 @@
 using Weasel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using LamarCodeGeneration.Frames;
 using EcommerceDDD.Core.EventBus;
 
 namespace EcommerceDDD.Core.Infrastructure.Marten;

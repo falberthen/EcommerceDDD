@@ -27,7 +27,7 @@ public class RequestShipmentHandler : ICommandHandler<RequestShipment>
         _outboxMessageService = outboxMessageService;
     }
 
-    public async Task<Unit> Handle(RequestShipment command, CancellationToken cancellationToken)
+    public async Task Handle(RequestShipment command, CancellationToken cancellationToken)
     {
         var producIds = command.ProductItems
             .Select(pid => pid.ProductId.Value)
@@ -48,7 +48,6 @@ public class RequestShipmentHandler : ICommandHandler<RequestShipment>
             .AppendEventsAsync(shipment, cancellationToken);
 
         await _commandBus.Send(ShipPackage.Create(shipment.Id));
-        return Unit.Value;
     }
 }
 

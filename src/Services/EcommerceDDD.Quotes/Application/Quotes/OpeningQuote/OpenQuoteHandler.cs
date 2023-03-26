@@ -19,7 +19,7 @@ public class OpenQuoteHandler : ICommandHandler<OpenQuote>
         _customerOpenQuoteChecker = customerOpenQuoteChecker;
     }
 
-    public async Task<Unit> Handle(OpenQuote command, CancellationToken cancellationToken)
+    public async Task Handle(OpenQuote command, CancellationToken cancellationToken)
     {
         if (await _customerOpenQuoteChecker.CustomerHasOpenQuote(command.CustomerId))
             throw new ApplicationLogicException("The customer has an open quote already.");
@@ -28,7 +28,5 @@ public class OpenQuoteHandler : ICommandHandler<OpenQuote>
 
         await _quoteWriteRepository
             .AppendEventsAsync(quote);
-
-        return Unit.Value;
     }
 }

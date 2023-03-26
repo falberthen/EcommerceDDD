@@ -3,11 +3,16 @@ using EcommerceDDD.Core.Infrastructure.WebApi;
 using EcommerceDDD.Products.Infrastructure.Persistence;
 using EcommerceDDD.Products.Infrastructure.Configurations;
 using EcommerceDDD.Products.Infrastructure.CurrencyConverter;
+using EcommerceDDD.Products.Application.Products.GettingProducts;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
+// Mediator        
+builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(typeof(GetProductsHandler).Assembly));
 
 // ---- Services
 builder.Services.AddInfrastructureExtension(builder.Configuration);

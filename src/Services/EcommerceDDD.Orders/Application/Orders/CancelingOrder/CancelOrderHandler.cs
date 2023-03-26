@@ -21,7 +21,7 @@ public class CancelOrderHandler : ICommandHandler<CancelOrder>
         _orderWriteRepository = orderWriteRepository;
     }
 
-    public async Task<Unit> Handle(CancelOrder command, CancellationToken cancellationToken)
+    public async Task Handle(CancelOrder command, CancellationToken cancellationToken)
     {
         var order = await _orderWriteRepository
             .FetchStreamAsync(command.OrderId.Value) 
@@ -39,7 +39,5 @@ public class CancelOrderHandler : ICommandHandler<CancelOrder>
                 command.OrderId.Value,
                 order.Status.ToString(),
                 (int)order.Status));
-
-        return Unit.Value;
     }
 }

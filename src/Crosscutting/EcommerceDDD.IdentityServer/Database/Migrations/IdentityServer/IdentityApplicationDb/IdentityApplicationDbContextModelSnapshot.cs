@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace EcommerceDDD.IdentityServer.Migrations
+namespace EcommerceDDD.IdentityServer.Migrations.IdentityServer.IdentityApplicationDb
 {
     [DbContext(typeof(IdentityApplicationDbContext))]
     partial class IdentityApplicationDbContextModelSnapshot : ModelSnapshot
@@ -17,7 +17,7 @@ namespace EcommerceDDD.IdentityServer.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.7")
+                .HasAnnotation("ProductVersion", "6.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);

@@ -7,11 +7,16 @@ using EcommerceDDD.Core.Infrastructure.Marten;
 using EcommerceDDD.Core.Infrastructure.WebApi;
 using EcommerceDDD.Payments.Infrastructure.Projections;
 using EcommerceDDD.Payments.Application.ProcessingPayment;
+using EcommerceDDD.Payments.Application.RequestingPayment;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
+// Mediator        
+builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(typeof(RequestPaymentHandler).Assembly));
 
 // ---- Services
 builder.Services.AddInfrastructureExtension(builder.Configuration);
