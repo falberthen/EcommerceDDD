@@ -1,7 +1,4 @@
-﻿using Marten;
-using EcommerceDDD.Core.CQRS.QueryHandling;
-
-namespace EcommerceDDD.Orders.Application.GettingOrderEventHistory;
+﻿namespace EcommerceDDD.Orders.Application.GettingOrderEventHistory;
 
 public class GetOrderEventHistoryHandler : IQueryHandler<GetOrderEventHistory, List<OrderEventHistory>> 
 {

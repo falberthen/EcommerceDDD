@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using EcommerceDDD.Core.Domain;
-
-namespace EcommerceDDD.Core.Persistence;
+﻿namespace EcommerceDDD.Core.Persistence;
 
 public interface IEventStoreRepository<TA>
     where TA : class, IAggregateRoot<StronglyTypedId<Guid>>

@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.Core.Domain;
-
-namespace EcommerceDDD.Quotes.Domain.Events;
+﻿namespace EcommerceDDD.Quotes.Domain.Events;
 
 public record class QuoteItemAdded : IDomainEvent
 {

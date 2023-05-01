@@ -1,11 +1,5 @@
-using Moq;
-using EcommerceDDD.Core.Testing;
-using Microsoft.Extensions.Options;
-using EcommerceDDD.Core.Exceptions;
-using EcommerceDDD.Core.Infrastructure;
-using EcommerceDDD.Core.Infrastructure.Http;
+using EcommerceDDD.Customers.Domain;
 using EcommerceDDD.Customers.Domain.Commands;
-using EcommerceDDD.Core.Infrastructure.Integration;
 using EcommerceDDD.Customers.Api.Application.RegisteringCustomer;
 
 namespace EcommerceDDD.Customers.Tests.Application;

@@ -1,8 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using EcommerceDDD.Core.EventBus;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace EcommerceDDD.Core.Infrastructure.EventBus;
+﻿namespace EcommerceDDD.Core.Infrastructure.EventBus;
 
 public class EventDispatcher : IEventDispatcher
 {

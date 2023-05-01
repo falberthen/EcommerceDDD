@@ -1,11 +1,4 @@
-﻿using MediatR;
-using EcommerceDDD.Quotes.Domain;
-using EcommerceDDD.Core.Exceptions;
-using EcommerceDDD.Core.Persistence;
-using EcommerceDDD.Quotes.Domain.Commands;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-
-namespace EcommerceDDD.Quotes.Application.Quotes.ConfirmingQuote;
+﻿namespace EcommerceDDD.Quotes.Application.Quotes.ConfirmingQuote;
 
 public class ConfirmQuoteHandler : ICommandHandler<ConfirmQuote>
 {

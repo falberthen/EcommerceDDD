@@ -1,7 +1,4 @@
-﻿using EcommerceDDD.Orders.Domain;
-using EcommerceDDD.Orders.Domain.Events;
-
-namespace EcommerceDDD.Orders.Infrastructure.Projections;
+﻿namespace EcommerceDDD.Orders.Infrastructure.Projections;
 
 public class OrderDetails
 {

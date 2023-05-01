@@ -1,12 +1,4 @@
-﻿using Marten;
-using EcommerceDDD.Quotes.Domain;
-using EcommerceDDD.Core.CQRS.QueryHandling;
-using EcommerceDDD.Core.Infrastructure.Integration;
-using EcommerceDDD.Quotes.Application.Products;
-using EcommerceDDD.Quotes.Infrastructure.Projections;
-using EcommerceDDD.Core.Exceptions;
-
-namespace EcommerceDDD.Quotes.Application.Quotes.GettingOpenQuote;
+﻿namespace EcommerceDDD.Quotes.Application.Quotes.GettingOpenQuote;
 
 public class GetOpenQuoteHandler : IQueryHandler<GetOpenQuote, QuoteViewModel>
 {
@@ -77,7 +69,7 @@ public class GetOpenQuoteHandler : IQueryHandler<GetOpenQuote, QuoteViewModel>
                 }
 
                 viewModel = viewModel with { Items = catalogItems };
-                viewModel.CurrencyCode = currency.Symbol;
+                viewModel.CurrencySymbol = currency.Symbol;
             }
         }
 

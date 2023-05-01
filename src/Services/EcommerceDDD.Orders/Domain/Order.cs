@@ -1,8 +1,4 @@
-﻿using EcommerceDDD.Core.Domain;
-using EcommerceDDD.Core.Exceptions;
-using EcommerceDDD.Orders.Domain.Events;
-
-namespace EcommerceDDD.Orders.Domain;
+﻿namespace EcommerceDDD.Orders.Domain;
 
 public class Order : AggregateRoot<OrderId>
 {

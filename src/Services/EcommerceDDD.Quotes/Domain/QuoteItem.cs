@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.Core.Exceptions;
-
-namespace EcommerceDDD.Quotes.Domain;
+﻿namespace EcommerceDDD.Quotes.Domain;
 
 public class QuoteItem
 {

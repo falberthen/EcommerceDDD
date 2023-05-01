@@ -1,6 +1,3 @@
-using EcommerceDDD.Core.Exceptions;
-using EcommerceDDD.Products.Domain;
-
 namespace EcommerceDDD.Products.Tests;
 
 public class MoneyTests

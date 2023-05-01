@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using EcommerceDDD.Core.CQRS.QueryHandling;
-
-namespace EcommerceDDD.Core.Infrastructure.CQRS;
+﻿namespace EcommerceDDD.Core.Infrastructure.CQRS;
 
 public class QueryBus : IQueryBus
 {

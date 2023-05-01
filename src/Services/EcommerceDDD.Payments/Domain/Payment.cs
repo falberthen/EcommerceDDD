@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.Core.Domain;
-using EcommerceDDD.Core.Exceptions;
-using EcommerceDDD.Payments.Domain.Events;
+﻿using PaymentCompleted = EcommerceDDD.Payments.Domain.Events.PaymentCompleted;
 
 namespace EcommerceDDD.Payments.Domain;
 

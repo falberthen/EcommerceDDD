@@ -1,10 +1,3 @@
-using System.Net;
-using Moq.Protected;
-using Newtonsoft.Json;
-using EcommerceDDD.Core.Infrastructure.Http;
-using EcommerceDDD.Core.Testing;
-using EcommerceDDD.Core.Infrastructure.Integration;
-
 namespace EcommerceDDD.Core.Infrastructure.Tests.Http;
 
 public class HttpRequesterTests

@@ -1,9 +1,3 @@
-using EcommerceDDD.Core.Testing;
-using EcommerceDDD.Quotes.Domain;
-using EcommerceDDD.Quotes.Application.Quotes.CancelingQuote;
-using EcommerceDDD.Quotes.Application.Quotes.OpeningQuote;
-using EcommerceDDD.Quotes.Domain.Commands;
-
 namespace EcommerceDDD.Quotes.Tests.Application;
 
 public class CancelQuoteHandlerTests

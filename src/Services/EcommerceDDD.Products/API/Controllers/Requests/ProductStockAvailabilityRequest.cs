@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace EcommerceDDD.Products.API.Controllers.Requests;
+﻿namespace EcommerceDDD.Products.API.Controllers.Requests;
 
 public record class ProductStockAvailabilityRequest
 {

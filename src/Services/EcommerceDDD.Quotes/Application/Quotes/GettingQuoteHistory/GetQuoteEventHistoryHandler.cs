@@ -1,7 +1,4 @@
-﻿using Marten;
-using EcommerceDDD.Core.CQRS.QueryHandling;
-
-namespace EcommerceDDD.Quotes.Application.Quotes.GettingQuoteHistory;
+﻿namespace EcommerceDDD.Quotes.Application.Quotes.GettingQuoteHistory;
 
 public class GetQuoteEventHistoryHandler : IQueryHandler<GetQuoteEventHistory, List<QuoteEventHistory>> 
 {

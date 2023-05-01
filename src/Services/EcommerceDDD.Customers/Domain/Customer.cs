@@ -1,8 +1,4 @@
-﻿using EcommerceDDD.Core.Domain;
-using EcommerceDDD.Core.Exceptions;
-using EcommerceDDD.Customers.Domain.Events;
-
-namespace EcommerceDDD.Customers.Domain;
+﻿namespace EcommerceDDD.Customers.Domain;
 
 public sealed class Customer : AggregateRoot<CustomerId>
 {

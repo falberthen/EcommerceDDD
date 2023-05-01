@@ -1,13 +1,4 @@
-﻿using MediatR;
-using EcommerceDDD.Quotes.Domain;
-using EcommerceDDD.Core.Persistence;
-using EcommerceDDD.Quotes.Domain.Commands;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-using EcommerceDDD.Quotes.Application.Products;
-using EcommerceDDD.Core.Infrastructure.Integration;
-using EcommerceDDD.Core.Exceptions;
-
-namespace EcommerceDDD.Quotes.Application.Quotes.AddingQuoteItem;
+﻿namespace EcommerceDDD.Quotes.Application.Quotes.AddingQuoteItem;
 
 public class AddQuoteItemHandler : ICommandHandler<AddQuoteItem>
 {

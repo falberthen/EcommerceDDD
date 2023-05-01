@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.Core.CQRS.CommandHandling;
-
-namespace EcommerceDDD.Quotes.Domain.Commands;
+﻿namespace EcommerceDDD.Quotes.Domain.Commands;
 
 public record class AddQuoteItem: ICommand
 {

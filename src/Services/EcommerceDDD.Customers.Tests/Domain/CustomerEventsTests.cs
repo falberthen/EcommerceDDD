@@ -1,3 +1,4 @@
+using EcommerceDDD.Customers.Domain;
 using EcommerceDDD.Customers.Domain.Events;
 
 namespace EcommerceDDD.Customers.Tests.Domain;

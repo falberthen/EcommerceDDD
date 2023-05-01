@@ -1,8 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using System.Reflection;
-
-namespace EcommerceDDD.Core.Reflection;
+﻿namespace EcommerceDDD.Core.Reflection;
 
 public class PrivateResolver : DefaultContractResolver
 {

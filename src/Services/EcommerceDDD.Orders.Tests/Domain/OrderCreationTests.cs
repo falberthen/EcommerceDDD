@@ -1,5 +1,3 @@
-using EcommerceDDD.Core.Exceptions;
-
 namespace EcommerceDDD.Orders.Tests.Domain;
 
 public class OrderCreationTests

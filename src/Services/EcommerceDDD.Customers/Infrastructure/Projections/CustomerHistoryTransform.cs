@@ -1,9 +1,4 @@
-﻿using Marten.Events;
-using Marten.Events.Projections;
-using EcommerceDDD.Customers.Domain.Events;
-using EcommerceDDD.Customers.Application.GettingCustomerEventHistory;
-
-namespace EcommerceDDD.Customers.Infrastructure.Projections;
+﻿namespace EcommerceDDD.Customers.Infrastructure.Projections;
 
 public class CustomerHistoryTransform : EventProjection
 {

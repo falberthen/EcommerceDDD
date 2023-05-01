@@ -1,22 +1,9 @@
-﻿using EcommerceDDD.Core.Testing;
-using EcommerceDDD.Core.EventBus;
-using EcommerceDDD.Core.Persistence;
-using Microsoft.Extensions.Configuration;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-using EcommerceDDD.Core.CQRS.QueryHandling;
-using EcommerceDDD.Core.Infrastructure.CQRS;
-using EcommerceDDD.Core.Infrastructure.WebApi;
-using EcommerceDDD.Core.Infrastructure.EventBus;
-using Microsoft.Extensions.DependencyInjection;
-using EcommerceDDD.Core.Infrastructure.Identity;
-using EcommerceDDD.Core.Infrastructure.Integration;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-
-namespace EcommerceDDD.Core.Infrastructure;
+﻿namespace EcommerceDDD.Core.Infrastructure;
 
 public static class CoreInfrastructureExtensions
 {
-    public static void AddInfrastructureExtension(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddCoreInfrastructure(this IServiceCollection services, 
+        IConfiguration configuration)
     {
         if (services is null)
             throw new ArgumentNullException(nameof(services));
@@ -40,5 +27,7 @@ public static class CoreInfrastructureExtensions
         // Testing
         services.AddScoped<IEventStoreRepository<DummyAggregateRoot>, 
             DummyEventStoreRepository<DummyAggregateRoot>>();
+
+        return services;
     }
 }

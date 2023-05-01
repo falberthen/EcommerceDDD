@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.Core.CQRS.QueryHandling;
-
-namespace EcommerceDDD.Products.Application.Products.CheckingProductStockAvailability;
+﻿namespace EcommerceDDD.Products.Application.Products.CheckingProductStockAvailability;
 
 public class CheckProductStockAvailabilityHandler : IQueryHandler<CheckProductStockAvailability, IList<ProductInStockViewModel>> 
 {

@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.Core.EventBus;
-
-namespace EcommerceDDD.Shipments.Application.ShippingPackage;
+﻿namespace EcommerceDDD.Shipments.Application.ShippingPackage;
 
 public class PackageShipped : IntegrationEvent
 {

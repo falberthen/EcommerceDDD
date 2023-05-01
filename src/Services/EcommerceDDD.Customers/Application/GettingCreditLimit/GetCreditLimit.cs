@@ -1,7 +1,4 @@
-﻿using EcommerceDDD.Customers.Domain;
-using EcommerceDDD.Core.CQRS.QueryHandling;
-
-namespace EcommerceDDD.Customers.Application.GettingCreditLimit;
+﻿namespace EcommerceDDD.Customers.Application.GettingCreditLimit;
 
 public record class GetCreditLimit : IQuery<CreditLimitModel>
 {

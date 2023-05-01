@@ -1,14 +1,11 @@
-﻿using EcommerceDDD.Core.Domain;
-using EcommerceDDD.Core.Exceptions;
-
-namespace EcommerceDDD.Orders.Domain;
+﻿namespace EcommerceDDD.Orders.Domain;
 
 public class Currency : ValueObject<Currency>
 {
     public string Code { get; }
     public string Symbol { get; }
     public static Currency USDollar => new Currency("USD", "$");
-    public static Currency CanadianDollar => new Currency("CAD", "CDN$");
+    public static Currency CanadianDollar => new Currency("CAD", "CA$");
     public static Currency Euro => new Currency("EUR", "€");
 
     public static Currency OfCode(string code)

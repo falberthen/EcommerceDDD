@@ -1,8 +1,3 @@
-using EcommerceDDD.Core.Testing;
-using EcommerceDDD.Orders.Domain.Commands;
-using EcommerceDDD.Core.Infrastructure.SignalR;
-using EcommerceDDD.Orders.Application.Orders.CancelingOrder;
-
 namespace EcommerceDDD.Orders.Tests.Application;
 
 public class CancelOrderHandlerTests

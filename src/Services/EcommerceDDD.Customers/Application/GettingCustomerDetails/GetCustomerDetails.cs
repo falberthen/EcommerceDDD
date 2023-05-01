@@ -1,7 +1,4 @@
-﻿using EcommerceDDD.Core.CQRS.QueryHandling;
-using EcommerceDDD.Customers.Infrastructure.Projections;
-
-namespace EcommerceDDD.Customers.Api.Application.GettingCustomerDetails;
+﻿namespace EcommerceDDD.Customers.Api.Application.GettingCustomerDetails;
 
 public record class GetCustomerDetails : IQuery<CustomerDetails>
 {

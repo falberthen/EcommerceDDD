@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.Core.EventBus;
-
-namespace EcommerceDDD.Shipments.Application.RequestingShipment;
+﻿namespace EcommerceDDD.Shipments.Application.RequestingShipment;
 
 public class ProductWasOutOfStock : IntegrationEvent
 {

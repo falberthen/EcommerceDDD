@@ -1,11 +1,4 @@
-﻿using MediatR;
-using EcommerceDDD.Core.Persistence;
-using EcommerceDDD.Payments.Domain;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-using EcommerceDDD.Payments.Domain.Commands;
-using EcommerceDDD.Core.Exceptions;
-
-namespace EcommerceDDD.Payments.Application.CancelingPayment;
+﻿namespace EcommerceDDD.Payments.Application.CancelingPayment;
 
 public class CancelPaymentHandler : ICommandHandler<CancelPayment>
 {

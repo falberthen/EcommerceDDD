@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-using EcommerceDDD.Core.CQRS.QueryHandling;
-
-namespace EcommerceDDD.Core.Infrastructure.WebApi;
+﻿namespace EcommerceDDD.Core.Infrastructure.WebApi;
 
 public class CustomControllerBase : ControllerBase
 {
@@ -17,6 +13,8 @@ public class CustomControllerBase : ControllerBase
     {
         _commandBus = commandBus;
         _queryBus = queryBus;
+
+
     }
 
     protected async new Task<IActionResult> Response<TResult>(IQuery<TResult> query)

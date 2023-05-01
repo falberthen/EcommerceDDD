@@ -1,10 +1,3 @@
-using EcommerceDDD.Core.Testing;
-using EcommerceDDD.Quotes.Domain;
-using EcommerceDDD.Quotes.Domain.Commands;
-using EcommerceDDD.Quotes.Application.Products;
-using EcommerceDDD.Core.Infrastructure.Integration;
-using EcommerceDDD.Quotes.Application.Quotes.AddingQuoteItem;
-
 namespace EcommerceDDD.Quotes.Tests.Application;
 
 public class AddQuoteItemHandlerTests

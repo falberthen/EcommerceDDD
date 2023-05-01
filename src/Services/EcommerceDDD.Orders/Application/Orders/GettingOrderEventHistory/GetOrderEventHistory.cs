@@ -1,7 +1,4 @@
-﻿using EcommerceDDD.Orders.Domain;
-using EcommerceDDD.Core.CQRS.QueryHandling;
-
-namespace EcommerceDDD.Orders.Application.GettingOrderEventHistory;
+﻿namespace EcommerceDDD.Orders.Application.GettingOrderEventHistory;
 
 public record class GetOrderEventHistory : IQuery<List<OrderEventHistory>>
 {

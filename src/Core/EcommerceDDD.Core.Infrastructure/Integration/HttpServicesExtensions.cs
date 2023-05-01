@@ -1,13 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
-using EcommerceDDD.Core.Infrastructure.Http;
-using EcommerceDDD.Core.Infrastructure.Identity;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace EcommerceDDD.Core.Infrastructure.Integration;
+﻿namespace EcommerceDDD.Core.Infrastructure.Integration;
 
 public static class HttpServicesExtensions
 {
-    public static void ConfigureIntegrationHttpService(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection ConfigureIntegrationHttpService(this IServiceCollection services, 
+        IConfiguration configuration)
     {
         // ---- Settings
         var tokenIssuerSettings = configuration.GetSection("TokenIssuerSettings");
@@ -20,5 +16,7 @@ public static class HttpServicesExtensions
         services.AddTransient<IIntegrationHttpService, IntegrationHttpService>();
         services.AddTransient<IHttpRequester, HttpRequester>();
         services.AddTransient<ITokenRequester, TokenRequester>();
+
+        return services;
     }
 }

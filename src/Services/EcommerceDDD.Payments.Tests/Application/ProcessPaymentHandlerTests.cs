@@ -1,9 +1,3 @@
-using EcommerceDDD.Core.Testing;
-using EcommerceDDD.Payments.Domain;
-using EcommerceDDD.Payments.Domain.Commands;
-using EcommerceDDD.Payments.Application.ProcessingPayment;
-using EcommerceDDD.Core.Infrastructure.Outbox.Services;
-
 namespace EcommerceDDD.Payments.Tests.Application;
 
 public class ProcessPaymentHandlerTests

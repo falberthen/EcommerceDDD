@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.Core.EventBus;
-
-namespace EcommerceDDD.Core.Testing;
+﻿namespace EcommerceDDD.Core.Testing;
 
 public sealed class DummyIntegrationEvent : IntegrationEvent
 {

@@ -1,9 +1,4 @@
-﻿using EcommerceDDD.Core.Domain;
-using EcommerceDDD.Core.Persistence;
-using System.Collections.Generic;
-using System.Threading;
-
-namespace EcommerceDDD.Core.Testing;
+﻿namespace EcommerceDDD.Core.Testing;
 
 public class DummyEventStoreRepository<TA> : IEventStoreRepository<TA>
     where TA : class, IAggregateRoot<StronglyTypedId<Guid>>

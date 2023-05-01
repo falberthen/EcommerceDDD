@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.Core.Domain;
-
-namespace EcommerceDDD.Customers.Domain.Events;
+﻿namespace EcommerceDDD.Customers.Domain.Events;
 
 public record class CustomerRegistered : IDomainEvent
 {

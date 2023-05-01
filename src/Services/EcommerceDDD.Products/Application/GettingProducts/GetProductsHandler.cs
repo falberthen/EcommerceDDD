@@ -1,8 +1,4 @@
-﻿using EcommerceDDD.Core.Exceptions;
-using EcommerceDDD.Products.Domain;
-using EcommerceDDD.Core.CQRS.QueryHandling;
-
-namespace EcommerceDDD.Products.Application.Products.GettingProducts;
+﻿namespace EcommerceDDD.Products.Application.Products.GettingProducts;
 
 public class GetProductsHandler : IQueryHandler<GetProducts, IList<ProductViewModel>> 
 {
@@ -38,6 +34,9 @@ public class GetProductsHandler : IQueryHandler<GetProducts, IList<ProductViewMo
                 new ProductViewModel(
                     product.Id.Value,
                     product.Name,
+                    product.Category,
+                    product.Description,
+                    product.ImageUrl,
                     Math.Round(convertedPrice, 2).ToString(),
                     currency.Symbol));
         }

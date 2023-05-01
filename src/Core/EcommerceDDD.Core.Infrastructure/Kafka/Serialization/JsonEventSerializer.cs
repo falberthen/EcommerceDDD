@@ -1,8 +1,3 @@
-using System.Text;
-using Newtonsoft.Json;
-using Confluent.Kafka;
-using EcommerceDDD.Core.Reflection;
-
 namespace EcommerceDDD.Core.Infrastructure.Kafka.Serialization;
 
 public class JsonEventSerializer<T> : ISerializer<T>, IDeserializer<T?>

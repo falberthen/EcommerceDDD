@@ -1,7 +1,4 @@
-﻿using EcommerceDDD.Core.CQRS.QueryHandling;
-using EcommerceDDD.Quotes.Domain;
-
-namespace EcommerceDDD.Quotes.Application.Quotes.GettingOpenQuote;
+﻿namespace EcommerceDDD.Quotes.Application.Quotes.GettingOpenQuote;
 
 public record class GetOpenQuote : IQuery<QuoteViewModel>
 {

@@ -1,8 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using EcommerceDDD.Core.Infrastructure.Http;
-using EcommerceDDD.Core.Infrastructure.Identity;
-
-namespace EcommerceDDD.Core.Infrastructure.Integration;
+﻿namespace EcommerceDDD.Core.Infrastructure.Integration;
 
 public class IntegrationHttpService : IIntegrationHttpService
 {
@@ -28,10 +24,10 @@ public class IntegrationHttpService : IIntegrationHttpService
         _integrationSettings = integrationSettings.Value;
     }
 
-    public async Task<IntegrationHttpResponse?> PostAsync(string path, object request)
+    public async Task<IntegrationHttpResponse> PostAsync(string path, object request)
     {
         var tokenResponse = await _tokenRequester
-            .GetApplicationToken(_tokenIssuerSettings);
+            .GetApplicationTokenAsync(_tokenIssuerSettings);
 
         var response = await _httpRequester.PostAsync<IntegrationHttpResponse>(
             $"{_integrationSettings.ApiGatewayBaseUrl}/{path}",
@@ -41,10 +37,10 @@ public class IntegrationHttpService : IIntegrationHttpService
         return response;
     }
 
-    public async Task<IntegrationHttpResponse?> DeleteAsync(string path, object request)
+    public async Task<IntegrationHttpResponse> DeleteAsync(string path, object request)
     {
         var tokenResponse = await _tokenRequester
-            .GetApplicationToken(_tokenIssuerSettings);
+            .GetApplicationTokenAsync(_tokenIssuerSettings);
 
         var response = await _httpRequester.DeleteAsync<IntegrationHttpResponse>(
             $"{_integrationSettings.ApiGatewayBaseUrl}/{path}",
@@ -54,11 +50,11 @@ public class IntegrationHttpService : IIntegrationHttpService
         return response;
     }
 
-    public async Task<IntegrationHttpResponse<TResponse>?> FilterAsync<TResponse>(string path, object request)
+    public async Task<IntegrationHttpResponse<TResponse>> FilterAsync<TResponse>(string path, object request)
         where TResponse : class
     {
         var tokenResponse = await _tokenRequester
-            .GetApplicationToken(_tokenIssuerSettings);
+            .GetApplicationTokenAsync(_tokenIssuerSettings);
 
         var response = await _httpRequester.PostAsync<IntegrationHttpResponse<TResponse>>(
             $"{_integrationSettings.ApiGatewayBaseUrl}/{path}",
@@ -68,11 +64,11 @@ public class IntegrationHttpService : IIntegrationHttpService
         return response;
     }
 
-    public async Task<IntegrationHttpResponse<TResponse>?> GetAsync<TResponse>(string path)
+    public async Task<IntegrationHttpResponse<TResponse>> GetAsync<TResponse>(string path)
         where TResponse : class
     {
         var tokenResponse = await _tokenRequester
-            .GetApplicationToken(_tokenIssuerSettings);
+            .GetApplicationTokenAsync(_tokenIssuerSettings);
 
         var response = await _httpRequester.GetAsync<IntegrationHttpResponse<TResponse>>(
             $"{_integrationSettings.ApiGatewayBaseUrl}/{path}",

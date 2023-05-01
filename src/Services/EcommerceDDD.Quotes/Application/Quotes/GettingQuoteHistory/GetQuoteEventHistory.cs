@@ -1,7 +1,4 @@
-﻿using EcommerceDDD.Quotes.Domain;
-using EcommerceDDD.Core.CQRS.QueryHandling;
-
-namespace EcommerceDDD.Quotes.Application.Quotes.GettingQuoteHistory;
+﻿namespace EcommerceDDD.Quotes.Application.Quotes.GettingQuoteHistory;
 
 public record class GetQuoteEventHistory : IQuery<List<QuoteEventHistory>>
 {

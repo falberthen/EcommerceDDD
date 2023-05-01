@@ -1,8 +1,4 @@
-﻿using Marten.Events;
-using Newtonsoft.Json;
-using EcommerceDDD.Core.Infrastructure.Marten;
-
-namespace EcommerceDDD.Quotes.Application.Quotes.GettingQuoteHistory;
+﻿namespace EcommerceDDD.Quotes.Application.Quotes.GettingQuoteHistory;
 
 public record QuoteEventHistory(
     Guid Id, 

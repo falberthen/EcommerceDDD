@@ -1,9 +1,4 @@
-﻿using Marten;
-using EcommerceDDD.Quotes.Domain;
-using EcommerceDDD.Core.CQRS.QueryHandling;
-using EcommerceDDD.Quotes.Infrastructure.Projections;
-
-namespace EcommerceDDD.Quotes.Application.Quotes.GettingConfirmedQuote;
+﻿namespace EcommerceDDD.Quotes.Application.Quotes.GettingConfirmedQuote;
 
 public class GetConfirmedQuoteByIdHandler : IQueryHandler<GetConfirmedQuoteById, QuoteViewModel>
 {
@@ -49,6 +44,7 @@ public class GetConfirmedQuoteByIdHandler : IQueryHandler<GetConfirmedQuoteById,
                 }).ToList();
 
                 viewModel = viewModel with { Items = quoteItems };
+                viewModel.CurrencySymbol = currency.Symbol;
                 viewModel.CurrencyCode = currency.Code;
             }
         }

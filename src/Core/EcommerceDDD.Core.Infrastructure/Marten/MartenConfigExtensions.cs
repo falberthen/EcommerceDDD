@@ -1,10 +1,4 @@
-﻿using Marten;
-using Weasel.Core;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using EcommerceDDD.Core.EventBus;
-
-namespace EcommerceDDD.Core.Infrastructure.Marten;
+﻿namespace EcommerceDDD.Core.Infrastructure.Marten;
 
 public static class MartenConfigExtensions
 {

@@ -1,12 +1,4 @@
-﻿using MediatR;
-using EcommerceDDD.Orders.Domain;
-using EcommerceDDD.Core.Exceptions;
-using EcommerceDDD.Core.Persistence;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-using EcommerceDDD.Orders.Domain.Commands;
-using EcommerceDDD.Core.Infrastructure.Integration;
-
-namespace EcommerceDDD.Orders.Application.Orders.PlacingOrder;
+﻿namespace EcommerceDDD.Orders.Application.Orders.PlacingOrder;
 
 public class PlaceOrderHandler : ICommandHandler<PlaceOrder>
 {
@@ -61,6 +53,13 @@ public class PlaceOrderHandler : ICommandHandler<PlaceOrder>
         return responseData;
     }
 
-    public record QuoteViewModelResponse(Guid QuoteId, Guid CustomerId, List<QuoteItemViewModel> Items, string CurrencyCode);
-    public record class QuoteItemViewModel(Guid ProductId, int Quantity);   
+    public record QuoteViewModelResponse(
+        Guid QuoteId, 
+        Guid CustomerId, 
+        List<QuoteItemViewModel> Items, 
+        string CurrencyCode);
+
+    public record class QuoteItemViewModel(
+        Guid ProductId, 
+        int Quantity);   
 }

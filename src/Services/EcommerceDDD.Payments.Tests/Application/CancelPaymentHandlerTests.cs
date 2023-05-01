@@ -1,8 +1,3 @@
-using EcommerceDDD.Core.Testing;
-using EcommerceDDD.Payments.Domain;
-using EcommerceDDD.Payments.Domain.Commands;
-using EcommerceDDD.Payments.Application.CancelingPayment;
-
 namespace EcommerceDDD.Payments.Tests.Application;
 
 public class CancelPaymentHandlerTests

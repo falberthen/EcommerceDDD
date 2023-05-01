@@ -1,7 +1,4 @@
-﻿using EcommerceDDD.Orders.Domain;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-
-namespace EcommerceDDD.Orders.Application.Payments.CancelingPayment;
+﻿namespace EcommerceDDD.Orders.Application.Payments.CancelingPayment;
 
 public record class RequestCancelPayment : ICommand
 {

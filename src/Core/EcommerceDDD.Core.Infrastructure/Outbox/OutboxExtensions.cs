@@ -1,11 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using EcommerceDDD.Core.Infrastructure.Workers;
-using EcommerceDDD.Core.Infrastructure.Outbox.Workers;
-using EcommerceDDD.Core.Infrastructure.Outbox.Services;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-
-namespace EcommerceDDD.Core.Infrastructure.Outbox;
+﻿namespace EcommerceDDD.Core.Infrastructure.Outbox;
 
 public static class OutboxExtensions
 {

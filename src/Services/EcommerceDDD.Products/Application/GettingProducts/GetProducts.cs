@@ -1,7 +1,4 @@
-﻿using EcommerceDDD.Products.Domain;
-using EcommerceDDD.Core.CQRS.QueryHandling;
-
-namespace EcommerceDDD.Products.Application.Products.GettingProducts;
+﻿namespace EcommerceDDD.Products.Application.Products.GettingProducts;
 
 public record class GetProducts : IQuery<IList<ProductViewModel>>
 {

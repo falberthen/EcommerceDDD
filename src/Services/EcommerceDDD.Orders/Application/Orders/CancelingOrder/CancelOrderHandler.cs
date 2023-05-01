@@ -1,12 +1,4 @@
-﻿using MediatR;
-using EcommerceDDD.Orders.Domain;
-using EcommerceDDD.Core.Persistence;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-using EcommerceDDD.Core.Infrastructure.SignalR;
-using EcommerceDDD.Orders.Domain.Commands;
-using EcommerceDDD.Core.Exceptions;
-
-namespace EcommerceDDD.Orders.Application.Orders.CancelingOrder;
+﻿namespace EcommerceDDD.Orders.Application.Orders.CancelingOrder;
 
 public class CancelOrderHandler : ICommandHandler<CancelOrder>
 {
