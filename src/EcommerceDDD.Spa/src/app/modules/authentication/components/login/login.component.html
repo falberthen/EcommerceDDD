@@ -1,33 +1,70 @@
-<div class="wrapper fadeInDown">
-  <div class="form-content login-form">
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <input type="text" id="email" name="email" formControlName="email" placeholder="Login"
-          [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
-        <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
-            <div *ngIf="f.email.errors.required">E-mail is required</div>
-        </div>
+<div class="card fadeInDown login-container">
+  <div class="card-body login-form">
+    <div class="cart-header">
+      <div class="row">
+        <h4>Login</h4>
       </div>
-      <div class="form-group">
-          <input type="password" id="password" name="password" formControlName="password" placeholder="Password"
-            [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
-          <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-              <div *ngIf="f.password.errors.required">Password is required</div>
+    </div>
+    <div class="form-group row mt-3">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <input
+            class="form-control"
+            type="text"
+            id="email"
+            name="email"
+            formControlName="email"
+            placeholder="Login"
+            [ngClass]="{ 'is-invalid': isFieldInvalid('email') }"
+          />
+          <div class="invalid-feedback" *ngIf="isFieldInvalid('email')">
+            Email is required
           </div>
+        </div>
+        <div class="form-group mt-3">
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            name="password"
+            formControlName="password"
+            placeholder="Password"
+            [ngClass]="{ 'is-invalid': isFieldInvalid('password') }"
+          />
+          <div class="invalid-feedback" *ngIf="isFieldInvalid('password')">
+            Password is required
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-lg-12">
+            <input
+              type="submit"
+              class="btn btn-primary login-button"
+              value="Log In"
+              [disabled]="loginForm.invalid || (isLoading | async)"
+            />
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="row mt-3">
+      <hr />
+      <div class="col-lg-12">
+        <a [routerLink]="['/customer-account']" class="create-account-link"
+          >Create my account</a
+        >
       </div>
-      <input type="submit" class="btn btn-primary" value="Log In">
-    </form>
-
-    <div class="form-footer">
-      <a [routerLink]="['/customer-account']" href="" class="underlineHover">Create my account</a>
     </div>
   </div>
 </div>
-
-<div class="wrapper mt-3">
+<div class="container mt-3">
   <div class="stargazers-container alert alert-dark">
-    Did you like it?<strong> give a star!</strong><br><br>
-    <github-button type="stargazers" size="large" namespace="falberthen" repo="EcommerceDDD"></github-button>
+    Did you like it?<strong> give a star!</strong><br /><br />
+    <github-button
+      type="stargazers"
+      size="large"
+      namespace="falberthen"
+      repo="EcommerceDDD"
+    ></github-button>
   </div>
 </div>
-

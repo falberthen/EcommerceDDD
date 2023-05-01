@@ -1,3 +1,41 @@
-.details-form {
-  margin:40px;
+.customer-details-container {
+  width: 50%;
+  margin: 0 auto;
+  margin-top: 5%;
+  background-color: #fefefe;
+
+  .customer-events-history {
+    text-align: right;
+
+    .event-link {
+      cursor: pointer;
+      text-decoration: none;
+    }
+  }
+
+  .credit-limit-field {
+    width: 25%;
+  }
+  .customer-details-form {
+    width: 100%;
+
+    .customer-details-footer {
+      margin: 5px;
+      display: flex;
+      justify-content: center;
+
+      .footer-item {
+        margin-left: 10px;
+        width: 100px;
+      }
+    }
+  }
+}
+
+.stored-event-viewer-container {
+  margin: auto;
+  z-index: 999999;
+  margin-bottom: 20px;
+  margin-top: 40px;
+  width: 50%;
 }

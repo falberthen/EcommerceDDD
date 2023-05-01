@@ -16,10 +16,7 @@ import { LoaderInterceptor } from './core/interceptors/loader.interceptor';
 import { NavMenuComponent } from './shared/components/nav-menu/nav-menu.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    NavMenuComponent
-  ],
+  declarations: [AppComponent, NavMenuComponent],
   imports: [
     SharedModule,
     CoreModule,
@@ -29,14 +26,18 @@ import { NavMenuComponent } from './shared/components/nav-menu/nav-menu.componen
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot(APP_ROUTES),
-    NgbModule
+    NgbModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ServerErrorInterceptor, multi: true },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ServerErrorInterceptor,
+      multi: true,
+    },
   ],
   exports: [RouterModule],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

@@ -1,73 +1,103 @@
 <div class="orders-container">
-  <div class="mb-4" *ngIf="!orderId">
-    <h3>My Orders</h3>
+  <div *ngIf="!(isLoading | async) && orders.length == 0"
+    class="alert alert-danger no-orders-message">
+    You don't have Orders
   </div>
-  <div *ngIf="orders && orders.length == 0" class="alert alert-danger no-orders-message">
-    <span  *ngIf="!orderId">
-      You don't have Orders
-    </span>
-  </div>
+
   <!-- Stored Event Viewer container-->
   <div class="stored-event-viewer-container">
     <template #storedEventViewerContainer></template>
   </div>
-  <div *ngIf="orders && orders.length > 0">
-    <div *ngFor="let order of orders | orderBy:'createdAt': true ; index as i" class="order-details-container form-content">
-      <a class="nav-link text-secondary underlineHover" style="cursor: pointer;" (click)="showOrderStoredEvents(order.orderId)">
-        <fa-icon [icon]="faList"></fa-icon>
-        Order Events
-      </a>
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th scope="col" class="table-header">Product</th>
-            <th scope="col" class="table-header">Quantity</th>
-            <th scope="col" class="table-header">Price</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let orderLine of order.orderLines; index as i">
-            <td class="table-row">
-              {{ orderLine.productName }}
-            </td>
-            <td class="table-row">
-              {{ orderLine.quantity }}
-            </td>
-            <td>
-              {{ orderLine.unitPrice }}
-              {{ order.currencySymbol }}
-            </td>
-          </tr>
-          <tr>
-            <td colspan="4" class="table-row">
-              <div class="date-placed-container">
-                <b>Order placed on:</b>
-                <span class="date-placed-text">
-                  {{order.createdAt | date}}
-                </span>
+
+  <div class="card order-details-container" *ngIf="(isLoading | async)">
+    <app-loader-skeleton></app-loader-skeleton>
+  </div>
+  <div *ngIf="orders.length > 0">
+    <div class="order-container"
+      *ngFor="let order of orders | orderBy : 'createdAt' : true; index as i">
+      <div class="card order-details-container">
+        <div class="card-body">
+          <div class="cart-header">
+            <div class="row">
+              <div class="col-7">
+                <h4>Order #{{ getOrderIdString(order.orderId) }}</h4>
               </div>
-              <div class="total-to-pay-container">
-                <b>Total:</b>
-                <span class="total-to-pay-text" >
-                  {{order.totalPrice.toFixed(2)}}
-                  {{order.currencySymbol}}
-                </span>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="4" class="table-row">
-              <div class="order-status-container">
-                <div class="order-status-text">
-                  <div [ngClass]="getStatusCssClass(order.statusCode)">
-                    {{order.statusText}}
-                  </div>
+              <div class="col-5">
+                <div class="text-right">
+                  <a
+                    class="nav-link text-secondary underlineHover"
+                    style="cursor: pointer"
+                    (click)="showOrderStoredEvents(order.orderId)">
+                    <fa-icon [icon]="faList"></fa-icon>
+                    Order Events
+                  </a>
                 </div>
               </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            </div>
+            <hr />
+            <div class="mt-3">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col" class="table-header">Product</th>
+                    <th scope="col" class="table-header text-right">
+                      Quantity
+                    </th>
+                    <th
+                      scope="col"
+                      class="table-header text-right"
+                      style="width: 100px; text-align: right">
+                      Price
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let orderLine of order.orderLines; index as i">
+                    <td class="table-row product-name">
+                      {{ orderLine.productName }}
+                    </td>
+                    <td class="table-row text-right">
+                      {{ orderLine.quantity }}
+                    </td>
+                    <td style="width: 100px" class="text-right">
+                      {{ order.currencySymbol }}
+                      {{ orderLine.unitPrice }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="4" class="table-row">
+                      <div class="date-placed-container">
+                        <b>Order placed on:</b>
+                        <span class="date-placed-text">
+                          {{ order.createdAt | date }}
+                        </span>
+                      </div>
+                      <div class="total-to-pay-container">
+                        <b>Total:</b>
+                        <span class="total-to-pay-text text-right">
+                          {{ order.currencySymbol }}
+                          {{ order.totalPrice.toFixed(2) }}
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="4" class="table-row">
+                      <div class="order-status-container">
+                        <div class="order-status-text">
+                          <div [ngClass]="getStatusCssClass(order.statusCode)">
+                            {{ order.statusText }}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

@@ -6,29 +6,35 @@ import { Observable } from 'rxjs';
 import { ServiceResponse } from './ServiceResponse';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class OrdersService extends RestService {
-
   controllerName = 'orders';
 
   constructor(http: HttpClient) {
     super(http, environment.apiUrl);
   }
 
-  public getOrders(customerId: string): Observable<ServiceResponse>{
+  public getOrders(customerId: string): Observable<ServiceResponse> {
     return this.get(this.controllerName + '/' + customerId);
   }
 
-  public getOrderDetails(customerId: string, orderId: string): Observable<ServiceResponse>{
-    return this.get(this.controllerName + '/' + customerId + '/' + orderId + '/details')
+  public getOrderDetails(
+    customerId: string,
+    orderId: string
+  ): Observable<ServiceResponse> {
+    return this.get(
+      this.controllerName + '/' + customerId + '/' + orderId + '/details'
+    );
   }
 
-  public getOrderStoredEvents(aggregateId: string): Observable<ServiceResponse>{
+  public getOrderStoredEvents(
+    aggregateId: string
+  ): Observable<ServiceResponse> {
     return this.get('orders/' + aggregateId + '/history');
   }
 
-  public placeOrderFromQuote(quoteId: string): Observable<ServiceResponse>{
+  public placeOrderFromQuote(quoteId: string): Observable<ServiceResponse> {
     return this.post(this.controllerName + '/' + quoteId);
   }
 }

@@ -10,46 +10,46 @@ import { CustomerDetailsComponent } from './modules/ecommerce/components/custome
 export const APP_ROUTES: Routes = [
   {
     path: 'login',
-    component: LoginComponent
+    component: LoginComponent,
   },
   {
     path: 'customer-account',
-    component: CustomerAccountComponent
+    component: CustomerAccountComponent,
   },
   {
     path: 'home',
     component: HomeComponent,
     canActivate: [AuthGuard],
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'products',
     component: ProductSelectionComponent,
     canActivate: [AuthGuard],
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'products/:quoteId',
     component: ProductSelectionComponent,
     canActivate: [AuthGuard],
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'orders',
     component: OrdersComponent,
     canActivate: [AuthGuard],
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'customer-details',
     component: CustomerDetailsComponent,
     canActivate: [AuthGuard],
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: '**',
     component: LoginComponent,
     canActivate: [AuthGuard],
-    pathMatch: 'full'
-  }
-]
+    pathMatch: 'full',
+  },
+];

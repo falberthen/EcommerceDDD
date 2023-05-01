@@ -1,15 +1,18 @@
-
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import {
+  CanActivate,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+} from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { TokenStorageService } from '../services/token-storage.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
-      private authService: AuthService,
-      private tokenStorageToken: TokenStorageService
-  ) { }
+    private authService: AuthService,
+    private tokenStorageToken: TokenStorageService
+  ) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     if (!this.tokenStorageToken.getToken()) {

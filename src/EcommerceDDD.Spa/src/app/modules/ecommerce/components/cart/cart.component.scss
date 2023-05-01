@@ -1,56 +1,79 @@
 .cart-details-container {
   width: 100%;
-  min-height: 95px;
   height: 100%;
+  min-height: 150px;
   position: relative;
-  border-radius: 5px;
-
-  .quote-history{
-    cursor: pointer;
-    position: absolute;
-  }
+  background-color: #fbfdff;
 
   .remove-item {
-    color: red;
+    width: 10px;
+    margin-left: -20px;
+    border: none;
+    text-decoration: none;
+    color: #ff8080;
   }
 
-  .cart-title {
-    padding-bottom: 10px;
-    padding-top: 10px;
+  .cart-header {
+    .quote-history {
+      cursor: pointer;
+      text-align: right;
 
-    .cancel-quote {
-      top:0;
-      right:0;
-      position: absolute;
+      .event-link {
+        text-decoration: none;
+      }
     }
   }
+  .cart-body {
+    border: 1px solid #f5fbff;
+    margin-top: 15px;
+    width: 95%;
+    margin-left: 10px;
 
-  .place-order-container{
-    padding-bottom: 20px;
+    .product-name {
+      font-size: 15px;
+      font-weight: 400;
+    }
+    .product-price {
+      font-size: 15px;
+      text-align: right;
+      font-weight: bolder;
+
+      .currency-symbol {
+        font-size: 12px;
+        font-weight: normal;
+        vertical-align: top;
+        top: 0px;
+        margin-right: -1px;
+        position: relative;
+      }
+    }
+    .product-qty {
+      font-size: 13px;
+      text-align: right;
+      color: #505050;
+    }
+    .total-to-pay-container {
+      float: right;
+      font-size: 20px;
+      text-align: center;
+    }
   }
-
-  .empty-cart-message{
+  .empty-cart-message {
     margin-bottom: 10px;
   }
+  .place-order-container {
+    margin: 5px;
+    text-align: center;
 
-  .total-to-pay-container {
-    float:right;
-    margin-right: 20px;
-    font-size: 20px;
-
-    .total-to-pay-text {
-      margin-left:5px;
+    .cancel-quote {
+      margin-right: 10px;
+      background-color: #ff8080;
+      width: 100px;
     }
-  }
-
-  .table-row {
-    line-height: 40px;
-    font-size: 15px;
   }
 }
 
-.stored-event-viewer-container{
+.stored-event-viewer-container {
   margin: auto;
-  z-index:999999;
-  margin-top: 5%;
+  z-index: 999999;
 }

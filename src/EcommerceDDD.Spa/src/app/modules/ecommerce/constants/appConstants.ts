@@ -3,7 +3,7 @@ export const appConstants = {
   storedCustomer: 'customer',
   storedCurrency: 'currency',
   storedOpenQuote: 'openQuote',
-  defaultCurrency: 'USD'
+  defaultCurrency: 'USD',
 };
 
 export const orderStatusCodes = {
@@ -11,5 +11,5 @@ export const orderStatusCodes = {
   paid: 2,
   shipped: 3,
   completed: 4,
-  canceled: 0
-}
+  canceled: 0,
+};

@@ -1,51 +1,86 @@
 <div class="product-selection-container">
-  <div class="mb-4">
-    <h3>Products</h3>
-  </div>
   <div class="product-list-container">
-    <div class="form-content product-list">
-      <div *ngIf="products && products.length == 0" class="alert alert-danger no-orders-message">
-        You don't have Products.
+    <div class="product-list">
+      <div class="card" *ngIf="(isLoading | async) && products.length == 0">
+        <app-loader-skeleton></app-loader-skeleton>
       </div>
-      <div *ngIf="products && products.length > 0" class="table-responsive">
-        <table class="table table-hover">
-          <tbody>
-            <tr *ngFor="let product of products | orderBy:'name';; index as i">
-              <td class="table-row-text name-column">{{ product.name }}</td>
-              <td class="table-row-text price-column">{{ product.currencySymbol }} {{ product.price }}</td>
-              <td class="add-column">
-                <div *ngIf="product.quantity == 0">
-                  <button (click)="saveCart(product)" class="btn btn-primary add-change-item-button" [disabled]="isLoading">
-                    <fa-icon [icon]="faPlusCircle" title="Add to Cart"></fa-icon>
-                    Add to Cart
-                  </button>
+      <div class="container">
+        <div class="col-12"
+          *ngFor="let product of products | orderBy : 'name'; index as i">
+          <div class="card product-container">
+            <div class="card-body">
+              <h3 class="card-title product-title">{{ product.name }}</h3>
+              <span class="badge badge-category mb-4">
+                {{product.category}}
+              </span>
+              <div class="row">
+                <div class="col-2">
+                  <img
+                    src="{{ product.imageUrl }}"
+                    class="card-img-top product-img"
+                  />
                 </div>
-                <div *ngIf="product.quantity > 0">
-                  <select id="cars" [(ngModel)]="product.quantity" class="quantity-selector">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                  </select>
-                  <button (click)="addQuoteItem(product)" class="btn btn-secondary add-change-item-button" [disabled]="isLoading">
-                    Change quantity
-                  </button>
+                <div class="col-10">
+                  <p class="card-text product-description">
+                    {{ product.description }}
+                  </p>
                 </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </div>
+              <div class="row mt-3 mb-2">
+                <div class="col-3">
+                  <span class="product-price">
+                    <span class="currency-symbol">
+                      {{product.currencySymbol}}</span>{{product.price}}
+                  </span>
+                </div>
+                <div class="col-9">
+                  <div
+                    *ngIf="product.quantity == 0" class="add-product-container">
+                    <button
+                      (click)="saveCart(product)"
+                      class="btn btn-primary add-change-item-button"
+                      [disabled]="isLoading | async">
+                      <fa-icon
+                        [icon]="faPlusCircle"
+                        title="Add to Cart"></fa-icon>
+                      Add to Cart
+                    </button>
+                  </div>
+                  <div *ngIf="product.quantity > 0">
+                    <div class="change-quantity-container">
+                      <button
+                        (click)="addQuoteItem(product)"
+                        class="btn btn-secondary add-change-item-button"
+                        [disabled]="isLoading | async">
+                        Change quantity
+                      </button>
+                      <select
+                        [(ngModel)]="product.quantity"
+                        class="quantity-selector">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="cart-details-container fadeInDown">
-    <app-cart #cart
+  <div class="cart-details-container">
+    <app-cart
+      #cart
       (sendQuoteItemsEvent)="syncronizeQuoteToProductList($event)"
       (reloadProductsEvent)="loadProducts()">
     </app-cart>

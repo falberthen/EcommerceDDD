@@ -11,9 +11,8 @@ describe('CurrencyDropdownComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CurrencyDropdownComponent ]
-    })
-    .compileComponents();
+      declarations: [CurrencyDropdownComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

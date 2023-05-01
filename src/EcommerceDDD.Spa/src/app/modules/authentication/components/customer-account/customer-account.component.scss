@@ -1,3 +1,24 @@
-.account-form {
-  margin: 40px;
+.customer-account-container {
+  width: 50%;
+  margin: 0 auto;
+  margin-top: 5%;
+  background-color: #fefefe;
+
+  .credit-limit-field {
+    width: 25%;
+  }
+  .customer-account-form {
+    width: 100%;
+
+    .customer-account-footer {
+      display: flex;
+      justify-content: center;
+      margin: 5px;
+
+      .footer-item {
+        margin-left: 10px;
+        width: 100px;
+      }
+    }
+  }
 }

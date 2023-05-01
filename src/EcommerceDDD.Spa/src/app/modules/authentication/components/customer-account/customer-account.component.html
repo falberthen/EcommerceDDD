@@ -1,53 +1,135 @@
-<div class="wrapper fadeInDown">
-  <div class="form-content account-form">
-    <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <input type="text" id="email" name="email" formControlName="email" placeholder="E-mail"
-               [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
-        <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
-          <div *ngIf="f.email.errors.required">E-mail is required</div>
+<div class="card fadeInDown customer-account-container">
+  <div class="card-body customer-account-form">
+    <div class="cart-header">
+      <div class="row">
+        <div class="col-7">
+          <h4>Customer account</h4>
         </div>
       </div>
-      <div class="form-group">
-        <input type="text" id="name" name="name" formControlName="name" placeholder="Name"
-               [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
-        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-          <div *ngIf="f.name.errors.required">Name is required</div>
-        </div>
+      <hr />
+    </div>
+    <div class="container">
+      <div class="form-group row">
+        <form [formGroup]="accountForm">
+          <div class="form-group mt-3">
+            <label for="email" class="form-label col-lg-12">Email</label>
+            <input
+              type="text"
+              id="email"
+              name="email"
+              class="form-control"
+              formControlName="email"
+              placeholder="E-mail"
+              [ngClass]="{ 'is-invalid': isFieldInvalid('email') }"
+            />
+            <div class="invalid-feedback" *ngIf="isFieldInvalid('email')">
+              Email is required
+            </div>
+          </div>
+          <div class="form-group mt-3">
+            <label for="name" class="form-label col-lg-12">Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              class="form-control"
+              formControlName="name"
+              placeholder="Name"
+              [ngClass]="{ 'is-invalid': isFieldInvalid('name') }"
+            />
+            <div class="invalid-feedback" *ngIf="isFieldInvalid('name')">
+              Name is required
+            </div>
+          </div>
+          <div class="form-group mt-3">
+            <label for="shippingAddress" class="form-label col-lg-12">
+              Shipping address
+            </label>
+            <input
+              type="text"
+              id="shippingAddress"
+              name="shippingAddress"
+              class="form-control"
+              formControlName="shippingAddress"
+              placeholder="Shipping Address"
+              [ngClass]="{ 'is-invalid': isFieldInvalid('shippingAddress') }"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="isFieldInvalid('shippingAddress')">
+              Shipping Address is required
+            </div>
+          </div>
+          <div class="form-group mt-3">
+            <label for="password" class="form-label col-lg-12">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-control"
+              formControlName="password"
+              placeholder="Password"
+              [ngClass]="{ 'is-invalid': isFieldInvalid('password') }"
+            />
+            <div class="invalid-feedback" *ngIf="isFieldInvalid('password')">
+              Password is required
+            </div>
+          </div>
+          <div class="form-group mt-3">
+            <label for="passwordConfirm" class="form-label col-lg-12">
+              Password confirmation
+            </label>
+            <input
+              type="password"
+              id="passwordConfirm"
+              name="passwordConfirm"
+              class="form-control"
+              formControlName="passwordConfirm"
+              placeholder="Confirmation"
+              [ngClass]="{ 'is-invalid': isFieldInvalid('passwordConfirm') }"
+            />
+            <div class="invalid-feedback" *ngIf="isFieldInvalid('password')">
+              Password confirm is required
+            </div>
+          </div>
+          <div class="form-group mt-3">
+            <label for="creditLimit" class="form-label col-lg-12">
+              Credit limit
+            </label>
+            <input
+              type="text"
+              id="creditLimit"
+              name="creditLimit"
+              class="form-control credit-limit-field"
+              formControlName="creditLimit"
+              placeholder="Credit limit"
+              [ngClass]="{ 'is-invalid': isFieldInvalid('creditLimit') }"
+            />
+            <div class="invalid-feedback" *ngIf="isFieldInvalid('creditLimit')">
+              Credit Limit is required
+            </div>
+          </div>
+          <div class="row mt-3">
+            <hr />
+            <div class="col-lg-12 customer-account-footer">
+              <button
+                [routerLink]="['/home']"
+                class="btn btn-secondary footer-item"
+                [disabled]="isLoading | async"
+              >
+                Cancel
+              </button>
+              <button
+                (click)="onSubmit()"
+                class="btn btn-primary footer-item"
+                [disabled]="accountForm.invalid || (isLoading | async)"
+              >
+                Create
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
-      <div class="form-group">
-        <input type="text" id="shippingAddress" name="shippingAddress" formControlName="shippingAddress" placeholder="Shipping Address"
-               [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
-        <div *ngIf="submitted && f.shippingAddress.errors" class="invalid-feedback">
-          <div *ngIf="f.shippingAddress.errors.required">Shipping Address is required</div>
-        </div>
-      </div>
-      <div class="form-group">
-        <input type="password" id="password" name="password" formControlName="password" placeholder="Password"
-               [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
-        <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-          <div *ngIf="f.password.errors.required">Password is required</div>
-        </div>
-      </div>
-      <div class="form-group">
-        <input type="password" id="passwordConfirm" name="passwordConfirm" formControlName="passwordConfirm"
-          placeholder="Confirmation"
-          [ngClass]="{ 'is-invalid': submitted && f.passwordConfirm.errors }">
-        <div *ngIf="submitted && f.passwordConfirm.errors" class="invalid-feedback">
-          <div *ngIf="f.passwordConfirm.errors.required">Password confirm is required</div>
-        </div>
-      </div>
-      <div class="form-group">
-        <input type="text" id="creditLimit" name="creditLimit" formControlName="creditLimit" placeholder="Credit limit"
-          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"> $
-        <div *ngIf="submitted && f.creditLimit.errors" class="invalid-feedback">
-          <div *ngIf="f.creditLimit.errors.required">Credit Limit is required</div>
-        </div>
-      </div>
-      <div class="form-footer">
-        <input type="button" value="Cancel" class="btn btn-secondary" [routerLink]="['/login']" [disabled]="isLoading"/>
-        <input type="submit" value="Create" class="btn btn-primary" [disabled]="isLoading"/>
-      </div>
-    </form>
+    </div>
   </div>
 </div>
