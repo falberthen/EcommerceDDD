@@ -1,13 +1,3 @@
-using System.Net;
-using Microsoft.AspNetCore.Mvc;
-using EcommerceDDD.Payments.Domain;
-using Microsoft.AspNetCore.Authorization;
-using EcommerceDDD.Payments.Domain.Commands;
-using EcommerceDDD.Core.Infrastructure.WebApi;
-using EcommerceDDD.Payments.API.Controllers.Requests;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-using EcommerceDDD.Core.CQRS.QueryHandling;
-
 namespace EcommerceDDD.Payments.API.Controllers;
 
 [Authorize]
@@ -21,6 +11,7 @@ public class PaymentsController : CustomControllerBase
         : base(commandBus, queryBus) { }
 
     [HttpPost]
+    [Authorize(Policy = PolicyBuilder.WritePolicy)]
     [ProducesResponseType((int)HttpStatusCode.Created)]
     public async Task<IActionResult> Create([FromBody] PaymentRequest request)
     {
@@ -34,6 +25,7 @@ public class PaymentsController : CustomControllerBase
     }
 
     [HttpDelete("{paymentId}")]
+    [Authorize(Policy = PolicyBuilder.DeletePolicy)]
     [ProducesResponseType((int)HttpStatusCode.Created)]
     public async Task<IActionResult> Cancel([FromRoute] Guid paymentId, [FromBody] CancelPaymentRequest request)
     {

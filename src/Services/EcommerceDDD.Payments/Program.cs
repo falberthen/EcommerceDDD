@@ -1,35 +1,37 @@
-using EcommerceDDD.Payments.Domain;
-using EcommerceDDD.Core.Persistence;
-using EcommerceDDD.Core.Infrastructure;
-using EcommerceDDD.Core.Infrastructure.Kafka;
-using EcommerceDDD.Core.Infrastructure.Outbox;
-using EcommerceDDD.Core.Infrastructure.Marten;
-using EcommerceDDD.Core.Infrastructure.WebApi;
-using EcommerceDDD.Payments.Infrastructure.Projections;
-using EcommerceDDD.Payments.Application.ProcessingPayment;
-using EcommerceDDD.Payments.Application.RequestingPayment;
-
 var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
+services.AddControllers();
+services.AddEndpointsApiExplorer();
+services.AddCoreInfrastructure(builder.Configuration);
 
 // Mediator        
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(RequestPaymentHandler).Assembly));
 
-// ---- Services
-builder.Services.AddInfrastructureExtension(builder.Configuration);
-builder.Services.AddScoped<ICustomerCreditChecker, CustomerCreditChecker>();
-builder.Services.AddScoped<IEventStoreRepository<Payment>, MartenRepository<Payment>>();
-builder.Services.AddKafkaProducer(builder.Configuration);
-builder.Services.AddMarten(builder.Configuration, options =>
+// Services
+services.AddScoped<ICustomerCreditChecker, CustomerCreditChecker>();
+services.AddScoped<IEventStoreRepository<Payment>, MartenRepository<Payment>>();
+
+// Kafka
+services.AddKafkaProducer(builder.Configuration);
+
+// Marten
+services.AddMarten(builder.Configuration, options =>
     options.ConfigureProjections());
 
-// ---- Outbox
-builder.Services.AddOutboxService(builder.Configuration);
+// Outbox
+services.AddOutboxService(builder.Configuration);
 
-// ---- App
+// Policies
+services.AddAuthorization(options =>
+{
+    options.AddPolicy(PolicyBuilder.ReadPolicy, PolicyBuilder.ReadAccess);
+    options.AddPolicy(PolicyBuilder.WritePolicy, PolicyBuilder.WriteAccess);
+    options.AddPolicy(PolicyBuilder.DeletePolicy, PolicyBuilder.DeleteAccess);
+});
+
+// App
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
