@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-
-namespace EcommerceDDD.IdentityServer.Models;
+﻿namespace EcommerceDDD.IdentityServer.Models;
 
 public record class ClaimRequirement : IAuthorizationRequirement
 {

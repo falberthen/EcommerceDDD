@@ -1,8 +1,3 @@
-using System.Net;
-using Moq.Protected;
-using Microsoft.Extensions.Caching.Memory;
-using EcommerceDDD.Core.Infrastructure.Identity;
-
 namespace EcommerceDDD.Core.Infrastructure.Tests.Http;
 
 public class TokenRequesterTests
@@ -25,7 +20,7 @@ public class TokenRequesterTests
 
         // When
         var response = await tokenRequester
-            .GetApplicationToken(new TokenIssuerSettings() { Authority = _url });
+            .GetApplicationTokenAsync(new TokenIssuerSettings() { Authority = _url });
 
         // Then
         Assert.NotNull(response);
@@ -45,7 +40,7 @@ public class TokenRequesterTests
         var tokenRequester = new TokenRequester(_cache.Object, _httpClientFactory.Object);
 
         // When
-        var response = await tokenRequester.GetUserToken(new TokenIssuerSettings() { Authority = _url }, 
+        var response = await tokenRequester.GetUserTokenAsync(new TokenIssuerSettings() { Authority = _url }, 
             "username", "password");
 
         // Then

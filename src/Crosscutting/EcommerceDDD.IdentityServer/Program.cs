@@ -1,26 +1,21 @@
-using System.Reflection;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using EcommerceDDD.Core.Infrastructure;
-using EcommerceDDD.IdentityServer.Database;
-using EcommerceDDD.IdentityServer.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using EcommerceDDD.Core.Infrastructure.Identity;
-
 var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
 
-// ---- Services
+services.AddControllers();
+services.AddEndpointsApiExplorer();
+services.AddMemoryCache();
+services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
+// Token settings
 var tokenIssuerSettings = builder.Configuration.GetSection("TokenIssuerSettings");
-builder.Services.Configure<TokenIssuerSettings>(tokenIssuerSettings);
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+services.Configure<TokenIssuerSettings>(tokenIssuerSettings);
 
-builder.Services.AddScoped<IdentityApplicationDbContext>();
-builder.Services.AddScoped<ITokenRequester, TokenRequester>();
-
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddMemoryCache();
+// Services
+services.AddScoped<IdentityApplicationDbContext>();
+services.AddScoped<ITokenRequester, TokenRequester>();
+services.AddScoped<IIdentityManager, IdentityManager>();
+services.AddTransient<IProfileService, CustomProfileService>();
 
 // ---- AspNet.Core.Identity settings
 var connectionString = builder.Configuration
@@ -28,10 +23,12 @@ var connectionString = builder.Configuration
 var migrationsAssembly = typeof(Program)
     .GetTypeInfo().Assembly.GetName().Name;
 
-builder.Services.AddDbContext<IdentityApplicationDbContext>(options =>
+// DbContext
+services.AddDbContext<IdentityApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+// Authorization and Identity
+services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<IdentityApplicationDbContext>()
     .AddDefaultTokenProviders();
 
@@ -56,9 +53,10 @@ builder.Services.AddIdentityServer(opt =>
         options.ConfigureDbContext = b =>
             b.UseNpgsql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
     })
-    .AddAspNetIdentity<ApplicationUser>();
+    .AddAspNetIdentity<ApplicationUser>()
+    .AddProfileService<CustomProfileService>();
 
-// ---- Cors
+// Cors
 builder.Services.AddCors(o =>
     o.AddPolicy("CorsPolicy", builder => {
         builder
@@ -69,7 +67,7 @@ builder.Services.AddCors(o =>
     }
 ));
 
-// ---- App
+// App
 var app = builder.Build();
 
 app.UseCors("CorsPolicy");
