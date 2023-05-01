@@ -2,11 +2,15 @@
 
 public static class JwtExtensions
 {
-    public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, 
+    public static IServiceCollection AddJwtAuthentication(this IServiceCollection services,
         IConfiguration configuration)
     {
-        if (services is null)
-            throw new ArgumentNullException(nameof(services));
+        if (configuration is null)
+            throw new ArgumentNullException(nameof(configuration));
+
+        var authority = configuration
+            .GetValue<string>("TokenIssuerSettings:Authority")
+            ?? throw new ArgumentNullException("TokenIssuerSettings:Authority section was not found");
 
         services.AddAuthentication(options =>
         {
@@ -16,7 +20,7 @@ public static class JwtExtensions
         .AddJwtBearer(options =>
         {
             options.RequireHttpsMetadata = false;
-            options.Authority = configuration.GetValue<string>("TokenIssuerSettings:Authority");
+            options.Authority = authority;
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,

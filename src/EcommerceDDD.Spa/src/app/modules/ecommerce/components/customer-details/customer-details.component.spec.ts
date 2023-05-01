@@ -11,9 +11,8 @@ describe('CustomerProfileComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CustomerDetailsComponent ]
-    })
-    .compileComponents();
+      declarations: [CustomerDetailsComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

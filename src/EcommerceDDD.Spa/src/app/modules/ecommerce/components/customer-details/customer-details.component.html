@@ -1,39 +1,96 @@
-<div class="wrapper fadeInDown">
-  <div class="form-content details-form" *ngIf="customer">
-    <form [formGroup]="customerDetailsForm">
-      <div class="form-group mt-3 mb-3">
-        <label><b>{{customer!.email}}</b></label>
-      </div>
-      <div class="form-group">
-        <input type="text" id="name" name="name" formControlName="name" value="{{customer!.name}}" placeholder="Name"
-               [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
-        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-          <div *ngIf="f.name.errors.required">Name is required</div>
-        </div>
-      </div>
-      <div class="form-group">
-        <input type="text" id="shippingAddress" name="shippingAddress" formControlName="shippingAddress" value="{{customer!.shippingAddress}}" placeholder="Shipping Address"
-               [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
-        <div *ngIf="submitted && f.shippingAddress.errors" class="invalid-feedback">
-          <div *ngIf="f.shippingAddress.errors.required">Shipping Address is required</div>
-        </div>
-      </div>
-      <div class="form-group">
-        <input type="text" id="creditLimit" name="creditLimit" formControlName="creditLimit" placeholder="Limit of credit"
-          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"> $
-        <div *ngIf="submitted && f.creditLimit.errors" class="invalid-feedback">
-          <div *ngIf="f.creditLimit.errors.required">Credit Limit is required</div>
-        </div>
-      </div>
-      <div class="form-footer">
-        <input type="button" value="Cancel" class="btn btn-secondary" [routerLink]="['/home']" />
-        <input type="button" value="Update" class="btn btn-primary" (click)="saveDetails()" [disabled]="isLoading"/>
-      </div>
-    </form>
-  </div>
-</div>
-
 <!-- Stored Event Viewer container-->
 <div class="stored-event-viewer-container">
   <template #storedEventViewerContainer></template>
+</div>
+<div class="card fadeInDown customer-details-container">
+  <div class="card-body customer-details-form">
+    <div class="cart-header">
+      <div class="row">
+        <div class="col-7">
+          <h4>Customer details</h4>
+        </div>
+        <div class="col-5 customer-events-history">
+          <a class="text-secondary event-link"
+            (click)="showCustomerStoredEvents()">
+            <fa-icon [icon]="faList"></fa-icon>
+            Customer Events
+          </a>
+        </div>
+      </div>
+      <hr />
+    </div>
+    <div class="container" *ngIf="(isLoading | async) && !customer">
+      <app-loader-skeleton></app-loader-skeleton>
+    </div>
+    <div class="container" *ngIf="customer">
+      <div class="form-group row">
+        <form [formGroup]="customerDetailsForm">
+          <div class="form-group">
+            <label for="name" class="form-label col-lg-12">Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              class="form-control"
+              formControlName="name"
+              value="{{ customer!.name }}"
+              placeholder="Name"
+              [ngClass]="{ 'is-invalid': isFieldInvalid('name') }"
+            />
+            <div class="invalid-feedback" *ngIf="isFieldInvalid('name')">
+              Name is required
+            </div>
+          </div>
+          <div class="form-group mt-3">
+            <label for="shippingAddress" class="form-label col-lg-12">Shipping address</label>
+            <input
+              type="text"
+              id="shippingAddress"
+              name="shippingAddress"
+              class="form-control"
+              formControlName="shippingAddress"
+              value="{{ customer!.shippingAddress }}"
+              placeholder="Shipping Address"
+              [ngClass]="{ 'is-invalid': isFieldInvalid('shippingAddress') }"/>
+            <div
+              class="invalid-feedback"
+              *ngIf="isFieldInvalid('shippingAddress')">
+              Shipping Address is required
+            </div>
+          </div>
+          <div class="form-group mt-3">
+            <label for="creditLimit" class="form-label col-lg-12">Credit limit</label>
+            <input
+              type="text"
+              id="creditLimit"
+              name="creditLimit"
+              class="form-control credit-limit-field"
+              formControlName="creditLimit"
+              placeholder="Limit of credit"
+              [ngClass]="{ 'is-invalid': isFieldInvalid('creditLimit') }"
+            />
+            <div class="invalid-feedback" *ngIf="isFieldInvalid('creditLimit')">
+              Credit Limit is required
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="row mt-3">
+        <hr />
+        <div class="col-lg-12 customer-details-footer">
+          <button
+            [routerLink]="['/home']"
+            class="btn btn-secondary footer-item">
+            Cancel
+          </button>
+          <button
+            (click)="saveDetails()"
+            class="btn btn-primary footer-item"
+            [disabled]="customerDetailsForm.invalid || (isLoading | async)">
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

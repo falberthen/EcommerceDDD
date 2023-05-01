@@ -1,64 +1,72 @@
 .orders-container {
-  margin-top: 50px;
+  margin-top: 5%;
   margin-left: 23%;
   width: 50%;
   height: 100%;
 
+  .order-container {
+    .order-details-container {
+      width: 100%;
+      margin-bottom: 15px;
+      background-color: #fefefe;
+
+      .product-name {
+        font-size: 14px;
+      }
+      .total-to-pay-container {
+        float: right;
+        margin-right: 20px;
+        font-size: 18px;
+
+        .total-to-pay-text {
+          margin-left: 5px;
+        }
+      }
+      .date-placed-container {
+        float: left;
+        font-size: 14px;
+
+        .date-placed-text {
+          margin-left: 5px;
+          font-size: 14px;
+        }
+      }
+      .order-status-container {
+        .order-status-text {
+          text-align: center;
+          font-size: 18px;
+          font-weight: bolder;
+
+          .placed {
+            color: #000000;
+          }
+          .paid {
+            color: #d39802;
+          }
+          .shipped {
+            color: rgb(7, 73, 195);
+          }
+          .completed {
+            color: green;
+          }
+          .canceled {
+            color: rgb(255, 0, 0);
+          }
+        }
+      }
+      .text-right {
+        text-align: right;
+      }
+    }
+  }
   .no-orders-message {
     margin-top: 15px;
-  }
-
-  .order-details-container {
-    width: 100%;
-    margin-bottom: 15px;
-
-    .total-to-pay-container {
-      float: right;
-      margin-right: 20px;
-      font-size: 20px;
-
-      .total-to-pay-text {
-        margin-left: 5px;
-      }
-    }
-
-    .date-placed-container {
-      float: left;
-
-      .date-placed-text {
-        margin-left: 5px;
-      }
-    }
-
-    .order-status-container {
-      .order-status-text {
-        text-align: center;
-        font-size:15px;
-        font-weight:bolder;
-
-        .placed {
-          color: #000000;
-        }
-        .paid {
-          color: #d39802;
-        }
-        .shipped {
-          color: rgb(7, 73, 195);
-        }
-        .completed {
-          color: green;
-        }
-        .canceled {
-          color: rgb(255, 0, 0);
-        }
-      }
-    }
   }
 }
 
 .stored-event-viewer-container {
   margin: auto;
-  z-index:999999;
+  z-index: 999999;
   margin-bottom: 20px;
   margin-top: 40px;
   width: 100%;

@@ -2,12 +2,18 @@
 
 public static class HttpServicesExtensions
 {
-    public static IServiceCollection ConfigureIntegrationHttpService(this IServiceCollection services, 
+    public static void ConfigureIntegrationHttpService(this IServiceCollection services, 
         IConfiguration configuration)
     {
+        if (configuration is null)
+            throw new ArgumentNullException(nameof(configuration));
+
         // ---- Settings
-        var tokenIssuerSettings = configuration.GetSection("TokenIssuerSettings");
-        var integrationHttpSettings = configuration.GetSection("IntegrationHttpSettings");
+        var tokenIssuerSettings = configuration.GetSection("TokenIssuerSettings")
+            ?? throw new ArgumentNullException("TokenIssuerSettings section was not found.");
+        var integrationHttpSettings = configuration.GetSection("IntegrationHttpSettings")
+            ?? throw new ArgumentNullException("IntegrationHttpSettings section was not found.");
+
         services.Configure<TokenIssuerSettings>(tokenIssuerSettings);
         services.Configure<IntegrationHttpSettings>(integrationHttpSettings);
 
@@ -16,7 +22,5 @@ public static class HttpServicesExtensions
         services.AddTransient<IIntegrationHttpService, IntegrationHttpService>();
         services.AddTransient<IHttpRequester, HttpRequester>();
         services.AddTransient<ITokenRequester, TokenRequester>();
-
-        return services;
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace EcommerceDDD.Quotes.API.Controllers.Requests;
+﻿namespace EcommerceDDD.Quotes.API.Controllers.Requests;
 
 public record class OpenQuoteRequest
 {

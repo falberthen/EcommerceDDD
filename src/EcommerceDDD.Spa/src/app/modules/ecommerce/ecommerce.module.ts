@@ -8,24 +8,23 @@ import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { OrderModule } from 'ngx-order-pipe';
 import { ProductSelectionComponent } from './components/product-selection/product-selection.component';
 import { CartComponent } from './components/cart/cart.component';
-import { NavMenuComponent } from '../../shared/components/nav-menu/nav-menu.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
-   declarations: [
-      HomeComponent,
-      ProductSelectionComponent,
-      CartComponent,
-      OrdersComponent,
-      CustomerDetailsComponent,
-   ],
-   imports: [
-      CommonModule,
-      SharedModule,
-      RouterModule,
-      NgbDatepickerModule,
-      OrderModule
-   ],
-   providers: []
+  declarations: [
+    HomeComponent,
+    ProductSelectionComponent,
+    CartComponent,
+    OrdersComponent,
+    CustomerDetailsComponent,
+  ],
+  imports: [
+    CommonModule,
+    SharedModule,
+    RouterModule,
+    NgbDatepickerModule,
+    OrderModule,
+  ],
+  providers: [],
 })
-export class EcommerceModule { }
+export class EcommerceModule {}

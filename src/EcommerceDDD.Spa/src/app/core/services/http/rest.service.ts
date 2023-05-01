@@ -7,20 +7,26 @@ export abstract class RestService {
   apiBaseUrl: string;
 
   httpHeaders = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-  }
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+  };
 
   constructor(private http: HttpClient, baseUrl: string) {
     this.apiBaseUrl = baseUrl;
   }
 
-  protected get(relativeUrl: string, httpParams?: HttpParams, responseTypeInput?: any): Observable<any> {
+  protected get(
+    relativeUrl: string,
+    httpParams?: HttpParams,
+    responseTypeInput?: any
+  ): Observable<any> {
     const fullUrl = Location.joinWithSlash(this.apiBaseUrl, relativeUrl);
-    return this.http.get(fullUrl, { params: httpParams, responseType: responseTypeInput }).pipe(
-      map((response: any) => {
-        return response;
-      })
-    );
+    return this.http
+      .get(fullUrl, { params: httpParams, responseType: responseTypeInput })
+      .pipe(
+        map((response: any) => {
+          return response;
+        })
+      );
   }
 
   protected delete(relativeUrl: string, body?: any): Observable<any> {
@@ -32,7 +38,10 @@ export abstract class RestService {
     );
   }
 
-  protected post(relativeUrl: string, body?: any, httpParams?: HttpParams): Observable<any> {
+  protected post(
+    relativeUrl: string,
+    body?: any
+  ): Observable<any> {
     const fullUrl = Location.joinWithSlash(this.apiBaseUrl, relativeUrl);
     return this.http.post(fullUrl, body, this.httpHeaders).pipe(
       map((response: any) => {
@@ -41,7 +50,10 @@ export abstract class RestService {
     );
   }
 
-  protected put(relativeUrl: string, body?: any, httpParams?: HttpParams): Observable<any> {
+  protected put(
+    relativeUrl: string,
+    body?: any
+  ): Observable<any> {
     const fullUrl = Location.joinWithSlash(this.apiBaseUrl, relativeUrl);
     return this.http.put(fullUrl, body, this.httpHeaders).pipe(
       map((response: any) => {
@@ -50,7 +62,10 @@ export abstract class RestService {
     );
   }
 
-  protected patch(relativeUrl: string, body: any, httpParams?: HttpParams): Observable<any> {
+  protected patch(
+    relativeUrl: string,
+    body: any
+  ): Observable<any> {
     const fullUrl = Location.joinWithSlash(this.apiBaseUrl, relativeUrl);
     return this.http.patch(fullUrl, body, this.httpHeaders).pipe(
       map((response: any) => {

@@ -10,16 +10,13 @@ import { SharedModule } from './shared/shared.module';
 import { AuthenticationModule } from './modules/authentication/authentication.module';
 import { APP_ROUTES } from './app.routes';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
-import { ServerErrorInterceptor } from './core/interceptors/error.interceptor';
+import { ServerErrorInterceptor } from './core/interceptors/server-error.interceptor';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LoaderInterceptor } from './core/interceptors/loader.interceptor';
 import { NavMenuComponent } from './shared/components/nav-menu/nav-menu.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    NavMenuComponent
-  ],
+  declarations: [AppComponent, NavMenuComponent],
   imports: [
     SharedModule,
     CoreModule,
@@ -29,14 +26,18 @@ import { NavMenuComponent } from './shared/components/nav-menu/nav-menu.componen
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot(APP_ROUTES),
-    NgbModule
+    NgbModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ServerErrorInterceptor, multi: true },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ServerErrorInterceptor,
+      multi: true,
+    },
   ],
   exports: [RouterModule],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

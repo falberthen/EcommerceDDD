@@ -1,9 +1,28 @@
-.login-form{
-  margin: 40px;
-  width: 450px;
-  height: 270px;
+.login-container {
+  width: 30%;
+  margin: 0 auto;
+  margin-top: 5%;
+  background-color: #fefefe;
+
+  .login-form {
+    margin: 20px;
+    padding: 20px;
+
+    .login-button {
+      width: 100%;
+      margin: 0;
+    }
+
+    .create-account-link {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      text-decoration: none;
+    }
+  }
 }
 
-.stargazers-container{
-  width: 455px;
+.stargazers-container {
+  width: 30.5%;
+  margin: 0 auto;
 }

@@ -1,19 +1,19 @@
-.ddl-currency-container{
+.ddl-currency-container {
   width: 200px;
   float: left;
   margin-left: -30px;
 }
 
 .currency-name-container {
-  width:50px;
+  width: 50px;
   padding-top: 7px;
   margin-left: 5px;
-  float:left;
+  float: left;
 }
 
 .currency-icon-container {
-  width: 20px;
-  margin-top:7px;
+  width: 10px;
+  margin-top: 7px;
   float: left;
 }
 

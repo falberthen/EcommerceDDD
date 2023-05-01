@@ -6,12 +6,7 @@ a.navbar-brand {
 
 .app-title {
   font-family: Architects Daughter;
-  color:white;
-}
-
-.custom-container {
-  width: 100%;
-  text-align: center;
+  color: white;
 }
 
 html {
@@ -24,22 +19,26 @@ html {
 }
 
 .box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
 }
 
 .main-title-container {
-  text-align:center;
-  width:100%;
+  text-align: center;
+  width: 100%;
+  height: 70px;
   background-color: #2879d0;
   padding-top: 15px;
 }
 
-.currency-container{
-  width: 155px;
-  float:left;
-}
+.nav-container {
+  text-align: left;
 
-.currency-selector-container {
-  width:100px;
-  float:left;
+  .currency-container {
+    width: 125px;
+    float: left;
+  }
+  .currency-selector-container {
+    width: 50px;
+    float: left;
+  }
 }

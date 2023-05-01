@@ -2,12 +2,16 @@
 
 public static class SwaggerExtensions
 {
-    public static void AddSwagger(this IServiceCollection services, IConfiguration configuration)
+    public static void AddSwagger(this IServiceCollection services, 
+        IConfiguration configuration)
     {
-        if (services is null)
-            throw new ArgumentNullException(nameof(services));
+        if (configuration is null)
+            throw new ArgumentNullException(nameof(configuration));
 
-        var swaggerSettings = configuration.GetSection("SwaggerSettings").Get<SwaggerGenSettings>();
+        var swaggerSettings = configuration.GetSection("SwaggerSettings")
+            .Get<SwaggerGenSettings>()
+            ?? throw new ArgumentNullException(nameof(SwaggerGenSettings));
+
         services.AddSwaggerGen(s =>
         {
             s.SwaggerDoc(swaggerSettings.Version, new OpenApiInfo
@@ -50,18 +54,20 @@ public static class SwaggerExtensions
     }
 
     public static void UseSwagger(this IApplicationBuilder app,
-        ConfigurationManager configuration)
+        IConfiguration configuration)
     {
-        if (app is null)
-            throw new ArgumentNullException(nameof(app));
+        if (configuration is null)
+            throw new ArgumentNullException(nameof(configuration));
 
         var swaggerSettings = configuration
-            .GetSection("SwaggerSettings").Get<SwaggerGenSettings>();
+            .GetSection("SwaggerSettings")?
+            .Get<SwaggerGenSettings>()
+            ?? throw new ArgumentNullException(nameof(SwaggerGenSettings));
 
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
-            c.SwaggerEndpoint("/swagger/v1/swagger.json", swaggerSettings.Description);
+            c.SwaggerEndpoint($"/swagger/{swaggerSettings.Version}/swagger.json", swaggerSettings.Title);
         });
     }
 }

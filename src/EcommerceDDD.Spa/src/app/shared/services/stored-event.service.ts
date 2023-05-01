@@ -3,17 +3,17 @@ import { StoredEventData } from 'src/app/modules/ecommerce/models/StoredEventDat
 import { StoredEventsViewerComponent } from 'src/app/shared/components/stored-events-viewer/stored-events-viewer.component';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class StoredEventService {
-
   public showStoredEvents(
-    storedEventViewContainerRef : ViewContainerRef,
-    storedEventData: StoredEventData[]) {
-
+    storedEventViewContainerRef: ViewContainerRef,
+    storedEventData: StoredEventData[]
+  ) {
     storedEventViewContainerRef.clear();
-    const componentRef  = storedEventViewContainerRef
-      .createComponent(StoredEventsViewerComponent);
+    const componentRef = storedEventViewContainerRef.createComponent(
+      StoredEventsViewerComponent
+    );
 
     componentRef.instance.storedEventData = storedEventData;
     componentRef.instance.destroyComponent.subscribe((event: any) => {

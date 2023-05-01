@@ -11,7 +11,7 @@ export class Quote {
   }
 }
 
-export class QuoteItem{
+export class QuoteItem {
   productId: string;
   productName: string;
   unitPrice: number;
@@ -19,8 +19,14 @@ export class QuoteItem{
   currencySymbol: string;
   totalPrice: number;
 
-  constructor(productId: string, productName: string, unitPrice: number,
-    quantity: number, currencySymbol: string, totalPrice: number) {
+  constructor(
+    productId: string,
+    productName: string,
+    unitPrice: number,
+    quantity: number,
+    currencySymbol: string,
+    totalPrice: number
+  ) {
     this.productId = productId;
     this.productName = productName;
     this.quantity = quantity;

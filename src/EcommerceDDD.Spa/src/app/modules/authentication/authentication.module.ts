@@ -6,14 +6,7 @@ import { RouterModule } from '@angular/router';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
-  declarations: [
-    LoginComponent,
-    CustomerAccountComponent
-  ],
-  imports: [
-    RouterModule,
-    CommonModule,
-    SharedModule
-  ]
+  declarations: [LoginComponent, CustomerAccountComponent],
+  imports: [RouterModule, CommonModule, SharedModule],
 })
-export class AuthenticationModule { }
+export class AuthenticationModule {}

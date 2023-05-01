@@ -8,29 +8,35 @@ import { Observable } from 'rxjs';
 import { ServiceResponse } from './ServiceResponse';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CustomersService extends RestService {
-
   controllerName = 'customers';
 
   constructor(http: HttpClient) {
     super(http, environment.apiUrl);
   }
 
-  public loadCustomerDetails(): Observable<ServiceResponse>{
+  public loadCustomerDetails(): Observable<ServiceResponse> {
     return this.get(this.controllerName);
   }
 
-  public getCustomerStoredEvents(aggregateId: string): Observable<ServiceResponse>{
-    return this.get(this.controllerName + "/" + aggregateId + '/history');
+  public getCustomerStoredEvents(
+    aggregateId: string
+  ): Observable<ServiceResponse> {
+    return this.get(this.controllerName + '/' + aggregateId + '/history');
   }
 
-  public registerCustomer(request: RegisterCustomerRequest) {
+  public registerCustomer(
+    request: RegisterCustomerRequest
+  ): Observable<ServiceResponse> {
     return this.post(this.controllerName, request);
   }
 
-  public updateCustomer(customerId: string, request: UpdateCustomerRequest) {
-    return this.put(this.controllerName + "/" + customerId, request);
+  public updateCustomer(
+    customerId: string,
+    request: UpdateCustomerRequest
+  ): Observable<ServiceResponse> {
+    return this.put(this.controllerName + '/' + customerId, request);
   }
 }
