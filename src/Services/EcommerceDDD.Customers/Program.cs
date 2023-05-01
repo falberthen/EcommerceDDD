@@ -1,29 +1,28 @@
-using EcommerceDDD.Core.Persistence;
-using EcommerceDDD.Customers.Domain;
-using EcommerceDDD.Core.Infrastructure;
-using EcommerceDDD.Core.Infrastructure.Marten;
-using EcommerceDDD.Core.Infrastructure.WebApi;
-using EcommerceDDD.Customers.Application.RegisteringCustomer;
-using EcommerceDDD.Customers.Infrastructure.Projections;
-using EcommerceDDD.Customers.Api.Application.RegisteringCustomer;
-
 var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
+services.AddControllers();
+services.AddEndpointsApiExplorer();
+services.AddCoreInfrastructure(builder.Configuration);
 
 // Mediator        
 builder.Services.AddMediatR(cfg => 
     cfg.RegisterServicesFromAssembly(typeof(RegisterCustomerHandler).Assembly));
 
-// ---- Services
-builder.Services.AddInfrastructureExtension(builder.Configuration);
-builder.Services.AddScoped<IEmailUniquenessChecker, EmailUniquenessChecker>();
-builder.Services.AddScoped<IEventStoreRepository<Customer>, MartenRepository<Customer>>();
-builder.Services.AddMarten(builder.Configuration,
+// Services
+services.AddScoped<IEmailUniquenessChecker, EmailUniquenessChecker>();
+services.AddScoped<IEventStoreRepository<Customer>, MartenRepository<Customer>>();
+services.AddMarten(builder.Configuration,
     options => options.ConfigureProjections());
 
-// ---- App
+// Policies
+services.AddAuthorization(options =>
+{
+    options.AddPolicy(PolicyBuilder.ReadPolicy, PolicyBuilder.ReadAccess);
+    options.AddPolicy(PolicyBuilder.WritePolicy, PolicyBuilder.WriteAccess);
+});
+
+// App
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

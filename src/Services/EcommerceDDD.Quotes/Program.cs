@@ -1,30 +1,30 @@
-using Marten;
-using EcommerceDDD.Quotes.Domain;
-using EcommerceDDD.Core.Persistence;
-using EcommerceDDD.Core.Infrastructure;
-using EcommerceDDD.Core.Infrastructure.Marten;
-using EcommerceDDD.Quotes.API.Configurations;
-using EcommerceDDD.Core.Infrastructure.WebApi;
-using EcommerceDDD.Quotes.Application.Quotes.OpeningQuote;
-
 var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
 
-builder.Services.AddHttpClient();
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
+services.AddHttpClient();
+services.AddControllers();
+services.AddEndpointsApiExplorer();
+services.AddCoreInfrastructure(builder.Configuration);
 
 // Mediator        
-builder.Services.AddMediatR(cfg =>
+services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(OpenQuoteHandler).Assembly));
 
-// ---- Services
-builder.Services.AddInfrastructureExtension(builder.Configuration);
-builder.Services.AddScoped<ICustomerOpenQuoteChecker, CustomerOpenQuoteChecker>();
-builder.Services.AddScoped<IEventStoreRepository<Quote>, MartenRepository<Quote>>();
-builder.Services.AddMarten(builder.Configuration,
+// Services
+services.AddScoped<ICustomerOpenQuoteChecker, CustomerOpenQuoteChecker>();
+services.AddScoped<IEventStoreRepository<Quote>, MartenRepository<Quote>>();
+services.AddMarten(builder.Configuration,
     options => options.ConfigureProjections());
 
-// ---- App
+// Policies
+services.AddAuthorization(options =>
+{
+    options.AddPolicy(PolicyBuilder.ReadPolicy, PolicyBuilder.ReadAccess);
+    options.AddPolicy(PolicyBuilder.WritePolicy, PolicyBuilder.WriteAccess);
+    options.AddPolicy(PolicyBuilder.DeletePolicy, PolicyBuilder.DeleteAccess);
+});
+
+// App
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

@@ -1,12 +1,3 @@
-using System.Net;
-using Microsoft.AspNetCore.Mvc;
-using EcommerceDDD.Shipments.Domain;
-using Microsoft.AspNetCore.Authorization;
-using EcommerceDDD.Core.CQRS.QueryHandling;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-using EcommerceDDD.Core.Infrastructure.WebApi;
-using EcommerceDDD.Shipments.API.Controllers.Requests;
-
 namespace EcommerceDDD.Shipments.API.Controllers;
 
 [Authorize]
@@ -20,6 +11,7 @@ public class ShipmentsController : CustomControllerBase
         : base(commandBus, queryBus) { }
 
     [HttpPost]
+    [Authorize(Policy = PolicyBuilder.ReadPolicy)]
     [ProducesResponseType((int)HttpStatusCode.Created)]
     public async Task<IActionResult> RequestShipment([FromBody] ShipOrderRequest request)
     {
