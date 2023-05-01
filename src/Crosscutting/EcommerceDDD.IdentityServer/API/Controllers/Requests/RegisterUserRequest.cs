@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace EcommerceDDD.IdentityServer.API.Controllers.Requests;
+﻿namespace EcommerceDDD.IdentityServer.API.Controllers.Requests;
 
 public record RegisterUserRequest
 {
