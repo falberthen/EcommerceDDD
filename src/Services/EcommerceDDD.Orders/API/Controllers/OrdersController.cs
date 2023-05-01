@@ -1,17 +1,6 @@
-using System.Net;
-using Microsoft.AspNetCore.Mvc;
-using EcommerceDDD.Orders.Domain;
-using Microsoft.AspNetCore.Authorization;
-using EcommerceDDD.Orders.Domain.Commands;
-using EcommerceDDD.Core.Infrastructure.WebApi;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-using EcommerceDDD.Core.CQRS.QueryHandling;
-using EcommerceDDD.Orders.Application.Orders.GettingOrders;
-using EcommerceDDD.Orders.Application.GettingOrderEventHistory;
-
 namespace EcommerceDDD.Orders.API.Controllers;
 
-[Authorize]
+[Authorize(Roles = "Customer")]
 [Route("api/orders")]
 [ApiController]
 public class OrdersController : CustomControllerBase
@@ -27,6 +16,7 @@ public class OrdersController : CustomControllerBase
     /// <param name="customerId"></param>
     /// <returns></returns>
     [HttpGet, Route("{customerId:guid}")]
+    [Authorize(Policy = PolicyBuilder.ReadPolicy)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ListDetails([FromRoute] Guid customerId)
@@ -41,6 +31,7 @@ public class OrdersController : CustomControllerBase
     /// <param name="orderId"></param>
     /// <returns></returns>
     [HttpGet, Route("{orderId}/history")]
+    [Authorize(Policy = PolicyBuilder.ReadPolicy)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ListHistory([FromRoute] Guid orderId)
@@ -55,6 +46,7 @@ public class OrdersController : CustomControllerBase
     /// <param name="request"></param>
     /// <returns></returns>
     [HttpPost, Route("{quoteId}")]
+    [Authorize(Policy = PolicyBuilder.WritePolicy)]
     [ProducesResponseType((int)HttpStatusCode.Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> PlaceOrderFromQuote([FromRoute] Guid quoteId)

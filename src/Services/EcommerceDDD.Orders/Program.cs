@@ -1,32 +1,30 @@
-using EcommerceDDD.Orders.Domain;
-using EcommerceDDD.Core.Persistence;
-using EcommerceDDD.Core.Infrastructure;
-using EcommerceDDD.Core.Infrastructure.WebApi;
-using EcommerceDDD.Core.Infrastructure.Kafka;
-using EcommerceDDD.Core.Infrastructure.Marten;
-using EcommerceDDD.Core.Infrastructure.SignalR;
-using EcommerceDDD.Orders.Infrastructure.Projections;
-using EcommerceDDD.Orders.Application.Orders.PlacingOrder;
-
 var builder = WebApplication.CreateBuilder(args);
+var services  = builder.Services;
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
+services.AddControllers();
+services.AddEndpointsApiExplorer();
+services.AddCoreInfrastructure(builder.Configuration);
 
 // Mediator        
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(PlaceOrderHandler).Assembly));
 
-// ---- Services
-builder.Services.AddInfrastructureExtension(builder.Configuration);
-builder.Services.AddScoped<IOrderStatusBroadcaster, OrderStatusBroadcaster>();
-builder.Services.AddScoped<IProductItemsMapper, ProductItemsMapper>();
-builder.Services.AddScoped<IEventStoreRepository<Order>, MartenRepository<Order>>();
-builder.Services.AddKafkaConsumer(builder.Configuration);
-builder.Services.AddMarten(builder.Configuration, options =>
+// Services
+services.AddScoped<IOrderStatusBroadcaster, OrderStatusBroadcaster>();
+services.AddScoped<IProductItemsMapper, ProductItemsMapper>();
+services.AddScoped<IEventStoreRepository<Order>, MartenRepository<Order>>();
+services.AddKafkaConsumer(builder.Configuration);
+services.AddMarten(builder.Configuration, options =>
     options.ConfigureProjections());
 
-// ---- App
+// Policies
+services.AddAuthorization(options =>
+{
+    options.AddPolicy(PolicyBuilder.ReadPolicy, PolicyBuilder.ReadAccess);
+    options.AddPolicy(PolicyBuilder.WritePolicy, PolicyBuilder.WriteAccess);
+});
+
+// App
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

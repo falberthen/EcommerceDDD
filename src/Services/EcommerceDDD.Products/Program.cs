@@ -1,33 +1,33 @@
-using EcommerceDDD.Core.Infrastructure;
-using EcommerceDDD.Core.Infrastructure.WebApi;
-using EcommerceDDD.Products.Infrastructure.Persistence;
-using EcommerceDDD.Products.Infrastructure.Configurations;
-using EcommerceDDD.Products.Infrastructure.CurrencyConverter;
-using EcommerceDDD.Products.Application.Products.GettingProducts;
-
 var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
+builder.AddDatabaseSetup();
+services.AddControllers();
+services.AddEndpointsApiExplorer();
+services.AddCoreInfrastructure(builder.Configuration);
 
 // Mediator        
-builder.Services.AddMediatR(cfg =>
+services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(GetProductsHandler).Assembly));
 
-// ---- Services
-builder.Services.AddInfrastructureExtension(builder.Configuration);
-builder.Services.AddScoped<IProducts, ProductRepository>();
-builder.Services.AddScoped<ICurrencyConverter, CurrencyConverter>();
-builder.Services.AddDatabaseSetup(builder.Configuration);
+// Services
+services.AddScoped<IProducts, ProductRepository>();
+services.AddScoped<ICurrencyConverter, CurrencyConverter>();
 
-// ---- App
+// Policies
+services.AddAuthorization(options =>
+{
+    options.AddPolicy(PolicyBuilder.ReadPolicy, PolicyBuilder.ReadAccess);
+});
+
+// App
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
     app.UseSwagger(builder.Configuration);
 
 // Seed products
-DataSeeder.SeedProducts(app);
+app.SeedProducts();
 
 app.UseAuthentication();
 app.UseAuthorization();

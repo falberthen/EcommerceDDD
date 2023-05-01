@@ -1,35 +1,36 @@
-using EcommerceDDD.Core.Persistence;
-using EcommerceDDD.Shipments.Domain;
-using EcommerceDDD.Core.Infrastructure;
-using EcommerceDDD.Core.Infrastructure.Kafka;
-using EcommerceDDD.Core.Infrastructure.Outbox;
-using EcommerceDDD.Core.Infrastructure.Marten;
-using EcommerceDDD.Core.Infrastructure.WebApi;
-using EcommerceDDD.Shipments.Infrastructure.Projections;
-using EcommerceDDD.Shipments.Application.RequestingShipment;
-
 var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
 
-builder.Services.AddHttpClient();
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
+services.AddHttpClient();
+services.AddControllers();
+services.AddEndpointsApiExplorer();
+services.AddCoreInfrastructure(builder.Configuration);
 
 // Mediator        
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(RequestShipmentHandler).Assembly));
 
-// ---- Services
-builder.Services.AddInfrastructureExtension(builder.Configuration);
-builder.Services.AddTransient<IProductAvailabilityChecker, ProductAvailabilityChecker>();
-builder.Services.AddScoped<IEventStoreRepository<Shipment>, MartenRepository<Shipment>>();
-builder.Services.AddKafkaProducer(builder.Configuration); 
-builder.Services.AddMarten(builder.Configuration, options =>
+// Services
+services.AddTransient<IProductAvailabilityChecker, ProductAvailabilityChecker>();
+services.AddScoped<IEventStoreRepository<Shipment>, MartenRepository<Shipment>>();
+
+// Kafka
+services.AddKafkaProducer(builder.Configuration); 
+
+// Marten
+services.AddMarten(builder.Configuration, options =>
     options.ConfigureProjections());
 
-// ---- Outbox
-builder.Services.AddOutboxService(builder.Configuration);
+// Outbox
+services.AddOutboxService(builder.Configuration);
 
-// ---- App
+// Policies
+services.AddAuthorization(options =>
+{
+    options.AddPolicy(PolicyBuilder.ReadPolicy, PolicyBuilder.ReadAccess);
+});
+
+// App
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

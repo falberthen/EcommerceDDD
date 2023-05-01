@@ -1,18 +1,4 @@
-﻿using System.Net;
-using Microsoft.AspNetCore.Mvc;
-using EcommerceDDD.Customers.Domain;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication;
-using EcommerceDDD.Core.CQRS.QueryHandling;
-using EcommerceDDD.Customers.Domain.Commands;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-using EcommerceDDD.Core.Infrastructure.WebApi;
-using EcommerceDDD.Customers.API.Controllers.Requests;
-using EcommerceDDD.Customers.Application.GettingCreditLimit;
-using EcommerceDDD.Customers.Application.GettingCustomerEventHistory;
-using EcommerceDDD.Customers.Api.Application.GettingCustomerDetails;
-
-namespace EcommerceDDD.Customers.API.Controllers;
+﻿namespace EcommerceDDD.Customers.API.Controllers;
 
 [Authorize]
 [Route("api/customers")]
@@ -29,6 +15,7 @@ public class CustomersController : CustomControllerBase
     /// </summary>
     /// <returns></returns>
     [HttpGet]
+    [Authorize(Roles = "Customer", Policy = PolicyBuilder.ReadPolicy)]    
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetDetails()
@@ -44,6 +31,7 @@ public class CustomersController : CustomControllerBase
     /// <param name="customerId"></param>
     /// <returns></returns>
     [HttpGet, Route("{customerId}/credit")]
+    [Authorize(Policy = PolicyBuilder.ReadPolicy)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetCustomerCreditLimit([FromRoute] Guid customerId)
@@ -58,6 +46,7 @@ public class CustomersController : CustomControllerBase
     /// <param name="customerId"></param>
     /// <returns></returns>
     [HttpGet, Route("{customerId}/history")]
+    [Authorize(Roles = "Customer", Policy = PolicyBuilder.ReadPolicy)]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ListHistory([FromRoute] Guid customerId)
@@ -94,6 +83,7 @@ public class CustomersController : CustomControllerBase
     /// <param name="request"></param>
     /// <returns></returns>
     [HttpPut, Route("{customerId}")]
+    [Authorize(Roles = "Customer", Policy = PolicyBuilder.WritePolicy)]
     [ProducesResponseType((int)HttpStatusCode.Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> UpdateInformation([FromRoute] Guid customerId, [FromBody] UpdateCustomerRequest request)
