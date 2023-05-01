@@ -1,36 +1,31 @@
-table  { margin-top:  20px; display: inline-block; overflow: auto; }
-th div { margin-top: -20px; position: absolute; }
-
-.stored-events-viewer-content {
-  border-radius: 10px 10px 10px 10px;
-  background: #ffffff;
-  position: relative;
-  box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
-  text-align: left;
-  outline:none;
-  box-shadow: 0px 0px 14px #3c748f;
-  -moz-box-shadow: 0px 0px 14px #3c748f;
-  -webkit-box-shadow: 0px 0px 14px #3c748f;
-  overflow-x: auto;
-  max-width: 100%;
+table {
+  margin-top: 5px;
+  display: inline-block;
+  overflow: auto;
+}
+th div {
+  margin-top: -20px;
+  position: absolute;
 }
 
-.action-column {
-  font-weight: 500;
-}
+.stored-events-viewer {
+  background-color: #fefef8;
+  margin-bottom: 5%;
 
-.table-scroll {
-  max-width: 100%;
-  max-height: 400px;
-  overflow-x: auto;
-  overflow-y: auto;
-}
-
-.event-type {
-  color: #0e9767;
-  font-weight: bolder;
-}
-
-.event-data {
-  color: #3c748f
+  .table-scroll {
+    max-width: 100%;
+    max-height: 400px;
+    overflow-x: auto;
+    overflow-y: auto;
+  }
+  .event-type {
+    color: #4e8975;
+    font-weight: bolder;
+  }
+  .event-data {
+    color: #3c748f;
+  }
+  .close-container {
+    text-align: center;
+  }
 }

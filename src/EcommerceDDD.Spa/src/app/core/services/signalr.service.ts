@@ -3,7 +3,7 @@ import * as signalR from '@microsoft/signalr';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SignalrService {
   connection!: signalR.HubConnection;
@@ -13,9 +13,11 @@ export class SignalrService {
 
   // Start Hub Connection and Register events
   private buildConnection = (hubUrl: string) => {
-    return new signalR.HubConnectionBuilder()
-      //.configureLogging(signalR.LogLevel.Trace)
-      .withUrl(hubUrl)
-      .build();
-    }
+    return (
+      new signalR.HubConnectionBuilder()
+        //.configureLogging(signalR.LogLevel.Trace)
+        .withUrl(hubUrl)
+        .build()
+    );
+  };
 }

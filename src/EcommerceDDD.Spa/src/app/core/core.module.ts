@@ -1,4 +1,4 @@
-import { Optional, SkipSelf, NgModule, APP_INITIALIZER } from '@angular/core';
+import { Optional, SkipSelf, NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from './services/auth.service';
 import { AuthGuard } from './guards/auth.guard';
@@ -11,12 +11,11 @@ import { ConfirmationDialogService } from './services/confirmation-dialog.servic
 import { SignalrService } from './services/signalr.service';
 
 @NgModule({
-  declarations: [
-  ],
+  declarations: [],
   imports: [
     HttpClientModule,
     BrowserAnimationsModule, // required animations module
-    ToastrModule.forRoot() // ToastrModule added,
+    ToastrModule.forRoot(), // ToastrModule added,
   ],
   providers: [
     AuthService,
@@ -27,12 +26,10 @@ import { SignalrService } from './services/signalr.service';
     ConfirmationDialogService,
     LocalStorageService,
     CurrencyNotificationService,
-    SignalrService
-  ]
+    SignalrService,
+  ],
 })
-
 export class CoreModule {
-
   constructor(@Optional() @SkipSelf() core: CoreModule) {
     if (core) {
       throw new Error('You should import core module only in the root module');

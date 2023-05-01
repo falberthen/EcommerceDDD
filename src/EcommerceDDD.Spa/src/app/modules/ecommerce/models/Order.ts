@@ -1,4 +1,3 @@
-
 export class Order {
   orderId: string;
   quoteId: string;
@@ -9,8 +8,15 @@ export class Order {
   statusText: string;
   statusCode: number;
 
-  constructor(orderId: string, quoteId: string, createdAt: Date, totalPrice: number, currencySymbol: string,
-    statusText: string, statusCode: number) {
+  constructor(
+    orderId: string,
+    quoteId: string,
+    createdAt: Date,
+    totalPrice: number,
+    currencySymbol: string,
+    statusText: string,
+    statusCode: number
+  ) {
     this.orderId = orderId;
     this.quoteId = quoteId;
     this.createdAt = createdAt;
@@ -21,13 +27,18 @@ export class Order {
   }
 }
 
-export class OrderLine{
+export class OrderLine {
   productId: string;
   productName: string;
   unitPrice: number;
   quantity: number;
 
-  constructor(productId: string, productName: string, unitPrice: number, quantity: number) {
+  constructor(
+    productId: string,
+    productName: string,
+    unitPrice: number,
+    quantity: number
+  ) {
     this.productId = productId;
     this.productName = productName;
     this.quantity = quantity;

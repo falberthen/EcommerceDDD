@@ -5,8 +5,13 @@ export class Customer {
   email: string;
   creditLimit: number;
 
-  constructor(id: string, name: string, email: string, shippingAddress: string,
-    creditLimit: number) {
+  constructor(
+    id: string,
+    name: string,
+    email: string,
+    shippingAddress: string,
+    creditLimit: number
+  ) {
     this.id = id;
     this.name = name;
     this.email = email;

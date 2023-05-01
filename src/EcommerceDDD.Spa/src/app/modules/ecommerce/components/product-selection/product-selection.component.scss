@@ -1,51 +1,74 @@
-.product-selection-container{
+.product-selection-container {
   margin-top: 20px;
   width: 100%;
   margin-bottom: 20px;
   float: left;
 
-  .product-list-container{
-    width: 55%;
+  .product-list-container {
+    width: 65%;
     float: left;
 
     .product-list {
-      border-radius: 5px;
       width: 100%;
       text-align: left;
 
-      .quantity-selector {
-        margin-top: 4px;
-        border-radius:4px;
-        height:33px;
-        margin-right: 10px;
-      }
+      .product-container {
+        margin-bottom: 15px;
+        background-color: #fffdfd;
 
-      .table-row-text {
-        line-height: 40px;
-      }
+        .badge-category {
+          background-color: rgb(0, 118, 192);
+        }
+        .product-title {
+          font-size: 22px;
+        }
+        .product-img {
+          width: 100px;
+          font-weight: bold;
+        }
+        .product-description {
+          text-align: justify;
+          text-justify: inter-word;
+          width: 98%;
+        }
+        .product-price {
+          font-size: 23px;
+          text-align: right;
 
-      .name-column {
-        width:150px;
-      }
+          .currency-symbol {
+            font-size: 14px;
+            vertical-align: top;
+            top: 4px;
+            position: relative;
+          }
+        }
+        .add-product-container {
+          width: 200px;
+          text-align: right;
+          float: right;
+        }
+        .change-quantity-container {
+          width: 100%;
 
-      .price-column {
-        width:100px;
-      }
-
-      .add-column {
-        width:200px;
-        text-align: right;
-      }
-
-      .add-change-item-button {
-        width: 150px;
+          .quantity-selector {
+            border-radius: 4px;
+            height: 38px;
+            margin-right: 10px;
+            float: right;
+          }
+          .add-change-item-button {
+            width: 150px;
+            float: right;
+          }
+        }
       }
     }
   }
 
-  .cart-details-container{
-    width: 40%;
-    margin-left: 20px;
-    float: left;
+  .cart-details-container {
+    width: 33.5%;
+    margin-left: 10px;
+    float: right;
+    background-color: #fffdfd;
   }
 }

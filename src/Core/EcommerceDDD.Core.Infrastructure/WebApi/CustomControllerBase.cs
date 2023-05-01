@@ -13,13 +13,11 @@ public class CustomControllerBase : ControllerBase
     {
         _commandBus = commandBus;
         _queryBus = queryBus;
-
-
     }
 
     protected async new Task<IActionResult> Response<TResult>(IQuery<TResult> query)
     {
-        TResult result = default!;
+        TResult result;
 
         try
         {
@@ -40,7 +38,7 @@ public class CustomControllerBase : ControllerBase
         });
     }
 
-    protected async new Task<IActionResult> Response(ICommand command, object? data = null)
+    protected async new Task<IActionResult> Response(ICommand command)
     {
         try
         {
@@ -56,12 +54,11 @@ public class CustomControllerBase : ControllerBase
 
         return Ok(new
         {
-            data = data,
             success = true
         });
     }
 
-    private IActionResult BadRequestActionResult(dynamic resultErrors)
+    private IActionResult BadRequestActionResult(string resultErrors)
     {
         return BadRequest(new
         {

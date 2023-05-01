@@ -1,10 +1,13 @@
-<div class="wrapper fadeInDown stored-event-viewer-container">
-  <div class="stored-events-viewer-content">
-    <div *ngIf="storedEventData && storedEventData.length == 0" class="alert alert-danger">
+<div class="card fadeInDown stored-events-viewer">
+  <div class="card-body">
+    <div
+      *ngIf="storedEventData && storedEventData.length == 0"
+      class="alert alert-danger"
+    >
       No events to display
     </div>
-    <div>
-      <table class="table table-responsive table-scroll">
+    <div class="row">
+      <table class="table table-responsive">
         <thead class="thead-light">
           <tr>
             <th>Event</th>
@@ -12,15 +15,21 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let row of storedEventData" style="white-space:nowrap;">
-            <td><span class="event-type">{{row.eventTypeName}}</span></td>
-            <td><span class="event-data">{{row.eventData}}</span></td>
+          <tr *ngFor="let row of storedEventData" style="white-space: nowrap">
+            <td>
+              <span class="event-type">{{ row.eventTypeName }}</span>
+            </td>
+            <td>
+              <span class="event-data">{{ row.eventData }}</span>
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
-    <div class="form-footer">
-      <input type="button" class="btn btn-secondary" (click)="close()" value="Close">
+    <div class="row">
+      <div class="close-container">
+        <button (click)="close()" class="btn btn-secondary">Close</button>
+      </div>
     </div>
   </div>
 </div>

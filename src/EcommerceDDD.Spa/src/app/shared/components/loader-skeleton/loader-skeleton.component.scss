@@ -1,0 +1,12 @@
+.loader {
+  display: flex;
+  flex-direction: column;
+}
+
+.line {
+  width: 90%;
+  height: 20px;
+  margin: 20px;
+  background-color: #eee;
+  border-radius: 4px;
+}

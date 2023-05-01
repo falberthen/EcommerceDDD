@@ -12,14 +12,12 @@
     "declaration": false,
     "downlevelIteration": true,
     "experimentalDecorators": true,
+    "useDefineForClassFields": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2017",
+    "target": "es2022",
     "module": "es2020",
-    "lib": [
-      "es2018",
-      "dom"
-    ]
+    "lib": ["es2018", "dom"]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
