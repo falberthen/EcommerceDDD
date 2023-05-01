@@ -1,9 +1,4 @@
-﻿using Marten;
-using EcommerceDDD.Core.Exceptions;
-using EcommerceDDD.Core.CQRS.QueryHandling;
-using EcommerceDDD.Customers.Infrastructure.Projections;
-
-namespace EcommerceDDD.Customers.Application.GettingCreditLimit;
+﻿namespace EcommerceDDD.Customers.Application.GettingCreditLimit;
 
 public class GetCreditLimitHandler : IQueryHandler<GetCreditLimit, CreditLimitModel>
 {

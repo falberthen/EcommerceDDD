@@ -1,7 +1,4 @@
-﻿using Marten;
-using Marten.Events.Projections;
-
-namespace EcommerceDDD.Customers.Infrastructure.Projections;
+﻿namespace EcommerceDDD.Customers.Infrastructure.Projections;
 
 public static class ProjectionsConfiguration
 {

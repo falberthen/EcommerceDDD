@@ -1,8 +1,4 @@
-﻿using Marten;
-using EcommerceDDD.Core.CQRS.QueryHandling;
-using EcommerceDDD.Orders.Infrastructure.Projections;
-
-namespace EcommerceDDD.Orders.Application.Orders.GettingOrders;
+﻿namespace EcommerceDDD.Orders.Application.Orders.GettingOrders;
 
 public class GetOrdersHandler : IQueryHandler<GetOrders, List<OrderViewModel>>
 {

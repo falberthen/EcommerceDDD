@@ -1,7 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using EcommerceDDD.ApiGateway.SignalR.Hubs.Order;
-
 namespace EcommerceDDD.ApiGateway.SignalR;
 
 [Authorize]

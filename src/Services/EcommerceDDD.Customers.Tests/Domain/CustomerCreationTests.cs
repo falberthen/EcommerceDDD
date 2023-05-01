@@ -1,3 +1,5 @@
+using EcommerceDDD.Customers.Domain;
+
 namespace EcommerceDDD.Customers.Tests.Domain;
 
 public class CustomerCreationTests

@@ -1,14 +1,4 @@
-﻿using EcommerceDDD.Core.Exceptions;
-using EcommerceDDD.Customers.Domain;
-using Microsoft.Extensions.Options;
-using EcommerceDDD.Core.Persistence;
-using EcommerceDDD.Core.Infrastructure;
-using EcommerceDDD.Core.Infrastructure.Http;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-using EcommerceDDD.Customers.Domain.Commands;
-using EcommerceDDD.Core.Infrastructure.Integration;
-
-namespace EcommerceDDD.Customers.Api.Application.RegisteringCustomer;
+﻿namespace EcommerceDDD.Customers.Api.Application.RegisteringCustomer;
 
 public class RegisterCustomerHandler : ICommandHandler<RegisterCustomer>
 {

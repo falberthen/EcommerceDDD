@@ -1,3 +1,13 @@
+global using Moq;
 global using Xunit;
-global using EcommerceDDD.Customers.Domain;
+global using System;
+global using System.Linq;
 global using FluentAssertions;
+global using System.Threading;
+global using System.Threading.Tasks;
+global using EcommerceDDD.Core.Testing;
+global using EcommerceDDD.Core.Exceptions;
+global using Microsoft.Extensions.Options;
+global using EcommerceDDD.Core.Infrastructure;
+global using EcommerceDDD.Core.Infrastructure.Http;
+global using EcommerceDDD.Core.Infrastructure.Integration;

@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.Core.CQRS.CommandHandling;
-
-namespace EcommerceDDD.Shipments.Domain.Commands;
+﻿namespace EcommerceDDD.Shipments.Domain.Commands;
 
 public record class RequestShipment : ICommand
 {

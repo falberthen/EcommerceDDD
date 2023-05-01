@@ -1,7 +1,4 @@
-﻿using EcommerceDDD.Orders.Domain;
-using EcommerceDDD.Core.Exceptions;
-using EcommerceDDD.Core.Infrastructure.Integration;
-using static EcommerceDDD.Orders.Application.Orders.PlacingOrder.PlaceOrderHandler;
+﻿using static EcommerceDDD.Orders.Application.Orders.PlacingOrder.PlaceOrderHandler;
 
 namespace EcommerceDDD.Orders.Application.Orders.PlacingOrder;
 

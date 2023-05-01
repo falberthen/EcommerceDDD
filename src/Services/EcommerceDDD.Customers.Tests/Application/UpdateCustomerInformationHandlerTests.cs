@@ -1,4 +1,4 @@
-using EcommerceDDD.Core.Testing;
+using EcommerceDDD.Customers.Domain;
 using EcommerceDDD.Customers.Domain.Commands;
 using EcommerceDDD.Customers.Api.Application.UpdatingCustomerInformation;
 

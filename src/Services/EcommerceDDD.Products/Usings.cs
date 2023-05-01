@@ -1,0 +1,22 @@
+global using System.Net;
+global using FluentAssertions;
+global using EcommerceDDD.Core.Domain;
+global using Microsoft.AspNetCore.Mvc;
+global using EcommerceDDD.Products.Domain;
+global using EcommerceDDD.Core.Exceptions;
+global using Microsoft.EntityFrameworkCore;
+global using EcommerceDDD.Core.Infrastructure;
+global using Microsoft.AspNetCore.Authorization;
+global using EcommerceDDD.Core.CQRS.QueryHandling;
+global using EcommerceDDD.Core.CQRS.CommandHandling;
+global using System.ComponentModel.DataAnnotations;
+global using EcommerceDDD.Core.Infrastructure.WebApi;
+global using EcommerceDDD.Core.Infrastructure.Identity;
+global using EcommerceDDD.Products.API.Controllers.Requests;
+global using EcommerceDDD.Products.Infrastructure.Persistence;
+global using Microsoft.EntityFrameworkCore.Metadata.Builders;
+global using EcommerceDDD.Products.Infrastructure.Configurations;
+global using EcommerceDDD.Products.Infrastructure.CurrencyConverter;
+global using EcommerceDDD.Products.Application.Products.GettingProducts;
+global using EcommerceDDD.Products.Application.Products.CheckingProductStockAvailability;
+

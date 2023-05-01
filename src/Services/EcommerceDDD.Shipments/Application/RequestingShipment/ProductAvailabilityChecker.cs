@@ -1,8 +1,4 @@
-﻿using EcommerceDDD.Core.Exceptions;
-using EcommerceDDD.Shipments.Domain;
-using EcommerceDDD.Core.Infrastructure.Integration;
-
-namespace EcommerceDDD.Shipments.Application.RequestingShipment;
+﻿namespace EcommerceDDD.Shipments.Application.RequestingShipment;
 
 public class ProductAvailabilityChecker : IProductAvailabilityChecker
 {

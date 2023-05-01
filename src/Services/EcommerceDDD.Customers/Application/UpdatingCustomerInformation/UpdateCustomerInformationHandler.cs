@@ -1,11 +1,4 @@
-﻿using MediatR;
-using EcommerceDDD.Customers.Domain;
-using EcommerceDDD.Core.Persistence;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-using EcommerceDDD.Customers.Domain.Commands;
-using EcommerceDDD.Core.Exceptions;
-
-namespace EcommerceDDD.Customers.Api.Application.UpdatingCustomerInformation;
+﻿namespace EcommerceDDD.Customers.Api.Application.UpdatingCustomerInformation;
 
 public class UpdateCustomerInformationHandler : ICommandHandler<UpdateCustomerInformation>
 {
@@ -38,4 +31,7 @@ public class UpdateCustomerInformationHandler : ICommandHandler<UpdateCustomerIn
     }
 }
 
-public record UpdateUserRequest(string Email, string Password, string PasswordConfirm);
+public record UpdateUserRequest(
+    string Email, 
+    string Password, 
+    string PasswordConfirm);

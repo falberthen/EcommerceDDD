@@ -1,8 +1,4 @@
-﻿using EcommerceDDD.Core.Exceptions;
-using EcommerceDDD.Payments.Domain;
-using EcommerceDDD.Core.Infrastructure.Integration;
-
-namespace EcommerceDDD.Payments.Application.ProcessingPayment;
+﻿namespace EcommerceDDD.Payments.Application.ProcessingPayment;
 
 public class CustomerCreditChecker : ICustomerCreditChecker
 {

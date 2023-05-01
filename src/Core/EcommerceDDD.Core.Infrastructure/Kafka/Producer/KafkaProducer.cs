@@ -1,11 +1,4 @@
-﻿global using MediatR;
-using Confluent.Kafka;
-using Newtonsoft.Json;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using EcommerceDDD.Core.EventBus;
-
-namespace EcommerceDDD.Core.Infrastructure.Kafka.Producer;
+﻿namespace EcommerceDDD.Core.Infrastructure.Kafka.Producer;
 
 public class KafkaProducer : IEventProducer
 {

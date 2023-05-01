@@ -1,8 +1,4 @@
-﻿using Marten.Events;
-using Newtonsoft.Json;
-using EcommerceDDD.Core.Infrastructure.Marten;
-
-namespace EcommerceDDD.Customers.Application.GettingCustomerEventHistory;
+﻿namespace EcommerceDDD.Customers.Application.GettingCustomerEventHistory;
 
 public record CustomerEventHistory(
     Guid Id,

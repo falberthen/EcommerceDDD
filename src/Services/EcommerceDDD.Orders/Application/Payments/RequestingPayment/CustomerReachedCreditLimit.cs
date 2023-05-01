@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.Core.EventBus;
-
-namespace EcommerceDDD.Orders.Application.Payments.RequestingPayment;
+﻿namespace EcommerceDDD.Orders.Application.Payments.RequestingPayment;
 
 public class CustomerReachedCreditLimit : IntegrationEvent
 { 

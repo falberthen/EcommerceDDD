@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.Core.EventBus;
-
-namespace EcommerceDDD.Orders.Application.Payments.ProcessingPayment;
+﻿namespace EcommerceDDD.Orders.Application.Payments.ProcessingPayment;
 
 public class PaymentFailed : IntegrationEvent
 {

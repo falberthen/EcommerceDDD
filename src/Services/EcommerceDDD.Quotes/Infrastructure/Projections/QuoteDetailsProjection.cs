@@ -1,9 +1,6 @@
-﻿using EcommerceDDD.Quotes.Domain.Events;
-using Marten.Events.Aggregation;
+﻿namespace EcommerceDDD.Quotes.Infrastructure.Projections;
 
-namespace EcommerceDDD.Quotes.Infrastructure.Projections;
-
-public class QuoteDetailsProjection : SingleStreamAggregation<QuoteDetails>
+public class QuoteDetailsProjection : SingleStreamProjection<QuoteDetails>
 {
     public QuoteDetailsProjection()
     {

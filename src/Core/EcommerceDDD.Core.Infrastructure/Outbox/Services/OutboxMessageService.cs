@@ -1,8 +1,4 @@
-﻿using Marten;
-using EcommerceDDD.Core.EventBus;
-using Microsoft.Extensions.Logging;
-
-namespace EcommerceDDD.Core.Infrastructure.Outbox.Services;
+﻿namespace EcommerceDDD.Core.Infrastructure.Outbox.Services;
 
 public class OutboxMessageService : IOutboxMessageService
 {

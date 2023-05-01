@@ -1,5 +1,3 @@
-using EcommerceDDD.Core.Testing;
-
 namespace EcommerceDDD.Core.Tests.Domain;
 
 public class AggregateRootTests

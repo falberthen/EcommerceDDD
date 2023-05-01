@@ -1,3 +1,16 @@
-global using Xunit;
 global using Moq;
+global using Xunit;
+global using System;
+global using System.Linq;
 global using FluentAssertions;
+global using System.Threading;
+global using System.Threading.Tasks;
+global using EcommerceDDD.Core.Testing;
+global using EcommerceDDD.Payments.Domain;
+global using EcommerceDDD.Payments.Domain.Events;
+global using EcommerceDDD.Core.CQRS.CommandHandling;
+global using EcommerceDDD.Payments.Domain.Commands;
+global using EcommerceDDD.Payments.Application.ProcessingPayment;
+global using EcommerceDDD.Core.Infrastructure.Outbox.Services;
+global using EcommerceDDD.Payments.Application.RequestingPayment;
+global using EcommerceDDD.Payments.Application.CancelingPayment;

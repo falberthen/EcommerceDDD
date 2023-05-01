@@ -1,5 +1,3 @@
-using EcommerceDDD.Products.Domain;
-
 namespace EcommerceDDD.Products.Tests;
 
 public class ProductCreationTests
@@ -10,7 +8,15 @@ public class ProductCreationTests
         // Given
         var productPrice = Money.Of(100, Currency.USDollar.Code);
         var productName = "Product XYZ";
-        var productData = new ProductData(productName, productPrice);
+        var productCategory = "electronics";
+        var productDescription = "USB 3.0 and USB 2.0 Compatibility Fast data transfers Improve PC Performance High Capacity";
+        var productImageUrl = "https://fakestoreapi.com/img/61IBBVJvSDL._AC_SY879_.jpg";
+        var productData = new ProductData(
+            productName, 
+            productCategory,
+            productDescription,
+            productImageUrl,
+            productPrice);
 
         // When
         var product = Product.Create(productData);
@@ -19,6 +25,9 @@ public class ProductCreationTests
         Assert.NotNull(product);
         product.Id.Should().NotBe(null);
         product.Name.Should().Be(productName);
+        product.Category.Should().Be(productCategory);
+        product.Description.Should().Be(productDescription);
+        product.ImageUrl.Should().Be(productImageUrl);
         product.UnitPrice.Should().Be(productPrice);
     }
 }

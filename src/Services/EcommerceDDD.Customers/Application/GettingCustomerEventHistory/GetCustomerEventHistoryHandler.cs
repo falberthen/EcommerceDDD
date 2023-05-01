@@ -1,8 +1,4 @@
-﻿using Marten;
-using EcommerceDDD.Core.Exceptions;
-using EcommerceDDD.Core.CQRS.QueryHandling;
-
-namespace EcommerceDDD.Customers.Application.GettingCustomerEventHistory;
+﻿namespace EcommerceDDD.Customers.Application.GettingCustomerEventHistory;
 
 public class GetCustomerEventHistoryHandler : IQueryHandler<GetCustomerEventHistory, List<CustomerEventHistory>> 
 {

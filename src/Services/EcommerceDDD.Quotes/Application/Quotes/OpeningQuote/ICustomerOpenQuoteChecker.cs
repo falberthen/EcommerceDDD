@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.Quotes.Domain;
-
-namespace EcommerceDDD.Quotes.Application.Quotes.OpeningQuote;
+﻿namespace EcommerceDDD.Quotes.Application.Quotes.OpeningQuote;
 
 public interface ICustomerOpenQuoteChecker
 {

@@ -1,8 +1,4 @@
-﻿using EcommerceDDD.Core.Domain;
-using EcommerceDDD.Core.Exceptions;
-using EcommerceDDD.Shipments.Domain.Events;
-
-namespace EcommerceDDD.Shipments.Domain;
+﻿namespace EcommerceDDD.Shipments.Domain;
 
 public class Shipment : AggregateRoot<ShipmentId>
 {

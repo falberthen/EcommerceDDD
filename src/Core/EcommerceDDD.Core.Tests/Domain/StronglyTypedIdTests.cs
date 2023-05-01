@@ -1,7 +1,4 @@
-﻿using EcommerceDDD.Core.Exceptions;
-using EcommerceDDD.Core.Testing;
-
-namespace EcommerceDDD.Core.Tests.Domain;
+﻿namespace EcommerceDDD.Core.Tests.Domain;
 
 public class StronglyTypedIdTests
 {

@@ -1,9 +1,6 @@
-﻿using Marten.Events.Aggregation;
-using EcommerceDDD.Orders.Domain.Events;
+﻿namespace EcommerceDDD.Orders.Infrastructure.Projections;
 
-namespace EcommerceDDD.Orders.Infrastructure.Projections;
-
-public class OrderDetailsProjection : SingleStreamAggregation<OrderDetails>
+public class OrderDetailsProjection : SingleStreamProjection<OrderDetails>
 {
     public OrderDetailsProjection()
     {

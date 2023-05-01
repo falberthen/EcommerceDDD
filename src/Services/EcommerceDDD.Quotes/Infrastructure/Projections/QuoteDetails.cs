@@ -1,7 +1,4 @@
-﻿using EcommerceDDD.Quotes.Domain;
-using EcommerceDDD.Quotes.Domain.Events;
-
-namespace EcommerceDDD.Quotes.Infrastructure.Projections;
+﻿namespace EcommerceDDD.Quotes.Infrastructure.Projections;
 
 public class QuoteDetails
 {

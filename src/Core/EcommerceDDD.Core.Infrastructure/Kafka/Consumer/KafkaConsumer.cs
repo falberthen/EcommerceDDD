@@ -1,11 +1,4 @@
-﻿using Polly;
-using Confluent.Kafka;
-using EcommerceDDD.Core.EventBus;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using EcommerceDDD.Core.Infrastructure.Kafka.Serialization;
-
-namespace EcommerceDDD.Core.Infrastructure.Kafka.Consumer;
+﻿namespace EcommerceDDD.Core.Infrastructure.Kafka.Consumer;
 
 public class KafkaConsumer : IEventConsumer
 {

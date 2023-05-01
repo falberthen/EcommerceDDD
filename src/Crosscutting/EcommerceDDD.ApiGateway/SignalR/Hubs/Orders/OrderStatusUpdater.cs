@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.SignalR;
-
-namespace EcommerceDDD.ApiGateway.SignalR.Hubs.Order;
+﻿namespace EcommerceDDD.ApiGateway.SignalR.Hubs.Order;
 
 public interface IOrderStatusUpdater
 {

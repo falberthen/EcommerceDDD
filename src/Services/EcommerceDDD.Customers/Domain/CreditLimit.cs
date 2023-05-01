@@ -1,7 +1,4 @@
-﻿using EcommerceDDD.Core.Domain;
-using EcommerceDDD.Core.Exceptions;
-
-namespace EcommerceDDD.Customers.Domain;
+﻿namespace EcommerceDDD.Customers.Domain;
 
 public class CreditLimit : ValueObject<CreditLimit>
 {

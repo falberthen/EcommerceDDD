@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace EcommerceDDD.Customers.API.Controllers.Requests;
+﻿namespace EcommerceDDD.Customers.API.Controllers.Requests;
 
 public record class UpdateCustomerRequest
 {

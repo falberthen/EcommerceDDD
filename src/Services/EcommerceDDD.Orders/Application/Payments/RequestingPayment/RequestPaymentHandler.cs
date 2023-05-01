@@ -1,9 +1,4 @@
-﻿using MediatR;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-using EcommerceDDD.Core.Infrastructure.Integration;
-using EcommerceDDD.Core.Exceptions;
-
-namespace EcommerceDDD.Orders.Application.Payments.RequestingPayment;
+﻿namespace EcommerceDDD.Orders.Application.Payments.RequestingPayment;
 
 public class RequestPaymentHandler : ICommandHandler<RequestPayment>
 {

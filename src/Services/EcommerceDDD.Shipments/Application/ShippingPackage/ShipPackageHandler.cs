@@ -1,11 +1,4 @@
-﻿using MediatR;
-using EcommerceDDD.Shipments.Domain;
-using EcommerceDDD.Core.Persistence;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-using EcommerceDDD.Shipments.Domain.Commands;
-using EcommerceDDD.Core.Infrastructure.Outbox.Services;
-
-namespace EcommerceDDD.Shipments.Application.ShippingPackage;
+﻿namespace EcommerceDDD.Shipments.Application.ShippingPackage;
 
 public class ShipPackageHandler : ICommandHandler<ShipPackage>
 {
@@ -26,14 +19,14 @@ public class ShipPackageHandler : ICommandHandler<ShipPackage>
             .FetchStreamAsync(command.ShipmentId.Value);
 
         shipment.RecordShipment();
-        
+
         await _outboxMessageService.SaveAsOutboxMessageAsync(
             new PackageShipped(
                 shipment.Id.Value,
                 shipment.OrderId.Value,
                 shipment.ShippedAt!.Value)
             );
-
+        
         await _shipmentWriteRepository
             .AppendEventsAsync(shipment);
     }

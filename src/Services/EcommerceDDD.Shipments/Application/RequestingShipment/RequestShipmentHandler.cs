@@ -1,12 +1,4 @@
-﻿using MediatR;
-using EcommerceDDD.Shipments.Domain;
-using EcommerceDDD.Core.Exceptions;
-using EcommerceDDD.Core.Persistence;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-using EcommerceDDD.Shipments.Domain.Commands;
-using EcommerceDDD.Core.Infrastructure.Outbox.Services;
-
-namespace EcommerceDDD.Shipments.Application.RequestingShipment;
+﻿namespace EcommerceDDD.Shipments.Application.RequestingShipment;
 
 public class RequestShipmentHandler : ICommandHandler<RequestShipment>
 {
@@ -36,8 +28,9 @@ public class RequestShipmentHandler : ICommandHandler<RequestShipment>
         // Checking if all items are in stock
         if (!await _productAvailabilityChecker.EnsureProductsInStock(command.ProductItems))
         {
-            // shipment was not created; sending integration event
-            await _outboxMessageService.SaveAsOutboxMessageAsync(new ProductWasOutOfStock(command.OrderId.Value), saveChanges: true);
+            // shipment was not created; outboxing integration event
+            await _outboxMessageService.SaveAsOutboxMessageAsync(new ProductWasOutOfStock(
+                command.OrderId.Value), saveChanges: true);
             throw new ApplicationLogicException($"One of the items is out of stock");
         }
 

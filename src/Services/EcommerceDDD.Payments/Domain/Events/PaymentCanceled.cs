@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.Core.Domain;
-
-namespace EcommerceDDD.Payments.Domain.Events;
+﻿namespace EcommerceDDD.Payments.Domain.Events;
 
 public record PaymentCanceled : IDomainEvent
 {

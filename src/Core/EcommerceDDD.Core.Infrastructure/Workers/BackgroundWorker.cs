@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Hosting;
-
-namespace EcommerceDDD.Core.Infrastructure.Workers;
+﻿namespace EcommerceDDD.Core.Infrastructure.Workers;
 
 public class BackgroundWorker : BackgroundService
 {

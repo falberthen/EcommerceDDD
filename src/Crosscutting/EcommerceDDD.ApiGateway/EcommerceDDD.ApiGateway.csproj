@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net7</TargetFramework>
-    <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>3f5a05c6-8494-4c36-883b-9953af266395</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
@@ -12,8 +11,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ocelot" Version="18.0.0" />
-    <PackageReference Include="Ocelot.Cache.CacheManager" Version="18.0.0" />
+    <PackageReference Include="Ocelot" Version="19.0.2" />
+    <PackageReference Include="Ocelot.Cache.CacheManager" Version="19.0.2" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,11 +1,4 @@
-﻿using MediatR;
-using EcommerceDDD.Quotes.Domain;
-using EcommerceDDD.Core.Persistence;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-using EcommerceDDD.Quotes.Domain.Commands;
-using EcommerceDDD.Core.Exceptions;
-
-namespace EcommerceDDD.Quotes.Application.Quotes.RemovingQuoteItem;
+﻿namespace EcommerceDDD.Quotes.Application.Quotes.RemovingQuoteItem;
 
 public class RemoveQuoteItemHandler : ICommandHandler<RemoveQuoteItem>
 {

@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.Core.EventBus;
-
-namespace EcommerceDDD.Core.Infrastructure.Outbox.Services;
+﻿namespace EcommerceDDD.Core.Infrastructure.Outbox.Services;
 
 public interface IOutboxMessageService
 {

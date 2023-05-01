@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.Core.Domain;
-
-namespace EcommerceDDD.Customers.Domain;
+﻿namespace EcommerceDDD.Customers.Domain;
 
 public sealed class CustomerId : StronglyTypedId<Guid>
 {

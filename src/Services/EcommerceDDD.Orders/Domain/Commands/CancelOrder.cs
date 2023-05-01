@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.Core.CQRS.CommandHandling;
-
-namespace EcommerceDDD.Orders.Domain.Commands;
+﻿namespace EcommerceDDD.Orders.Domain.Commands;
 
 public record class CancelOrder : ICommand
 {

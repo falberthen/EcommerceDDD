@@ -1,7 +1,3 @@
-using EcommerceDDD.Core.Testing;
-using EcommerceDDD.Orders.Domain.Commands;
-using EcommerceDDD.Orders.Application.Orders.RecordingPayment;
-
 namespace EcommerceDDD.Orders.Tests.Application;
 
 public class RecordPaymentToOrderHandlerTests
@@ -30,13 +26,16 @@ public class RecordPaymentToOrderHandlerTests
         var paymentId = PaymentId.Of(Guid.NewGuid());
 
         var order = Order.Create(orderData);
-
+        
         var orderWriteRepository = new DummyEventStoreRepository<Order>();
         await orderWriteRepository
             .AppendEventsAsync(order, CancellationToken.None);
 
         var recordPaymentToOrder = RecordPayment.Create(order.Id, paymentId, totalPaid);
-        var recordPaymentToOrderHandler = new RecordPaymentHandler(orderWriteRepository);
+        var recordPaymentToOrderHandler = new RecordPaymentHandler(
+            _integrationHttpService.Object,
+            _orderStatusBroadcaster.Object,
+            orderWriteRepository);
 
         // When
         await recordPaymentToOrderHandler.Handle(recordPaymentToOrder, CancellationToken.None);
@@ -48,4 +47,7 @@ public class RecordPaymentToOrderHandlerTests
         paidOrder.OrderLines.Count.Should().Be(quoteItems.Count);
         paidOrder.Status.Should().Be(OrderStatus.Paid);
     }
+
+    private Mock<IIntegrationHttpService> _integrationHttpService = new();
+    private Mock<IOrderStatusBroadcaster> _orderStatusBroadcaster = new();
 }

@@ -1,18 +1,18 @@
-﻿using MediatR;
-using EcommerceDDD.Core.Persistence;
-using EcommerceDDD.Orders.Domain;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-using EcommerceDDD.Orders.Domain.Commands;
-using EcommerceDDD.Core.Exceptions;
-
-namespace EcommerceDDD.Orders.Application.Orders.RecordingPayment;
+﻿namespace EcommerceDDD.Orders.Application.Orders.RecordingPayment;
 
 public class RecordPaymentHandler : ICommandHandler<RecordPayment>
 {
+    private readonly IIntegrationHttpService _integrationHttpService;
+    private readonly IOrderStatusBroadcaster _orderStatusBroadcaster;
     private readonly IEventStoreRepository<Order> _orderWriteRepository;
 
-    public RecordPaymentHandler(IEventStoreRepository<Order> orderWriteRepository)
+    public RecordPaymentHandler(
+        IIntegrationHttpService integrationHttpService,
+        IOrderStatusBroadcaster orderStatusBroadcaster,
+        IEventStoreRepository<Order> orderWriteRepository)
     {
+        _integrationHttpService = integrationHttpService;
+        _orderStatusBroadcaster = orderStatusBroadcaster;
         _orderWriteRepository = orderWriteRepository;
     }
 
@@ -26,5 +26,13 @@ public class RecordPaymentHandler : ICommandHandler<RecordPayment>
         order.RecordPayment(command.PaymentId, command.TotalPaid);
         await _orderWriteRepository
             .AppendEventsAsync(order);
+
+        // Updating order status on the UI with SignalR
+        await _orderStatusBroadcaster.UpdateOrderStatus(
+            new UpdateOrderStatusRequest(
+                order.CustomerId.Value,
+                command.OrderId.Value,
+                order.Status.ToString(),
+                (int)order.Status));
     }
 }

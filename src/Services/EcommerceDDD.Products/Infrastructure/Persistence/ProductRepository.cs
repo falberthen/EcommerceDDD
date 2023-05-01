@@ -1,7 +1,4 @@
-﻿using EcommerceDDD.Products.Domain;
-using Microsoft.EntityFrameworkCore;
-
-namespace EcommerceDDD.Products.Infrastructure.Persistence;
+﻿namespace EcommerceDDD.Products.Infrastructure.Persistence;
 
 public class ProductRepository : IProducts
 {

@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.Core.Domain;
-
-namespace EcommerceDDD.Shipments.Domain.Events;
+﻿namespace EcommerceDDD.Shipments.Domain.Events;
 
 public record ShipmentCreated : IDomainEvent
 {

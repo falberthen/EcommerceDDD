@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.Core.CQRS.CommandHandling;
-
-namespace EcommerceDDD.Payments.Domain.Commands;
+﻿namespace EcommerceDDD.Payments.Domain.Commands;
 
 public record class CancelPayment : ICommand
 {

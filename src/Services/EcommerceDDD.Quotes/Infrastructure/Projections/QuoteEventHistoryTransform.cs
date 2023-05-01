@@ -1,9 +1,4 @@
-﻿using Marten.Events;
-using Marten.Events.Projections;
-using EcommerceDDD.Quotes.Domain.Events;
-using EcommerceDDD.Quotes.Application.Quotes.GettingQuoteHistory;
-
-namespace EcommerceDDD.Quotes.Infrastructure.Projections;
+﻿namespace EcommerceDDD.Quotes.Infrastructure.Projections;
 
 public class QuoteEventHistoryTransform : EventProjection
 {
