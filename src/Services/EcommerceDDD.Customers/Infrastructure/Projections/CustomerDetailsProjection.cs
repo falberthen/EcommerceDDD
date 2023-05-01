@@ -1,7 +1,4 @@
-﻿using Marten.Events.Aggregation;
-using EcommerceDDD.Customers.Domain.Events;
-
-namespace EcommerceDDD.Customers.Infrastructure.Projections;
+﻿namespace EcommerceDDD.Customers.Infrastructure.Projections;
 
 public class CustomerDetailsProjection : SingleStreamAggregation<CustomerDetails>
 {

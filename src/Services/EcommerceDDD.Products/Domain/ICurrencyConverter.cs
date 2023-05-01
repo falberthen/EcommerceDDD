@@ -1,4 +1,4 @@
-﻿using EcommerceDDD.Products.Domain;
+﻿namespace EcommerceDDD.Products.Domain;
 
 public interface ICurrencyConverter
 {

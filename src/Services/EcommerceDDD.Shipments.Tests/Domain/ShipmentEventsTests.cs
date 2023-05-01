@@ -1,5 +1,4 @@
-using EcommerceDDD.Shipments.Domain;
-using EcommerceDDD.Shipments.Domain.Events;
+using PackageShipped = EcommerceDDD.Shipments.Domain.Events.PackageShipped;
 
 namespace EcommerceDDD.Shipments.Tests.Domain;
 

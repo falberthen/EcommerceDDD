@@ -1,7 +1,4 @@
-﻿using EcommerceDDD.Core.Domain;
-using EcommerceDDD.Core.Exceptions;
-
-namespace EcommerceDDD.Orders.Domain;
+﻿namespace EcommerceDDD.Orders.Domain;
 
 public class ProductItem : ValueObject<ProductItem>
 {

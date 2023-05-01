@@ -1,8 +1,4 @@
-﻿using System.Text;
-using Newtonsoft.Json;
-using System.Net.Http.Headers;
-
-namespace EcommerceDDD.Core.Infrastructure.Http;
+﻿namespace EcommerceDDD.Core.Infrastructure.Http;
 
 public class HttpRequester : IHttpRequester
 {    

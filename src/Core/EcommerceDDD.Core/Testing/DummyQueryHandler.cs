@@ -1,8 +1,4 @@
-﻿using System.Threading;
-using EcommerceDDD.Core.Persistence;
-using EcommerceDDD.Core.CQRS.QueryHandling;
-
-namespace EcommerceDDD.Core.Testing;
+﻿namespace EcommerceDDD.Core.Testing;
 
 public class DummyQueryHandler : IQueryHandler<DummyQuery, DummyAggregateRoot>
 {

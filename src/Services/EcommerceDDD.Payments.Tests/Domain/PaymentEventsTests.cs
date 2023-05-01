@@ -1,5 +1,4 @@
-using EcommerceDDD.Payments.Domain;
-using EcommerceDDD.Payments.Domain.Events;
+using PaymentCompleted = EcommerceDDD.Payments.Domain.Events.PaymentCompleted;
 
 namespace EcommerceDDD.Payments.Tests.Domain;
 

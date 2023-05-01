@@ -1,8 +1,4 @@
-﻿using Marten;
-using EcommerceDDD.Customers.Domain;
-using EcommerceDDD.Customers.Infrastructure.Projections;
-
-namespace EcommerceDDD.Customers.Application.RegisteringCustomer;
+﻿namespace EcommerceDDD.Customers.Application.RegisteringCustomer;
 
 public class EmailUniquenessChecker : IEmailUniquenessChecker
 {

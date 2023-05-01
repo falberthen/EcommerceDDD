@@ -1,8 +1,4 @@
-﻿using MediatR;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-using EcommerceDDD.Core.Infrastructure.Integration;
-
-namespace EcommerceDDD.Orders.Application.Payments.CancelingPayment;
+﻿namespace EcommerceDDD.Orders.Application.Payments.CancelingPayment;
 
 public class RequestCancelPaymentHandler : ICommandHandler<RequestCancelPayment>
 {
@@ -20,7 +16,7 @@ public class RequestCancelPaymentHandler : ICommandHandler<RequestCancelPayment>
             new CancelPaymentRequest((int)command.PaymentCancellationReason));
 
         if (response is null || !response!.Success)
-            throw new Core.Exceptions.ApplicationLogicException($"An error occurred requesting cancelling payment {command.PaymentId.Value}.");
+            throw new ApplicationLogicException($"An error occurred requesting cancelling payment {command.PaymentId.Value}.");
     }
 }
 

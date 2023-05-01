@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace EcommerceDDD.Shipments.API.Controllers.Requests;
+﻿namespace EcommerceDDD.Shipments.API.Controllers.Requests;
 
 public record class ShipOrderRequest
 {

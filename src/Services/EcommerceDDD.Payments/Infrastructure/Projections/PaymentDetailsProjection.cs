@@ -1,9 +1,8 @@
-﻿using Marten.Events.Aggregation;
-using EcommerceDDD.Payments.Domain.Events;
+﻿using PaymentCompleted = EcommerceDDD.Payments.Domain.Events.PaymentCompleted;
 
 namespace EcommerceDDD.Payments.Infrastructure.Projections;
 
-public class PaymentDetailsProjection : SingleStreamAggregation<PaymentDetails>
+public class PaymentDetailsProjection : SingleStreamProjection<PaymentDetails>
 {
     public PaymentDetailsProjection()
     {

@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.Core.Domain;
-
-namespace EcommerceDDD.Orders.Domain.Events;
+﻿namespace EcommerceDDD.Orders.Domain.Events;
 
 public record class OrderCanceled : IDomainEvent
 {

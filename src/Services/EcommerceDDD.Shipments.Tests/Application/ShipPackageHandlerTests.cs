@@ -1,11 +1,3 @@
-using EcommerceDDD.Core.Testing;
-using EcommerceDDD.Shipments.Domain;
-using EcommerceDDD.Shipments.Domain.Commands;
-using EcommerceDDD.Core.Infrastructure.Outbox.Services;
-using EcommerceDDD.Shipments.Application.RequestingShipment;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-using EcommerceDDD.Shipments.Application.ShippingPackage;
-
 namespace EcommerceDDD.Shipments.Tests.Application;
 
 public class ShipPackageHandlerTests

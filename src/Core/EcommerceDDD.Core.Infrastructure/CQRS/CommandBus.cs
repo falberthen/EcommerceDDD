@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-
-namespace EcommerceDDD.Core.Infrastructure.CQRS;
+﻿namespace EcommerceDDD.Core.Infrastructure.CQRS;
 
 public class CommandBus : ICommandBus
 {

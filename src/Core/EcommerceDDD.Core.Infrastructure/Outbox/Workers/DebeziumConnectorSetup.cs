@@ -1,12 +1,4 @@
-﻿using Polly;
-using System.Text;
-using Newtonsoft.Json;
-using System.Net.Mime;
-using Newtonsoft.Json.Linq;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-
-namespace EcommerceDDD.Core.Infrastructure.Outbox.Workers;
+﻿namespace EcommerceDDD.Core.Infrastructure.Outbox.Workers;
 
 public interface IDebeziumConnectorSetup
 {

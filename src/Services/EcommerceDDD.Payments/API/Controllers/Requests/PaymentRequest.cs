@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace EcommerceDDD.Payments.API.Controllers.Requests;
+﻿namespace EcommerceDDD.Payments.API.Controllers.Requests;
 
 public record class PaymentRequest
 {

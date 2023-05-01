@@ -1,7 +1,4 @@
-﻿using EcommerceDDD.Orders.Domain;
-using EcommerceDDD.Core.CQRS.QueryHandling;
-
-namespace EcommerceDDD.Orders.Application.Orders.GettingOrders;
+﻿namespace EcommerceDDD.Orders.Application.Orders.GettingOrders;
 
 public record class GetOrders : IQuery<List<OrderViewModel>>
 {

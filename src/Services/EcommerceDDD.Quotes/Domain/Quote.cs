@@ -1,8 +1,4 @@
-﻿using EcommerceDDD.Core.Domain;
-using EcommerceDDD.Core.Exceptions;
-using EcommerceDDD.Quotes.Domain.Events;
-
-namespace EcommerceDDD.Quotes.Domain;
+﻿namespace EcommerceDDD.Quotes.Domain;
 
 public class Quote : AggregateRoot<QuoteId>
 {

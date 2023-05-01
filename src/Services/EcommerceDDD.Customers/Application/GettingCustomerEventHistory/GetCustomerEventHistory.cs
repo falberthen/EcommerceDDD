@@ -1,7 +1,4 @@
-﻿using EcommerceDDD.Customers.Domain;
-using EcommerceDDD.Core.CQRS.QueryHandling;
-
-namespace EcommerceDDD.Customers.Application.GettingCustomerEventHistory;
+﻿namespace EcommerceDDD.Customers.Application.GettingCustomerEventHistory;
 
 public record class GetCustomerEventHistory : IQuery<List<CustomerEventHistory>>
 {

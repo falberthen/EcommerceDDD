@@ -1,12 +1,4 @@
-﻿using MediatR;
-using EcommerceDDD.Orders.Domain;
-using EcommerceDDD.Core.Persistence;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-using EcommerceDDD.Core.Infrastructure.SignalR;
-using EcommerceDDD.Core.Infrastructure.Integration;
-using EcommerceDDD.Core.Exceptions;
-
-namespace EcommerceDDD.Orders.Application.Shipments.RequestingShipment;
+﻿namespace EcommerceDDD.Orders.Application.Shipments.RequestingShipment;
 
 public class RequestShipmentHandler : ICommandHandler<RequestShipment>
 {

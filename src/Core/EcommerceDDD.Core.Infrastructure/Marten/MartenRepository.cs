@@ -1,9 +1,4 @@
-﻿using Marten;
-using EcommerceDDD.Core.Domain;
-using EcommerceDDD.Core.Persistence;
-using EcommerceDDD.Core.EventBus;
-
-namespace EcommerceDDD.Core.Infrastructure.Marten;
+﻿namespace EcommerceDDD.Core.Infrastructure.Marten;
 
 public class MartenRepository<TA> : IEventStoreRepository<TA>
     where TA : class, IAggregateRoot<StronglyTypedId<Guid>>

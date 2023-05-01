@@ -1,5 +1,3 @@
-using EcommerceDDD.Core.Testing;
-
 namespace EcommerceDDD.Core.Tests.CQRS;
 
 public class CommandHandlerTests

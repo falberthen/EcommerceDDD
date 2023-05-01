@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace EcommerceDDD.Orders.API.Controllers.Requests;
+﻿namespace EcommerceDDD.Orders.API.Controllers.Requests;
 
 public record class PlaceOrderRequest
 {

@@ -1,9 +1,4 @@
-﻿using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace EcommerceDDD.Core.Infrastructure.WebApi;
+﻿namespace EcommerceDDD.Core.Infrastructure.WebApi;
 
 public static class SwaggerExtensions
 {

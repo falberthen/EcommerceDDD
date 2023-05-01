@@ -1,6 +1,3 @@
-using EcommerceDDD.Quotes.Domain;
-using EcommerceDDD.Quotes.Domain.Events;
-
 namespace EcommerceDDD.Quotes.Tests.Domain;
 
 public class QuoteEventsTests

@@ -1,8 +1,4 @@
-﻿using Marten;
-using EcommerceDDD.Quotes.Domain;
-using EcommerceDDD.Quotes.Infrastructure.Projections;
-
-namespace EcommerceDDD.Quotes.Application.Quotes.OpeningQuote;
+﻿namespace EcommerceDDD.Quotes.Application.Quotes.OpeningQuote;
 
 public class CustomerOpenQuoteChecker : ICustomerOpenQuoteChecker
 {
@@ -13,12 +9,12 @@ public class CustomerOpenQuoteChecker : ICustomerOpenQuoteChecker
         _querySession = querySession;
     }
 
-    public async Task<bool> CustomerHasOpenQuote(CustomerId customerId)
+    public Task<bool> CustomerHasOpenQuote(CustomerId customerId)
     {
-        var quote = await _querySession.Query<QuoteDetails>()
-            .FirstOrDefaultAsync(c => c.CustomerId == customerId.Value
+        var quote = _querySession.Query<QuoteDetails>()
+            .FirstOrDefault(c => c.CustomerId == customerId.Value
             && c.QuoteStatus == QuoteStatus.Open);
 
-        return quote is not null;
+        return Task.FromResult(quote is not null);
     }
 }

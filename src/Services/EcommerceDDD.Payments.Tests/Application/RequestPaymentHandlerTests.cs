@@ -1,9 +1,3 @@
-using EcommerceDDD.Core.Testing;
-using EcommerceDDD.Payments.Domain;
-using EcommerceDDD.Payments.Domain.Commands;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-using EcommerceDDD.Payments.Application.RequestingPayment;
-
 namespace EcommerceDDD.Payments.Tests.Application;
 
 public class RequestPaymentHandlerTests

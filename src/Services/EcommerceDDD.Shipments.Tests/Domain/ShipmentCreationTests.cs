@@ -1,5 +1,3 @@
-using EcommerceDDD.Shipments.Domain;
-
 namespace EcommerceDDD.Shipments.Tests.Domain;
 
 public class ShipmentCreationTests

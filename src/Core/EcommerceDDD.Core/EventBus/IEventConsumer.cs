@@ -1,6 +1,4 @@
-﻿using System.Threading;
-
-namespace EcommerceDDD.Core.EventBus;
+﻿namespace EcommerceDDD.Core.EventBus;
 
 public interface IEventConsumer
 {

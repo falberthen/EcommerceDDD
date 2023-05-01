@@ -1,12 +1,4 @@
-﻿using MediatR;
-using EcommerceDDD.Core.Persistence;
-using EcommerceDDD.Orders.Domain;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-using EcommerceDDD.Core.Infrastructure.SignalR;
-using EcommerceDDD.Orders.Domain.Commands;
-using EcommerceDDD.Core.Exceptions;
-
-namespace EcommerceDDD.Orders.Application.Orders.CompletingOrder;
+﻿namespace EcommerceDDD.Orders.Application.Orders.CompletingOrder;
 
 public class CompleteOrderHandler : ICommandHandler<CompleteOrder>
 {

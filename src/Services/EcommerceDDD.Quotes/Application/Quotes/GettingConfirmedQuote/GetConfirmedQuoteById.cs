@@ -1,7 +1,4 @@
-﻿using EcommerceDDD.Quotes.Domain;
-using EcommerceDDD.Core.CQRS.QueryHandling;
-
-namespace EcommerceDDD.Quotes.Application.Quotes.GettingConfirmedQuote;
+﻿namespace EcommerceDDD.Quotes.Application.Quotes.GettingConfirmedQuote;
 
 public record class GetConfirmedQuoteById : IQuery<QuoteViewModel>
 {

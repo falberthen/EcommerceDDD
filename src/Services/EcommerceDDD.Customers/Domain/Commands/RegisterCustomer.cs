@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.Core.CQRS.CommandHandling;
-
-namespace EcommerceDDD.Customers.Domain.Commands;
+﻿namespace EcommerceDDD.Customers.Domain.Commands;
 
 public record class RegisterCustomer : ICommand
 {

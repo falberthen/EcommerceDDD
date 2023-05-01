@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.Customers.Domain.Events;
-
-namespace EcommerceDDD.Customers.Infrastructure.Projections;
+﻿namespace EcommerceDDD.Customers.Infrastructure.Projections;
 
 public class CustomerDetails
 {

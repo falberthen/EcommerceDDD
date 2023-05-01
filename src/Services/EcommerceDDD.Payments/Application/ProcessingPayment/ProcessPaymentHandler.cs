@@ -1,12 +1,4 @@
-﻿using MediatR;
-using EcommerceDDD.Payments.Domain;
-using EcommerceDDD.Core.Exceptions;
-using EcommerceDDD.Core.Persistence;
-using EcommerceDDD.Payments.Domain.Commands;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-using EcommerceDDD.Core.Infrastructure.Outbox.Services;
-
-namespace EcommerceDDD.Payments.Application.ProcessingPayment;
+﻿namespace EcommerceDDD.Payments.Application.ProcessingPayment;
 
 public class ProcessPaymentHandler : ICommandHandler<ProcessPayment>
 {
@@ -36,7 +28,7 @@ public class ProcessPaymentHandler : ICommandHandler<ProcessPayment>
 
             // Completing payment
             payment.Complete();
-
+            
             await _outboxMessageService
                 .SaveAsOutboxMessageAsync(new PaymentCompleted(
                     payment.Id.Value,

@@ -1,9 +1,4 @@
-﻿using Marten.Events;
-using Marten.Events.Projections;
-using EcommerceDDD.Orders.Application.GettingOrderEventHistory;
-using EcommerceDDD.Orders.Domain.Events;
-
-namespace EcommerceDDD.Orders.Infrastructure.Projections;
+﻿namespace EcommerceDDD.Orders.Infrastructure.Projections;
 
 public class OrderEventHistoryTransform : EventProjection
 {

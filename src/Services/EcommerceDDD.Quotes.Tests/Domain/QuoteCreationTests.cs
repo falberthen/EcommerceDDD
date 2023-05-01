@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.Quotes.Domain;
-
-namespace EcommerceDDD.Quotes.Tests.Domain;
+﻿namespace EcommerceDDD.Quotes.Tests.Domain;
 
 public class QuoteCreationTests
 {

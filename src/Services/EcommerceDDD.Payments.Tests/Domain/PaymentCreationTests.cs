@@ -1,5 +1,3 @@
-using EcommerceDDD.Payments.Domain;
-
 namespace EcommerceDDD.Payments.Tests.Domain;
 
 public class PaymentCreationTests

@@ -1,7 +1,4 @@
-﻿using EcommerceDDD.Orders.Domain;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-
-namespace EcommerceDDD.Orders.Application.Shipments.RequestingShipment;
+﻿namespace EcommerceDDD.Orders.Application.Shipments.RequestingShipment;
 
 public record class RequestShipment : ICommand
 {

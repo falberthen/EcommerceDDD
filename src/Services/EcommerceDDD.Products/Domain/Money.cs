@@ -1,7 +1,4 @@
-﻿using EcommerceDDD.Core.Domain;
-using EcommerceDDD.Core.Exceptions;
-
-namespace EcommerceDDD.Products.Domain;
+﻿namespace EcommerceDDD.Products.Domain;
 
 public class Money : ValueObject<Money>
 {

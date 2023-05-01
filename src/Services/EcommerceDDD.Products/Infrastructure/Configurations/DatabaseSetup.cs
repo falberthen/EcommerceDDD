@@ -1,13 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using EcommerceDDD.Products.Infrastructure.Persistence;
-
-namespace EcommerceDDD.Products.Infrastructure.Configurations;
+﻿namespace EcommerceDDD.Products.Infrastructure.Configurations;
 
 public static class DatabaseSetup
 {
-    public static void AddDatabaseSetup(this IServiceCollection services, ConfigurationManager configuration)
+    public static WebApplicationBuilder AddDatabaseSetup(this WebApplicationBuilder builder)
     {
-        if (services is null) 
+        var services = builder.Services;
+        var configuration = builder.Configuration;
+        if (services is null)
             throw new ArgumentNullException(nameof(services));
 
         string connString = configuration.GetConnectionString("DefaultConnection");
@@ -20,5 +19,7 @@ public static class DatabaseSetup
                     sqlOptions.EnableRetryOnFailure();
                 });
         });
+
+        return builder;
     }
 }

@@ -1,8 +1,3 @@
-using EcommerceDDD.Core.Testing;
-using EcommerceDDD.Quotes.Domain;
-using EcommerceDDD.Quotes.Domain.Commands;
-using EcommerceDDD.Quotes.Application.Quotes.RemovingQuoteItem;
-
 namespace EcommerceDDD.Quotes.Tests.Application;
 
 public class RemoveQuoteItemHandlerTests

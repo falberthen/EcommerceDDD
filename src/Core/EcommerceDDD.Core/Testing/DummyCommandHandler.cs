@@ -1,9 +1,4 @@
-﻿using MediatR;
-using System.Threading;
-using EcommerceDDD.Core.Persistence;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-
-namespace EcommerceDDD.Core.Testing;
+﻿namespace EcommerceDDD.Core.Testing;
 
 public class DummyCommandHandler : ICommandHandler<DummyCommand>
 {

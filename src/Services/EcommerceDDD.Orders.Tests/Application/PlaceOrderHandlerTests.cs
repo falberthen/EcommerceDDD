@@ -1,8 +1,3 @@
-using EcommerceDDD.Core.Testing;
-using EcommerceDDD.Core.Exceptions;
-using EcommerceDDD.Orders.Domain.Commands;
-using EcommerceDDD.Core.Infrastructure.Integration;
-using EcommerceDDD.Orders.Application.Orders.PlacingOrder;
 using static EcommerceDDD.Orders.Application.Orders.PlacingOrder.PlaceOrderHandler;
 
 namespace EcommerceDDD.Orders.Tests.Application;
@@ -51,7 +46,10 @@ public class PlaceOrderHandlerTests
             .Returns(Task.FromResult(productItemsData));
 
         var placeOrder = PlaceOrder.Create(quoteId);
-        var placeOrderHandler = new PlaceOrderHandler(_integrationHttpService.Object, orderWriteRepository, _productItemsMapper.Object);
+        var placeOrderHandler = new PlaceOrderHandler(
+            _integrationHttpService.Object, 
+            orderWriteRepository, 
+            _productItemsMapper.Object);
 
         // When
         await placeOrderHandler.Handle(placeOrder, CancellationToken.None);

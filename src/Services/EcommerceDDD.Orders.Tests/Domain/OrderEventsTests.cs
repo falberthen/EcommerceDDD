@@ -1,5 +1,3 @@
-using EcommerceDDD.Orders.Domain.Events;
-
 namespace EcommerceDDD.Orders.Tests.Domain;
 
 public class OrderEventsTests

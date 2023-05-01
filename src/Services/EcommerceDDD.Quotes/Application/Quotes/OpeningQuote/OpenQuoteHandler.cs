@@ -1,11 +1,4 @@
-﻿using MediatR;
-using EcommerceDDD.Quotes.Domain;
-using EcommerceDDD.Core.Persistence;
-using EcommerceDDD.Core.Exceptions;
-using EcommerceDDD.Core.CQRS.CommandHandling;
-using EcommerceDDD.Quotes.Domain.Commands;
-
-namespace EcommerceDDD.Quotes.Application.Quotes.OpeningQuote;
+﻿namespace EcommerceDDD.Quotes.Application.Quotes.OpeningQuote;
 
 public class OpenQuoteHandler : ICommandHandler<OpenQuote>
 {

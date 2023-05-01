@@ -1,9 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using EcommerceDDD.Core.Infrastructure.Http;
-using EcommerceDDD.Core.Infrastructure.Identity;
-using EcommerceDDD.Core.Infrastructure.Integration;
-
-namespace EcommerceDDD.Core.Infrastructure.SignalR;
+﻿namespace EcommerceDDD.Core.Infrastructure.SignalR;
 
 public class OrderStatusBroadcaster : IOrderStatusBroadcaster
 {
@@ -32,7 +27,7 @@ public class OrderStatusBroadcaster : IOrderStatusBroadcaster
     public async Task UpdateOrderStatus(UpdateOrderStatusRequest request)
     {
         var tokenResponse = await _tokenRequester
-            .GetApplicationToken(_tokenIssuerSettings);
+            .GetApplicationTokenAsync(_tokenIssuerSettings);
 
         await _httpRequester.PostAsync<IntegrationHttpResponse>(
             $"{_integrationHttpSettings.ApiGatewayBaseUrl}/api/signalr/updateorderstatus",
