@@ -1,8 +1,4 @@
-﻿using IdentityModel.Client;
-using Microsoft.Extensions.Caching.Memory;
-using System.IdentityModel.Tokens.Jwt;
-
-namespace EcommerceDDD.Core.Infrastructure.Identity;
+﻿namespace EcommerceDDD.Core.Infrastructure.Identity;
 
 public class TokenRequester : ITokenRequester
 {
@@ -19,21 +15,21 @@ public class TokenRequester : ITokenRequester
     }
 
     // Caching application token
-    public async Task<TokenResponse> GetApplicationToken(TokenIssuerSettings settings)
+    public async Task<TokenResponse> GetApplicationTokenAsync(TokenIssuerSettings settings)
     {
         TokenResponse tokenResponse = default!;
         var isStoredToken = _cache.TryGetValue(_applicationKey, out tokenResponse);
 
         if (!isStoredToken)        
-            tokenResponse = await RequestApplicationToken(settings);      
+            tokenResponse = await RequestApplicationTokenAsync(settings);      
         
         if (isStoredToken && IsTokenExpired(tokenResponse))
-            tokenResponse = await RequestApplicationToken(settings);
+            tokenResponse = await RequestApplicationTokenAsync(settings);
         
         return tokenResponse;       
     }
 
-    public async Task<TokenResponse> GetUserToken(TokenIssuerSettings settings, string userName, string password)
+    public async Task<TokenResponse> GetUserTokenAsync(TokenIssuerSettings settings, string userName, string password)
     {
         var identityServerAddress = $"{settings.Authority}/connect/token";
         var response = await _httpClient.RequestPasswordTokenAsync(new PasswordTokenRequest
@@ -50,7 +46,7 @@ public class TokenRequester : ITokenRequester
         return response;
     }
 
-    private async Task<TokenResponse> RequestApplicationToken(TokenIssuerSettings settings)
+    private async Task<TokenResponse> RequestApplicationTokenAsync(TokenIssuerSettings settings)
     {
         if (settings is null)
             throw new ArgumentNullException(nameof(settings));

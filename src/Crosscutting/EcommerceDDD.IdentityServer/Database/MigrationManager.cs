@@ -1,9 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using EcommerceDDD.IdentityServer.Configurations;
-using Duende.IdentityServer.EntityFramework.DbContexts;
-using Duende.IdentityServer.EntityFramework.Mappers;
-
-namespace EcommerceDDD.IdentityServer.Database;
+﻿namespace EcommerceDDD.IdentityServer.Database;
 
 public static class MigrationManager
 {
