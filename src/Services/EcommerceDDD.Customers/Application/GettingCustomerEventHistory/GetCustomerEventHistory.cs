@@ -1,6 +1,6 @@
 ﻿namespace EcommerceDDD.Customers.Application.GettingCustomerEventHistory;
 
-public record class GetCustomerEventHistory : IQuery<List<CustomerEventHistory>>
+public record class GetCustomerEventHistory : IQuery<IList<CustomerEventHistory>>
 {
     public CustomerId CustomerId { get; private set; }
 

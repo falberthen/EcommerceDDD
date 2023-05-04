@@ -1,5 +1,4 @@
 global using Marten;
-global using System.Net;
 global using Newtonsoft.Json;
 global using FluentAssertions;
 global using Marten.Events;
@@ -18,6 +17,7 @@ global using EcommerceDDD.Core.CQRS.QueryHandling;
 global using EcommerceDDD.Quotes.Domain.Commands;
 global using EcommerceDDD.Core.CQRS.CommandHandling;
 global using System.ComponentModel.DataAnnotations;
+global using EcommerceDDD.Quotes.Application.Quotes;
 global using EcommerceDDD.Core.Infrastructure.WebApi;
 global using EcommerceDDD.Core.Infrastructure.Identity;
 global using EcommerceDDD.Quotes.Infrastructure.Projections;

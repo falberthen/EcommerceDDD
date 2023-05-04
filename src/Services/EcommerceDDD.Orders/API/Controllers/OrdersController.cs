@@ -17,13 +17,13 @@ public class OrdersController : CustomControllerBase
     /// <returns></returns>
     [HttpGet, Route("{customerId:guid}")]
     [Authorize(Policy = PolicyBuilder.ReadPolicy)]
-    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<OrderViewModel>>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> ListDetails([FromRoute] Guid customerId)
-    {
-        var query = GetOrders.Create(CustomerId.Of(customerId));
-        return await Response(query);
-    }
+    public async Task<IActionResult> ListCustomerOrders([FromRoute] Guid customerId) => 
+         await Response(
+             GetOrders.Create(CustomerId.Of(customerId))
+        );
+    
 
     /// <summary>
     /// Get order event history
@@ -32,13 +32,12 @@ public class OrdersController : CustomControllerBase
     /// <returns></returns>
     [HttpGet, Route("{orderId}/history")]
     [Authorize(Policy = PolicyBuilder.ReadPolicy)]
-    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<OrderEventHistory>>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> ListHistory([FromRoute] Guid orderId)
-    {
-        var query = GetOrderEventHistory.Create(OrderId.Of(orderId));
-        return await Response(query);
-    }
+    public async Task<IActionResult> ListHistory([FromRoute] Guid orderId) =>  
+        await Response(
+            GetOrderEventHistory.Create(OrderId.Of(orderId))
+        );
 
     /// <summary>
     /// Places an order from a quote
@@ -47,11 +46,10 @@ public class OrdersController : CustomControllerBase
     /// <returns></returns>
     [HttpPost, Route("{quoteId}")]
     [Authorize(Policy = PolicyBuilder.WritePolicy)]
-    [ProducesResponseType((int)HttpStatusCode.Created)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> PlaceOrderFromQuote([FromRoute] Guid quoteId)
-    {
-        var command = PlaceOrder.Create(QuoteId.Of(quoteId));
-        return await Response(command);
-    }
+    public async Task<IActionResult> PlaceOrderFromQuote([FromRoute] Guid quoteId) =>
+        await Response(
+            PlaceOrder.Create(QuoteId.Of(quoteId))
+        );
 }

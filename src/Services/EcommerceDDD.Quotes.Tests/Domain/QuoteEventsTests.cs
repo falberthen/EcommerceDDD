@@ -3,7 +3,7 @@ namespace EcommerceDDD.Quotes.Tests.Domain;
 public class QuoteEventsTests
 {
     [Fact]
-    public void CreatingQuote_WithCustomerId_ReturnsQuoteCreatedEvent()
+    public void CreatingQuote_WithCustomerId_ReturnsQuoteOpenEvent()
     {
         // When
         var quote = Quote.Create(_customerId);
@@ -15,7 +15,7 @@ public class QuoteEventsTests
     }
 
     [Fact]
-    public void CancellingQuote_WithCustomerId_ReturnsQuoteCancelledEvent()
+    public void CancellingQuote_WithCustomerId_ReturnsQuoteCanceledEvent()
     {
         // When
         var quote = Quote.Create(_customerId);

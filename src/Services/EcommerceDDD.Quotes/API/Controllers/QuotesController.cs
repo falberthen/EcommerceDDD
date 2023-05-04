@@ -16,29 +16,27 @@ public class QuotesController : CustomControllerBase
     /// <returns></returns>
     [HttpGet, Route("{quoteId}")]
     [Authorize(Policy = PolicyBuilder.ReadPolicy)]
-    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<QuoteViewModel>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> GetById([FromRoute] Guid quoteId)
-    {
-        var query = GetConfirmedQuoteById.Create(QuoteId.Of(quoteId));
-        return await Response(query);
-    }
+    public async Task<IActionResult> GetById([FromRoute] Guid quoteId) =>
+        await Response(
+            GetConfirmedQuoteById.Create(QuoteId.Of(quoteId))
+        );
 
     /// <summary>
     /// Get the current customer's quote
     /// </summary>
     /// <param name="customerId"></param>
+    /// <param name="currencyCode"></param>
     /// <returns></returns>
     [HttpGet, Route("{customerId:guid}/quote/{currencyCode}")]
     [Authorize(Roles = "Customer", Policy = PolicyBuilder.ReadPolicy)]
-    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<QuoteViewModel>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> GetCustomerOpenQuote([FromRoute] Guid customerId, [FromRoute] string currencyCode)
-    {
-        var query = GetOpenQuote
-            .Create(CustomerId.Of(customerId), currencyCode);
-        return await Response(query);
-    }
+    public async Task<IActionResult> GetCustomerOpenQuote([FromRoute] Guid customerId, [FromRoute] string currencyCode) =>    
+        await Response(
+           GetOpenQuote.Create(CustomerId.Of(customerId), currencyCode)
+       );    
 
     /// <summary>
     /// Get quote event history
@@ -47,29 +45,26 @@ public class QuotesController : CustomControllerBase
     /// <returns></returns>
     [HttpGet, Route("{quoteId}/history")]
     [Authorize(Roles = "Customer", Policy = PolicyBuilder.ReadPolicy)]
-    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<QuoteEventHistory>>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> ListHistory([FromRoute] Guid quoteId)
-    {
-        var query = GetQuoteEventHistory.Create(QuoteId.Of(quoteId));
-        return await Response(query);
-    }
+    public async Task<IActionResult> ListHistory([FromRoute] Guid quoteId) =>
+        await Response(
+           GetQuoteEventHistory.Create(QuoteId.Of(quoteId))
+       );
 
     /// <summary>
-    /// Open a Quote 
+    /// Open a Quote for a customer
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
     [HttpPost]
-    [ProducesResponseType((int)HttpStatusCode.Created)]
     [Authorize(Roles = "Customer", Policy = PolicyBuilder.WritePolicy)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Create([FromBody] OpenQuoteRequest request)
-    {
-        var command = OpenQuote.Create(CustomerId.Of(request.CustomerId));
-        return await Response(command);
-
-    }
+    public async Task<IActionResult> OpenCustomerQuote([FromBody] OpenQuoteRequest request) =>
+        await Response(
+           OpenQuote.Create(CustomerId.Of(request.CustomerId))
+        );
 
     /// <summary>
     /// Add a Quote item
@@ -79,18 +74,17 @@ public class QuotesController : CustomControllerBase
     /// <returns></returns>
     [HttpPut, Route("{quoteId:guid}/items")]
     [Authorize(Roles = "Customer", Policy = PolicyBuilder.WritePolicy)]
-    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> AddItem([FromRoute] Guid quoteId, [FromBody] AddQuoteItemRequest request)
-    {
-        var command = AddQuoteItem.Create(
-            QuoteId.Of(quoteId),
-            ProductId.Of(request.ProductId),
-            request.Quantity,
-            Currency.OfCode(request.CurrencyCode));
-
-        return await Response(command);
-    }
+    public async Task<IActionResult> AddItem([FromRoute] Guid quoteId, [FromBody] AddQuoteItemRequest request) =>
+        await Response(
+            AddQuoteItem.Create(
+                QuoteId.Of(quoteId),
+                ProductId.Of(request.ProductId),
+                request.Quantity,
+                Currency.OfCode(request.CurrencyCode)
+            )
+       );
 
     /// <summary>
     /// Delete a Quote item
@@ -100,15 +94,12 @@ public class QuotesController : CustomControllerBase
     /// <returns></returns>
     [HttpDelete, Route("{quoteId:guid}/items/{productId}")]
     [Authorize(Roles = "Customer", Policy = PolicyBuilder.DeletePolicy)]
-    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> RemoveItem([FromRoute] Guid quoteId, [FromRoute] Guid productId)
-    {
-        var command = RemoveQuoteItem.Create(
-            QuoteId.Of(quoteId), ProductId.Of(productId));
-
-        return await Response(command);
-    }
+    public async Task<IActionResult> RemoveItem([FromRoute] Guid quoteId, [FromRoute] Guid productId) =>
+        await Response(
+            RemoveQuoteItem.Create(QuoteId.Of(quoteId), ProductId.Of(productId))
+        );
 
     /// <summary>
     /// Cancel a Quote
@@ -116,29 +107,27 @@ public class QuotesController : CustomControllerBase
     /// <param name="quoteId"></param>
     /// <returns></returns>
     [HttpDelete, Route("{quoteId:guid}")]
-    [ProducesResponseType((int)HttpStatusCode.OK)]
     [Authorize(Roles = "Customer", Policy = PolicyBuilder.DeletePolicy)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Cancel([FromRoute] Guid quoteId)
-    {
-        var command = CancelQuote.Create(QuoteId.Of(quoteId));
-        return await Response(command);
-    }
+    public async Task<IActionResult> Cancel([FromRoute] Guid quoteId) =>
+        await Response(
+            CancelQuote.Create(QuoteId.Of(quoteId))
+        );
 
     /// <summary>
     /// Confirms the quote
     /// </summary>
     /// <param name="quoteId"></param>
+    /// <param name="currencyCode"></param>
     /// <returns></returns>
     [HttpPut, Route("{quoteId:guid}/confirm/{currencyCode}")]
-    [ProducesResponseType((int)HttpStatusCode.OK)]
     [Authorize(Roles = "Customer", Policy = PolicyBuilder.WritePolicy)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Confirm([FromRoute] Guid quoteId, [FromRoute] string currencyCode)
-    {
-        var command = ConfirmQuote.Create(
-            QuoteId.Of(quoteId), Currency.OfCode(currencyCode));
-
-        return await Response(command);
-    }
+    public async Task<IActionResult> Confirm([FromRoute] Guid quoteId, [FromRoute] string currencyCode) =>    
+        await Response(
+            ConfirmQuote.Create(
+            QuoteId.Of(quoteId), Currency.OfCode(currencyCode))
+        );    
 }

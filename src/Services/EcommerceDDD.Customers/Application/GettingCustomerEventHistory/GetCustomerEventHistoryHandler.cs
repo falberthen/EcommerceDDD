@@ -1,6 +1,6 @@
 ﻿namespace EcommerceDDD.Customers.Application.GettingCustomerEventHistory;
 
-public class GetCustomerEventHistoryHandler : IQueryHandler<GetCustomerEventHistory, List<CustomerEventHistory>> 
+public class GetCustomerEventHistoryHandler : IQueryHandler<GetCustomerEventHistory, IList<CustomerEventHistory>> 
 {
     private readonly IQuerySession _querySession;
 
@@ -10,7 +10,7 @@ public class GetCustomerEventHistoryHandler : IQueryHandler<GetCustomerEventHist
         _querySession = querySession;
     }
 
-    public Task<List<CustomerEventHistory>> Handle(GetCustomerEventHistory query, CancellationToken cancellationToken)
+    public Task<IList<CustomerEventHistory>> Handle(GetCustomerEventHistory query, CancellationToken cancellationToken)
     {
         var customerHistory = _querySession.Query<CustomerEventHistory>()
            .Where(c => c.AggregateId == query!.CustomerId.Value);
@@ -18,6 +18,6 @@ public class GetCustomerEventHistoryHandler : IQueryHandler<GetCustomerEventHist
         if (customerHistory is null)
             throw new RecordNotFoundException($"History for customer {query.CustomerId.Value} was not found.");
 
-        return Task.FromResult(customerHistory.ToList());
+        return Task.FromResult<IList<CustomerEventHistory>>(customerHistory.ToList());
     }
 }

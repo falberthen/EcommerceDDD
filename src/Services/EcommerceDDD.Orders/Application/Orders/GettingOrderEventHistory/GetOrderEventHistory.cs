@@ -1,6 +1,6 @@
 ﻿namespace EcommerceDDD.Orders.Application.GettingOrderEventHistory;
 
-public record class GetOrderEventHistory : IQuery<List<OrderEventHistory>>
+public record class GetOrderEventHistory : IQuery<IList<OrderEventHistory>>
 {
     public OrderId OrderId { get; private set; }
 
