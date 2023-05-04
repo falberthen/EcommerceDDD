@@ -9,6 +9,8 @@ global using Confluent.Kafka;
 global using Newtonsoft.Json.Linq;
 global using System.Net.Http.Headers;
 global using IdentityModel.Client;
+global using Microsoft.AspNetCore.Http;
+global using System.Threading.RateLimiting;
 global using EcommerceDDD.Core.Reflection;
 global using EcommerceDDD.Core.Domain;
 global using Microsoft.Extensions.Logging;
