@@ -1,4 +1,5 @@
 export class ServiceResponse {
-  data: any;
+  data?: any;
   success: boolean = false;
+  message?: string;
 }

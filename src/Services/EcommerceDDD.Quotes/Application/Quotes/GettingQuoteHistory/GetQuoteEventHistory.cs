@@ -1,6 +1,6 @@
 ﻿namespace EcommerceDDD.Quotes.Application.Quotes.GettingQuoteHistory;
 
-public record class GetQuoteEventHistory : IQuery<List<QuoteEventHistory>>
+public record class GetQuoteEventHistory : IQuery<IList<QuoteEventHistory>>
 {
     public QuoteId QuoteId { get; private set; }
 

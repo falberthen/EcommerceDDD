@@ -1,5 +1,4 @@
 global using Marten;
-global using System.Net;
 global using Marten.Events;
 global using Newtonsoft.Json;
 global using Marten.Events.Projections;

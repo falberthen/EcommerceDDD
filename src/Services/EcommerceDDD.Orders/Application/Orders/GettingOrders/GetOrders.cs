@@ -1,6 +1,6 @@
 ﻿namespace EcommerceDDD.Orders.Application.Orders.GettingOrders;
 
-public record class GetOrders : IQuery<List<OrderViewModel>>
+public record class GetOrders : IQuery<IList<OrderViewModel>>
 {
     public CustomerId CustomerId { get; private set; }
 
