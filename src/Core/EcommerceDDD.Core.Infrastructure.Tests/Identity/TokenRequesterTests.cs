@@ -12,7 +12,10 @@ public class TokenRequesterTests
         _httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>()))
             .Returns(httpClient);
             
-        var tokenRequester = new TokenRequester(_cache.Object, _httpClientFactory.Object);
+        var tokenRequester = new TokenRequester(
+            _cache.Object, 
+            _httpContextAccessor.Object,
+            _httpClientFactory.Object);
 
             // IMemoryCache.Set is an extension method using CreateEntry
         _cache.Setup(x => x.CreateEntry(It.IsAny<object>()))
@@ -37,7 +40,10 @@ public class TokenRequesterTests
         _httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>()))
             .Returns(httpClient);
 
-        var tokenRequester = new TokenRequester(_cache.Object, _httpClientFactory.Object);
+        var tokenRequester = new TokenRequester(
+            _cache.Object,
+            _httpContextAccessor.Object,
+            _httpClientFactory.Object);
 
         // When
         var response = await tokenRequester.GetUserTokenAsync(new TokenIssuerSettings() { Authority = _url }, 
@@ -63,6 +69,7 @@ public class TokenRequesterTests
     private const string _url = "http://url";
     private Mock<IHttpClientFactory> _httpClientFactory = new();
     private Mock<IMemoryCache> _cache = new();
+    private Mock<IHttpContextAccessor> _httpContextAccessor = new();
     private Mock<HttpMessageHandler> _mockHttpMessageHandler = new();
 
     public record DummyResponse(string AccessToken);

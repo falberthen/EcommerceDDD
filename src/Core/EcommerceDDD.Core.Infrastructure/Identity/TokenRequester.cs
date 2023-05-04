@@ -1,15 +1,21 @@
-﻿namespace EcommerceDDD.Core.Infrastructure.Identity;
+﻿using Microsoft.AspNetCore.Authentication;
+
+namespace EcommerceDDD.Core.Infrastructure.Identity;
 
 public class TokenRequester : ITokenRequester
 {
     private readonly HttpClient _httpClient;
     private readonly IMemoryCache _cache;
+    private readonly IHttpContextAccessor _contextAccessor;
+
     private const string _applicationKey = "ApplicationToken";
 
     public TokenRequester(
         IMemoryCache cache, 
+        IHttpContextAccessor httpContextAccessor,
         IHttpClientFactory factory)
     {
+        _contextAccessor = httpContextAccessor;
         _httpClient = factory.CreateClient();
         _cache = cache;
     }
@@ -46,6 +52,9 @@ public class TokenRequester : ITokenRequester
         return response;
     }
 
+    public async Task<string> GetUserTokenFromHttpContextAsync() =>
+        await _contextAccessor.HttpContext?.GetTokenAsync("access_token");
+
     private async Task<TokenResponse> RequestApplicationTokenAsync(TokenIssuerSettings settings)
     {
         if (settings is null)
@@ -76,5 +85,5 @@ public class TokenRequester : ITokenRequester
             return true;
 
         return false;
-    }
+    }    
 }

@@ -27,7 +27,8 @@ services.AddOutboxService(builder.Configuration);
 // Policies
 services.AddAuthorization(options =>
 {
-    options.AddPolicy(PolicyBuilder.ReadPolicy, PolicyBuilder.ReadAccess);
+    options.AddPolicy(PolicyBuilder.M2MPolicy, PolicyBuilder.M2MAccess);
+    options.AddPolicy(PolicyBuilder.WritePolicy, PolicyBuilder.WriteAccess);
 });
 
 // App
