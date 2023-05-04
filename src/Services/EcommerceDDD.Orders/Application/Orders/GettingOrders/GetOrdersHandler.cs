@@ -1,6 +1,6 @@
 ﻿namespace EcommerceDDD.Orders.Application.Orders.GettingOrders;
 
-public class GetOrdersHandler : IQueryHandler<GetOrders, List<OrderViewModel>>
+public class GetOrdersHandler : IQueryHandler<GetOrders, IList<OrderViewModel>>
 {
     private readonly IQuerySession _querySession;
 
@@ -9,7 +9,7 @@ public class GetOrdersHandler : IQueryHandler<GetOrders, List<OrderViewModel>>
         _querySession = querySession;
     }
 
-    public Task<List<OrderViewModel>> Handle(GetOrders query, CancellationToken cancellationToken)
+    public Task<IList<OrderViewModel>> Handle(GetOrders query, CancellationToken cancellationToken)
     {
         var orders = _querySession.Query<OrderDetails>()
             .Where(q => q.CustomerId == query.CustomerId.Value)
@@ -51,6 +51,6 @@ public class GetOrdersHandler : IQueryHandler<GetOrders, List<OrderViewModel>>
             }
         }
 
-        return Task.FromResult(viewModels);
+        return Task.FromResult<IList<OrderViewModel>>(viewModels);
     }
 }

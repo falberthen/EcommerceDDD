@@ -7,7 +7,10 @@ public static class CoreInfrastructureExtensions
     {
         if (configuration is null)
             throw new ArgumentNullException(nameof(configuration));
-        
+
+        services.AddMemoryCache();
+        services.AddHttpContextAccessor();
+
         // EventBus
         services.TryAddSingleton<IEventDispatcher, EventDispatcher>();
 

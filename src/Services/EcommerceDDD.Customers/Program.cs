@@ -10,6 +10,7 @@ builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(RegisterCustomerHandler).Assembly));
 
 // Services
+services.AddScoped<ITokenRequester, TokenRequester>();
 services.AddScoped<IEmailUniquenessChecker, EmailUniquenessChecker>();
 services.AddScoped<IEventStoreRepository<Customer>, MartenRepository<Customer>>();
 services.AddMarten(builder.Configuration,

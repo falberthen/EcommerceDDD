@@ -13,7 +13,7 @@ export class ServerErrorInterceptor implements HttpInterceptor {
       catchError((error) => {
         const notifier = this.injector.get(NotificationService);
 
-        if (error.status === 500) {
+        if (error.status === 400 || error.status === 500) {
           const errorResult = this.getServerErrorMessage(error).error;
           if(errorResult.errors){
             Object.keys(errorResult.errors).forEach(function (key, index) {
@@ -21,7 +21,7 @@ export class ServerErrorInterceptor implements HttpInterceptor {
               notifier.showError(errorMsg);
             });
           }
-          else{
+          else {
             notifier.showError(errorResult.message);
           }
         }

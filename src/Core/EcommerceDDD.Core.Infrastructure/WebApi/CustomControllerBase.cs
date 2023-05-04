@@ -21,9 +21,6 @@ public class CustomControllerBase : ControllerBase
 
         try
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
             result = await _queryBus.Send(query);
         }
         catch (Exception e)
@@ -31,10 +28,10 @@ public class CustomControllerBase : ControllerBase
             return BadRequestActionResult(e.Message);
         }
 
-        return Ok(new
+        return Ok(new ApiResponse<TResult>
         {
-            data = result,
-            success = true
+            Data = result,
+            Success = true
         });
     }
 
@@ -42,9 +39,6 @@ public class CustomControllerBase : ControllerBase
     {
         try
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
             await _commandBus.Send(command);
         }
         catch (Exception e)
@@ -52,18 +46,18 @@ public class CustomControllerBase : ControllerBase
             return BadRequestActionResult(e.Message);
         }
 
-        return Ok(new
+        return Ok(new ApiResponse<IActionResult>
         {
-            success = true
+            Success = true
         });
     }
 
     private IActionResult BadRequestActionResult(string resultErrors)
     {
-        return BadRequest(new
+        return BadRequest(new ApiResponse<IActionResult>
         {
-            success = false,
-            message = resultErrors
+            Success = false,
+            Message = resultErrors
         });
     }
 }

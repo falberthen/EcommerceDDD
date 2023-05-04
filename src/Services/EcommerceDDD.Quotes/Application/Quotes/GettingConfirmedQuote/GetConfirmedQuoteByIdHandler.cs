@@ -13,7 +13,8 @@ public class GetConfirmedQuoteByIdHandler : IQueryHandler<GetConfirmedQuoteById,
     {
         var projectedQuote = _querySession.Query<QuoteDetails>()
             .FirstOrDefault(q => q.Id == query.QuoteId.Value 
-            && q.QuoteStatus == QuoteStatus.Confirmed);
+            && q.QuoteStatus == QuoteStatus.Confirmed)
+            ?? throw new RecordNotFoundException("Quote not found.");
 
         QuoteViewModel viewModel = default!;
 

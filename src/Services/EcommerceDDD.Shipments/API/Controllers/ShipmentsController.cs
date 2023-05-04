@@ -1,6 +1,6 @@
 namespace EcommerceDDD.Shipments.API.Controllers;
 
-[Authorize]
+[Authorize(Policy = PolicyBuilder.M2MPolicy)]
 [Route("api/shipments")]
 [ApiController]
 public class ShipmentsController : CustomControllerBase
@@ -11,20 +11,18 @@ public class ShipmentsController : CustomControllerBase
         : base(commandBus, queryBus) { }
 
     [HttpPost]
-    [Authorize(Policy = PolicyBuilder.ReadPolicy)]
-    [ProducesResponseType((int)HttpStatusCode.Created)]
-    public async Task<IActionResult> RequestShipment([FromBody] ShipOrderRequest request)
-    {
-        var productItems = request.ProductItems.Select(p =>
-            new ProductItem(
-                ProductId.Of(p.ProductId),
-                p.Quantity))
-            .ToList();
-
-        var command = Domain.Commands.RequestShipment.Create(
-            OrderId.Of(request.OrderId), 
-            productItems);
-
-        return await Response(command);
-    }
+    [Authorize(Policy = PolicyBuilder.WritePolicy)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> RequestOrderShipment([FromBody] ShipOrderRequest request) =>    
+        await Response(
+            RequestShipment.Create(
+                OrderId.Of(request.OrderId),
+                request.ProductItems.Select(p =>
+                    new ProductItem(
+                        ProductId.Of(p.ProductId),
+                        p.Quantity)
+                ).ToList()
+            )
+        );
 }

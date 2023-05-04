@@ -1,6 +1,6 @@
 namespace EcommerceDDD.Payments.API.Controllers;
 
-[Authorize]
+[Authorize(Policy = PolicyBuilder.M2MPolicy)]
 [Route("api/payments")]
 [ApiController]
 public class PaymentsController : CustomControllerBase
@@ -12,27 +12,25 @@ public class PaymentsController : CustomControllerBase
 
     [HttpPost]
     [Authorize(Policy = PolicyBuilder.WritePolicy)]
-    [ProducesResponseType((int)HttpStatusCode.Created)]
-    public async Task<IActionResult> Create([FromBody] PaymentRequest request)
-    {
-        var command = RequestPayment.Create(
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> RequestCreate([FromBody] PaymentRequest request) =>
+        await Response(
+            RequestPayment.Create(
             CustomerId.Of(request.CustomerId),
             OrderId.Of(request.OrderId),
             Money.Of(request.TotalAmount, request.CurrencyCode),
-            Currency.OfCode(request.CurrencyCode));
-
-        return await Response(command);
-    }
-
+            Currency.OfCode(request.CurrencyCode))
+        );
+    
     [HttpDelete("{paymentId}")]
     [Authorize(Policy = PolicyBuilder.DeletePolicy)]
-    [ProducesResponseType((int)HttpStatusCode.Created)]
-    public async Task<IActionResult> Cancel([FromRoute] Guid paymentId, [FromBody] CancelPaymentRequest request)
-    {
-        var command = CancelPayment.Create(
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Cancel([FromRoute] Guid paymentId, [FromBody] CancelPaymentRequest request) =>    
+        await Response(
+            CancelPayment.Create(
             PaymentId.Of(paymentId),
-            (PaymentCancellationReason)request.PaymentCancellationReason);
-
-        return await Response(command);
-    }
+            (PaymentCancellationReason)request.PaymentCancellationReason)
+        );    
 }

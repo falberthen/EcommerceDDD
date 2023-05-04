@@ -2,9 +2,16 @@
 
 public static class PolicyBuilder
 {
+    public const string M2MPolicy = "M2MAccess";
     public const string ReadPolicy = "ReadAccess";
     public const string WritePolicy = "WriteAccess";
     public const string DeletePolicy = "WriteAccess";
+
+    public static AuthorizationPolicy M2MAccess =>
+        new AuthorizationPolicyBuilder()
+            .RequireAuthenticatedUser()
+            .RequireClaim("scope", "ecommerceddd-api.scope")
+            .Build();
 
     public static AuthorizationPolicy ReadAccess =>
         new AuthorizationPolicyBuilder()
