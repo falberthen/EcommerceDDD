@@ -6,8 +6,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace EcommerceDDD.IdentityServer.Migrations.IdentityServer.PersistedGrantDb
 {
+    /// <inheritdoc />
     public partial class InitialIdentityServerPersistedGrantDbMigration : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -159,6 +161,7 @@ namespace EcommerceDDD.IdentityServer.Migrations.IdentityServer.PersistedGrantDb
                 column: "SubjectId");
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
