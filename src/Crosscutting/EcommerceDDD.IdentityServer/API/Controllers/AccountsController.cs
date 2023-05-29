@@ -3,7 +3,7 @@
 [AllowAnonymous]
 [ApiController]
 [Route("api/accounts")]
-public class AccountsController : ControllerBase
+public class AccountsController : CustomControllerBase
 {
     private readonly IIdentityManager _identityManager;
     
@@ -16,38 +16,36 @@ public class AccountsController : ControllerBase
     [HttpPost, Route("login")]
     public async Task<IActionResult> UserLogin(LoginRequest request)
     {
-        var response = await _identityManager
-            .AuthUserByCredentials(request);
+        try
+        {
+            var response = await _identityManager
+                .AuthUserByCredentials(request);
 
-        return Ok(response);
+            return Ok(response);
+        }
+        catch (Exception e)
+        {
+            return BadRequestActionResult(e.Message);
+        }
     }
 
     [HttpPost, Route("register")]
     public async Task<IActionResult> Register(RegisterUserRequest request)
     {
-        IdentityResult result = default!;
-
         try
         {
-            result = await _identityManager
+            var result = await _identityManager
                 .RegisterNewUser(request);
-        }
-        catch (Exception)
-        {
-            return BadRequest(result);            
-        }
-        
-        return Ok(new
-        {
-            data = result,
-            success = result.Succeeded
-        });
-    }
 
-    private BadRequestObjectResult BadRequest(IdentityResult result) => 
-        BadRequest(new
+            return Ok(new
+            {
+                data = result,
+                success = result.Succeeded
+            });
+        }
+        catch (Exception e)
         {
-            success = result.Succeeded,
-            message = result.Errors.First().Description
-        });
+            return BadRequestActionResult(e.Message);            
+        }
+    }
 }

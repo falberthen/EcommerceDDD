@@ -9,17 +9,18 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace EcommerceDDD.IdentityServer.Migrations.IdentityServer.IdentityApplicationDb
+namespace EcommerceDDD.IdentityServer.Migrations
 {
     [DbContext(typeof(IdentityApplicationDbContext))]
-    [Migration("20230325230729_IdentityApplicationDbMigration")]
-    partial class IdentityApplicationDbMigration
+    [Migration("20230529203333_InitialMigration")]
+    partial class InitialMigration
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.8")
+                .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);

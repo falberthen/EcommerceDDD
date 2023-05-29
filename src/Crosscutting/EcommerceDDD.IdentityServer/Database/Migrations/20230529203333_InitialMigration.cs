@@ -4,10 +4,12 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace EcommerceDDD.IdentityServer.Migrations.IdentityServer.IdentityApplicationDb
+namespace EcommerceDDD.IdentityServer.Migrations
 {
-    public partial class IdentityApplicationDbMigration : Migration
+    /// <inheritdoc />
+    public partial class InitialMigration : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -193,6 +195,7 @@ namespace EcommerceDDD.IdentityServer.Migrations.IdentityServer.IdentityApplicat
                 unique: true);
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
