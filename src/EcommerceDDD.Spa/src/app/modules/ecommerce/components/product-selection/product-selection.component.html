@@ -6,7 +6,7 @@
       </div>
       <div class="container">
         <div class="col-12"
-          *ngFor="let product of products | orderBy : 'name'; index as i">
+          *ngFor="let product of products | sort:'name':'asc'">
           <div class="card product-container">
             <div class="card-body">
               <h3 class="card-title product-title">{{ product.name }}</h3>

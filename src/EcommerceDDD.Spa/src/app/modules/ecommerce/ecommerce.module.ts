@@ -5,10 +5,10 @@ import { OrdersComponent } from './components/orders/orders.component';
 import { RouterModule } from '@angular/router';
 import { CustomerDetailsComponent } from './components/customer-details/customer-details.component';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
-import { OrderModule } from 'ngx-order-pipe';
 import { ProductSelectionComponent } from './components/product-selection/product-selection.component';
 import { CartComponent } from './components/cart/cart.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { SortPipe } from 'src/app/core/pipes/sort.pipe';
 
 @NgModule({
   declarations: [
@@ -17,13 +17,13 @@ import { SharedModule } from 'src/app/shared/shared.module';
     CartComponent,
     OrdersComponent,
     CustomerDetailsComponent,
+    SortPipe
   ],
   imports: [
     CommonModule,
     SharedModule,
     RouterModule,
-    NgbDatepickerModule,
-    OrderModule,
+    NgbDatepickerModule
   ],
   providers: [],
 })

@@ -10,7 +10,6 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { TokenStorageService } from '../services/token-storage.service';
-import { AuthService } from '../services/auth.service';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 

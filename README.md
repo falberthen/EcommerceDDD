@@ -30,7 +30,7 @@ It defines all the building blocks and abstractions to be used on every underlyi
 It implements infrastructure matters to be used by microservices. Also, it centralizes third-party packages.
 
 ### Crosscutting
-It contains projects with logic needed to cross over the microservices, such as `IdentityServer4` and `API gateway`.
+It contains projects with logic needed to cross over the microservices, such as `IdentityServer` and `API gateway`.
 
 <br/>
 
@@ -63,25 +63,25 @@ A lightweight Angular-based `SPA` providing a functional and user-friendly UI.
     for cross-platform back-end with:
     <ul>
       <li>.NET 7</li>
-        <li>ASP.NET Core Minimal API</li>
-        <li>Ocelot 19.0.2</li>
-        <li>Marten 6.0.0-rc.1</li>
-        <li>Entity Framework Core 7.0.5</li>
-        <li>Postgres for Entity Framework Core 7.0.4</li>
-        <li>ASP.NET Core Identity 7.0.5</li>
-        <li>ASP.NET Core Authentication JwtBearer 7.0.5</li>
-        <li>Duende IdentityServer 6.2.3</li>
-        <li>MediatR 12.0.1</li>
-        <li>Fluent Assertions 6.11.10</li>
-        <li>XUnit 2.4.2</li>
-        <li>Moq 4.18.4</li>
-        <li>Swagger 6.5.0</li>
-        <li>Confluent Kafka 2.1.0</li>
-        <li>Docker Compose</li>
+      <li>Ocelot 19.0.2</li>
+      <li>Marten 6.0.2</li>
+      <li>Entity Framework Core 7.0.8</li>
+      <li>Postgres for Entity Framework Core 7.0.4</li>
+      <li>ASP.NET Core Identity 7.0.8</li>
+      <li>ASP.NET Core Authentication JwtBearer 7.0.8</li>
+      <li>Duende IdentityServer 6.3.2</li>
+      <li>MediatR 12.0.1</li>
+      <li>Polly 7.2.4</li>
+      <li>Fluent Assertions 6.11.0</li>      
+      <li>XUnit 2.4.2</li>
+      <li>Moq 4.18.4</li>
+      <li>Swagger 6.5.0</li>
+      <li>Confluent Kafka 2.1.1</li>
+      <li>Docker Compose</li>
     </ul>
   </li>
   <li>
-    <a href='https://angular.io/' target="_blank">Angular 15</a> and <a href='http://www.typescriptlang.org/' target="_blank">TypeScript</a> for the front-end with:
+    <a href='https://angular.io/' target="_blank">Angular 16</a> and <a href='http://www.typescriptlang.org/' target="_blank">TypeScript</a> for the front-end with:
     <ul>
       <li>NgBootstrap / Bootstrap 5.2.3</li>
       <li>Font Awesome</li>

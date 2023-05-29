@@ -1,6 +1,6 @@
 namespace EcommerceDDD.Orders.API.Controllers;
 
-[Authorize(Roles = "Customer")]
+[Authorize(Roles = PolicyBuilder.CustomerRole)]
 [Route("api/orders")]
 [ApiController]
 public class OrdersController : CustomControllerBase
@@ -30,7 +30,7 @@ public class OrdersController : CustomControllerBase
     /// </summary>
     /// <param name="orderId"></param>
     /// <returns></returns>
-    [HttpGet, Route("{orderId}/history")]
+    [HttpGet, Route("{orderId:guid}/history")]
     [Authorize(Policy = PolicyBuilder.ReadPolicy)]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<OrderEventHistory>>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -44,7 +44,7 @@ public class OrdersController : CustomControllerBase
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    [HttpPost, Route("{quoteId}")]
+    [HttpPost, Route("{quoteId:guid}")]
     [Authorize(Policy = PolicyBuilder.WritePolicy)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

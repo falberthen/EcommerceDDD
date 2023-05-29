@@ -11,8 +11,6 @@ import { LoaderService } from '../services/loader.service';
 
 @Injectable()
 export class LoaderInterceptor implements HttpInterceptor {
-  private count = 0;
-
   constructor(private loaderService: LoaderService) {}
   intercept(
     request: HttpRequest<any>,
