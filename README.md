@@ -63,21 +63,21 @@ A lightweight Angular-based `SPA` providing a functional and user-friendly UI.
     for cross-platform back-end with:
     <ul>
       <li>.NET 7</li>
-        <li>ASP.NET Core Minimal API</li>
-        <li>Ocelot 19.0.2</li>
-        <li>Marten 6.0.0-rc.1</li>
-        <li>Entity Framework Core 7.0.5</li>
-        <li>Postgres for Entity Framework Core 7.0.4</li>
-        <li>ASP.NET Core Identity 7.0.5</li>
-        <li>ASP.NET Core Authentication JwtBearer 7.0.5</li>
-        <li>Duende IdentityServer 6.2.3</li>
-        <li>MediatR 12.0.1</li>
-        <li>Fluent Assertions 6.11.10</li>
-        <li>XUnit 2.4.2</li>
-        <li>Moq 4.18.4</li>
-        <li>Swagger 6.5.0</li>
-        <li>Confluent Kafka 2.1.0</li>
-        <li>Docker Compose</li>
+      <li>ASP.NET Core Minimal API</li>
+      <li>Ocelot 19.0.2</li>
+      <li>Marten 6.0.1</li>
+      <li>Entity Framework Core 7.0.5</li>
+      <li>Postgres for Entity Framework Core 7.0.4</li>
+      <li>ASP.NET Core Identity 7.0.5</li>
+      <li>ASP.NET Core Authentication JwtBearer 7.0.5</li>
+      <li>Duende IdentityServer 6.3.1</li>
+      <li>MediatR 12.0.1</li>
+      <li>Fluent Assertions 6.11.0</li>
+      <li>XUnit 2.4.2</li>
+      <li>Moq 4.18.4</li>
+      <li>Swagger 6.5.0</li>
+      <li>Confluent Kafka 2.1.1</li>
+      <li>Docker Compose</li>
     </ul>
   </li>
   <li>
