@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using EcommerceDDD.IdentityServer.Models;
-
-namespace EcommerceDDD.IdentityServer.Database;
+﻿namespace EcommerceDDD.IdentityServer.Database;
 
 public class IdentityApplicationDbContext : IdentityDbContext<ApplicationUser>
 {

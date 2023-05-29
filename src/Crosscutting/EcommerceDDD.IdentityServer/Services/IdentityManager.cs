@@ -1,4 +1,7 @@
-﻿namespace EcommerceDDD.IdentityServer.Services;
+﻿using JasperFx.CodeGeneration.Frames;
+using System.Net;
+
+namespace EcommerceDDD.IdentityServer.Services;
 
 public class IdentityManager : IIdentityManager
 {
@@ -26,6 +29,9 @@ public class IdentityManager : IIdentityManager
             request.Email,
             request.Password);
 
+        if(response.HttpStatusCode == HttpStatusCode.BadRequest)
+            throw new ApplicationException($"Invalid username or password.");
+
         return response;
     }
 
@@ -44,7 +50,7 @@ public class IdentityManager : IIdentityManager
         var result = await _userManager
             .CreateAsync(user, request.Password);
         if (!result.Succeeded)
-            throw new ApplicationException($"Can't create user for {user.Email}");
+            throw new ApplicationException(result.Errors.First().Description);
 
         // Adding role
         result = await _userManager

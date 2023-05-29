@@ -17,7 +17,7 @@ namespace EcommerceDDD.IdentityServer.Migrations.IdentityServer.ConfigurationDb
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.8")
+                .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -375,6 +375,12 @@ namespace EcommerceDDD.IdentityServer.Migrations.IdentityServer.ConfigurationDb
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<TimeSpan>("DPoPClockSkew")
+                        .HasColumnType("interval");
+
+                    b.Property<int>("DPoPValidationMode")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
@@ -400,6 +406,10 @@ namespace EcommerceDDD.IdentityServer.Migrations.IdentityServer.ConfigurationDb
 
                     b.Property<bool>("IncludeJwtId")
                         .HasColumnType("boolean");
+
+                    b.Property<string>("InitiateLoginUri")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
 
                     b.Property<DateTime?>("LastAccessed")
                         .HasColumnType("timestamp with time zone");
@@ -433,6 +443,9 @@ namespace EcommerceDDD.IdentityServer.Migrations.IdentityServer.ConfigurationDb
                         .HasColumnType("boolean");
 
                     b.Property<bool>("RequireConsent")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("RequireDPoP")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("RequirePkce")

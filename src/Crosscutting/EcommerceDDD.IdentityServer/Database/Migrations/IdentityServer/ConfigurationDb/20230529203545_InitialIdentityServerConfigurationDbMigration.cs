@@ -6,8 +6,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace EcommerceDDD.IdentityServer.Migrations.IdentityServer.ConfigurationDb
 {
+    /// <inheritdoc />
     public partial class InitialIdentityServerConfigurationDbMigration : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -77,6 +79,9 @@ namespace EcommerceDDD.IdentityServer.Migrations.IdentityServer.ConfigurationDb
                     AllowPlainTextPkce = table.Column<bool>(type: "boolean", nullable: false),
                     RequireRequestObject = table.Column<bool>(type: "boolean", nullable: false),
                     AllowAccessTokensViaBrowser = table.Column<bool>(type: "boolean", nullable: false),
+                    RequireDPoP = table.Column<bool>(type: "boolean", nullable: false),
+                    DPoPValidationMode = table.Column<int>(type: "integer", nullable: false),
+                    DPoPClockSkew = table.Column<TimeSpan>(type: "interval", nullable: false),
                     FrontChannelLogoutUri = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: true),
                     FrontChannelLogoutSessionRequired = table.Column<bool>(type: "boolean", nullable: false),
                     BackChannelLogoutUri = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: true),
@@ -98,6 +103,7 @@ namespace EcommerceDDD.IdentityServer.Migrations.IdentityServer.ConfigurationDb
                     AlwaysSendClientClaims = table.Column<bool>(type: "boolean", nullable: false),
                     ClientClaimsPrefix = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
                     PairWiseSubjectSalt = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    InitiateLoginUri = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: true),
                     UserSsoLifetime = table.Column<int>(type: "integer", nullable: true),
                     UserCodeType = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     DeviceCodeLifetime = table.Column<int>(type: "integer", nullable: false),
@@ -641,6 +647,7 @@ namespace EcommerceDDD.IdentityServer.Migrations.IdentityServer.ConfigurationDb
                 unique: true);
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

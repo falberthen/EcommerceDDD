@@ -52,7 +52,7 @@ public class CustomControllerBase : ControllerBase
         });
     }
 
-    private IActionResult BadRequestActionResult(string resultErrors)
+    protected IActionResult BadRequestActionResult(string resultErrors)
     {
         return BadRequest(new ApiResponse<IActionResult>
         {
