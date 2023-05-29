@@ -1,16 +1,14 @@
 version: '3.7'
 
 services:
-  # POSTGRES
   postgres:
     image: postgres
     container_name: postgresql
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: P@55w0rd
-    command: >-
-      postgres -c wal_level=logical -c max_wal_senders=2 -c
-      max_replication_slots=2
+    command: >
+      postgres -c wal_level=logical -c max_wal_senders=2 -c max_replication_slots=2
     restart: on-failure
     ports:
       - '5432:5432'
@@ -53,9 +51,8 @@ services:
     networks:
       - ecommercedddnet
 
-  # ZOOKEEPER
   zookeeper:
-    image: 'confluentinc/cp-zookeeper:7.0.1'
+    image: confluentinc/cp-zookeeper:7.0.1
     hostname: zookeeper
     container_name: zookeeper
     restart: on-failure
@@ -67,9 +64,8 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
   
-  # KAFKA
   kafka:
-    image: 'confluentinc/cp-kafka:7.0.1'
+    image: confluentinc/cp-kafka:7.0.1
     hostname: kafka
     container_name: kafka
     networks:
@@ -87,26 +83,24 @@ services:
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
     depends_on:
       - zookeeper
+    
 
   init-kafka:
-    image: 'confluentinc/cp-kafka:7.0.1'
+    image: confluentinc/cp-kafka:7.0.1
     entrypoint:
       - /bin/sh
       - '-c'
     networks:
       - ecommercedddnet
     command: >
-      " kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists
-      --topic Payments --replication-factor 1 --partitions 1
-
-      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists
-      --topic Shipments --replication-factor 1 --partitions 1 "
+      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic Payments --replication-factor 1 --partitions 1 &&
+      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic Shipments --replication-factor 1 --partitions 1
     restart: on-failure
     depends_on:
       - kafka
 
   kafka_topics_ui:
-    image: 'provectuslabs/kafka-ui:latest'
+    image: provectuslabs/kafka-ui:latest
     hostname: kafka-ui
     ports:
       - '8080:8080'
@@ -119,15 +113,14 @@ services:
     depends_on:
       - kafka
 
-  # SERVICES
   ecommerceddd-identityserver:
-    image: '${DOCKER_REGISTRY-}ecommerceddd-identityserver'
+    image: ecommerceddd-identityserver
     container_name: ecommerceddd-identityserver
     build:
       context: .
       dockerfile: src/Crosscutting/EcommerceDDD.IdentityServer/Dockerfile
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_ENVIRONMENT: '${ASPNETCORE_ENVIRONMENT:-Development}'
       ASPNETCORE_URLS: 'http://+:80'
     restart: on-failure
     ports:
@@ -136,13 +129,13 @@ services:
       - ecommercedddnet
 
   ecommerceddd-apigateway:
-    image: '${DOCKER_REGISTRY-}ecommerceddd-apigateway'
+    image: ecommerceddd-apigateway
     container_name: ecommerceddd-apigateway
     build:
       context: .
       dockerfile: src/Crosscutting/EcommerceDDD.ApiGateway/Dockerfile
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_ENVIRONMENT: '${ASPNETCORE_ENVIRONMENT:-Development}'
       ASPNETCORE_URLS: 'http://+:80'
     restart: on-failure
     ports:
@@ -154,13 +147,13 @@ services:
       - ecommercedddnet
 
   ecommerceddd-customers:
-    image: '${DOCKER_REGISTRY-}ecommerceddd-customers'
+    image: ecommerceddd-customers
     container_name: ecommerceddd-customers
     build:
       context: .
       dockerfile: src/Services/EcommerceDDD.Customers/Dockerfile
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_ENVIRONMENT: '${ASPNETCORE_ENVIRONMENT:-Development}'
       ASPNETCORE_URLS: 'http://+:80'
     restart: on-failure
     ports:
@@ -172,13 +165,13 @@ services:
       - ecommerceddd-apigateway
 
   ecommerceddd-products:
-    image: '${DOCKER_REGISTRY-}ecommerceddd-products'
+    image: ecommerceddd-products
     container_name: ecommerceddd-products
     build:
       context: .
       dockerfile: src/Services/EcommerceDDD.Products/Dockerfile
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_ENVIRONMENT: '${ASPNETCORE_ENVIRONMENT:-Development}'
       ASPNETCORE_URLS: 'http://+:80'
     restart: on-failure
     ports:
@@ -190,13 +183,13 @@ services:
       - ecommerceddd-apigateway
 
   ecommerceddd-quotes:
-    image: '${DOCKER_REGISTRY-}ecommerceddd-quotes'
+    image: ecommerceddd-quotes
     container_name: ecommerceddd-quotes
     build:
       context: .
       dockerfile: src/Services/EcommerceDDD.Quotes/Dockerfile
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_ENVIRONMENT: '${ASPNETCORE_ENVIRONMENT:-Development}'
       ASPNETCORE_URLS: 'http://+:80'
     restart: on-failure
     ports:
@@ -208,13 +201,13 @@ services:
       - ecommerceddd-apigateway
 
   ecommerceddd-orders:
-    image: '${DOCKER_REGISTRY-}ecommerceddd-orders'
+    image: ecommerceddd-orders
     container_name: ecommerceddd-orders
     build:
       context: .
       dockerfile: src/Services/EcommerceDDD.Orders/Dockerfile
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_ENVIRONMENT: '${ASPNETCORE_ENVIRONMENT:-Development}'
       ASPNETCORE_URLS: 'http://+:80'
     restart: on-failure
     ports:
@@ -226,13 +219,13 @@ services:
       - ecommerceddd-apigateway
 
   ecommerceddd-payments:
-    image: '${DOCKER_REGISTRY-}ecommerceddd-payments'
+    image: ecommerceddd-payments
     container_name: ecommerceddd-payments
     build:
       context: .
       dockerfile: src/Services/EcommerceDDD.Payments/Dockerfile
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_ENVIRONMENT: '${ASPNETCORE_ENVIRONMENT:-Development}'
       ASPNETCORE_URLS: 'http://+:80'
     restart: on-failure
     ports:
@@ -245,13 +238,13 @@ services:
       - connect
 
   ecommerceddd-shipments:
-    image: '${DOCKER_REGISTRY-}ecommerceddd-shipments'
+    image: ecommerceddd-shipments
     container_name: ecommerceddd-shipments
     build:
       context: .
       dockerfile: src/Services/EcommerceDDD.Shipments/Dockerfile
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_ENVIRONMENT: '${ASPNETCORE_ENVIRONMENT:-Development}'
       ASPNETCORE_URLS: 'http://+:80'
     restart: on-failure
     ports:

@@ -23,7 +23,7 @@ public class PaymentsController : CustomControllerBase
             Currency.OfCode(request.CurrencyCode))
         );
     
-    [HttpDelete("{paymentId}")]
+    [HttpDelete("{paymentId:guid}")]
     [Authorize(Policy = PolicyBuilder.DeletePolicy)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

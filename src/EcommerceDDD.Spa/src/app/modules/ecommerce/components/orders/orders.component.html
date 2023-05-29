@@ -14,7 +14,7 @@
   </div>
   <div *ngIf="orders.length > 0">
     <div class="order-container"
-      *ngFor="let order of orders | orderBy : 'createdAt' : true; index as i">
+    *ngFor="let order of orders | sort:'createdAt':'desc'">
       <div class="card order-details-container">
         <div class="card-body">
           <div class="cart-header">

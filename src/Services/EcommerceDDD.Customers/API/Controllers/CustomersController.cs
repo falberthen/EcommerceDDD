@@ -21,7 +21,7 @@ public class CustomersController : CustomControllerBase
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    [Authorize(Roles = "Customer", Policy = PolicyBuilder.ReadPolicy)]
+    [Authorize(Roles = PolicyBuilder.CustomerRole, Policy = PolicyBuilder.ReadPolicy)]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<CustomerDetails>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetDetails() =>
@@ -34,7 +34,7 @@ public class CustomersController : CustomControllerBase
     /// </summary>
     /// <param name="customerId"></param>
     /// <returns></returns>
-    [HttpGet, Route("{customerId}/credit")]
+    [HttpGet, Route("{customerId:guid}/credit")]
     [Authorize(Policy = PolicyBuilder.ReadPolicy)]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<CreditLimitModel>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -48,8 +48,8 @@ public class CustomersController : CustomControllerBase
     /// </summary>
     /// <param name="customerId"></param>
     /// <returns></returns>
-    [HttpGet, Route("{customerId}/history")]
-    [Authorize(Roles = "Customer", Policy = PolicyBuilder.ReadPolicy)]
+    [HttpGet, Route("{customerId::guid}/history")]
+    [Authorize(Roles = PolicyBuilder.CustomerRole, Policy = PolicyBuilder.ReadPolicy)]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<CustomerEventHistory>>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ListHistory([FromRoute] Guid customerId) =>
@@ -83,8 +83,8 @@ public class CustomersController : CustomControllerBase
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    [HttpPut, Route("{customerId}")]
-    [Authorize(Roles = "Customer", Policy = PolicyBuilder.WritePolicy)]
+    [HttpPut, Route("{customerId:guid}")]
+    [Authorize(Roles = PolicyBuilder.CustomerRole, Policy = PolicyBuilder.WritePolicy)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> UpdateInformation([FromRoute] Guid customerId, [FromBody] UpdateCustomerRequest request) =>    

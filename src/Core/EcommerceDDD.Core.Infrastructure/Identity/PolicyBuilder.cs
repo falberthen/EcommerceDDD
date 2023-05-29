@@ -2,6 +2,7 @@
 
 public static class PolicyBuilder
 {
+    public const string CustomerRole = "Customer";
     public const string M2MPolicy = "M2MAccess";
     public const string ReadPolicy = "ReadAccess";
     public const string WritePolicy = "WriteAccess";
