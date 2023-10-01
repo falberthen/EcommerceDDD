@@ -14,18 +14,21 @@ public class HttpRequesterTests
             new DummyAggregateRoot(aggregateId),
         };
 
-        SetupMessageHandlerResponse(
-            new StringContent(JsonConvert.SerializeObject(dummyResponse))
-        );
+        var dummyResponseJson = JsonConvert.SerializeObject(dummyResponse);
+        var messageHandler = new MockHttpMessageHandler(dummyResponseJson, HttpStatusCode.OK);
+        var httpClient = new HttpClient(messageHandler)
+        {
+            BaseAddress = _url
+        };
 
-        var client = new HttpClient(_mockHttpMessageHandler.Object);
-        _httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>()))
-            .Returns(client);
+        _httpClientFactory.CreateClient()
+            .Returns(httpClient);
 
-        var requester = new HttpRequester(_httpClientFactory.Object);
+        var requester = new HttpRequester(_httpClientFactory);
 
         // When
-        var response = await requester.GetAsync<List<DummyAggregateRoot>>(_url);
+        var response = await requester
+            .GetAsync<List<DummyAggregateRoot>>(_url.AbsoluteUri);
 
         // Then
         Assert.NotNull(response);
@@ -36,18 +39,21 @@ public class HttpRequesterTests
     public async Task PostAsync_ShouldReturnResponse()
     {
         // Given        
-        SetupMessageHandlerResponse(
-            new StringContent(JsonConvert.SerializeObject(new IntegrationHttpResponse() { Success = true }))
-        );
+        var dummyResponse = JsonConvert
+            .SerializeObject(new IntegrationHttpResponse() { Success = true });
 
-        var client = new HttpClient(_mockHttpMessageHandler.Object);
-        _httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>()))
-            .Returns(client);
+        var messageHandler = new MockHttpMessageHandler(dummyResponse, HttpStatusCode.OK);
+        var httpClient = new HttpClient(messageHandler)
+        {
+            BaseAddress = _url
+        };
+        _httpClientFactory.CreateClient(Arg.Any<string>())
+            .Returns(httpClient);
 
-        var requester = new HttpRequester(_httpClientFactory.Object);
+        var requester = new HttpRequester(_httpClientFactory);
 
         // When
-        var response = await requester.PostAsync<IntegrationHttpResponse>(_url, new object());
+        var response = await requester.PostAsync<IntegrationHttpResponse>(_url.AbsoluteUri, new object());
 
         // Then
         Assert.NotNull(response);
@@ -57,19 +63,23 @@ public class HttpRequesterTests
     [Fact]
     public async Task PutAsync_ShouldReturnResponse()
     {
-        // Given
-        SetupMessageHandlerResponse(
-            new StringContent(JsonConvert.SerializeObject(new IntegrationHttpResponse() { Success = true }))
-        );
+        // Given        
+        var dummyResponse = JsonConvert
+            .SerializeObject(new IntegrationHttpResponse() { Success = true });
 
-        var client = new HttpClient(_mockHttpMessageHandler.Object);
-        _httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>()))
-            .Returns(client);
+        var messageHandler = new MockHttpMessageHandler(dummyResponse, HttpStatusCode.OK);
+        var httpClient = new HttpClient(messageHandler)
+        {
+            BaseAddress = _url
+        };
+        _httpClientFactory.CreateClient(Arg.Any<string>())
+            .Returns(httpClient);
 
-        var requester = new HttpRequester(_httpClientFactory.Object);
+        var requester = new HttpRequester(_httpClientFactory);
 
         // When
-        var response = await requester.PutAsync<IntegrationHttpResponse>(_url, new object());
+        var response = await requester
+            .PutAsync<IntegrationHttpResponse>(_url.AbsoluteUri, new object());
 
         // Then
         Assert.NotNull(response);
@@ -79,39 +89,28 @@ public class HttpRequesterTests
     [Fact]
     public async Task DeleteAsync_ShouldReturnResponse()
     {
-        // Given
-        SetupMessageHandlerResponse(
-            new StringContent(JsonConvert.SerializeObject(new IntegrationHttpResponse() { Success = true }))
-        );
+        // Given        
+        var dummyResponse = JsonConvert
+            .SerializeObject(new IntegrationHttpResponse() { Success = true });
 
-        var client = new HttpClient(_mockHttpMessageHandler.Object);
-        _httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>()))
-            .Returns(client);
+        var messageHandler = new MockHttpMessageHandler(dummyResponse, HttpStatusCode.OK);
+        var httpClient = new HttpClient(messageHandler)
+        {
+            BaseAddress = _url
+        };
+        _httpClientFactory.CreateClient(Arg.Any<string>())
+            .Returns(httpClient);
 
-        var requester = new HttpRequester(_httpClientFactory.Object);
+        var requester = new HttpRequester(_httpClientFactory);
 
         // When
-        var response = await requester.DeleteAsync<IntegrationHttpResponse>(_url);
+        var response = await requester.DeleteAsync<IntegrationHttpResponse>(_url.AbsoluteUri);
 
         // Then
         Assert.NotNull(response);
         response!.Success.Should().BeTrue();
     }
 
-    private void SetupMessageHandlerResponse(dynamic content)
-    {
-        _mockHttpMessageHandler.Protected()
-            .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
-            .ReturnsAsync(new HttpResponseMessage
-            {
-                StatusCode = HttpStatusCode.OK,
-                Content = content
-            });
-    }
-
-    private const string _url = "http://url";
-    private Mock<IHttpClientFactory> _httpClientFactory = new();
-    private Mock<HttpMessageHandler> _mockHttpMessageHandler = new();
+    private Uri _url = new Uri("http://test.com");
+    private IHttpClientFactory _httpClientFactory = Substitute.For<IHttpClientFactory>();
 }
-
-

@@ -5,8 +5,7 @@ public class QuotesControllerTests
     public QuotesControllerTests()
     {
         _quotesController = new QuotesController(
-            _commandBus.Object,
-            _queryBus.Object);
+            _commandBus,_queryBus);
     }
 
     [Fact]
@@ -34,9 +33,8 @@ public class QuotesControllerTests
             }
         };
 
-        _queryBus
-            .Setup(m => m.Send(It.IsAny<GetConfirmedQuoteById>()))
-            .ReturnsAsync(expectedData);
+        _queryBus.Send(Arg.Any<GetConfirmedQuoteById>())
+            .Returns(expectedData);
 
         // When
         var response = await _quotesController.GetById(quoteId);
@@ -69,9 +67,8 @@ public class QuotesControllerTests
             )
         };
 
-        _queryBus
-            .Setup(m => m.Send(It.IsAny<GetQuoteEventHistory>()))
-            .ReturnsAsync(expectedData);
+        _queryBus.Send(Arg.Any<GetQuoteEventHistory>())
+            .Returns(expectedData);
 
         // When
         var response = await _quotesController.ListHistory(quoteId);
@@ -88,8 +85,7 @@ public class QuotesControllerTests
         // Given
         Guid customerId = Guid.NewGuid();
 
-        _commandBus
-            .Setup(m => m.Send(It.IsAny<OpenQuote>()));
+        await _commandBus.Send(Arg.Any<OpenQuote>());
 
         var request = new OpenQuoteRequest()
         {
@@ -109,8 +105,7 @@ public class QuotesControllerTests
         // Given
         Guid quoteId = Guid.NewGuid();
 
-        _commandBus
-            .Setup(m => m.Send(It.IsAny<AddQuoteItem>()));
+        await _commandBus.Send(Arg.Any<AddQuoteItem>());
 
         var request = new AddQuoteItemRequest()
         {
@@ -133,8 +128,7 @@ public class QuotesControllerTests
         Guid quoteId = Guid.NewGuid();
         Guid productId = Guid.NewGuid();
 
-        _commandBus
-            .Setup(m => m.Send(It.IsAny<RemoveQuoteItem>()));
+        await _commandBus.Send(Arg.Any<RemoveQuoteItem>());
 
         // When
         var response = await _quotesController.RemoveItem(quoteId, productId);
@@ -149,8 +143,7 @@ public class QuotesControllerTests
         // Given
         Guid quoteId = Guid.NewGuid();
 
-        _commandBus
-            .Setup(m => m.Send(It.IsAny<CancelQuote>()));
+        await _commandBus.Send(Arg.Any<CancelQuote>());
 
         // When
         var response = await _quotesController.Cancel(quoteId);
@@ -166,8 +159,7 @@ public class QuotesControllerTests
         Guid quoteId = Guid.NewGuid();
         var currencyCode = Currency.USDollar.Code;
 
-        _commandBus
-            .Setup(m => m.Send(It.IsAny<ConfirmQuote>()));
+        await _commandBus.Send(Arg.Any<ConfirmQuote>());
 
         // When
         var response = await _quotesController.Confirm(quoteId, currencyCode);
@@ -176,7 +168,7 @@ public class QuotesControllerTests
         response.Should().BeOfType<OkObjectResult>();
     }
 
-    private Mock<ICommandBus> _commandBus = new();
-    private Mock<IQueryBus> _queryBus = new();
+    private ICommandBus _commandBus = Substitute.For<ICommandBus>();
+    private IQueryBus _queryBus = Substitute.For<IQueryBus>();
     private QuotesController _quotesController;
 }

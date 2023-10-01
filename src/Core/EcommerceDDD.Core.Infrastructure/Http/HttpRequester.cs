@@ -10,25 +10,28 @@ public class HttpRequester : IHttpRequester
         _httpClient = factory.CreateClient();
     }
 
-    public async Task<T?> PostAsync<T>(string url, object body, string? bearerToken = null) where T : class
+    public async Task<T> PostAsync<T>(string url, object body, string bearerToken = null) 
+        where T : class
     {
         if (!string.IsNullOrEmpty(bearerToken))
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_scheme, bearerToken);
 
         var response = await _httpClient.PostAsync(url, SerializeBody(body));            
-        return DeserializeResponse<T>(response);
+        return await DeserializeResponse<T>(response);
     }
 
-    public async Task<T?> PutAsync<T>(string url, object body, string? bearerToken = null) where T : class
+    public async Task<T> PutAsync<T>(string url, object body, string bearerToken = null) 
+        where T : class
     {
         if (!string.IsNullOrEmpty(bearerToken))
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_scheme, bearerToken);
 
         var response = await _httpClient.PutAsync(url, SerializeBody(body));
-        return DeserializeResponse<T>(response);
+        return await DeserializeResponse<T>(response);
     }
 
-    public async Task<T?> DeleteAsync<T>(string url, object? body = null, string? bearerToken = null) where T : class
+    public async Task<T> DeleteAsync<T>(string url, object body = null, string bearerToken = null) 
+        where T : class
     {
         if (!string.IsNullOrEmpty(bearerToken))
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_scheme, bearerToken);
@@ -38,16 +41,17 @@ public class HttpRequester : IHttpRequester
             httpMessage.Content = SerializeBody(body);
         
         var response = await _httpClient.SendAsync(httpMessage);
-        return DeserializeResponse<T>(response);
+        return await DeserializeResponse<T>(response);
     }
 
-    public async Task<T?> GetAsync<T>(string url, string? bearerToken = null) where T : class
+    public async Task<T> GetAsync<T>(string url, string bearerToken = null) 
+        where T : class
     {
         if (!string.IsNullOrEmpty(bearerToken))
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_scheme, bearerToken);
 
         var response = await _httpClient.GetAsync(url);
-        return DeserializeResponse<T>(response);
+        return await DeserializeResponse<T>(response);
     }
 
     private StringContent SerializeBody(object body)
@@ -59,9 +63,10 @@ public class HttpRequester : IHttpRequester
         return new StringContent(json, Encoding.UTF8, "application/json");
     }
 
-    private T? DeserializeResponse<T>(HttpResponseMessage response)
+    private async Task<T> DeserializeResponse<T>(HttpResponseMessage response)
     {
-        var content = response.Content.ReadAsStringAsync();
-        return JsonConvert.DeserializeObject<T>(content.Result);
+        var content = await response.Content.ReadAsStringAsync();
+        var deserializedObject = JsonConvert.DeserializeObject<T>(content);
+        return deserializedObject;
     }
 }

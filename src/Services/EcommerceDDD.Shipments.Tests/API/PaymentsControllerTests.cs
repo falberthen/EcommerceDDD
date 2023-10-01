@@ -5,8 +5,7 @@ public class ShipmentsControllerTests
     public ShipmentsControllerTests()
     {
         _shipmentsController = new ShipmentsController(
-            _commandBus.Object,
-            _queryBus.Object);
+            _commandBus, _queryBus);
     }
 
     [Fact]
@@ -16,8 +15,7 @@ public class ShipmentsControllerTests
         Guid orderId = Guid.NewGuid();
         Guid productId = Guid.NewGuid();
 
-        _commandBus
-            .Setup(m => m.Send(It.IsAny<RequestShipment>()));
+        await _commandBus.Send(Arg.Any<RequestShipment>());
 
         var request = new ShipOrderRequest()
         {
@@ -40,7 +38,7 @@ public class ShipmentsControllerTests
         response.Should().BeOfType<OkObjectResult>();
     }
 
-    private Mock<ICommandBus> _commandBus = new();
-    private Mock<IQueryBus> _queryBus = new();
+    private ICommandBus _commandBus = Substitute.For<ICommandBus>();
+    private IQueryBus _queryBus = Substitute.For<IQueryBus>();
     private ShipmentsController _shipmentsController;
 }

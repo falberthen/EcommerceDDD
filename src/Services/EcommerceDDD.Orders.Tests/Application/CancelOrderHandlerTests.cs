@@ -30,7 +30,7 @@ public class CancelOrderHandlerTests
             .AppendEventsAsync(order);
 
         var cancelOrder = CancelOrder.Create(order.Id, OrderCancellationReason.CanceledByUser);
-        var cancelOrderHandler = new CancelOrderHandler(_orderStatusBroadcaster.Object, orderWriteRepository);
+        var cancelOrderHandler = new CancelOrderHandler(_orderStatusBroadcaster, orderWriteRepository);
 
         // When
         await cancelOrderHandler.Handle(cancelOrder, CancellationToken.None);
@@ -43,5 +43,5 @@ public class CancelOrderHandlerTests
         canceledOrder.Status.Should().Be(OrderStatus.Canceled);
     }
 
-    private Mock<IOrderStatusBroadcaster> _orderStatusBroadcaster = new();    
+    private IOrderStatusBroadcaster _orderStatusBroadcaster = Substitute.For<IOrderStatusBroadcaster>();
 }

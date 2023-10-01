@@ -7,13 +7,13 @@ public class CancelQuoteHandlerTests
     {
         // Given
         var customerId = CustomerId.Of(Guid.NewGuid());
-        _customerOpenQuoteChecker.Setup(p => p.CustomerHasOpenQuote(customerId))
+        _customerOpenQuoteChecker.CustomerHasOpenQuote(customerId)
             .Returns(Task.FromResult(false));
 
         var quoteWriteRepository = new DummyEventStoreRepository<Quote>();
 
         var openCommand = OpenQuote.Create(customerId);
-        var openCommandHandler = new OpenQuoteHandler(quoteWriteRepository, _customerOpenQuoteChecker.Object);
+        var openCommandHandler = new OpenQuoteHandler(quoteWriteRepository, _customerOpenQuoteChecker);
         await openCommandHandler.Handle(openCommand, CancellationToken.None);
 
         var quote = quoteWriteRepository.AggregateStream.First().Aggregate;
@@ -27,5 +27,5 @@ public class CancelQuoteHandlerTests
         quote.Status.Should().Be(QuoteStatus.Cancelled);
     }
 
-    private Mock<ICustomerOpenQuoteChecker> _customerOpenQuoteChecker = new();
+    private ICustomerOpenQuoteChecker _customerOpenQuoteChecker = Substitute.For<ICustomerOpenQuoteChecker>();
 }

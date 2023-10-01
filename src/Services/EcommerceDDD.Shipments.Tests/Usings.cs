@@ -1,10 +1,10 @@
-global using Moq;
 global using Xunit;
+global using NSubstitute;
 global using FluentAssertions;
 global using Microsoft.AspNetCore.Mvc;
 global using EcommerceDDD.Core.Testing;
 global using EcommerceDDD.Shipments.Domain;
-global  using EcommerceDDD.Core.CQRS.QueryHandling;
+global using EcommerceDDD.Core.CQRS.QueryHandling;
 global using EcommerceDDD.Shipments.API.Controllers;
 global using EcommerceDDD.Shipments.Domain.Events;
 global using EcommerceDDD.Shipments.Domain.Commands;

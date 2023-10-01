@@ -7,13 +7,13 @@ public class OpenQuoteHandlerTests
     {
         // Given
         var customerId = CustomerId.Of(Guid.NewGuid());
-        _customerOpenQuoteChecker.Setup(p => p.CustomerHasOpenQuote(customerId))
+        _customerOpenQuoteChecker.CustomerHasOpenQuote(customerId)
             .Returns(Task.FromResult(false));
 
         var quoteWriteRepository = new DummyEventStoreRepository<Quote>();
 
         var command = OpenQuote.Create(customerId);
-        var commandHandler = new OpenQuoteHandler(quoteWriteRepository, _customerOpenQuoteChecker.Object);
+        var commandHandler = new OpenQuoteHandler(quoteWriteRepository, _customerOpenQuoteChecker);
 
         // When
         await commandHandler.Handle(command, CancellationToken.None);
@@ -25,5 +25,5 @@ public class OpenQuoteHandlerTests
         openQuote.Status.Should().Be(QuoteStatus.Open);
     }
 
-    private Mock<ICustomerOpenQuoteChecker> _customerOpenQuoteChecker = new();
+    private ICustomerOpenQuoteChecker _customerOpenQuoteChecker = Substitute.For<ICustomerOpenQuoteChecker>();
 }

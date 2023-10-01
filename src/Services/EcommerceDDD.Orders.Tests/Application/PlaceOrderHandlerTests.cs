@@ -1,5 +1,3 @@
-using static EcommerceDDD.Orders.Application.Orders.PlacingOrder.PlaceOrderHandler;
-
 namespace EcommerceDDD.Orders.Tests.Application;
 
 public class PlaceOrderHandlerTests
@@ -29,8 +27,7 @@ public class PlaceOrderHandlerTests
                 }, currency.Code)
         };
 
-        _integrationHttpService.Setup(q =>
-            q.GetAsync<QuoteViewModelResponse>(It.IsAny<string>()))
+        _integrationHttpService.GetAsync<QuoteViewModelResponse>(Arg.Any<string>())
             .Returns(Task.FromResult(responseConfirmedQuote));
 
         var productItemsData = new List<ProductItemData>() {
@@ -42,14 +39,14 @@ public class PlaceOrderHandlerTests
             }
         };
 
-        _productItemsMapper.Setup(p => p.MatchProductsFromCatalog(responseConfirmedQuote.Data.Items, currency))
+        _productItemsMapper.MatchProductsFromCatalog(responseConfirmedQuote.Data.Items, currency)
             .Returns(Task.FromResult(productItemsData));
 
         var placeOrder = PlaceOrder.Create(quoteId);
         var placeOrderHandler = new PlaceOrderHandler(
-            _integrationHttpService.Object, 
+            _integrationHttpService, 
             orderWriteRepository, 
-            _productItemsMapper.Object);
+            _productItemsMapper);
 
         // When
         await placeOrderHandler.Handle(placeOrder, CancellationToken.None);
@@ -70,7 +67,8 @@ public class PlaceOrderHandlerTests
         var orderWriteRepository = new DummyEventStoreRepository<Order>();
 
         var placeOrder = PlaceOrder.Create(quoteId);
-        var placeOrderHandler = new PlaceOrderHandler(_integrationHttpService.Object, orderWriteRepository, _productItemsMapper.Object);
+        var placeOrderHandler = new PlaceOrderHandler(_integrationHttpService, 
+            orderWriteRepository, _productItemsMapper);
 
         // When
         Func<Task> action = async () =>
@@ -80,6 +78,6 @@ public class PlaceOrderHandlerTests
         await action.Should().ThrowAsync<ApplicationLogicException>();
     }
 
-    private Mock<IProductItemsMapper> _productItemsMapper = new();
-    private Mock<IIntegrationHttpService> _integrationHttpService = new();
+    private IProductItemsMapper _productItemsMapper = Substitute.For<IProductItemsMapper>();
+    private IIntegrationHttpService _integrationHttpService = Substitute.For<IIntegrationHttpService>();
 }

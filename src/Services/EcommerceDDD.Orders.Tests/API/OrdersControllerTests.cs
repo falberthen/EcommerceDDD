@@ -5,8 +5,7 @@ public class OrdersControllerTests
     public OrdersControllerTests()
     {
         _ordersController = new OrdersController(
-            _commandBus.Object,
-            _queryBus.Object);
+            _commandBus, _queryBus);
     }
 
     [Fact]
@@ -41,9 +40,8 @@ public class OrdersControllerTests
             }
         };
 
-        _queryBus
-            .Setup(m => m.Send(It.IsAny<GetOrders>()))
-            .ReturnsAsync(expectedData);
+        _queryBus.Send(Arg.Any<GetOrders>())
+            .Returns(expectedData);
 
         // When
         var response = await _ordersController.ListCustomerOrders(customerId);
@@ -77,9 +75,8 @@ public class OrdersControllerTests
             )
         };
 
-        _queryBus
-            .Setup(m => m.Send(It.IsAny<GetOrderEventHistory>()))
-            .ReturnsAsync(expectedData);
+        _queryBus.Send(Arg.Any<GetOrderEventHistory>())
+            .Returns(expectedData);
 
         // When
         var response = await _ordersController.ListHistory(customerId);
@@ -96,8 +93,7 @@ public class OrdersControllerTests
         // Given
         Guid quoteId = Guid.NewGuid();
 
-        _commandBus
-            .Setup(m => m.Send(It.IsAny<PlaceOrder>()));
+        await _commandBus.Send(Arg.Any<PlaceOrder>());
 
         // When
         var response = await _ordersController.PlaceOrderFromQuote(quoteId);
@@ -106,7 +102,7 @@ public class OrdersControllerTests
         response.Should().BeOfType<OkObjectResult>();
     }
 
-    private Mock<ICommandBus> _commandBus = new();
-    private Mock<IQueryBus> _queryBus = new();
+    private ICommandBus _commandBus = Substitute.For<ICommandBus>();
+    private IQueryBus _queryBus = Substitute.For<IQueryBus>();
     private OrdersController _ordersController;
 }

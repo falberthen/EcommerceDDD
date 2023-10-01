@@ -15,12 +15,13 @@ public class ProcessPaymentHandlerTests
         var paymentWriteRepository = new DummyEventStoreRepository<Payment>();
         await paymentWriteRepository.AppendEventsAsync(payment);
 
-        _customerCreditChecker.Setup(c => c.IsCreditEnough(It.IsAny<CustomerId>(), It.IsAny<Money>()))
+        _customerCreditChecker.IsCreditEnough(Arg.Any<CustomerId>(), Arg.Any<Money>())
            .Returns(Task.FromResult(true));
 
         // When
         var processPayment = ProcessPayment.Create(payment.Id);
-        var processPaymentHandler = new ProcessPaymentHandler(_customerCreditChecker.Object, paymentWriteRepository, _outboxMessageService.Object);
+        var processPaymentHandler = new ProcessPaymentHandler(_customerCreditChecker, 
+            paymentWriteRepository, _outboxMessageService);
         await processPaymentHandler.Handle(processPayment, CancellationToken.None);
 
         // Then
@@ -46,11 +47,13 @@ public class ProcessPaymentHandlerTests
         var paymentWriteRepository = new DummyEventStoreRepository<Payment>();
         await paymentWriteRepository.AppendEventsAsync(payment);
 
-        _customerCreditChecker.Setup(c => c.IsCreditEnough(It.IsAny<CustomerId>(), It.IsAny<Money>()))
+        _customerCreditChecker
+            .IsCreditEnough(Arg.Any<CustomerId>(), Arg.Any<Money>())
            .Returns(Task.FromResult(false));
 
         var processPayment = ProcessPayment.Create(payment.Id);
-        var processPaymentHandler = new ProcessPaymentHandler(_customerCreditChecker.Object, paymentWriteRepository, _outboxMessageService.Object);
+        var processPaymentHandler = new ProcessPaymentHandler(_customerCreditChecker, 
+            paymentWriteRepository, _outboxMessageService);
 
         // When
         await processPaymentHandler.Handle(processPayment, CancellationToken.None);
@@ -66,6 +69,6 @@ public class ProcessPaymentHandlerTests
         payment.Status.Should().Be(PaymentStatus.Canceled);
     }
 
-    private Mock<IOutboxMessageService> _outboxMessageService = new();    
-    private Mock<ICustomerCreditChecker> _customerCreditChecker = new();
+    private IOutboxMessageService _outboxMessageService = Substitute.For<IOutboxMessageService>();
+    private ICustomerCreditChecker _customerCreditChecker = Substitute.For<ICustomerCreditChecker>();
 }
