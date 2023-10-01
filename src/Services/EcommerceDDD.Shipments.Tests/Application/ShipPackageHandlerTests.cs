@@ -15,17 +15,18 @@ public class ShipPackageHandlerTests
 
         var shipmentWriteRepository = new DummyEventStoreRepository<Shipment>();
 
-        _availabilityChecker.Setup(p => p.EnsureProductsInStock(It.IsAny<IReadOnlyList<ProductItem>>()))
+        _availabilityChecker.EnsureProductsInStock(Arg.Any<IReadOnlyList<ProductItem>>())
             .Returns(Task.FromResult(true));
 
         var requestShipment = RequestShipment.Create(orderId, productItems);
-        var requestShipmentHandler = new RequestShipmentHandler(_commandBus.Object, _availabilityChecker.Object, shipmentWriteRepository, _outboxMessageService.Object);
+        var requestShipmentHandler = new RequestShipmentHandler(_commandBus, _availabilityChecker,
+            shipmentWriteRepository, _outboxMessageService);
         await requestShipmentHandler.Handle(requestShipment, CancellationToken.None);
         var shipment = shipmentWriteRepository.AggregateStream.First().Aggregate;
         Assert.NotNull(shipment);
 
         var shipPackage = ShipPackage.Create(shipment.Id);
-        var shipPackageHandler = new ShipPackageHandler(shipmentWriteRepository, _outboxMessageService.Object);
+        var shipPackageHandler = new ShipPackageHandler(shipmentWriteRepository, _outboxMessageService);
 
         // When
         await shipPackageHandler.Handle(shipPackage, CancellationToken.None);
@@ -40,7 +41,7 @@ public class ShipPackageHandlerTests
         shipment.Status.Should().Be(ShipmentStatus.Shipped);
     }
 
-    private Mock<ICommandBus> _commandBus = new();
-    private Mock<IOutboxMessageService> _outboxMessageService = new();
-    private Mock<IProductAvailabilityChecker> _availabilityChecker = new();
+    private ICommandBus _commandBus = Substitute.For<ICommandBus>();
+    private IOutboxMessageService _outboxMessageService = Substitute.For<IOutboxMessageService>();
+    private IProductAvailabilityChecker _availabilityChecker = Substitute.For<IProductAvailabilityChecker>();
 }

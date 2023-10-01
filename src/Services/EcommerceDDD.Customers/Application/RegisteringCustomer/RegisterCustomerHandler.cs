@@ -43,7 +43,7 @@ public class RegisterCustomerHandler : ICommandHandler<RegisterCustomer>
             .AppendEventsAsync(customer);
     }
 
-    private async Task<IntegrationHttpResponse?> CreateUserForCustomer(RegisterCustomer command)
+    private async Task<IntegrationHttpResponse> CreateUserForCustomer(RegisterCustomer command)
     {
         try
         {

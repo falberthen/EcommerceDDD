@@ -1,7 +1,7 @@
-global using Moq;
 global using Xunit;
 global using System;
 global using System.Linq;
+global using NSubstitute;
 global using FluentAssertions;
 global using System.Threading;
 global using System.Threading.Tasks;
