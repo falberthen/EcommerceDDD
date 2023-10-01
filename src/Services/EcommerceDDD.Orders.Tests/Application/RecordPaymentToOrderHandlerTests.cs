@@ -33,8 +33,8 @@ public class RecordPaymentToOrderHandlerTests
 
         var recordPaymentToOrder = RecordPayment.Create(order.Id, paymentId, totalPaid);
         var recordPaymentToOrderHandler = new RecordPaymentHandler(
-            _integrationHttpService.Object,
-            _orderStatusBroadcaster.Object,
+            _integrationHttpService,
+            _orderStatusBroadcaster,
             orderWriteRepository);
 
         // When
@@ -48,6 +48,6 @@ public class RecordPaymentToOrderHandlerTests
         paidOrder.Status.Should().Be(OrderStatus.Paid);
     }
 
-    private Mock<IIntegrationHttpService> _integrationHttpService = new();
-    private Mock<IOrderStatusBroadcaster> _orderStatusBroadcaster = new();
+    private IIntegrationHttpService _integrationHttpService = Substitute.For<IIntegrationHttpService>();
+    private IOrderStatusBroadcaster _orderStatusBroadcaster = Substitute.For<IOrderStatusBroadcaster>();
 }

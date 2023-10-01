@@ -1,3 +1,7 @@
+using EcommerceDDD.Core.Infrastructure.Identity;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
+
 namespace EcommerceDDD.Core.Infrastructure.Tests.Http;
 
 public class TokenRequesterTests
@@ -6,24 +10,26 @@ public class TokenRequesterTests
     public async Task GetApplicationToken_ShouldReturnStatusCodeOK()
     {
         // Given
-        await SetupMessageHandlerResponseAsync();
-        var httpClient = new HttpClient(_mockHttpMessageHandler.Object);
+        var dummyResponse = JsonConvert
+            .SerializeObject(new IntegrationHttpResponse() { Success = true });
 
-        _httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>()))
+        var messageHandler = new MockHttpMessageHandler(dummyResponse, HttpStatusCode.OK);
+        var httpClient = new HttpClient(messageHandler)
+        {
+            BaseAddress = _url
+        };
+        _httpClientFactory.CreateClient(Arg.Any<string>())
             .Returns(httpClient);
-            
-        var tokenRequester = new TokenRequester(
-            _cache.Object, 
-            _httpContextAccessor.Object,
-            _httpClientFactory.Object);
 
-            // IMemoryCache.Set is an extension method using CreateEntry
-        _cache.Setup(x => x.CreateEntry(It.IsAny<object>()))
-            .Returns(Mock.Of<ICacheEntry>);
+        var tokenRequester = new TokenRequester(
+            _cache, _contextAccessor, _httpClientFactory);
+
+        _cache.CreateEntry(Arg.Any<object>())
+            .Returns(Substitute.For<ICacheEntry>());
 
         // When
         var response = await tokenRequester
-            .GetApplicationTokenAsync(new TokenIssuerSettings() { Authority = _url });
+            .GetApplicationTokenAsync(new TokenIssuerSettings() { Authority = _url.AbsoluteUri });
 
         // Then
         Assert.NotNull(response);
@@ -34,19 +40,23 @@ public class TokenRequesterTests
     public async Task GetUserToken_ShouldReturnStatusCodeOK()
     {
         // Given
-        await SetupMessageHandlerResponseAsync();
-        var httpClient = new HttpClient(_mockHttpMessageHandler.Object);
+        var dummyResponse = JsonConvert
+            .SerializeObject(new IntegrationHttpResponse() { Success = true });
 
-        _httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>()))
+        var messageHandler = new MockHttpMessageHandler(dummyResponse, HttpStatusCode.OK);
+        var httpClient = new HttpClient(messageHandler)
+        {
+            BaseAddress = _url
+        };
+        _httpClientFactory.CreateClient(Arg.Any<string>())
             .Returns(httpClient);
 
         var tokenRequester = new TokenRequester(
-            _cache.Object,
-            _httpContextAccessor.Object,
-            _httpClientFactory.Object);
+            _cache, _contextAccessor, _httpClientFactory);
 
         // When
-        var response = await tokenRequester.GetUserTokenAsync(new TokenIssuerSettings() { Authority = _url }, 
+        var response = await tokenRequester.GetUserTokenAsync(
+            new TokenIssuerSettings() { Authority = _url.AbsoluteUri },
             "username", "password");
 
         // Then
@@ -54,23 +64,8 @@ public class TokenRequesterTests
         response.HttpStatusCode.Should().Be(HttpStatusCode.OK);
     }
 
-
-    private Task SetupMessageHandlerResponseAsync()
-    {
-        _mockHttpMessageHandler.Protected()
-            .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
-            .ReturnsAsync(new HttpResponseMessage
-            {
-                StatusCode = HttpStatusCode.OK
-            });
-        return Task.CompletedTask;
-    }
-
-    private const string _url = "http://url";
-    private Mock<IHttpClientFactory> _httpClientFactory = new();
-    private Mock<IMemoryCache> _cache = new();
-    private Mock<IHttpContextAccessor> _httpContextAccessor = new();
-    private Mock<HttpMessageHandler> _mockHttpMessageHandler = new();
-
-    public record DummyResponse(string AccessToken);
+    private Uri _url = new Uri("http://test.com");
+    private IHttpClientFactory _httpClientFactory = Substitute.For<IHttpClientFactory>();
+    private IMemoryCache _cache = Substitute.For<IMemoryCache>();
+    private IHttpContextAccessor _contextAccessor = Substitute.For<IHttpContextAccessor>();
 }

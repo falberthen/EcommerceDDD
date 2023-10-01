@@ -5,8 +5,8 @@ public class ProductsControllerTests
     public ProductsControllerTests()
     {
         _productsController = new ProductsController(
-            _commandBus.Object,
-            _queryBus.Object);
+            _commandBus,
+            _queryBus);
     }
 
     [Fact]
@@ -26,9 +26,8 @@ public class ProductsControllerTests
                 "$" )
         };
 
-        _queryBus
-            .Setup(m => m.Send(It.IsAny<GetProducts>()))
-            .ReturnsAsync(expectedData);
+        _queryBus.Send(Arg.Any<GetProducts>())
+            .Returns(expectedData);
 
         var request = new GetProductsRequest()
         {
@@ -62,9 +61,8 @@ public class ProductsControllerTests
                 "$" )
         };
 
-        _queryBus
-            .Setup(m => m.Send(It.IsAny<GetProducts>()))
-            .ReturnsAsync(expectedData);
+        _queryBus.Send(Arg.Any<GetProducts>())
+            .Returns(expectedData);
 
         var request = new GetProductsRequest()
         {
@@ -81,7 +79,7 @@ public class ProductsControllerTests
             .Subject.Data.Should().BeEquivalentTo(expectedData);
     }
 
-    private Mock<ICommandBus> _commandBus = new();
-    private Mock<IQueryBus> _queryBus = new();
+    private ICommandBus _commandBus = Substitute.For<ICommandBus>();
+    private IQueryBus _queryBus = Substitute.For<IQueryBus>();
     private ProductsController _productsController;
 }

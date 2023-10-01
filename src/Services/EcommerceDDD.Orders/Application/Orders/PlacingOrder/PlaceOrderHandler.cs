@@ -51,15 +51,15 @@ public class PlaceOrderHandler : ICommandHandler<PlaceOrder>
 
         var responseData = response.Data!;
         return responseData;
-    }
-
-    public record QuoteViewModelResponse(
-        Guid QuoteId, 
-        Guid CustomerId, 
-        List<QuoteItemViewModel> Items, 
-        string CurrencyCode);
-
-    public record class QuoteItemViewModel(
-        Guid ProductId, 
-        int Quantity);   
+    }    
 }
+
+public record QuoteViewModelResponse(
+    Guid QuoteId,
+    Guid CustomerId,
+    List<QuoteItemViewModel> Items,
+    string CurrencyCode);
+
+public record class QuoteItemViewModel(
+    Guid ProductId,
+    int Quantity);

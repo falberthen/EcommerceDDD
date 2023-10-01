@@ -35,7 +35,7 @@ public class CompleteOrderHandlerTests
             .AppendEventsAsync(order);
 
         var completeOrder = CompleteOrder.Create(order.Id, shipmentId);
-        var completeOrderHandler = new CompleteOrderHandler(_orderStatusBroadcaster.Object, orderWriteRepository);
+        var completeOrderHandler = new CompleteOrderHandler(_orderStatusBroadcaster, orderWriteRepository);
 
         // When
         await completeOrderHandler.Handle(completeOrder, CancellationToken.None);
@@ -48,5 +48,5 @@ public class CompleteOrderHandlerTests
         completedOrder.Status.Should().Be(OrderStatus.Completed);
     }
 
-    private Mock<IOrderStatusBroadcaster> _orderStatusBroadcaster = new();
+    private IOrderStatusBroadcaster _orderStatusBroadcaster = Substitute.For<IOrderStatusBroadcaster>();
 }

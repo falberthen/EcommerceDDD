@@ -20,8 +20,8 @@ public class AddQuoteItemHandlerTests
             }
         };
 
-        _integrationHttpService.Setup(p =>
-            p.FilterAsync<List<ProductViewModel>>(It.IsAny<string>(), It.IsAny<object>()))
+        _integrationHttpService
+            .FilterAsync<List<ProductViewModel>>(Arg.Any<string>(), Arg.Any<object>())
             .Returns(Task.FromResult(response));
 
         var quote = Quote.Create(_customerId);
@@ -30,7 +30,7 @@ public class AddQuoteItemHandlerTests
         await quoteWriteRepository.AppendEventsAsync(quote);
 
         var addQuoteItem = AddQuoteItem.Create(quote.Id, _productId, _productQuantity, _currency);
-        var addQuoteItemHandler = new AddQuoteItemHandler(_integrationHttpService.Object, quoteWriteRepository);
+        var addQuoteItemHandler = new AddQuoteItemHandler(_integrationHttpService, quoteWriteRepository);
 
         // When
         await addQuoteItemHandler.Handle(addQuoteItem, CancellationToken.None);
@@ -57,8 +57,8 @@ public class AddQuoteItemHandlerTests
                 )
             }
         };
-        _integrationHttpService.Setup(p =>
-            p.FilterAsync<List<ProductViewModel>>(It.IsAny<string>(), It.IsAny<object>()))
+        _integrationHttpService
+            .FilterAsync<List<ProductViewModel>>(Arg.Any<string>(), Arg.Any<object>())
             .Returns(Task.FromResult(response));
 
         var quote = Quote.Create(_customerId);
@@ -67,7 +67,7 @@ public class AddQuoteItemHandlerTests
         await quoteWriteRepository.AppendEventsAsync(quote);
 
         var addQuoteItem = AddQuoteItem.Create(quote.Id, _productId, _productQuantity, _currency);
-        var addQuoteItemHandler = new AddQuoteItemHandler(_integrationHttpService.Object, quoteWriteRepository);
+        var addQuoteItemHandler = new AddQuoteItemHandler(_integrationHttpService, quoteWriteRepository);
         await addQuoteItemHandler.Handle(addQuoteItem, CancellationToken.None);
 
         var productNewQuantity = 12;
@@ -87,5 +87,5 @@ public class AddQuoteItemHandlerTests
     private Currency _currency = Currency.OfCode(Currency.USDollar.Code);
     private CustomerId _customerId = CustomerId.Of(Guid.NewGuid());
     private ProductId _productId = ProductId.Of(Guid.NewGuid());
-    private Mock<IIntegrationHttpService> _integrationHttpService = new();
+    private IIntegrationHttpService _integrationHttpService = Substitute.For<IIntegrationHttpService>();
 }

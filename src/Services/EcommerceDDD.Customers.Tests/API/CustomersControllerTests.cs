@@ -5,14 +5,13 @@ public class CustomersControllerTests
     public CustomersControllerTests()
     {
         var fakeToken = "yJhbGciOiJSUzI1NiIsImtpZCI6IjAzOUI0NUE1OThCMzE3RTRBQzc0M";
-        _tokenRequester
-            .Setup(m => m.GetUserTokenFromHttpContextAsync())
-            .ReturnsAsync(fakeToken);
+        _tokenRequester.GetUserTokenFromHttpContextAsync()
+            .Returns(fakeToken);
 
         _customersController = new CustomersController(
-            _tokenRequester.Object,
-            _commandBus.Object,
-            _queryBus.Object);
+            _tokenRequester,
+            _commandBus,
+            _queryBus);
     }
 
     [Fact]
@@ -29,9 +28,8 @@ public class CustomersControllerTests
             CreditLimit = 1000
         };
 
-        _queryBus
-            .Setup(m => m.Send(It.IsAny<GetCustomerDetails>()))
-            .ReturnsAsync(expectedData);
+        _queryBus.Send(Arg.Any<GetCustomerDetails>())
+            .Returns(expectedData);
 
         // When
         var response = await _customersController.GetDetails();
@@ -53,9 +51,8 @@ public class CustomersControllerTests
             10000
         );
 
-        _queryBus
-            .Setup(m => m.Send(It.IsAny<GetCreditLimit>()))
-            .ReturnsAsync(expectedData);
+        _queryBus.Send(Arg.Any<GetCreditLimit>())
+            .Returns(expectedData);
 
         // When
         var response = await _customersController.GetCustomerCreditLimit(customerId);
@@ -87,9 +84,8 @@ public class CustomersControllerTests
             )
         };
 
-        _queryBus
-            .Setup(m => m.Send(It.IsAny<GetCustomerEventHistory>()))
-            .ReturnsAsync(expectedData);
+        _queryBus.Send(Arg.Any<GetCustomerEventHistory>())
+            .Returns(expectedData);
 
         // When
         var response = await _customersController.ListHistory(customerId);
@@ -114,8 +110,7 @@ public class CustomersControllerTests
             CreditLimit = 1000
         };
 
-        _commandBus
-            .Setup(m => m.Send(It.IsAny<RegisterCustomer>()));
+        await _commandBus.Send(Arg.Any<RegisterCustomer>());
 
         // When
         var response = await _customersController.Register(request);
@@ -136,8 +131,7 @@ public class CustomersControllerTests
             CreditLimit = 1000m
         };
 
-        _commandBus
-            .Setup(m => m.Send(It.IsAny<RegisterCustomer>()));
+        await _commandBus.Send(Arg.Any<RegisterCustomer>());
 
         // When
         var response = await _customersController.UpdateInformation(customerId, request);
@@ -146,8 +140,8 @@ public class CustomersControllerTests
         response.Should().BeOfType<OkObjectResult>();
     }
 
-    private Mock<ICommandBus> _commandBus = new();
-    private Mock<IQueryBus> _queryBus = new();
     private CustomersController _customersController;
-    private Mock<ITokenRequester> _tokenRequester = new();
+    private ICommandBus _commandBus = Substitute.For<ICommandBus>();
+    private IQueryBus _queryBus = Substitute.For<IQueryBus>();
+    private ITokenRequester _tokenRequester = Substitute.For<ITokenRequester>();
 }

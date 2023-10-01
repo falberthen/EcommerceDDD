@@ -5,8 +5,8 @@ public class PaymentsControllerTests
     public PaymentsControllerTests()
     {
         _paymentsController = new PaymentsController(
-            _commandBus.Object,
-            _queryBus.Object);
+            _commandBus,
+            _queryBus);
     }
 
     [Fact]
@@ -16,8 +16,7 @@ public class PaymentsControllerTests
         Guid customerId = Guid.NewGuid();
         Guid orderId = Guid.NewGuid();
 
-        _commandBus
-            .Setup(m => m.Send(It.IsAny<RequestPayment>()));
+        await _commandBus.Send(Arg.Any<RequestPayment>());
 
         var request = new PaymentRequest()
         {
@@ -34,7 +33,7 @@ public class PaymentsControllerTests
         response.Should().BeOfType<OkObjectResult>();
     }
 
-    private Mock<ICommandBus> _commandBus = new();
-    private Mock<IQueryBus> _queryBus = new();
+    private ICommandBus _commandBus = Substitute.For<ICommandBus>();
+    private IQueryBus _queryBus = Substitute.For<IQueryBus>();
     private PaymentsController _paymentsController;
 }
