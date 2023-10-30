@@ -1,12 +1,12 @@
 import { Router } from '@angular/router';
 import { faList, faMinusCircle } from '@fortawesome/free-solid-svg-icons';
-import { appConstants } from 'src/app/modules/ecommerce/constants/appConstants';
-import { AuthService } from 'src/app/core/services/auth.service';
-import { ConfirmationDialogService } from 'src/app/core/services/confirmation-dialog.service';
-import { CurrencyNotificationService } from 'src/app/modules/ecommerce/services/currency-notification.service';
-import { LocalStorageService } from 'src/app/core/services/local-storage.service';
-import { NotificationService } from 'src/app/core/services/notification.service';
-import { LoaderService } from 'src/app/core/services/loader.service';
+import { LOCAL_STORAGE_ENTRIES } from '@ecommerce/constants/appConstants';
+import { AuthService } from '@core/services/auth.service';
+import { ConfirmationDialogService } from '@core/services/confirmation-dialog.service';
+import { CurrencyNotificationService } from '@ecommerce/services/currency-notification.service';
+import { LocalStorageService } from '@core/services/local-storage.service';
+import { NotificationService } from '@core/services/notification.service';
+import { LoaderService } from '@core/services/loader.service';
 import { QuotesService } from '../../services/quotes.service';
 import { Quote, QuoteItem } from '../../models/Quote';
 import { Product } from '../../models/Product';
@@ -15,7 +15,7 @@ import { OpenQuoteRequest } from '../../models/requests/OpenQuoteRequest';
 import { AddQuoteItemRequest } from '../../models/requests/AddQuoteItemRequest';
 import { firstValueFrom } from 'rxjs';
 import { ServiceResponse } from '../../services/ServiceResponse';
-import { StoredEventService } from 'src/app/shared/services/stored-event.service';
+import { StoredEventService } from '@shared/services/stored-event.service';
 import { OrdersService } from '../../services/orders.service';
 import {
   Component,
@@ -63,7 +63,7 @@ export class CartComponent implements OnInit {
 
   async ngOnInit() {
     const storedCurrency = this.localStorageService.getValueByKey(
-      appConstants.storedCurrency
+      LOCAL_STORAGE_ENTRIES.storedCurrency
     );
     if (storedCurrency) {
       this.currentCurrency = storedCurrency;
@@ -204,7 +204,7 @@ export class CartComponent implements OnInit {
 
           await firstValueFrom(result).then((result) => {
             if (result.success) {
-              this.localStorageService.clearKey(appConstants.storedOpenQuote);
+              this.localStorageService.clearKey(LOCAL_STORAGE_ENTRIES.storedOpenQuote);
               this.notificationService.showSuccess(
                 'Order placed with success.'
               );
@@ -217,12 +217,12 @@ export class CartComponent implements OnInit {
 
   private setQuote(openQuote: Quote) {
     if (openQuote == null) {
-      this.localStorageService.clearKey(appConstants.storedOpenQuote);
+      this.localStorageService.clearKey(LOCAL_STORAGE_ENTRIES.storedOpenQuote);
       return;
     }
 
     this.localStorageService.setValue(
-      appConstants.storedOpenQuote,
+      LOCAL_STORAGE_ENTRIES.storedOpenQuote,
       JSON.stringify(openQuote)
     );
   }

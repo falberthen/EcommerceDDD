@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { faDollarSign, faEuroSign } from '@fortawesome/free-solid-svg-icons';
-import { appConstants } from 'src/app/modules/ecommerce/constants/appConstants';
-import { CurrencyNotificationService } from 'src/app/modules/ecommerce/services/currency-notification.service';
-import { LocalStorageService } from 'src/app/core/services/local-storage.service';
+import { LOCAL_STORAGE_ENTRIES } from '@ecommerce/constants/appConstants';
+import { LocalStorageService } from '@core/services/local-storage.service';
+import { CurrencyNotificationService } from '@ecommerce/services/currency-notification.service';
 
 @Component({
   selector: 'app-currency-dropdown',
@@ -24,22 +24,22 @@ export class CurrencyDropdownComponent implements OnInit {
       (currencyCode) => (this.currentCurrency = currencyCode)
     );
     var storedCurrency = this.localStorageService.getValueByKey(
-      appConstants.storedCurrency
+      LOCAL_STORAGE_ENTRIES.storedCurrency
     );
 
     if (!storedCurrency)
       this.localStorageService.setValue(
-        appConstants.storedCurrency,
-        appConstants.defaultCurrency
+        LOCAL_STORAGE_ENTRIES.storedCurrency,
+        LOCAL_STORAGE_ENTRIES.defaultCurrency
       );
   }
 
   setCurrency(currency: string) {
-    this.localStorageService.setValue(appConstants.storedCurrency, currency);
+    this.localStorageService.setValue(LOCAL_STORAGE_ENTRIES.storedCurrency, currency);
     this.notificationService.changeCurrency(currency);
   }
 
   getCurrentCurrency() {
-    return this.localStorageService.getValueByKey(appConstants.storedCurrency);
+    return this.localStorageService.getValueByKey(LOCAL_STORAGE_ENTRIES.storedCurrency);
   }
 }

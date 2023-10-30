@@ -1,15 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { CartComponent } from '../cart/cart.component';
-import { LocalStorageService } from 'src/app/core/services/local-storage.service';
-import { CurrencyNotificationService } from 'src/app/modules/ecommerce/services/currency-notification.service';
-import { appConstants } from 'src/app/modules/ecommerce/constants/appConstants';
-import { LoaderService } from 'src/app/core/services/loader.service';
+import { LocalStorageService } from '@core/services/local-storage.service';
+import { LoaderService } from '@core/services/loader.service';
 import { ProductsService } from '../../services/products.service';
+import { CurrencyNotificationService } from '../../services/currency-notification.service';
 import { Product } from '../../models/Product';
 import { GetProductsRequest } from '../../models/requests/GetProductsRequest';
 import { Quote, QuoteItem } from '../../models/Quote';
-import { firstValueFrom, of } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
+import { LOCAL_STORAGE_ENTRIES } from '../../constants/appConstants';
 
 @Component({
   selector: 'app-products',
@@ -32,7 +32,7 @@ export class ProductSelectionComponent implements OnInit {
 
   async ngOnInit() {
     var storedCurrency = this.localStorageService.getValueByKey(
-      appConstants.storedCurrency
+      LOCAL_STORAGE_ENTRIES.storedCurrency
     );
 
     if (storedCurrency) {

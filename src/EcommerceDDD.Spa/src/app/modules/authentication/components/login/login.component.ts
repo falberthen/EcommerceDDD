@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from 'src/app/core/services/auth.service';
-import { LoaderService } from 'src/app/core/services/loader.service';
+import { AuthService } from '@core/services/auth.service';
+import { LoaderService } from '@core/services/loader.service';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
