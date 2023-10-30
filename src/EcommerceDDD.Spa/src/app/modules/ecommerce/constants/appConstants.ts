@@ -1,4 +1,4 @@
-export const appConstants = {
+export const LOCAL_STORAGE_ENTRIES = {
   storedUser: 'user',
   storedCustomer: 'customer',
   storedCurrency: 'currency',
@@ -6,10 +6,14 @@ export const appConstants = {
   defaultCurrency: 'USD',
 };
 
-export const orderStatusCodes = {
+export const ORDER_STATUS_CODES = {
   placed: 1,
   paid: 2,
   shipped: 3,
   completed: 4,
   canceled: 0,
 };
+
+export const ROUTE_PATHS = {
+  login: '/login'
+}

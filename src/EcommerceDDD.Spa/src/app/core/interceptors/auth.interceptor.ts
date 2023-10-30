@@ -10,6 +10,7 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { TokenStorageService } from '../services/token-storage.service';
+import { AuthService } from '../services/auth.service';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
@@ -18,7 +19,8 @@ const TOKEN_HEADER_KEY = 'Authorization';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   constructor(
-    private token: TokenStorageService,
+    private authService: AuthService,
+    private token: TokenStorageService
   ) {}
 
   intercept(
@@ -27,7 +29,6 @@ export class AuthInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     const token = this.token.getToken();
     let authReq = request;
-
     if (token) {
       authReq = request.clone({
         headers: request.headers.set(TOKEN_HEADER_KEY, 'Bearer ' + token),
@@ -41,6 +42,9 @@ export class AuthInterceptor implements HttpInterceptor {
           if (err instanceof HttpErrorResponse && err.status !== 401) {
             return;
           }
+
+          // logout
+          this.authService.logout();
         }
       )
     );
