@@ -1,11 +1,10 @@
 import { firstValueFrom, Subscription } from 'rxjs';
-import { AuthService } from 'src/app/core/services/auth.service';
-import { TokenStorageService } from 'src/app/core/services/token-storage.service';
-import { LocalStorageService } from 'src/app/core/services/local-storage.service';
-import { appConstants } from 'src/app/modules/ecommerce/constants/appConstants';
-import { CustomersService } from 'src/app/modules/ecommerce/services/customers.service';
-import { Customer } from 'src/app/modules/ecommerce/models/Customer';
-import { Quote } from 'src/app/modules/ecommerce/models/Quote';
+import { AuthService } from '@core/services/auth.service';
+import { TokenStorageService } from '@core/services/token-storage.service';
+import { LocalStorageService } from '@core/services/local-storage.service';
+import { CustomersService } from '@ecommerce/services/customers.service';
+import { Customer } from '@ecommerce/models/Customer';
+import { Quote } from '@ecommerce/models/Quote';
 import {
   ChangeDetectorRef,
   Component,
@@ -21,6 +20,7 @@ import {
   faSignOutAlt,
   faUser,
 } from '@fortawesome/free-solid-svg-icons';
+import { LOCAL_STORAGE_ENTRIES } from '@ecommerce/constants/appConstants';
 
 @Component({
   selector: 'app-nav-menu',
@@ -95,7 +95,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   private async storeLoadedCustomer() {
     // storing customer in the localstorage
     this.localStorageService.setValue(
-      appConstants.storedCustomer,
+      LOCAL_STORAGE_ENTRIES.storedCustomer,
       JSON.stringify(this.customer)
     );
   }
