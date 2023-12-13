@@ -13,10 +13,8 @@ public class UpdateCustomerInformationHandler : ICommandHandler<UpdateCustomerIn
     public async Task Handle(UpdateCustomerInformation command, CancellationToken cancellationToken)
     {
         var customer = await _customerWriteRepository
-            .FetchStreamAsync(command.CustomerId.Value);
-
-        if (customer is null)
-            throw new ArgumentNullException("Customer not found.");
+            .FetchStreamAsync(command.CustomerId.Value)
+            ?? throw new ArgumentNullException($"Customer {command.CustomerId.Value} not found.");
 
         var customerData = new CustomerData(
             customer.Email,

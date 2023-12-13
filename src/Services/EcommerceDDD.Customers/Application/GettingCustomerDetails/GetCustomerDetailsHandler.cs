@@ -28,10 +28,8 @@ public class GetCustomerDetailsHandler : IQueryHandler<GetCustomerDetails, Custo
 
         var details = new CustomerDetails();
         var customer = _querySession.Query<CustomerDetails>()
-            .FirstOrDefault(c => c.Email == response.Email);
-
-        if (customer is null)
-            throw new RecordNotFoundException($"Customer not found.");
+            .FirstOrDefault(c => c.Email == response.Email)
+            ?? throw new RecordNotFoundException($"Customer not found.");
 
         details.Id = customer.Id;
         details.Email = customer.Email;

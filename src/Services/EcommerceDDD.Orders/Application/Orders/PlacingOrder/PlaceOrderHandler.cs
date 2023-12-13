@@ -19,7 +19,8 @@ public class PlaceOrderHandler : ICommandHandler<PlaceOrder>
     public async Task Handle(PlaceOrder command, CancellationToken cancellationToken)
     {
         // Getting quote data
-        var quote = await GetConfirmedQuoteById(command.QuoteId);
+        var quote = await GetConfirmedQuoteById(command.QuoteId)
+            ?? throw new RecordNotFoundException($"Quote {command.QuoteId} not found.");
 
         // Getting product data from catalog
         var currency = Currency.OfCode(quote.CurrencyCode);
@@ -41,10 +42,8 @@ public class PlaceOrderHandler : ICommandHandler<PlaceOrder>
     private async Task<QuoteViewModelResponse> GetConfirmedQuoteById(QuoteId quoteId)
     {
         var response = await _integrationHttpService.GetAsync<QuoteViewModelResponse>(
-            $"api/quotes/{quoteId.Value}");
-
-        if (response is null)
-            throw new ApplicationLogicException($"An error occurred retrieving quote {quoteId}.");
+            $"api/quotes/{quoteId.Value}")
+            ?? throw new ApplicationLogicException($"An error occurred retrieving quote {quoteId}.");
 
         if (!response.Success)
             throw new ApplicationLogicException(response.Message);

@@ -14,7 +14,7 @@ public class ConfirmQuoteHandler : ICommandHandler<ConfirmQuote>
     {
         var quote = await _quoteWriteRepository
             .FetchStreamAsync(command.QuoteId.Value)
-            ?? throw new RecordNotFoundException("Quote not found.");
+            ?? throw new RecordNotFoundException($"The quote {command.QuoteId} not found.");
         
         // Quote confirmed
         quote.Confirm(command.Currency);

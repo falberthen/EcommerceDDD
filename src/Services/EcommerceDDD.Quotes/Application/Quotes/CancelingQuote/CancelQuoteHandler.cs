@@ -13,7 +13,7 @@ public class CancelQuoteHandler : ICommandHandler<CancelQuote>
     {
         var quote = await _quoteWriteRepository
             .FetchStreamAsync(command.QuoteId.Value)
-            ?? throw new RecordNotFoundException("The quote was not found.");
+            ?? throw new RecordNotFoundException($"The quote {command.QuoteId} was not found.");
      
         quote.Cancel();
 

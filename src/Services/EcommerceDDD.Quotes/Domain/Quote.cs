@@ -39,7 +39,7 @@ public class Quote : AggregateRoot<QuoteId>
         var quoteItem = Items
             .FirstOrDefault(p => p.ProductId == quoteItemData.ProductId);
 
-        dynamic @event = quoteItem == null
+        dynamic @event = quoteItem is null
             ? QuoteItemAdded.Create(quoteItemData)
             : QuoteItemQuantityChanged.Create(quoteItemData);
 

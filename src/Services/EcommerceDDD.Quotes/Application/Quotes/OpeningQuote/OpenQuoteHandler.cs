@@ -15,7 +15,7 @@ public class OpenQuoteHandler : ICommandHandler<OpenQuote>
     public async Task Handle(OpenQuote command, CancellationToken cancellationToken)
     {
         if (await _customerOpenQuoteChecker.CustomerHasOpenQuote(command.CustomerId))
-            throw new ApplicationLogicException("The customer has an open quote already.");
+            throw new ApplicationLogicException($"The customer {command.CustomerId} has an open quote already.");
 
         var quote = Quote.Create(command.CustomerId);
 
