@@ -10,10 +10,10 @@ public class CustomerCreationTests
         // Given
         string email = "email@test.com";
         string name = "UserTest";
-        string address = "Rue XYZ";
+        string streetAddress = "Rue XYZ";
         decimal creditLimit = 1000;
 
-        var customerData = new CustomerData(email, name, address, creditLimit);
+        var customerData = new CustomerData(email, name, streetAddress, creditLimit);
 
         // When
         var customer = Customer.Create(customerData);
@@ -23,7 +23,7 @@ public class CustomerCreationTests
         customer.Id.Value.Should().NotBe(Guid.Empty);
         customer.Email.Should().Be(email);
         customer.Name.Should().Be(name);
-        customer.ShippingAddress.Should().Be(Address.Create(address));
+        customer.ShippingAddress.Should().Be(Address.FromStreetAddress(streetAddress));
         customer.CreditLimit.Should().Be(CreditLimit.Create(creditLimit));
     }
 }

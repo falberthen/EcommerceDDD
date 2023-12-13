@@ -56,14 +56,14 @@ public sealed class Customer : AggregateRoot<CustomerId>
         Id = CustomerId.Of(registered.CustomerId);
         Email = registered.Email;
         Name = registered.Name;
-        ShippingAddress = Address.Create(registered.ShippingAddress);
+        ShippingAddress = Address.FromStreetAddress(registered.ShippingAddress);
         CreditLimit = CreditLimit.Create(registered.CreditLimit);
     }
 
     private void Apply(CustomerUpdated updated)
     {
         Name = updated.Name;
-        ShippingAddress = Address.Create(updated.ShippingAddress);
+        ShippingAddress = Address.FromStreetAddress(updated.ShippingAddress);
         CreditLimit = CreditLimit.Create(updated.CreditLimit);
     }
 

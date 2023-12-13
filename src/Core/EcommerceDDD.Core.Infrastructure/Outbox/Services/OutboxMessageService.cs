@@ -15,7 +15,7 @@ public class OutboxMessageService : IOutboxMessageService
 
     public async Task SaveAsOutboxMessageAsync(IntegrationEvent @event, bool saveChanges = false)
     {
-        if (@event == null)
+        if (@event is null)
             throw new ArgumentNullException(nameof(@event));
 
         _logger.LogInformation("Adding event {@event} to outboxmessages...", @event);

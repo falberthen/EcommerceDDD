@@ -19,7 +19,8 @@ public class ProcessPaymentHandler : ICommandHandler<ProcessPayment>
     public async Task Handle(ProcessPayment command, CancellationToken cancellationToken)
     {
         var payment = await _paymentWriteRepository
-            .FetchStreamAsync(command.PaymentId.Value);
+            .FetchStreamAsync(command.PaymentId.Value)
+            ?? throw new RecordNotFoundException($"Payment {command.PaymentId} was not found.");
 
         try
         {

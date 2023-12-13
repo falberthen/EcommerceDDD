@@ -1,4 +1,6 @@
-﻿namespace EcommerceDDD.Quotes.Application.Quotes.RemovingQuoteItem;
+﻿using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+
+namespace EcommerceDDD.Quotes.Application.Quotes.RemovingQuoteItem;
 
 public class RemoveQuoteItemHandler : ICommandHandler<RemoveQuoteItem>
 {
@@ -12,9 +14,9 @@ public class RemoveQuoteItemHandler : ICommandHandler<RemoveQuoteItem>
     public async Task Handle(RemoveQuoteItem command, CancellationToken cancellationToken)
     {
         var quote = await _quoteWriteRepository
-            .FetchStreamAsync(command.QuoteId.Value)
-            ?? throw new RecordNotFoundException("Quote not found.");
-     
+        .FetchStreamAsync(command.QuoteId.Value)
+            ?? throw new RecordNotFoundException($"The quote {command.QuoteId} not found.");
+
         quote.RemoveItem(command.ProductId);
 
         await _quoteWriteRepository

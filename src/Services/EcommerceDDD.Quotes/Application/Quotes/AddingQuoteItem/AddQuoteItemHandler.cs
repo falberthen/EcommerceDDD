@@ -17,7 +17,7 @@ public class AddQuoteItemHandler : ICommandHandler<AddQuoteItem>
     {
         var quote = await _quoteWriteRepository
             .FetchStreamAsync(command.QuoteId.Value)
-            ?? throw new RecordNotFoundException("The quote was not found.");
+            ?? throw new RecordNotFoundException($"The quote {command.QuoteId} was not found.");
 
         // checks if product exists in the catalog
         var response = await _integrationHttpService.FilterAsync<List<ProductViewModel>>(

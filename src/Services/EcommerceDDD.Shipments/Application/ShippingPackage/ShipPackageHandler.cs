@@ -16,7 +16,8 @@ public class ShipPackageHandler : ICommandHandler<ShipPackage>
     public async Task Handle(ShipPackage command, CancellationToken cancellationToken)
     {
         var shipment = await _shipmentWriteRepository
-            .FetchStreamAsync(command.ShipmentId.Value);
+            .FetchStreamAsync(command.ShipmentId.Value)
+            ?? throw new RecordNotFoundException($"The shipment {command.ShipmentId} was not found.");
 
         shipment.RecordShipment();
 

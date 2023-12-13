@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7</TargetFramework>
-    <Platforms>AnyCPU;x64</Platforms>
+    <TargetFramework>net8.0</TargetFramework>
+	<LangVersion>12</LangVersion>
+	<Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,8 +14,8 @@
 
   <ItemGroup>
 	<PackageReference Include="FluentAssertions" Version="6.12.0" />
-	<PackageReference Include="Marten" Version="6.2.0" />
-	<PackageReference Include="MediatR" Version="12.1.1" />	
+	<PackageReference Include="Marten" Version="6.4.0" />
+	<PackageReference Include="MediatR" Version="12.2.0" />
 	<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 

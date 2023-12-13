@@ -1,18 +1,18 @@
 namespace EcommerceDDD.Core.Infrastructure.Kafka.Serialization;
 
-public class JsonEventSerializer<T> : ISerializer<T>, IDeserializer<T?>
+public class JsonEventSerializer<T> : ISerializer<T>, IDeserializer<T>
     where T : class
 {
     public byte[] Serialize(T data, SerializationContext context)
         => Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(data));
 
-    public T? Deserialize(ReadOnlySpan<byte> data, bool isNull, SerializationContext context)
+    public T Deserialize(ReadOnlySpan<byte> data, bool isNull, SerializationContext context)
     {
         if (isNull)
             return null;
 
         var eventType = GetEventType(context);
-        if (eventType == null)
+        if (eventType is null)
             return null;
 
         var message = Encoding.UTF8.GetString(data);

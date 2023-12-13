@@ -4,7 +4,7 @@ public class Address : ValueObject<Address>
 {
     public string StreetAddress { get; private set; }
 
-    public static Address Create(string address)
+    public static Address FromStreetAddress(string address)
     {
         if (string.IsNullOrWhiteSpace(address))
             throw new BusinessRuleException("Address cannot be null or whitespace.");
