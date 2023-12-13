@@ -1,17 +1,15 @@
-import {
-  HTTP_INTERCEPTORS,
-  HttpErrorResponse,
-  HttpEvent,
-} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   HttpInterceptor,
-  HttpHandler,
   HttpRequest,
+  HttpHandler,
+  HttpEvent,
+  HttpErrorResponse,
 } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import { TokenStorageService } from '../services/token-storage.service';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { AuthService } from '../services/auth.service';
 
 const TOKEN_HEADER_KEY = 'Authorization';
 
@@ -19,12 +17,9 @@ const TOKEN_HEADER_KEY = 'Authorization';
 export class AuthInterceptor implements HttpInterceptor {
   constructor(
     private token: TokenStorageService,
-  ) {}
+    private authenticationService: AuthService) {}
 
-  intercept(
-    request: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = this.token.getToken();
     let authReq = request;
 
@@ -38,15 +33,16 @@ export class AuthInterceptor implements HttpInterceptor {
       tap(
         () => {},
         (err: any) => {
-          if (err instanceof HttpErrorResponse && err.status !== 401) {
-            return;
+          if (err instanceof HttpErrorResponse && err.status === 401) {
+            // Token expired or unauthorized
+            this.authenticationService.logout();
           }
         }
-      )
+      ),
+      catchError((error) => {
+        // Handle other types of errors if needed
+        return throwError(error);
+      })
     );
   }
 }
-
-export const authInterceptorProviders = [
-  { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-];
