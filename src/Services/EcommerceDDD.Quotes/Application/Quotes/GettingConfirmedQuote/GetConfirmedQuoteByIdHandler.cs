@@ -1,4 +1,6 @@
-﻿namespace EcommerceDDD.Quotes.Application.Quotes.GettingConfirmedQuote;
+﻿using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+
+namespace EcommerceDDD.Quotes.Application.Quotes.GettingConfirmedQuote;
 
 public class GetConfirmedQuoteByIdHandler : IQueryHandler<GetConfirmedQuoteById, QuoteViewModel>
 {
@@ -12,9 +14,9 @@ public class GetConfirmedQuoteByIdHandler : IQueryHandler<GetConfirmedQuoteById,
     public Task<QuoteViewModel> Handle(GetConfirmedQuoteById query, CancellationToken cancellationToken)
     {
         var projectedQuote = _querySession.Query<QuoteDetails>()
-            .FirstOrDefault(q => q.Id == query.QuoteId.Value 
+            .FirstOrDefault(q => q.Id == query.QuoteId.Value
             && q.QuoteStatus == QuoteStatus.Confirmed)
-            ?? throw new RecordNotFoundException("Quote not found.");
+            ?? throw new RecordNotFoundException($"The quote {query.QuoteId} not found.");
 
         QuoteViewModel viewModel = default!;
 

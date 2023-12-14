@@ -31,10 +31,8 @@ public class RegisterCustomerHandler : ICommandHandler<RegisterCustomer>
             command.CreditLimit);
 
         var customer = Customer.Create(customerData);
-        var response = await CreateUserForCustomer(command);
-
-        if (response is null)
-            throw new RecordNotFoundException($"An error occurred creating the customer's user.");
+        var response = await CreateUserForCustomer(command)
+            ?? throw new RecordNotFoundException($"An error occurred creating the customer's user.");
 
         if (!response.Success)
             throw new RecordNotFoundException(response.Message);

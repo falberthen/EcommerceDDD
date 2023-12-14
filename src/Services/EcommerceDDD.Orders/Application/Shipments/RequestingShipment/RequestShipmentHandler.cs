@@ -19,10 +19,8 @@ public class RequestShipmentHandler : ICommandHandler<RequestShipment>
     public async Task Handle(RequestShipment command, CancellationToken cancellationToken)
     {
         var order = await _orderWriteRepository
-            .FetchStreamAsync(command.OrderId.Value);
-
-        if (order is null)
-            throw new RecordNotFoundException($"Failed to find the order {command.OrderId}.");
+            .FetchStreamAsync(command.OrderId.Value)
+            ?? throw new RecordNotFoundException($"Failed to find the order {command.OrderId}.");
 
         var productItemsRequest = order.OrderLines
             .Select(ol => new ProductItemRequest(

@@ -1,56 +1,48 @@
-import {
-  HTTP_INTERCEPTORS,
-  HttpErrorResponse,
-  HttpEvent,
-} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
-  HttpInterceptor,
-  HttpHandler,
-  HttpRequest,
+    HttpInterceptor,
+    HttpRequest,
+    HttpHandler,
+    HttpEvent,
+    HttpErrorResponse,
 } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import { TokenStorageService } from '../services/token-storage.service';
 import { AuthService } from '../services/auth.service';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
 
 const TOKEN_HEADER_KEY = 'Authorization';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(
-    private authService: AuthService,
-    private token: TokenStorageService
-  ) {}
+    constructor(
+        private token: TokenStorageService,
+        private authenticationService: AuthService) { }
 
-  intercept(
-    request: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
-    const token = this.token.getToken();
-    let authReq = request;
-    if (token) {
-      authReq = request.clone({
-        headers: request.headers.set(TOKEN_HEADER_KEY, 'Bearer ' + token),
-      });
-    }
+    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        const token = this.token.getToken();
+        let authReq = request;
 
-    return next.handle(authReq).pipe(
-      tap(
-        () => {},
-        (err: any) => {
-          if (err instanceof HttpErrorResponse && err.status !== 401) {
-            return;
-          }
-
-          // logout
-          this.authService.logout();
+        if (token) {
+            authReq = request.clone({
+                headers: request.headers.set(TOKEN_HEADER_KEY, 'Bearer ' + token),
+            });
         }
-      )
-    );
-  }
-}
 
-export const authInterceptorProviders = [
-  { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-];
+        return next.handle(authReq).pipe(
+            tap(
+                () => { },
+                (err: any) => {
+                    if (err instanceof HttpErrorResponse && err.status === 401) {
+                        // Token expired or unauthorized
+                        this.authenticationService.logout();
+                    }
+                }
+            ),
+            catchError((error) => {
+                // Handle other types of errors if needed
+                return throwError(error);
+            })
+        );
+    }
+}

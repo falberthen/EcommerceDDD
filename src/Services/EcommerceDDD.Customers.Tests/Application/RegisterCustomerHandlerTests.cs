@@ -1,3 +1,6 @@
+using EcommerceDDD.Customers.Domain;
+using EcommerceDDD.Customers.Api.Application.RegisteringCustomer;
+
 namespace EcommerceDDD.Customers.Tests.Application;
 
 public class RegisterCustomerHandlerTests
@@ -19,7 +22,8 @@ public class RegisterCustomerHandlerTests
             .Returns(true);
         
         var confirmation = _password;
-        var registerCommand = RegisterCustomer.Create(_email, _password, confirmation, _name, _address, _creditLimit);
+        var registerCommand = RegisterCustomer
+            .Create(_email, _password, confirmation, _name, _streetAddress, _creditLimit);
         var commandHandler = new RegisterCustomerHandler(
             _requester,
             _checker, 
@@ -33,7 +37,7 @@ public class RegisterCustomerHandlerTests
         var addedCustomer = _dummyRepository.AggregateStream.First().Aggregate;
         addedCustomer.Email.Should().Be(registerCommand.Email);
         addedCustomer.Name.Should().Be(registerCommand.Name);
-        addedCustomer.ShippingAddress.Should().Be(Address.Create(_address));
+        addedCustomer.ShippingAddress.Should().Be(Address.FromStreetAddress(_streetAddress));
     }
 
     [Fact]
@@ -44,7 +48,8 @@ public class RegisterCustomerHandlerTests
             .Returns(false);
 
         var confirmation = _password;
-        var registerCommand = RegisterCustomer.Create(_email, _password, confirmation, _name, _address, _creditLimit);
+        var registerCommand = RegisterCustomer
+            .Create(_email, _password, confirmation, _name, _streetAddress, _creditLimit);
         var commandHandler = new RegisterCustomerHandler(
             _requester,
             _checker,
@@ -62,7 +67,7 @@ public class RegisterCustomerHandlerTests
     public const string _email = "email@test.com";
     public const string _name = "UserTest";
     public const string _password = "p4ssw0rd";
-    public const string _address = "Rue XYZ";
+    public const string _streetAddress = "Rue XYZ";
     public const decimal _creditLimit = 1000;
     private IHttpRequester _requester = Substitute.For<IHttpRequester>();
     private IEmailUniquenessChecker _checker = Substitute.For<IEmailUniquenessChecker>();

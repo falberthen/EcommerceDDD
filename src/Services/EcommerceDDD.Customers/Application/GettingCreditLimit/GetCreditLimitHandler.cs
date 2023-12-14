@@ -12,11 +12,9 @@ public class GetCreditLimitHandler : IQueryHandler<GetCreditLimit, CreditLimitMo
     public Task<CreditLimitModel> Handle(GetCreditLimit query, CancellationToken cancellationToken)
     {        
         var customer = _querySession.Query<CustomerDetails>()
-            .FirstOrDefault(c => c.Id == query.CustomerId.Value);
+        .FirstOrDefault(c => c.Id == query.CustomerId.Value)
+            ?? throw new RecordNotFoundException($"Customer {query.CustomerId} not found.");
 
-        if (customer is null)
-            throw new RecordNotFoundException($"Customer {query.CustomerId} not found.");
-        
         return Task.FromResult(new CreditLimitModel(query.CustomerId.Value, customer.CreditLimit));
     }
 }

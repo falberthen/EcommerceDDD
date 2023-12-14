@@ -59,33 +59,32 @@ A lightweight Angular-based `SPA` providing a functional and user-friendly UI.
 ## Technologies used
 <ul>
   <li>
-    <a href='https://get.asp.net' target="_blank">ASP.NET</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx' target="_blank">C# 10</a>
+    <a href='https://get.asp.net' target="_blank">ASP.NET Core API</a> and <a href='https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-12' target="_blank">C# 12</a>
     for cross-platform backend with:
     <ul>
-      <li>.NET 7</li>
-      <li>Ocelot 19.0.3</li>
-      <li>Marten 6.2.0</li>
-      <li>Entity Framework Core 7.0.11</li>
-      <li>Postgres for Entity Framework Core 7.0.11</li>
-      <li>ASP.NET Core Identity 7.0.11</li>
-      <li>ASP.NET Core Authentication JwtBearer 7.0.11</li>
-      <li>Duende IdentityServer 6.3.5</li>
-      <li>MediatR 12.1.1</li>
-      <li>Polly 8.0.0</li>
-      <li>Fluent Assertions 6.12.0</li>
-      <li>XUnit 2.5.1</li>
+      <li>.NET 8</li>
+      <li>Ocelot 22.0.1</li>
+      <li>Marten 6.4.0</li>
+      <li>Entity Framework Core 8.0.0</li>
+      <li>Postgres for Entity Framework Core 8.0.0</li>
+      <li>ASP.NET Core Identity 8.0.0</li>
+      <li>ASP.NET Core Authentication JwtBearer 8.0.0</li>
+      <li>Duende IdentityServer 6.3.6</li>
+      <li>MediatR 12.2.0</li>
+      <li>Polly 8.2.0</li>
+      <li>Fluent Assertions 6.12.0</li>      
+      <li>XUnit 2.6.3</li>
       <li>NSubstitute 5.1.0</li>
       <li>Swagger 6.5.0</li>
-      <li>Confluent Kafka 2.2.0</li>
-      <li>Docker Compose</li>
+      <li>Confluent Kafka 2.3.0</li>
     </ul>
   </li>
   <li>
-    <a href='https://angular.io/' target="_blank">Angular 16</a> and <a href='http://www.typescriptlang.org/' target="_blank">TypeScript</a> for the frontend with:
+    <a href='https://angular.io/' target="_blank">Angular 17</a> and <a href='http://www.typescriptlang.org/' target="_blank">TypeScript 5.2.0</a> for the frontend with:
     <ul>
-      <li>NgBootstrap / Bootstrap 5.2.3</li>
-      <li>Font Awesome</li>
-      <li>Toastr</li>
+      <li>NgBootstrap 16.0.0/ Bootstrap 5.2.3</li>
+      <li>Font Awesome 6.4.</li>
+      <li>Toastr 17.0.2</li>
     </ul>
   </li>
 </ul>

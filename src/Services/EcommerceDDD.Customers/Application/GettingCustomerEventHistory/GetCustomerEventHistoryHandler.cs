@@ -15,9 +15,6 @@ public class GetCustomerEventHistoryHandler : IQueryHandler<GetCustomerEventHist
         var customerHistory = _querySession.Query<CustomerEventHistory>()
            .Where(c => c.AggregateId == query!.CustomerId.Value);
 
-        if (customerHistory is null)
-            throw new RecordNotFoundException($"History for customer {query.CustomerId.Value} was not found.");
-
         return Task.FromResult<IList<CustomerEventHistory>>(customerHistory.ToList());
     }
 }
