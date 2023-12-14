@@ -5,14 +5,14 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { faList } from '@fortawesome/free-solid-svg-icons';
-import { orderStatusCodes } from 'src/app/modules/ecommerce/constants/appConstants';
-import { AuthService } from 'src/app/core/services/auth.service';
-import { SignalrService } from 'src/app/core/services/signalr.service';
+import { AuthService } from '@core/services/auth.service';
+import { SignalrService } from '@core/services/signalr.service';
+import { StoredEventService } from '@shared/services/stored-event.service';
 import { OrdersService } from '../../services/orders.service';
 import { Order } from '../../models/Order';
-import { StoredEventService } from 'src/app/shared/services/stored-event.service';
 import { firstValueFrom } from 'rxjs';
-import { LoaderService } from 'src/app/core/services/loader.service';
+import { ORDER_STATUS_CODES } from '@ecommerce/constants/appConstants';
+import { LoaderService } from '@core/services/loader.service';
 
 @Component({
   selector: 'app-orders',
@@ -91,15 +91,15 @@ export class OrdersComponent implements OnInit {
 
   getStatusCssClass(statusCode: number): string {
     switch (statusCode) {
-      case orderStatusCodes.placed:
+      case ORDER_STATUS_CODES.placed:
         return 'placed';
-      case orderStatusCodes.paid:
+      case ORDER_STATUS_CODES.paid:
         return 'paid';
-      case orderStatusCodes.shipped:
+      case ORDER_STATUS_CODES.shipped:
         return 'shipped';
-      case orderStatusCodes.canceled:
+      case ORDER_STATUS_CODES.canceled:
         return 'canceled';
-      case orderStatusCodes.completed:
+      case ORDER_STATUS_CODES.completed:
         return 'completed';
       default:
         return '';

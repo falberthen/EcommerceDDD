@@ -7,8 +7,8 @@ import { CustomerDetailsComponent } from './components/customer-details/customer
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { ProductSelectionComponent } from './components/product-selection/product-selection.component';
 import { CartComponent } from './components/cart/cart.component';
-import { SharedModule } from 'src/app/shared/shared.module';
-import { SortPipe } from 'src/app/core/pipes/sort.pipe';
+import { SharedModule } from '@shared/shared.module';
+import { SortPipe } from '@core/pipes/sort.pipe';
 
 @NgModule({
   declarations: [

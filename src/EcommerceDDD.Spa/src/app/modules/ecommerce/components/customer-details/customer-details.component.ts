@@ -1,16 +1,16 @@
 import { firstValueFrom } from 'rxjs';
 import { faList } from '@fortawesome/free-solid-svg-icons';
-import { LoaderService } from 'src/app/core/services/loader.service';
-import { LocalStorageService } from 'src/app/core/services/local-storage.service';
-import { NotificationService } from 'src/app/core/services/notification.service';
+import { LoaderService } from '@core/services/loader.service';
+import { LocalStorageService } from '@core/services/local-storage.service';
+import { NotificationService } from '@core/services/notification.service';
 import { Customer } from '../../models/Customer';
 import { UpdateCustomerRequest } from '../../models/requests/UpdateCustomerRequest';
 import { CustomersService } from '../../services/customers.service';
-import { StoredEventService } from 'src/app/shared/services/stored-event.service';
+import { StoredEventService } from '@shared/services/stored-event.service';
 import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { appConstants } from '../../constants/appConstants';
-import { AuthService } from 'src/app/core/services/auth.service';
+import { LOCAL_STORAGE_ENTRIES } from '@ecommerce/constants/appConstants';
+import { AuthService } from '@core/services/auth.service';
 
 @Component({
   selector: 'app-customer-details',
@@ -95,7 +95,7 @@ export class CustomerDetailsComponent implements OnInit {
   private async storeLoadedCustomer() {
     // storing customer in the localstorage
     this.localStorageService.setValue(
-      appConstants.storedCustomer,
+      LOCAL_STORAGE_ENTRIES.storedCustomer,
       JSON.stringify(this.customer)
     );
   }

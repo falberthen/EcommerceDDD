@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { RestService } from 'src/app/core/services/http/rest.service';
-import { environment } from 'src/environments/environment';
+import { RestService } from '@core/services/http/rest.service';
+import { environment } from '@environments/environment';
 import { OpenQuoteRequest } from '../models/requests/OpenQuoteRequest';
 import { AddQuoteItemRequest } from '../models/requests/AddQuoteItemRequest';
 import { RemoveQuoteItemRequest } from '../models/requests/RemoveQuoteItemRequest';
