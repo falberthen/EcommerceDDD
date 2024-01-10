@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.Shipments.Application.RequestingShipment;
+﻿namespace EcommerceDDD.Shipments.Application.ProcessingShipment;
 
 public class ProductAvailabilityChecker : IProductAvailabilityChecker
 {
@@ -35,3 +35,6 @@ public class ProductAvailabilityChecker : IProductAvailabilityChecker
         return true;
     }
 }
+
+public record class ProductInStockViewModel(Guid ProductId, int AmountInStock);
+public record class ProductStockAvailabilityRequest(Guid[] ProductIds);

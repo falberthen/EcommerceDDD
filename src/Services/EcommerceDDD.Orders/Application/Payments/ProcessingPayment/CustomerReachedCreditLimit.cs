@@ -1,7 +1,7 @@
-﻿namespace EcommerceDDD.Orders.Application.Payments.RequestingPayment;
+﻿namespace EcommerceDDD.Orders.Application.Payments.ProcessingPayment;
 
 public class CustomerReachedCreditLimit : IntegrationEvent
-{ 
+{
     public Guid OrderId { get; private set; }
     public DateTime CheckedAt { get; private set; }
 

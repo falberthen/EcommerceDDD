@@ -7,6 +7,7 @@ public class Shipment : AggregateRoot<ShipmentId>
     public DateTime CreatedAt { get; private set; }
     public DateTime? ShippedAt { get; private set; }
     public ShipmentStatus Status { get; private set; }
+    public DateTime? CanceledAt { get; private set; }
 
     public static Shipment Create(ShipmentData shipmentData)
     {
@@ -20,6 +21,20 @@ public class Shipment : AggregateRoot<ShipmentId>
             throw new BusinessRuleException("There are no products to ship.");
 
         return new Shipment(shipmentData);
+    }
+
+    public void Cancel(ShipmentCancellationReason shipmentCancellationReason)
+    {
+        if (Status == ShipmentStatus.Shipped)
+            throw new BusinessRuleException($"Payment cannot be canceled when '{Status}'");
+
+        var @event = ShipmentCanceled.Create(
+            Id.Value,
+            DateTime.UtcNow,
+            shipmentCancellationReason);
+
+        AppendEvent(@event);
+        Apply(@event);
     }
 
     public void RecordShipment()
@@ -48,6 +63,12 @@ public class Shipment : AggregateRoot<ShipmentId>
     {
         ShippedAt = shipped.ShippedAt;
         Status = ShipmentStatus.Shipped;
+    }
+
+    private void Apply(ShipmentCanceled canceled)
+    {
+        Status = ShipmentStatus.Canceled;
+        CanceledAt = canceled.CanceledAt;
     }
 
     private Shipment(ShipmentData shipmentData)

@@ -70,7 +70,7 @@ public class OrderEventsTests
         var order = Order.Create(orderData);
 
         // When
-        order.RecordPayment(_paymentId, totalPaid);
+        order.RecordOrderPaid(_paymentId, totalPaid);
 
         // Then
         var @event = order.GetUncommittedEvents().LastOrDefault() as OrderPaid;
@@ -96,8 +96,8 @@ public class OrderEventsTests
         var orderData = new OrderData(_quoteId, _customerId, quoteItems, currency);
 
         var order = Order.Create(orderData);
-        order.RecordPayment(_paymentId, totalPaid);
-        order.RecordShippedEvent();
+        order.RecordOrderPaid(_paymentId, totalPaid);
+        order.RecordOrderShipped();
 
         // When
         order.Complete(_shipmentId);

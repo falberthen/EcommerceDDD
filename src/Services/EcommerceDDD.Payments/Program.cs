@@ -21,7 +21,7 @@ services.AddMarten(builder.Configuration, options =>
     options.ConfigureProjections());
 
 // Outbox
-services.AddOutboxService(builder.Configuration);
+services.ConfigureDebezium(builder.Configuration);
 
 // Policies
 services.AddAuthorization(options =>

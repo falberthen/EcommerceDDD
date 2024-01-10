@@ -14,13 +14,8 @@ public class RequestShipmentHandlerTests
         };
 
         var shipmentWriteRepository = new DummyEventStoreRepository<Shipment>();
-
-        _availabilityChecker.EnsureProductsInStock(Arg.Any<IReadOnlyList<ProductItem>>())
-            .Returns(Task.FromResult(true));
-
         var requestShipment = RequestShipment.Create(orderId, productItems);
-        var requestShipmentHandler = new RequestShipmentHandler(_commandBus, 
-            _availabilityChecker, shipmentWriteRepository, _outboxMessageService);
+        var requestShipmentHandler = new RequestShipmentHandler(_commandBus, shipmentWriteRepository);
 
         // When
         await requestShipmentHandler.Handle(requestShipment, CancellationToken.None);
@@ -35,7 +30,5 @@ public class RequestShipmentHandlerTests
         shipment.Status.Should().Be(ShipmentStatus.Pending);
     }
 
-    private ICommandBus _commandBus = Substitute.For<ICommandBus>();
-    private IOutboxMessageService _outboxMessageService = Substitute.For<IOutboxMessageService>();
-    private IProductAvailabilityChecker _availabilityChecker = Substitute.For<IProductAvailabilityChecker>();
+    private ICommandBus _commandBus = Substitute.For<ICommandBus>();    
 }

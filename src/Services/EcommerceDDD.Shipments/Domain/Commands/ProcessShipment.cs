@@ -1,18 +1,18 @@
 ﻿namespace EcommerceDDD.Shipments.Domain.Commands;
 
-public record class ShipPackage : ICommand
+public record class ProcessShipment : ICommand
 {
     public ShipmentId ShipmentId { get; private set; }
 
-    public static ShipPackage Create(ShipmentId shipmentId)
+    public static ProcessShipment Create(ShipmentId shipmentId)
     {
         if (shipmentId is null)
             throw new ArgumentNullException(nameof(shipmentId));
         
-        return new ShipPackage(shipmentId);
+        return new ProcessShipment(shipmentId);
     }
 
-    private ShipPackage(ShipmentId shipmentId)
+    private ProcessShipment(ShipmentId shipmentId)
     {
         ShipmentId = shipmentId;
     }

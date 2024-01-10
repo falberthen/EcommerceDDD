@@ -27,8 +27,8 @@ public class CompleteOrderHandlerTests
         var totalPaid = Money.Of(quoteItems.Sum(p => p.UnitPrice.Amount), currency.Code);
         var orderData = new OrderData(quoteId, customerId, quoteItems, currency);
         var order = Order.Create(orderData);
-        order.RecordPayment(paymentId, totalPaid);
-        order.RecordShippedEvent();
+        order.RecordOrderPaid(paymentId, totalPaid);
+        order.RecordOrderShipped();
 
         var orderWriteRepository = new DummyEventStoreRepository<Order>();
         await orderWriteRepository

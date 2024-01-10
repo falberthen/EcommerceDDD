@@ -1,4 +1,6 @@
-﻿namespace EcommerceDDD.Orders.Application;
+﻿using EcommerceDDD.Orders.Application.Shipments.ProcessingShipment;
+
+namespace EcommerceDDD.Orders.Application;
 
 /// <summary>
 /// Handles compensation events for OrderSaga
@@ -6,8 +8,9 @@
 public class OrderSagaCompensation :
     IEventHandler<PaymentFailed>,
     IEventHandler<CustomerReachedCreditLimit>,
+    IEventHandler<ShipmentFailed>,
     IEventHandler<ProductWasOutOfStock>,
-    IEventHandler<OrderCanceled>
+    IEventHandler<OrderCanceled>    
 {
     private readonly ICommandBus _commandBus;
 
@@ -18,6 +21,7 @@ public class OrderSagaCompensation :
 
     public Task Handle(PaymentFailed @event, CancellationToken cancellationToken)
     {
+        // Payment failed due to issues
         var command = CancelOrder.Create(
             OrderId.Of(@event.OrderId),
             OrderCancellationReason.PaymentFailed);
@@ -27,6 +31,7 @@ public class OrderSagaCompensation :
 
     public async Task Handle(CustomerReachedCreditLimit @event, CancellationToken cancellationToken)
     {
+        // Payment failed due to credit limit
         var command = CancelOrder.Create(
             OrderId.Of(@event.OrderId),
             OrderCancellationReason.CustomerReachedCreditLimit);
@@ -34,8 +39,19 @@ public class OrderSagaCompensation :
         await _commandBus.Send(command);
     }
 
+    public Task Handle(ShipmentFailed @event, CancellationToken cancellationToken)
+    {
+        // Shipment failed due to issues
+        var command = CancelOrder.Create(
+            OrderId.Of(@event.OrderId),
+            OrderCancellationReason.ShipmentFailed);
+
+        return _commandBus.Send(command);
+    }
+
     public async Task Handle(ProductWasOutOfStock @event, CancellationToken cancellationToken)
     {
+        // Product was out of stock when shipping 
         var command = CancelOrder.Create(
             OrderId.Of(@event.OrderId),
             OrderCancellationReason.ProductWasOutOfStock);
@@ -45,7 +61,7 @@ public class OrderSagaCompensation :
 
     public async Task Handle(OrderCanceled @event, CancellationToken cancellationToken)
     {
-        if (@event.PaymentId.HasValue) // if order was paid but canceled
+        if (@event.PaymentId.HasValue) // if order was paid but canceled by user
         {
             var command = RequestCancelPayment.Create(
                 PaymentId.Of(@event.PaymentId!.Value), 

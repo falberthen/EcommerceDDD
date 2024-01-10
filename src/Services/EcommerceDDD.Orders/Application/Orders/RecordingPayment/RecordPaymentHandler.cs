@@ -2,16 +2,13 @@
 
 public class RecordPaymentHandler : ICommandHandler<RecordPayment>
 {
-    private readonly IIntegrationHttpService _integrationHttpService;
     private readonly IOrderStatusBroadcaster _orderStatusBroadcaster;
     private readonly IEventStoreRepository<Order> _orderWriteRepository;
 
     public RecordPaymentHandler(
-        IIntegrationHttpService integrationHttpService,
         IOrderStatusBroadcaster orderStatusBroadcaster,
         IEventStoreRepository<Order> orderWriteRepository)
     {
-        _integrationHttpService = integrationHttpService;
         _orderStatusBroadcaster = orderStatusBroadcaster;
         _orderWriteRepository = orderWriteRepository;
     }
@@ -23,7 +20,7 @@ public class RecordPaymentHandler : ICommandHandler<RecordPayment>
             ?? throw new RecordNotFoundException($"Failed to find the order {command.OrderId}.");
 
         // Recording the payment
-        order.RecordPayment(command.PaymentId, command.TotalPaid);
+        order.RecordOrderPaid(command.PaymentId, command.TotalPaid);
         await _orderWriteRepository
             .AppendEventsAsync(order);
 
