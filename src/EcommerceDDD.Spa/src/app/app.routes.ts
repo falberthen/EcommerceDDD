@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './modules/ecommerce/components/home/home.component';
-import { LoginComponent } from './modules/authentication/components/login/login.component';
-import { AuthGuard } from './core/guards/auth.guard';
-import { CustomerAccountComponent } from './modules/authentication/components/customer-account/customer-account.component';
-import { ProductSelectionComponent } from './modules/ecommerce/components/product-selection/product-selection.component';
-import { OrdersComponent } from './modules/ecommerce/components/orders/orders.component';
-import { CustomerDetailsComponent } from './modules/ecommerce/components/customer-details/customer-details.component';
+import { HomeComponent } from '@ecommerce/components/home/home.component';
+import { LoginComponent } from '@authentication/components/login/login.component';
+import { AuthGuard } from '@core/guards/auth.guard';
+import { CustomerAccountComponent } from '@authentication/components/customer-account/customer-account.component';
+import { ProductSelectionComponent } from '@ecommerce/components/product-selection/product-selection.component';
+import { OrdersComponent } from '@ecommerce/components/orders/orders.component';
+import { CustomerDetailsComponent } from '@ecommerce/components/customer-details/customer-details.component';
 
 export const APP_ROUTES: Routes = [
   {

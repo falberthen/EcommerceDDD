@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { RestService } from 'src/app/core/services/http/rest.service';
-import { environment } from 'src/environments/environment';
+import { RestService } from '@core/services/http/rest.service';
+import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 import { ServiceResponse } from './ServiceResponse';
 

@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NotificationService } from 'src/app/core/services/notification.service';
-import { LoaderService } from 'src/app/core/services/loader.service';
-import { CustomersService } from 'src/app/modules/ecommerce/services/customers.service';
-import { RegisterCustomerRequest } from 'src/app/modules/ecommerce/models/requests/RegisterCustomerRequest';
+import { NotificationService } from '@core/services/notification.service';
+import { LoaderService } from '@core/services/loader.service';
+import { CustomersService } from '@ecommerce/services/customers.service';
+import { RegisterCustomerRequest } from '@ecommerce/models/requests/RegisterCustomerRequest';
 
 @Component({
   selector: 'app-customer-account',

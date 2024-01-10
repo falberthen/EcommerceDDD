@@ -4,16 +4,16 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
-import { CoreModule } from './core/core.module';
-import { EcommerceModule } from './modules/ecommerce/ecommerce.module';
+import { CoreModule } from '@core/core.module';
+import { EcommerceModule } from '@ecommerce/ecommerce.module';
 import { SharedModule } from './shared/shared.module';
-import { AuthenticationModule } from './modules/authentication/authentication.module';
+import { AuthenticationModule } from '@authentication/authentication.module';
 import { APP_ROUTES } from './app.routes';
-import { AuthInterceptor } from './core/interceptors/auth.interceptor';
-import { ServerErrorInterceptor } from './core/interceptors/server-error.interceptor';
+import { AuthInterceptor } from '@core/interceptors/auth.interceptor';
+import { ServerErrorInterceptor } from '@core/interceptors/server-error.interceptor';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { LoaderInterceptor } from './core/interceptors/loader.interceptor';
-import { NavMenuComponent } from './shared/components/nav-menu/nav-menu.component';
+import { LoaderInterceptor } from '@core/interceptors/loader.interceptor';
+import { NavMenuComponent } from '@shared/components/nav-menu/nav-menu.component';
 
 @NgModule({
   declarations: [AppComponent, NavMenuComponent],
