@@ -1,5 +1,4 @@
 global using Marten;
-global using System.Net;
 global using Newtonsoft.Json;
 global using EcommerceDDD.Core.EventBus;
 global using Marten.Events.Aggregation;
@@ -23,7 +22,6 @@ global using EcommerceDDD.Core.Infrastructure.Kafka;
 global using EcommerceDDD.Core.Infrastructure.Outbox;
 global using EcommerceDDD.Core.Infrastructure.Integration;
 global using EcommerceDDD.Shipments.API.Controllers.Requests;
-global using EcommerceDDD.Core.Infrastructure.Outbox.Services;
 global using EcommerceDDD.Shipments.Infrastructure.Projections;
 global using EcommerceDDD.Shipments.Application.RequestingShipment;
 

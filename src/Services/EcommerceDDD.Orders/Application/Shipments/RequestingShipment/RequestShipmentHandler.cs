@@ -38,8 +38,8 @@ public class RequestShipmentHandler : ICommandHandler<RequestShipment>
         if (response is null || !response!.Success)
             throw new ApplicationLogicException("An error occurred requesting shipping order.");
 
-        // Recording shipped event
-        order.RecordShippedEvent();
+        // Recording shipped is shipped
+        order.RecordOrderShipped();
         await _orderWriteRepository
             .AppendEventsAsync(order);
 

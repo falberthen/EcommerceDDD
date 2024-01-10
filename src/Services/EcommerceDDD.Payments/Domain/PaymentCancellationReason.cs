@@ -2,7 +2,7 @@
 
 public enum PaymentCancellationReason
 {
+    ProcessmentError = 0,
     OrderCanceled = 1,
-    CustomerReachedCreditLimit = 2,
-    ProcessmentError = 3
+    CustomerReachedCreditLimit = 2
 }

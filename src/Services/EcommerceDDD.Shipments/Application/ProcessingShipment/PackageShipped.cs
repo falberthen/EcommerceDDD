@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.Shipments.Application.ShippingPackage;
+﻿namespace EcommerceDDD.Shipments.Application.ProcessingShipment;
 
 public class PackageShipped : IntegrationEvent
 {
@@ -7,8 +7,8 @@ public class PackageShipped : IntegrationEvent
     public DateTime ShippedAt { get; private set; }
 
     public PackageShipped(
-        Guid shipmentId, 
-        Guid orderId, 
+        Guid shipmentId,
+        Guid orderId,
         DateTime shippedAt)
     {
         ShipmentId = shipmentId;

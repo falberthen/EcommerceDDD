@@ -1,4 +1,6 @@
-﻿namespace EcommerceDDD.Orders.Application;
+﻿using EcommerceDDD.Orders.Application.Shipments.ProcessingShipment;
+
+namespace EcommerceDDD.Orders.Application;
 
 public class OrderSaga :
     IEventHandler<OrderPlaced>,

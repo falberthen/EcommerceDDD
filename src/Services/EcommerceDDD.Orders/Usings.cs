@@ -29,5 +29,4 @@ global using EcommerceDDD.Orders.Application.GettingOrderEventHistory;
 global using EcommerceDDD.Orders.Application.Payments.CancelingPayment;
 global using EcommerceDDD.Orders.Application.Payments.RequestingPayment;
 global using EcommerceDDD.Orders.Application.Shipments.RequestingShipment;
-global using EcommerceDDD.Orders.Application.Shipments.ShippingPackage;
 global using EcommerceDDD.Orders.Application.Payments.ProcessingPayment;

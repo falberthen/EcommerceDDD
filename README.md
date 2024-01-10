@@ -64,16 +64,16 @@ A lightweight Angular-based `SPA` providing a functional and user-friendly UI.
     <ul>
       <li>.NET 8</li>
       <li>Ocelot 22.0.1</li>
-      <li>Marten 6.4.0</li>
+      <li>Marten 6.4.1</li>
       <li>Entity Framework Core 8.0.0</li>
       <li>Postgres for Entity Framework Core 8.0.0</li>
       <li>ASP.NET Core Identity 8.0.0</li>
       <li>ASP.NET Core Authentication JwtBearer 8.0.0</li>
-      <li>Duende IdentityServer 6.3.6</li>
+      <li>Duende IdentityServer 6.3.8</li>
       <li>MediatR 12.2.0</li>
-      <li>Polly 8.2.0</li>
-      <li>Fluent Assertions 6.12.0</li>      
-      <li>XUnit 2.6.3</li>
+      <li>Polly 8.2.1</li>
+      <li>Fluent Assertions 6.12.0</li>
+      <li>XUnit 2.6.5</li>
       <li>NSubstitute 5.1.0</li>
       <li>Swagger 6.5.0</li>
       <li>Confluent Kafka 2.3.0</li>

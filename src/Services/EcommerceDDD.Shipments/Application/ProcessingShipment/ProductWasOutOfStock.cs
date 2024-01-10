@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.Orders.Application.Shipments.RequestingShipment;
+﻿namespace EcommerceDDD.Shipments.Application.ProcessingShipment;
 
 public class ProductWasOutOfStock : IntegrationEvent
 {

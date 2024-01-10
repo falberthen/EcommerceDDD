@@ -36,7 +36,7 @@ public class Order : AggregateRoot<OrderId>
         return new Order(orderData);
     }
 
-    public void RecordPayment(PaymentId paymentId, Money totalPaid)
+    public void RecordOrderPaid(PaymentId paymentId, Money totalPaid)
     {
         var productsIds = OrderLines
             .Select(ol => ol.ProductItem.ProductId.Value).ToList();
@@ -52,7 +52,7 @@ public class Order : AggregateRoot<OrderId>
         Apply(@event);
     }
 
-    public void RecordShippedEvent()
+    public void RecordOrderShipped()
     {
         if (Status != OrderStatus.Paid)
             throw new BusinessRuleException("The order must be paid before shipped.");

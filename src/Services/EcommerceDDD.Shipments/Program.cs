@@ -1,3 +1,5 @@
+using EcommerceDDD.Shipments.Application.ProcessingShipment;
+
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
@@ -22,7 +24,7 @@ services.AddMarten(builder.Configuration, options =>
     options.ConfigureProjections());
 
 // Outbox
-services.AddOutboxService(builder.Configuration);
+services.ConfigureDebezium(builder.Configuration);
 
 // Policies
 services.AddAuthorization(options =>

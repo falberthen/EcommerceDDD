@@ -11,6 +11,5 @@ global using EcommerceDDD.Core.CQRS.QueryHandling;
 global using EcommerceDDD.Payments.API.Controllers;
 global using EcommerceDDD.Payments.API.Controllers.Requests;
 global using EcommerceDDD.Payments.Application.ProcessingPayment;
-global using EcommerceDDD.Core.Infrastructure.Outbox.Services;
 global using EcommerceDDD.Payments.Application.RequestingPayment;
 global using EcommerceDDD.Payments.Application.CancelingPayment;

@@ -10,6 +10,4 @@ global using EcommerceDDD.Shipments.Domain.Events;
 global using EcommerceDDD.Shipments.Domain.Commands;
 global using EcommerceDDD.Core.CQRS.CommandHandling;
 global using EcommerceDDD.Shipments.API.Controllers.Requests;
-global using EcommerceDDD.Core.Infrastructure.Outbox.Services;
 global using EcommerceDDD.Shipments.Application.RequestingShipment;
-global using EcommerceDDD.Shipments.Application.ShippingPackage;

@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.Orders.Application.Shipments.ShippingPackage;
+﻿namespace EcommerceDDD.Orders.Application.Shipments.ProcessingShipment;
 
 public class PackageShipped : IntegrationEvent
 {

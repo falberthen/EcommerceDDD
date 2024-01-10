@@ -20,8 +20,7 @@ public class ProcessPaymentHandlerTests
 
         // When
         var processPayment = ProcessPayment.Create(payment.Id);
-        var processPaymentHandler = new ProcessPaymentHandler(_customerCreditChecker, 
-            paymentWriteRepository, _outboxMessageService);
+        var processPaymentHandler = new ProcessPaymentHandler(_customerCreditChecker, paymentWriteRepository);
         await processPaymentHandler.Handle(processPayment, CancellationToken.None);
 
         // Then
@@ -52,8 +51,7 @@ public class ProcessPaymentHandlerTests
            .Returns(Task.FromResult(false));
 
         var processPayment = ProcessPayment.Create(payment.Id);
-        var processPaymentHandler = new ProcessPaymentHandler(_customerCreditChecker, 
-            paymentWriteRepository, _outboxMessageService);
+        var processPaymentHandler = new ProcessPaymentHandler(_customerCreditChecker, paymentWriteRepository);
 
         // When
         await processPaymentHandler.Handle(processPayment, CancellationToken.None);
@@ -69,6 +67,5 @@ public class ProcessPaymentHandlerTests
         payment.Status.Should().Be(PaymentStatus.Canceled);
     }
 
-    private IOutboxMessageService _outboxMessageService = Substitute.For<IOutboxMessageService>();
     private ICustomerCreditChecker _customerCreditChecker = Substitute.For<ICustomerCreditChecker>();
 }

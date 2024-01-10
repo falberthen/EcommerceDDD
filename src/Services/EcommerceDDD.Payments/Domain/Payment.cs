@@ -42,7 +42,7 @@ public class Payment : AggregateRoot<PaymentId>
         Apply(@event);
     }
 
-    public void Cancel(PaymentCancellationReason PaymentCancellationReason)
+    public void Cancel(PaymentCancellationReason paymentCancellationReason)
     {
         if (Status == PaymentStatus.Canceled)
             throw new BusinessRuleException($"Payment cannot be canceled when '{Status}'");
@@ -50,7 +50,7 @@ public class Payment : AggregateRoot<PaymentId>
         var @event = PaymentCanceled.Create(
             Id.Value,            
             DateTime.UtcNow,
-            PaymentCancellationReason);
+            paymentCancellationReason);
 
         AppendEvent(@event);
         Apply(@event);

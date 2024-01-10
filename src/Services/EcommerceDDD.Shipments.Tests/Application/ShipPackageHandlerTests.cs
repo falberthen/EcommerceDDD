@@ -1,3 +1,5 @@
+using EcommerceDDD.Shipments.Application.ProcessingShipment;
+
 namespace EcommerceDDD.Shipments.Tests.Application;
 
 public class ShipPackageHandlerTests
@@ -19,14 +21,13 @@ public class ShipPackageHandlerTests
             .Returns(Task.FromResult(true));
 
         var requestShipment = RequestShipment.Create(orderId, productItems);
-        var requestShipmentHandler = new RequestShipmentHandler(_commandBus, _availabilityChecker,
-            shipmentWriteRepository, _outboxMessageService);
+        var requestShipmentHandler = new RequestShipmentHandler(_commandBus, shipmentWriteRepository);
         await requestShipmentHandler.Handle(requestShipment, CancellationToken.None);
         var shipment = shipmentWriteRepository.AggregateStream.First().Aggregate;
         Assert.NotNull(shipment);
 
-        var shipPackage = ShipPackage.Create(shipment.Id);
-        var shipPackageHandler = new ShipPackageHandler(shipmentWriteRepository, _outboxMessageService);
+        var shipPackage = ProcessShipment.Create(shipment.Id);
+        var shipPackageHandler = new ProcessShipmentHandler(_availabilityChecker, shipmentWriteRepository);
 
         // When
         await shipPackageHandler.Handle(shipPackage, CancellationToken.None);
@@ -41,7 +42,6 @@ public class ShipPackageHandlerTests
         shipment.Status.Should().Be(ShipmentStatus.Shipped);
     }
 
-    private ICommandBus _commandBus = Substitute.For<ICommandBus>();
-    private IOutboxMessageService _outboxMessageService = Substitute.For<IOutboxMessageService>();
+    private ICommandBus _commandBus = Substitute.For<ICommandBus>();    
     private IProductAvailabilityChecker _availabilityChecker = Substitute.For<IProductAvailabilityChecker>();
 }

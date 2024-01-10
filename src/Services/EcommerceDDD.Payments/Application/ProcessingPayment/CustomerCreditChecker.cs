@@ -26,3 +26,5 @@ public class CustomerCreditChecker : ICustomerCreditChecker
         return totalAmount.Amount < customerCreditLimit.CreditLimit;
     }
 }
+
+public record class CreditLimitModel(Guid CustomerId, decimal CreditLimit);

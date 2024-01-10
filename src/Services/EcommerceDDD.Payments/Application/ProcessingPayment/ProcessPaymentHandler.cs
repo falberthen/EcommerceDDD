@@ -4,16 +4,13 @@ public class ProcessPaymentHandler : ICommandHandler<ProcessPayment>
 {
     private readonly ICustomerCreditChecker _creditChecker;
     private readonly IEventStoreRepository<Payment> _paymentWriteRepository;
-    private readonly IOutboxMessageService _outboxMessageService;
 
     public ProcessPaymentHandler(
         ICustomerCreditChecker creditChecker,
-        IEventStoreRepository<Payment> paymentWriteRepository,
-        IOutboxMessageService outboxMessageService)
+        IEventStoreRepository<Payment> paymentWriteRepository)
     {
         _creditChecker = creditChecker;
-        _paymentWriteRepository = paymentWriteRepository;
-        _outboxMessageService = outboxMessageService;
+        _paymentWriteRepository = paymentWriteRepository;        
     }
 
     public async Task Handle(ProcessPayment command, CancellationToken cancellationToken)
@@ -29,38 +26,38 @@ public class ProcessPaymentHandler : ICommandHandler<ProcessPayment>
 
             // Completing payment
             payment.Complete();
-            
-            await _outboxMessageService
-                .SaveAsOutboxMessageAsync(new PaymentCompleted(
+
+            // Persisting events
+            _paymentWriteRepository.AppendIntegrationEvent(
+                new PaymentCompleted(
                     payment.Id.Value,
                     payment.OrderId.Value,
                     payment.TotalAmount.Amount,
                     payment.TotalAmount.Currency.Code,
                     payment.CompletedAt!.Value));
+            await _paymentWriteRepository.AppendEventsAsync(payment);
         }
-        catch (BusinessRuleException)
+        catch (BusinessRuleException) // Customer reached credit limit
         {
             payment.Cancel(PaymentCancellationReason.CustomerReachedCreditLimit);
-            await _outboxMessageService
-                .SaveAsOutboxMessageAsync(new CustomerReachedCreditLimit(
-                    payment.OrderId.Value));
-        }
-        catch (Exception)
-        {
-            // unexpected issue
-            payment.Cancel(PaymentCancellationReason.ProcessmentError);
-            await _outboxMessageService
-                .SaveAsOutboxMessageAsync(
-                    new PaymentFailed(
-                        payment.Id.Value,
-                        payment.OrderId.Value,
-                        payment.TotalAmount.Amount,
-                        payment.TotalAmount.Currency.Code));
-        }
 
-        await _paymentWriteRepository
-            .AppendEventsAsync(payment);
+            // Persisting events
+            _paymentWriteRepository.AppendIntegrationEvent(
+                new CustomerReachedCreditLimit(payment.OrderId.Value));
+            await _paymentWriteRepository.AppendEventsAsync(payment);
+        }
+        catch (Exception) // Unexpected issue
+        {
+            payment.Cancel(PaymentCancellationReason.ProcessmentError);
+
+            // Persisting events
+            _paymentWriteRepository.AppendIntegrationEvent(
+                new PaymentFailed(
+                    payment.Id.Value,
+                    payment.OrderId.Value,
+                    payment.TotalAmount.Amount,
+                    payment.TotalAmount.Currency.Code));
+            await _paymentWriteRepository.AppendEventsAsync(payment);
+        }
     }
 }
-
-public record class CreditLimitModel(Guid CustomerId, decimal CreditLimit);

@@ -32,10 +32,7 @@ public class RecordPaymentToOrderHandlerTests
             .AppendEventsAsync(order, CancellationToken.None);
 
         var recordPaymentToOrder = RecordPayment.Create(order.Id, paymentId, totalPaid);
-        var recordPaymentToOrderHandler = new RecordPaymentHandler(
-            _integrationHttpService,
-            _orderStatusBroadcaster,
-            orderWriteRepository);
+        var recordPaymentToOrderHandler = new RecordPaymentHandler(_orderStatusBroadcaster, orderWriteRepository);
 
         // When
         await recordPaymentToOrderHandler.Handle(recordPaymentToOrder, CancellationToken.None);
@@ -48,6 +45,5 @@ public class RecordPaymentToOrderHandlerTests
         paidOrder.Status.Should().Be(OrderStatus.Paid);
     }
 
-    private IIntegrationHttpService _integrationHttpService = Substitute.For<IIntegrationHttpService>();
     private IOrderStatusBroadcaster _orderStatusBroadcaster = Substitute.For<IOrderStatusBroadcaster>();
 }
