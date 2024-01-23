@@ -1,11 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationDialogComponent } from '@shared/components/confirmation-dialog/confirmation-dialog.component';
 
 @Injectable()
 export class ConfirmationDialogService {
-  constructor(private modalService: NgbModal) {}
 
+  private modalService = inject(NgbModal); 
+  
   public confirm(
     title: string,
     message: string,

@@ -7,8 +7,10 @@ import { StoredEventData } from '@ecommerce/models/StoredEventData';
   styleUrls: ['./stored-events-viewer.component.scss'],
 })
 export class StoredEventsViewerComponent {
-  @Output('destroyComponent') destroyComponent: EventEmitter<any> =
+   //TODO: This can rather be reworked for simplification and less coupling
+  @Output('destroyComponent') destroyComponent: EventEmitter<void> =
     new EventEmitter();
+  // TODO: This should be a simple @Input for less coupling
   storedEventData!: StoredEventData[];
 
   close() {

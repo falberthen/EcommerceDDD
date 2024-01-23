@@ -19,7 +19,7 @@
           class="navbar-collapse collapse"
           id="navbar"
           *ngIf="isLoggedIn"
-          [ngClass]="{ show: isExpanded }">
+          [class.show]="isExpanded">
           <ul class="navbar-nav mx-auto">
             <li class="nav-item">
               <div class="currency-container">
@@ -72,13 +72,11 @@
               </a>
             </li>
             <li
-              class="nav-item"
-              [routerLinkActive]="['link-active']"
-              style="margin-left: 30px">
+              class="nav-item logout" 
+              [routerLinkActive]="['link-active']">
               <a
                 class="nav-link text-primary underlineHover"
-                (click)="logout()"
-                style="cursor: pointer">
+                (click)="logout()">
                 <fa-icon [icon]="faSignOutAlt"></fa-icon>
                 Logout {{ loadStoredUser }}
               </a>

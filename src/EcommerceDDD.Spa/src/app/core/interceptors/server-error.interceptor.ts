@@ -1,4 +1,4 @@
-import { Injectable, Injector } from '@angular/core';
+import { Injectable, Injector, inject } from '@angular/core';
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -6,8 +6,9 @@ import { NotificationService } from '../services/notification.service';
 
 @Injectable()
 export class ServerErrorInterceptor implements HttpInterceptor {
-  constructor(private injector: Injector) {}
 
+  private readonly  injector = inject(Injector);
+  
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(
       catchError((error) => {

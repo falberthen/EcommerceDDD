@@ -8,10 +8,9 @@ import { Quote } from '@ecommerce/models/Quote';
 import {
   ChangeDetectorRef,
   Component,
+  inject,
   OnDestroy,
   OnInit,
-  ViewChild,
-  ViewContainerRef,
 } from '@angular/core';
 import {
   faList,
@@ -28,8 +27,6 @@ import { LOCAL_STORAGE_ENTRIES } from '@ecommerce/constants/appConstants';
   styleUrls: ['./nav-menu.component.scss'],
 })
 export class NavMenuComponent implements OnInit, OnDestroy {
-  @ViewChild('storedEventViewerContainer', { read: ViewContainerRef })
-  storedEventViewerContainer!: ViewContainerRef;
 
   faList = faList;
   faShoppingBasket = faShoppingBasket;
@@ -42,15 +39,13 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   subscription!: Subscription;
   customer!: Customer;
 
-  constructor(
-    private cdr: ChangeDetectorRef,
-    private authService: AuthService,
-    private customersService: CustomersService,
-    private tokenStorageService: TokenStorageService,
-    private localStorageService: LocalStorageService
-  ) {}
+  private cdr = inject(ChangeDetectorRef);
+  private authService  = inject(AuthService);
+  private customersService = inject(CustomersService);
+  private tokenStorageService = inject(TokenStorageService);
+  private localStorageService = inject(LocalStorageService);
 
-  async ngOnInit() {
+  async ngOnInit(): Promise<void>{
     this.subscription = this.authService.isLoggedAnnounced$.subscribe(
       async (response) => {
         this.isLoggedIn = response;
@@ -61,12 +56,12 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     );
   }
 
-  async ngAfterViewInit() {
+  async ngAfterViewInit(): Promise<void>{
     this.isLoggedIn = !!this.tokenStorageService.getToken();
-    this.cdr.detectChanges();
+    this.cdr.detectChanges(); 
   }
 
-  get quoteItems() {
+  get quoteItems(): number{
     let quoteStr = this.localStorageService.getValueByKey('openQuote');
     if (quoteStr && quoteStr != 'undefined') {
       var quote = JSON.parse(quoteStr) as Quote;
@@ -80,19 +75,19 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     return this.authService.currentCustomer?.email;
   }
 
-  logout() {
+  logout(): void{
     this.localStorageService.clearAllKeys();
     this.authService.logout();
     this.isLoggedIn = !!this.tokenStorageService.getToken();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void{
     // prevent memory leak when component destroyed
     this.subscription.unsubscribe();
     this.isModalOpen = false;
   }
 
-  private async storeLoadedCustomer() {
+  private async storeLoadedCustomer(): Promise <void>{
     // storing customer in the localstorage
     this.localStorageService.setValue(
       LOCAL_STORAGE_ENTRIES.storedCustomer,
@@ -100,7 +95,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     );
   }
 
-  private async loadCustomerDetails() {
+  private async loadCustomerDetails(): Promise <void>{
     await firstValueFrom(this.customersService.loadCustomerDetails()).then(
       (result) => {
         if (result.success) {

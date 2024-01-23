@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from '@ecommerce/components/home/home.component';
 import { LoginComponent } from '@authentication/components/login/login.component';
-import { AuthGuard } from '@core/guards/auth.guard';
+import { canActivateGuard } from '@core/guards/auth.guard';
 import { CustomerAccountComponent } from '@authentication/components/customer-account/customer-account.component';
 import { ProductSelectionComponent } from '@ecommerce/components/product-selection/product-selection.component';
 import { OrdersComponent } from '@ecommerce/components/orders/orders.component';
@@ -19,37 +19,37 @@ export const APP_ROUTES: Routes = [
   {
     path: 'home',
     component: HomeComponent,
-    canActivate: [AuthGuard],
+    canActivate: [canActivateGuard],
     pathMatch: 'full',
   },
   {
     path: 'products',
     component: ProductSelectionComponent,
-    canActivate: [AuthGuard],
+    canActivate: [canActivateGuard],
     pathMatch: 'full',
   },
   {
     path: 'products/:quoteId',
     component: ProductSelectionComponent,
-    canActivate: [AuthGuard],
+    canActivate: [canActivateGuard],
     pathMatch: 'full',
   },
   {
     path: 'orders',
     component: OrdersComponent,
-    canActivate: [AuthGuard],
+    canActivate: [canActivateGuard],
     pathMatch: 'full',
   },
   {
     path: 'customer-details',
     component: CustomerDetailsComponent,
-    canActivate: [AuthGuard],
+    canActivate: [canActivateGuard],
     pathMatch: 'full',
   },
   {
     path: '**',
     component: LoginComponent,
-    canActivate: [AuthGuard],
+    canActivate: [canActivateGuard],
     pathMatch: 'full',
   },
 ];

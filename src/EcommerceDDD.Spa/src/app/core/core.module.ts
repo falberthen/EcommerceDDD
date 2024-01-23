@@ -1,7 +1,6 @@
 import { Optional, SkipSelf, NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from './services/auth.service';
-import { AuthGuard } from './guards/auth.guard';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { NotificationService } from './services/notification.service';
@@ -19,7 +18,7 @@ import { SignalrService } from './services/signalr.service';
   ],
   providers: [
     AuthService,
-    AuthGuard,
+    //TODO: maybe we should consider lazyloaded animation until needed for better perf using the new API: provideAnimationsAsync()
     BrowserAnimationsModule,
     ToastrModule,
     NotificationService,
