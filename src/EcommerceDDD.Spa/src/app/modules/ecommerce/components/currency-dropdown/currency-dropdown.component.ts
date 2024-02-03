@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { faDollarSign, faEuroSign } from '@fortawesome/free-solid-svg-icons';
 import { LOCAL_STORAGE_ENTRIES } from '@ecommerce/constants/appConstants';
 import { LocalStorageService } from '@core/services/local-storage.service';
@@ -14,12 +14,10 @@ export class CurrencyDropdownComponent implements OnInit {
   faEuroSign = faEuroSign;
   currentCurrency!: string;
 
-  constructor(
-    private localStorageService: LocalStorageService,
-    private notificationService: CurrencyNotificationService
-  ) {}
+  private localStorageService = inject(LocalStorageService);
+  private notificationService = inject(CurrencyNotificationService);
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.notificationService.currentCurrency.subscribe(
       (currencyCode) => (this.currentCurrency = currencyCode)
     );
@@ -34,12 +32,12 @@ export class CurrencyDropdownComponent implements OnInit {
       );
   }
 
-  setCurrency(currency: string) {
+  setCurrency(currency: string): void{
     this.localStorageService.setValue(LOCAL_STORAGE_ENTRIES.storedCurrency, currency);
     this.notificationService.changeCurrency(currency);
   }
 
-  getCurrentCurrency() {
+  getCurrentCurrency(): string | null {
     return this.localStorageService.getValueByKey(LOCAL_STORAGE_ENTRIES.storedCurrency);
   }
 }
