@@ -13,15 +13,15 @@ export class ConfirmationDialogComponent {
  
   activeModal = inject(NgbActiveModal);
 
-  decline() {
+  decline(): void {
     this.activeModal.close(false);
   }
 
-  accept() {
+  accept(): void {
     this.activeModal.close(true);
   }
 
-  dismiss() {
+  dismiss(): void {
     this.activeModal.dismiss();
   }
 }
