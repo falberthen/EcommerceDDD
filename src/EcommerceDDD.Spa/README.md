@@ -4,5 +4,5 @@ Using a terminal, navigate to `EcommerceDDD.Spa` and run for the following comma
 
 ```console
  $ npm install #first time only
- $ ng serve
+ $ npm run start #or ng serve 
 ```

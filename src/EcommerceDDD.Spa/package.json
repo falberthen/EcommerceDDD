@@ -2,11 +2,10 @@
   "name": "ecommerceddd-spa",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
-    "start": "nx serve",
-    "build": "nx build",
-    "watch": "nx build --watch --configuration development",
-    "test": "nx test"
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "jest --coverage"
   },
   "private": true,
   "dependencies": {
@@ -38,8 +37,6 @@
     "@angular/cli": "^17.0.6",
     "@angular/compiler-cli": "~17.0.6",
     "@fortawesome/angular-fontawesome": "^0.14.0",
-    "@nx/angular": "17.2.1",
-    "@nx/workspace": "17.2.1",
     "@schematics/angular": "^17.0.6",
     "@types/jasmine": "~4.3.1",
     "@types/lodash": "^4.14.194",
@@ -51,7 +48,6 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
-    "nx": "17.2.1",
     "typescript": "^5.2.0"
   }
 }
