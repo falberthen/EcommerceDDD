@@ -73,10 +73,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "ecommerceddd-spa:build:production"
+              "buildTarget": "ecommerceddd-spa:build:production"
             },
             "development": {
-              "browserTarget": "ecommerceddd-spa:build:development"
+              "buildTarget": "ecommerceddd-spa:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -84,25 +84,11 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ecommerceddd-spa:build"
+            "buildTarget": "ecommerceddd-spa:build"
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
-            "inlineStyleLanguage": "scss",
-            "assets": ["src/favicon.ico", "src/assets"],
-            "styles": [
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "src/assets/toastr.css",
-              "src/assets/styles.css"
-            ],
-            "scripts": []
-          }
+          "builder": "@angular-devkit/build-angular:jest"
         }
       }
     }
