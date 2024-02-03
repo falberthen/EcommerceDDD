@@ -13,7 +13,7 @@ export class StoredEventsViewerComponent {
   // TODO: This should be a simple @Input for less coupling
   storedEventData!: StoredEventData[];
 
-  close() {
+  close(): void {
     this.destroyComponent.emit();
   }
 }
