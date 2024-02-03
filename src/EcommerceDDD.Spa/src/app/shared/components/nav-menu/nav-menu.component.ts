@@ -64,7 +64,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   get quoteItems(): number{
     let quoteStr = this.localStorageService.getValueByKey('openQuote');
     if (quoteStr && quoteStr != 'undefined') {
-      var quote = JSON.parse(quoteStr) as Quote;
+      const quote = JSON.parse(quoteStr) as Quote;
       return quote.items.length;
     }
 
@@ -75,7 +75,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     return this.authService.currentCustomer?.email;
   }
 
-  logout(): void{
+  logout(): void {
     this.localStorageService.clearAllKeys();
     this.authService.logout();
     this.isLoggedIn = !!this.tokenStorageService.getToken();
@@ -99,7 +99,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     await firstValueFrom(this.customersService.loadCustomerDetails()).then(
       (result) => {
         if (result.success) {
-          var data = result.data;
+          const data = result.data;
           this.customer = new Customer(
             data.id,
             data.name,
