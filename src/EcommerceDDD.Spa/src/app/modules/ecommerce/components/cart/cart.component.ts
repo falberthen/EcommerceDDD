@@ -24,6 +24,7 @@ import {
   EventEmitter,
   ViewContainerRef,
   ViewChild,
+  inject,
 } from '@angular/core';
 
 @Component({
@@ -48,20 +49,18 @@ export class CartComponent implements OnInit {
   isModalOpen = false;
   storedEventsViewerComponentRef: any;
 
-  constructor(
-    private router: Router,
-    private authService: AuthService,
-    private quotesService: QuotesService,
-    private orderService: OrdersService,
-    private loaderService: LoaderService,
-    private localStorageService: LocalStorageService,
-    private confirmationDialogService: ConfirmationDialogService,
-    private currencyNotificationService: CurrencyNotificationService,
-    private notificationService: NotificationService,
-    private storedEventService: StoredEventService
-  ) {}
+  private router = inject(Router);
+  private authService = inject(AuthService);
+  private quotesService = inject(QuotesService);
+  private orderService = inject(OrdersService);
+  private loaderService = inject(LoaderService);
+  private localStorageService = inject(LocalStorageService);
+  private confirmationDialogService = inject(ConfirmationDialogService);
+  private currencyNotificationService = inject(CurrencyNotificationService);
+  private notificationService = inject(NotificationService);
+  private storedEventService = inject(StoredEventService);
 
-  async ngOnInit() {
+  async ngOnInit(): Promise<void> {
     const storedCurrency = this.localStorageService.getValueByKey(
       LOCAL_STORAGE_ENTRIES.storedCurrency
     );
@@ -90,7 +89,7 @@ export class CartComponent implements OnInit {
     return this.loaderService.loading$;
   }
 
-  async showQuoteStoredEvents() {
+  async showQuoteStoredEvents(): Promise<void> {
     const result = this.quotesService
       .getQuoteStoredEvents(this.quote!.quoteId);
 
@@ -104,7 +103,7 @@ export class CartComponent implements OnInit {
     });
   }
 
-  async cancelQuote() {
+  async cancelQuote(): Promise<void> {
     this.confirmationDialogService
       .confirm(
         'Please confirm',
@@ -126,7 +125,7 @@ export class CartComponent implements OnInit {
       });
   }
 
-  async confirmQuote() {
+  async confirmQuote(): Promise<void> {
     await firstValueFrom(
       this.quotesService.confirmQuote(
         this.quote!.quoteId,
@@ -170,7 +169,7 @@ export class CartComponent implements OnInit {
     );
   }
 
-  async removeItem(quoteItem: QuoteItem) {
+  async removeItem(quoteItem: QuoteItem): Promise<void> {
     this.confirmationDialogService
       .confirm('Please confirm', 'Do you confirm you want to remove this item?')
       .then(async (confirmed) => {
@@ -192,7 +191,7 @@ export class CartComponent implements OnInit {
       });
   }
 
-  async placeOrder() {
+  async placeOrder(): Promise<void> {
     this.confirmationDialogService
       .confirm('Please confirm', 'Do you confirm you want to place an order?')
       .then(async (confirmed) => {
@@ -215,8 +214,8 @@ export class CartComponent implements OnInit {
       });
   }
 
-  private setQuote(openQuote: Quote) {
-    if (openQuote == null) {
+  private setQuote(openQuote: Quote): Promise<void> | undefined {
+    if (openQuote === null) {
       this.localStorageService.clearKey(LOCAL_STORAGE_ENTRIES.storedOpenQuote);
       return;
     }
@@ -227,7 +226,7 @@ export class CartComponent implements OnInit {
     );
   }
 
-  private emitQuote(openQuote: Quote) {
+  private emitQuote(openQuote: Quote): void {
     // emiting quote object to product selection
     this.quote = openQuote;
     this.sendQuoteItemsEvent.emit(this.quote);
