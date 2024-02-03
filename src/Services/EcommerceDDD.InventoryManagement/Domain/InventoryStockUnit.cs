@@ -60,8 +60,8 @@ public class InventoryStockUnit : AggregateRoot<InventoryStockUnitId>
 
     private InventoryStockUnit(ProductId productId, int initialQuantity)
     {
-        if (initialQuantity <= 0)
-            throw new BusinessRuleException("Initial quantity must be greater than zero.");
+        if (initialQuantity < 0)
+            throw new BusinessRuleException("Initial quantity cannot be less than zero.");
         
         var @event = UnitEnteredInStock.Create(
             Guid.NewGuid(),

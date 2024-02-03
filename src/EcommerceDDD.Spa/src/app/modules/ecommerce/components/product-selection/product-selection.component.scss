@@ -34,6 +34,8 @@
         .product-price {
           font-size: 23px;
           text-align: right;
+          float: right;
+          font-weight: bold;
 
           .currency-symbol {
             font-size: 14px;
@@ -41,6 +43,22 @@
             top: 4px;
             position: relative;
           }
+        }
+        .product-stock-quantity {
+          font-size: 23px;
+          text-align: left;
+        }
+        /* Orange-ish font color for less than or equal to 10 in stock */
+        .product-stock-quantity.less-than-ten {
+          color: rgb(142, 88, 13);
+        }
+        /* Green font color for more than 10 in stock */
+        .product-stock-quantity.more-than-ten {
+          color: green;
+        }
+        /* Red font color for out of stock */
+        .product-stock-quantity.out-of-stock {
+          color: rgb(5, 5, 5);
         }
         .add-product-container {
           width: 200px;

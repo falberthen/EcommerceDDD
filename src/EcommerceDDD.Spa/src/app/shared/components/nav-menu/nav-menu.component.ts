@@ -77,7 +77,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   }
 
   get loadStoredUser() {
-    return this.authService.currentCustomer?.email;
+    return this.authService.currentCustomer?.name;
   }
 
   logout() {

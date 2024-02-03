@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { RestService } from '@core/services/http/rest.service';
 import { environment } from '@environments/environment';
-import { Observable } from 'rxjs';
 import { ServiceResponse } from './ServiceResponse';
 
 @Injectable({
@@ -16,25 +17,31 @@ export class OrdersService extends RestService {
   }
 
   public getOrders(customerId: string): Observable<ServiceResponse> {
-    return this.get(this.controllerName + '/' + customerId);
-  }
-
-  public getOrderDetails(
-    customerId: string,
-    orderId: string
-  ): Observable<ServiceResponse> {
-    return this.get(
-      this.controllerName + '/' + customerId + '/' + orderId + '/details'
+    return this.get(this.controllerName + '/' + customerId).pipe(
+      catchError((error) => {
+        console.error('Error:', error);
+        return [];
+      })
     );
   }
 
   public getOrderStoredEvents(
     aggregateId: string
   ): Observable<ServiceResponse> {
-    return this.get('orders/' + aggregateId + '/history');
+    return this.get('orders/' + aggregateId + '/history').pipe(
+      catchError((error) => {
+        console.error('Error:', error);
+        return [];
+      })
+    );
   }
 
-  public placeOrderFromQuote(quoteId: string): Observable<ServiceResponse> {
-    return this.post(this.controllerName + '/' + quoteId);
+  public placeOrder(customerId: string, quoteId: string): Observable<ServiceResponse> {
+    return this.post(this.controllerName + '/' + customerId  + '/' + quoteId).pipe(
+      catchError((error) => {
+        console.error('Error:', error);
+        return [];
+      })
+    );
   }
 }

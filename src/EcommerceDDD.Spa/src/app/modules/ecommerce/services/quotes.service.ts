@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { RestService } from '@core/services/http/rest.service';
 import { environment } from '@environments/environment';
 import { OpenQuoteRequest } from '../models/requests/OpenQuoteRequest';
 import { AddQuoteItemRequest } from '../models/requests/AddQuoteItemRequest';
 import { RemoveQuoteItemRequest } from '../models/requests/RemoveQuoteItemRequest';
-import { Observable } from 'rxjs';
 import { ServiceResponse } from './ServiceResponse';
 
 @Injectable({
@@ -19,14 +20,24 @@ export class QuotesService extends RestService {
   }
 
   public openQuote(request: OpenQuoteRequest): Observable<ServiceResponse> {
-    return this.post(this.controllerName, request);
+    return this.post(this.controllerName, request).pipe(
+      catchError((error) => {
+        console.error('Error:', error);
+        return [];
+      })
+    );
   }
 
   public addQuoteItem(
     quoteId: string,
     request: AddQuoteItemRequest
   ): Observable<ServiceResponse> {
-    return this.put(this.controllerName + '/' + quoteId + '/items', request);
+    return this.put(this.controllerName + '/' + quoteId + '/items', request).pipe(
+      catchError((error) => {
+        console.error('Error:', error);
+        return [];
+      })
+    );
   }
 
   public removeQuoteItem(
@@ -38,34 +49,44 @@ export class QuotesService extends RestService {
         request.quoteId +
         '/items/' +
         request.productId
+    ).pipe(
+      catchError((error) => {
+        console.error('Error:', error);
+        return [];
+      })
     );
   }
 
   public cancelQuote(quoteId: string): Observable<ServiceResponse> {
-    return this.delete(this.controllerName + '/' + quoteId);
-  }
-
-  public confirmQuote(
-    quoteId: string,
-    currencyCode: string
-  ): Observable<ServiceResponse> {
-    return this.put(
-      this.controllerName + '/' + quoteId + '/confirm/' + currencyCode
+    return this.delete(this.controllerName + '/' + quoteId).pipe(
+      catchError((error) => {
+        console.error('Error:', error);
+        return [];
+      })
     );
   }
 
   public getOpenQuote(
-    customerId: string,
-    currency: string
+    customerId: string
   ): Observable<ServiceResponse> {
     return this.get(
-      this.controllerName + '/' + customerId + '/quote/' + currency
+      this.controllerName + '/' + customerId + '/quote'
+    ).pipe(
+      catchError((error) => {
+        console.error('Error:', error);
+        return [];
+      })
     );
   }
 
   public getQuoteStoredEvents(
     aggregateId: string
   ): Observable<ServiceResponse> {
-    return this.get('quotes/' + aggregateId + '/history');
+    return this.get('quotes/' + aggregateId + '/history').pipe(
+      catchError((error) => {
+        console.error('Error:', error);
+        return [];
+      })
+    );
   }
 }

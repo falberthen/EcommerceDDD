@@ -60,11 +60,11 @@ public class InventoryStockUnitTests
     }
 
     [Fact]
-    public void EnterStockUnit_WithInitialQuantityEqualsZero_ShouldThrowException()
+    public void EnterStockUnit_WithInitialQuantityLessThanZero_ShouldThrowException()
     {
         // Given        
         var productId = ProductId.Of(Guid.NewGuid());
-        var initialQuantity = 0;
+        var initialQuantity = -1;
 
         // When
         Func<InventoryStockUnit> action = () =>

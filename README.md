@@ -26,25 +26,29 @@ This project is an experimental full-stack application I use to combine several 
 </a>
 
 ```
-  ├── Core
-  ├── Core.Infrastructure
-  ├── Crosscutting
-  │   ├── ApiGateway
-  │   └── IdentityServer
-  ├── Services
-  │   ├── CustomerManagement
-  │   ├── InventoryManagement
-  │   ├── OrderProcessing
-  │   ├── PaymentProcessing
-  │   ├── ProductCatalog
-  │   │   ├── API
-  │   │   ├── Application
-  │   │   ├── Domain
-  │   │   └── Infrastructure
-  │   ├── QuoteManagement
-  │   └── ShipmentProcessing
-  ├── SPA
-  └── docker-compose
+├── Core
+├── Core.Infrastructure
+│
+├── Crosscutting
+│   ├── ApiGateway
+│   └── IdentityServer
+│
+├── Services
+│   ├── CustomerManagement
+│   ├── InventoryManagement
+│   ├── OrderProcessing
+│   ├── PaymentProcessing
+│   ├── ProductCatalog
+|   |   └─ EcommerceDDD.ProductCatalog
+│   │      ├── API
+│   │      ├── Application
+│   │      ├── Domain
+│   │      └── Infrastructure
+│   ├── QuoteManagement
+│   └── ShipmentProcessing
+│
+├── SPA
+└── docker-compose
 ```
 
 - **Core** <br/>
@@ -60,26 +64,26 @@ It contains project implementations that cross-cut all microservices, such as `I
 The microservices composing the backend are built to be as simple as possible, structured as a vertically sliced structure with  `API`, `Application`, `Domain,` and `Infrastructure.`
 
     ```
-    ├── Products
-    │   ├── API
-    │   ├── Application
-    │   ├── Domain
-    │   └── Infrastructure
+      ├── EcommerceDDD.ProductCatalog
+      │   ├── API
+      │   ├── Application
+      │   ├── Domain
+      │   └── Infrastructure
     ```
 
   - **API** <br/>
   RESTful API for enabling communication between client and server.
 
-  - **Application:** <br/> 
+  - **Application** <br/> 
   It orchestrates the interactions between the external world and the domain to perform application tasks through use cases by `handling commands and queries`. 
 
-  - **Domain:** <br/>
+  - **Domain** <br/>
   A structured implementation of the domain through aggregates, commands, value objects, domain services, repository definitions, and domain events.
 
-  - **Infrastructure:** <br/>
+  - **Infrastructure** <br/>
   It is a supporting library for upper layers, handling infrastructural matters such as data persistence with *implementing repositories*, database mapping, and external integrations.
 
-  - **SPA (Single Page Application):** <br/>
+  - **SPA (Single Page Application)** <br/>
   A lightweight Angular-based `SPA` providing a functional and user-friendly UI.
 
 <br/>

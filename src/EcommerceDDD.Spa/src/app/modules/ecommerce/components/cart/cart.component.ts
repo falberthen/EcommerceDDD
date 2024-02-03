@@ -126,18 +126,9 @@ export class CartComponent implements OnInit {
       });
   }
 
-  async confirmQuote() {
-    await firstValueFrom(
-      this.quotesService.confirmQuote(
-        this.quote!.quoteId,
-        this.currentCurrency)
-    );
-  }
-
-  async getOpenQuote(): Promise<ServiceResponse | null> {
+  async getOpenQuote(): Promise<ServiceResponse | undefined> {
     const result = this.quotesService.getOpenQuote(
-      this.customerId,
-      this.currentCurrency
+      this.customerId
     );
 
     return firstValueFrom(result).then((result) => {
@@ -147,7 +138,7 @@ export class CartComponent implements OnInit {
         return result;
       }
 
-      return null;
+      return undefined;
     });
   }
 
@@ -155,7 +146,9 @@ export class CartComponent implements OnInit {
     const request = new OpenQuoteRequest(
       this.customerId,
       this.currentCurrency);
-    return await firstValueFrom(this.quotesService.openQuote(request));
+    return await firstValueFrom(
+      this.quotesService.openQuote(request)
+    );
   }
 
   async addQuoteItem(product: Product): Promise<ServiceResponse> {
@@ -166,7 +159,8 @@ export class CartComponent implements OnInit {
       this.currentCurrency
     );
     return await firstValueFrom(
-      this.quotesService.addQuoteItem(this.quote!.quoteId, request)
+      this.quotesService
+        .addQuoteItem(this.quote!.quoteId, request)
     );
   }
 
@@ -197,9 +191,9 @@ export class CartComponent implements OnInit {
       .confirm('Please confirm', 'Do you confirm you want to place an order?')
       .then(async (confirmed) => {
         if (confirmed) {
-          await this.confirmQuote();
-          const result = this.orderService.placeOrderFromQuote(
-            this.quote!.quoteId
+          const result = this.orderService.placeOrder(
+            this.customerId,
+            this.quote?.quoteId!
           );
 
           await firstValueFrom(result).then((result) => {

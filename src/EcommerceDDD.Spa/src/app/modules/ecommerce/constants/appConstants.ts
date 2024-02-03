@@ -8,9 +8,10 @@ export const LOCAL_STORAGE_ENTRIES = {
 
 export const ORDER_STATUS_CODES = {
   placed: 1,
-  paid: 2,
-  shipped: 3,
-  completed: 4,
+  processed:2,
+  paid: 3,
+  shipped: 4,
+  completed: 5,
   canceled: 0,
 };
 
