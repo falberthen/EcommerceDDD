@@ -7,8 +7,8 @@ import { Customer } from '../../models/Customer';
 import { UpdateCustomerRequest } from '../../models/requests/UpdateCustomerRequest';
 import { CustomersService } from '../../services/customers.service';
 import { StoredEventService } from '@shared/services/stored-event.service';
-import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild, ViewContainerRef, inject } from '@angular/core';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { LOCAL_STORAGE_ENTRIES } from '@ecommerce/constants/appConstants';
 import { AuthService } from '@core/services/auth.service';
 
@@ -25,15 +25,13 @@ export class CustomerDetailsComponent implements OnInit {
   customer!: Customer;
   faList = faList;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private loaderService: LoaderService,
-    private customersService: CustomersService,
-    private notificationService: NotificationService,
-    private localStorageService: LocalStorageService,
-    private storedEventService: StoredEventService,
-    private authService: AuthService
-  ) {}
+  private formBuilder = inject(FormBuilder);
+  private loaderService = inject(LoaderService);
+  private customersService = inject(CustomersService);
+  private notificationService = inject(NotificationService);
+  private localStorageService = inject(LocalStorageService);
+  private storedEventService = inject(StoredEventService);
+  private authService = inject(AuthService);
 
   async ngOnInit() {
     await this.loadCustomerDetails();
@@ -62,9 +60,9 @@ export class CustomerDetailsComponent implements OnInit {
     }
 
     const customerUpdate = new UpdateCustomerRequest(
-      this.f.name.value,
-      this.f.shippingAddress.value,
-      this.f.creditLimit.value
+      this.formControls.name.value,
+      this.formControls.shippingAddress.value,
+      this.formControls.creditLimit.value
     );
 
     await firstValueFrom(
@@ -77,7 +75,7 @@ export class CustomerDetailsComponent implements OnInit {
     });
   }
 
-  async showCustomerStoredEvents() {
+  async showCustomerStoredEvents(): Promise<void> {
     await firstValueFrom(
       this.customersService.getCustomerStoredEvents(
         this.authService.currentCustomer!.id
@@ -92,7 +90,7 @@ export class CustomerDetailsComponent implements OnInit {
     });
   }
 
-  private async storeLoadedCustomer() {
+  private async storeLoadedCustomer(): Promise<void>  {
     // storing customer in the localstorage
     this.localStorageService.setValue(
       LOCAL_STORAGE_ENTRIES.storedCustomer,
@@ -100,7 +98,7 @@ export class CustomerDetailsComponent implements OnInit {
     );
   }
 
-  private async loadCustomerDetails() {
+  private async loadCustomerDetails(): Promise<void>  {
     await firstValueFrom(this.customersService.loadCustomerDetails()).then(
       (result) => {
         if (result.success) {
@@ -119,7 +117,7 @@ export class CustomerDetailsComponent implements OnInit {
   }
 
   // getter for easy access to form fields
-  private get f() {
+  private get formControls(): {[key: string]: AbstractControl<any>} {
     return this.customerDetailsForm.controls;
   }
 }
