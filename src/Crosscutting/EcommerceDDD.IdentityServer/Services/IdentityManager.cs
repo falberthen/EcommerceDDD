@@ -54,7 +54,7 @@ public class IdentityManager : IIdentityManager
 
         // Adding role
         result = await _userManager
-            .AddToRoleAsync(user, IdentityConfiguration.CustomerRole);
+            .AddToRoleAsync(user, Roles.Customer);
         if (!result.Succeeded)
             throw new ApplicationException($"Can't add role for {user.Email}");
 
@@ -64,7 +64,7 @@ public class IdentityManager : IIdentityManager
             {
                 new Claim(JwtClaimTypes.Name, user.UserName),
                 new Claim(JwtClaimTypes.Email, user.Email),
-                new Claim(JwtClaimTypes.Role, IdentityConfiguration.CustomerRole),
+                new Claim(JwtClaimTypes.Role, Roles.Customer),
             });
         if (!result.Succeeded)
             throw new ApplicationException($"Can't add claims for {user.Email}");
@@ -75,15 +75,15 @@ public class IdentityManager : IIdentityManager
     private async Task AddDefaultRoles()
     {
         var clientRole = await _roleManager
-            .FindByNameAsync(IdentityConfiguration.CustomerRole);
+            .FindByNameAsync(Roles.Customer);
 
         if (clientRole is null)
         {
             var result = await _roleManager
-                .CreateAsync(new IdentityRole(IdentityConfiguration.CustomerRole));
+                .CreateAsync(new IdentityRole(Roles.Customer));
 
             if (!result.Succeeded)
-                throw new ApplicationException($"Can't add role {IdentityConfiguration.CustomerRole}");
+                throw new ApplicationException($"Can't add role {Roles.Customer}");
         }
 
         await Task.CompletedTask;

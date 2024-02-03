@@ -2,8 +2,6 @@
 
 public class IdentityConfiguration
 {
-    public const string CustomerRole = "Customer";
-
     private const string _apiScope = "ecommerceddd-api.scope";    
     private const string _readScope = "read";
     private const string _writeScope = "write";
