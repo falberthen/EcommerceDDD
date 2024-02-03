@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.Core.Domain;
-using EcommerceDDD.Core.Exceptions;
-using System.Collections.Generic;
+﻿using EcommerceDDD.Core.Exceptions;
 
 public abstract class StronglyTypedId<T> : ValueObject<StronglyTypedId<T>>
 {

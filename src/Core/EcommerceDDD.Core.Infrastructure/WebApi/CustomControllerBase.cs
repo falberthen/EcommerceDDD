@@ -15,13 +15,18 @@ public class CustomControllerBase : ControllerBase
         _queryBus = queryBus;
     }
 
-    protected async new Task<IActionResult> Response<TResult>(IQuery<TResult> query)
+    protected async new Task<IActionResult> Response<TResult>(IQuery<TResult> query,
+        CancellationToken cancellationToken)
     {
         TResult result;
 
         try
         {
-            result = await _queryBus.Send(query);
+            result = await _queryBus.SendAsync(query, cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            return StatusCode(500, "Operation was canceled.");
         }
         catch (Exception e)
         {
@@ -35,11 +40,17 @@ public class CustomControllerBase : ControllerBase
         });
     }
 
-    protected async new Task<IActionResult> Response(ICommand command)
+    protected async new Task<IActionResult> Response(ICommand command,
+        CancellationToken cancellationToken)
     {
         try
         {
-            await _commandBus.Send(command);
+            await _commandBus.SendAsync(command, cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            // Handle cancellation
+            return StatusCode(500, "Operation was canceled.");
         }
         catch (Exception e)
         {

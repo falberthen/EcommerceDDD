@@ -11,9 +11,10 @@ public class QueryBus : IQueryBus
         _logger = logger;
     }
 
-    public Task<TResponse> Send<TResponse>(IQuery<TResponse> query)
+    public Task<TResponse> SendAsync<TResponse>(IQuery<TResponse> query
+        , CancellationToken cancellationToken)
     {
         _logger.LogInformation("Executing query: {query}", query);
-        return _mediator.Send(query);
+        return _mediator.Send(query, cancellationToken);
     }
 }

@@ -2,11 +2,9 @@
 
 namespace EcommerceDDD.Core.Domain;
 
-public abstract class AggregateRoot<TKey> : IAggregateRoot<TKey>
+public abstract class AggregateRoot<TKey> : Entity<TKey>, IAggregateRoot<TKey>
     where TKey : StronglyTypedId<Guid>
 {
-    public TKey Id { get; set; } = default!;
-
     [Identity]
     public Guid AggregateId
     {

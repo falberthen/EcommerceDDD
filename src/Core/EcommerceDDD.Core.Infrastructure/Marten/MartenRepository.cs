@@ -4,16 +4,13 @@ public class MartenRepository<TA> : IEventStoreRepository<TA>
     where TA : class, IAggregateRoot<StronglyTypedId<Guid>>
 {
     private readonly IDocumentSession _documentSession;
-    private readonly IEventDispatcher _dispatcher;
     private readonly ILogger<MartenRepository<TA>> _logger;
 
     public MartenRepository(
         IDocumentSession documentSession, 
-        IEventDispatcher dispatcher,
         ILogger<MartenRepository<TA>> logger)
     {
         _documentSession = documentSession;
-        _dispatcher = dispatcher;
         _logger = logger;
     }
 
@@ -32,9 +29,6 @@ public class MartenRepository<TA> : IEventStoreRepository<TA>
         _documentSession.Events.Append(aggregate.Id.Value, nextVersion, events);
 
         await _documentSession.SaveChangesAsync();
-
-        // Dispatching events after saving changes
-        await DispatchEventsAsync(events);
 
         return nextVersion;
     }
@@ -59,23 +53,15 @@ public class MartenRepository<TA> : IEventStoreRepository<TA>
     /// </summary>
     /// <param name="event"></param>
     /// <exception cref="ArgumentNullException"></exception>
-    public void AppendIntegrationEvent(IntegrationEvent @event)
+    public void AppendToOutbox(INotification @event)
     {
         if (@event is null)
             throw new ArgumentNullException(nameof(@event));
 
-        _logger.LogInformation($"Adding integration event {@event} to outbox...", @event);
-        _documentSession.Store(@event);        
-    }
+        var integrationEvent = IntegrationEvent
+            .FromNotification(@event!);
 
-    /// <summary>
-    /// Auxiliary method for dispatching domain events to handlers if any
-    /// </summary>
-    /// <param name="domainEvents"></param>
-    /// <returns></returns>
-    private async Task DispatchEventsAsync(IList<IDomainEvent> domainEvents)
-    {
-        foreach (var @event in domainEvents)
-            await _dispatcher.DispatchAsync(@event);        
-    }    
+        _logger.LogInformation($"Adding integration event {@event} to outbox...", @event);
+        _documentSession.Store(integrationEvent!);        
+    }
 }

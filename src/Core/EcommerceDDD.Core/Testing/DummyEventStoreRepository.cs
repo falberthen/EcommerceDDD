@@ -1,4 +1,6 @@
 ﻿
+
+
 namespace EcommerceDDD.Core.Testing;
 
 public class DummyEventStoreRepository<TA> : IEventStoreRepository<TA>
@@ -18,7 +20,7 @@ public class DummyEventStoreRepository<TA> : IEventStoreRepository<TA>
         return await Task.FromResult(nextVersion);
     }
 
-    public void AppendIntegrationEvent(IntegrationEvent @event) {}
+    public void AppendToOutbox(INotification @event) { }    
 
     public Task<TA> FetchStreamAsync(Guid id, int? version = null, CancellationToken cancellationToken = default) =>
         Task.FromResult(AggregateStream.FirstOrDefault(c=>c.Stream == id)?.Aggregate);

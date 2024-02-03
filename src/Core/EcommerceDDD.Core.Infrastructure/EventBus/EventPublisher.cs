@@ -1,17 +1,17 @@
 ﻿namespace EcommerceDDD.Core.Infrastructure.EventBus;
 
-public class EventDispatcher : IEventDispatcher
+public class EventPublisher : IEventPublisher
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
-    private readonly ILogger<EventDispatcher> _logger;
+    private readonly ILogger<EventPublisher> _logger;
 
-    public EventDispatcher(IServiceScopeFactory serviceScopeFactory, ILogger<EventDispatcher> logger)
+    public EventPublisher(IServiceScopeFactory serviceScopeFactory, ILogger<EventPublisher> logger)
     {
         _serviceScopeFactory = serviceScopeFactory;
         _logger = logger;
     }
 
-    public async Task DispatchAsync(INotification @event, CancellationToken cancellationToken)
+    public async Task PublishEventAsync(INotification @event, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Publishing event {@event}", @event);
 
@@ -27,5 +27,11 @@ public class EventDispatcher : IEventDispatcher
         {
             _logger.LogError("An error occurred when publishing event: {Message} {StackTrace}", e.Message, e.StackTrace);
         }
+    }
+
+    public async Task PublishEventsAsync(IEnumerable<INotification> @events, CancellationToken cancellationToken)
+    {
+        foreach (var @event in @events)
+            await PublishEventAsync(@event, cancellationToken);
     }
 }

@@ -104,7 +104,8 @@ public class HttpRequesterTests
         var requester = new HttpRequester(_httpClientFactory);
 
         // When
-        var response = await requester.DeleteAsync<IntegrationHttpResponse>(_url.AbsoluteUri);
+        var response = await requester.
+            DeleteAsync<IntegrationHttpResponse>(_url.AbsoluteUri);
 
         // Then
         Assert.NotNull(response);

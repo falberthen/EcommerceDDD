@@ -2,18 +2,18 @@
 
 public class KafkaConsumer : IEventConsumer
 {
-    private readonly IEventDispatcher _eventDispatcher;
-    private readonly IConsumer<string, IntegrationEvent> _consumer;
+    private readonly IEventPublisher _eventPublisher;
+    private readonly IConsumer<string, INotification> _consumer;
     private readonly ILogger<KafkaConsumer> _logger;
 
     public KafkaConsumer(
-        IEventDispatcher eventDispatcher,
-        JsonEventSerializer<IntegrationEvent> serializer,
+        IEventPublisher eventPublisher,
+        JsonEventSerializer<INotification> serializer,
         IOptions<KafkaConsumerConfig> kafkaConsumerConfig,
         ILogger<KafkaConsumer> logger)
     {
         _logger = logger;
-        _eventDispatcher = eventDispatcher;
+        _eventPublisher = eventPublisher;
 
         if (kafkaConsumerConfig is null)
             throw new ArgumentNullException(nameof(kafkaConsumerConfig));
@@ -27,53 +27,72 @@ public class KafkaConsumer : IEventConsumer
             EnableAutoCommit = false
         };
         
-        _consumer =
-            new ConsumerBuilder<string, IntegrationEvent>(consumerConfig)
-            .SetKeyDeserializer(Deserializers.Utf8)
-            .SetValueDeserializer(serializer)
-            .Build();
+        try
+        {
+            _consumer = new ConsumerBuilder<string, INotification>(consumerConfig)
+                .SetKeyDeserializer(Deserializers.Utf8)
+                .SetValueDeserializer(serializer)
+                .Build();
 
-        _consumer.Subscribe(config.Topics);
+            _logger.LogInformation("Subscribing to topics: {Topics}", string.Join(", ", config.Topics));
+            _consumer.Subscribe(config.Topics);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error subscribing to Kafka topics: {ErrorMessage}", ex.Message);
+            throw;
+        }
     }
 
     public async Task StartConsumeAsync(CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Kafka consumer started.");
+        if (_consumer == null)
+        {
+            _logger.LogError("Kafka consumer is not initialized. Unable to start consumption.");
+            return;
+        }
 
-        try
-        {
-            while (!cancellationToken.IsCancellationRequested)
-                await ConsumeNextMessage(_consumer, cancellationToken);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError("An error occurred when consuming a Kafka message: {Message} {StackTrace}", e.Message, e.StackTrace);
-            _consumer.Close();
-        }
+        _logger.LogInformation("Kafka consumer started.");
+        
+        while (!cancellationToken.IsCancellationRequested)
+            await ConsumeNextMessage(_consumer, cancellationToken);        
     }
 
-    private async Task ConsumeNextMessage(IConsumer<string, IntegrationEvent> consumer, CancellationToken cancellationToken)
+    private async Task ConsumeNextMessage(IConsumer<string, INotification> consumer, 
+        CancellationToken cancellationToken)
     {
-        var policy = Policy
-           .Handle<Exception>()
-           .WaitAndRetryForeverAsync(retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
+        var retryPolicy = Policy
+            .Handle<KafkaException>()
+            .WaitAndRetryForeverAsync(attempt => TimeSpan.FromSeconds(5));
 
-        await policy.ExecuteAsync(
-           async () =>
-           {
-               await Task.Yield();
-               var @event = _consumer.Consume(cancellationToken);
+        var timeoutPolicy = Policy.TimeoutAsync(TimeSpan.FromHours(1));
+        var policyWrap = Policy.WrapAsync(timeoutPolicy, retryPolicy);
 
-               if (@event is null)
-               {
-                   _logger.LogError("Unable to deserialize integration event.", consumer);
-                   await Task.CompletedTask;
-               }
+        await policyWrap.ExecuteAsync(async () =>
+        {
+            await Task.Yield();
+            var @event = _consumer.Consume(cancellationToken);
 
-               _logger.LogInformation("Dispatching event: {event}", @event);
+            if (@event is null)
+            {
+                _logger.LogError($"Unable to deserialize integration event: {@event}");
+                await Task.CompletedTask;
+            }
 
-               await _eventDispatcher.DispatchAsync(@event!.Message.Value);
-               consumer.Commit();
-           });
+            _logger.LogInformation($"Dispatching event: {@event}");
+            await _eventPublisher.PublishEventAsync(@event!.Message.Value, 
+                cancellationToken);
+            consumer.Commit();
+        })
+        .ContinueWith(task =>
+        {
+            if (task.IsFaulted)
+            {
+                var exception = task.Exception?.Flatten().InnerException;
+                _logger.LogError("An error occurred when consuming a Kafka message: {Message} {StackTrace}",
+                    exception?.Message, exception?.StackTrace);
+                _consumer.Close();
+            }
+        });
     }
 }
