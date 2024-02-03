@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { CartComponent } from '../cart/cart.component';
 import { LocalStorageService } from '@core/services/local-storage.service';
@@ -8,7 +8,7 @@ import { CurrencyNotificationService } from '../../services/currency-notificatio
 import { Product } from '../../models/Product';
 import { GetProductsRequest } from '../../models/requests/GetProductsRequest';
 import { Quote, QuoteItem } from '../../models/Quote';
-import { firstValueFrom } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 import { LOCAL_STORAGE_ENTRIES } from '../../constants/appConstants';
 
 @Component({
@@ -17,20 +17,18 @@ import { LOCAL_STORAGE_ENTRIES } from '../../constants/appConstants';
   styleUrls: ['./product-selection.component.scss'],
 })
 export class ProductSelectionComponent implements OnInit {
-  @ViewChild('cart') cart!: CartComponent;
+  @ViewChild(CartComponent) cart!: CartComponent;
   currentCurrency!: string;
   customerId!: string;
   products: Product[] = [];
   faPlusCircle = faPlusCircle;
 
-  constructor(
-    public loaderService: LoaderService,
-    private productsService: ProductsService,
-    private localStorageService: LocalStorageService,
-    private currencyNotificationService: CurrencyNotificationService
-  ) {}
+  private loaderService = inject(LoaderService);
+  private productsService = inject(ProductsService);
+  private localStorageService = inject(LocalStorageService);
+  private currencyNotificationService = inject(CurrencyNotificationService);
 
-  async ngOnInit() {
+  async ngOnInit(): Promise<void> {
     var storedCurrency = this.localStorageService.getValueByKey(
       LOCAL_STORAGE_ENTRIES.storedCurrency
     );
@@ -52,11 +50,11 @@ export class ProductSelectionComponent implements OnInit {
     );
   }
 
-  get isLoading() {
+  get isLoading(): Observable<boolean> {
     return this.loaderService.loading$;
   }
 
-  async loadProducts() {
+  async loadProducts(): Promise<void> {
     await firstValueFrom(
       this.productsService.getProducts(
         new GetProductsRequest(this.currentCurrency)
@@ -69,7 +67,7 @@ export class ProductSelectionComponent implements OnInit {
     });
   }
 
-  async saveCart(product: Product) {
+  async saveCart(product: Product): Promise<void> {
     if (!this.cart.quote) {
       await this.createQuote();
     }
@@ -77,7 +75,7 @@ export class ProductSelectionComponent implements OnInit {
     await this.addQuoteItem(product);
   }
 
-  async createQuote() {
+  async createQuote(): Promise<void> {
     await this.cart.createQuote().then(async (result) => {
       if (result && result.success) {
         await this.cart.getOpenQuote();
@@ -85,7 +83,7 @@ export class ProductSelectionComponent implements OnInit {
     });
   }
 
-  async addQuoteItem(product: Product) {
+  async addQuoteItem(product: Product): Promise<void> {
     await this.cart.addQuoteItem(product).then(async (result) => {
       if (result && result.success) {
         await this.cart.getOpenQuote();
@@ -93,19 +91,13 @@ export class ProductSelectionComponent implements OnInit {
     });
   }
 
-  syncronizeQuoteToProductList(quote: Quote) {
+  syncronizeQuoteToProductList(quote: Quote): void {
     if (this.products && quote) {
       this.products.forEach((product) => {
-        var productFound = quote.items.filter(
+        const productFound = quote.items.filter(
           (quoteItem: QuoteItem) => quoteItem.productId == product.productId
         );
-
-        if (productFound.length > 0) {
-          product.quantity = productFound[0].quantity;
-        }
-        else{
-          product.quantity = 0;
-        }
+        product.quantity =  productFound.length > 0 ? productFound[0].quantity : 0;
       });
     }
   }

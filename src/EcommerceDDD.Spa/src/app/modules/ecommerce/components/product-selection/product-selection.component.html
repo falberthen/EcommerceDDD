@@ -80,7 +80,6 @@
   </div>
   <div class="cart-details-container">
     <app-cart
-      #cart
       (sendQuoteItemsEvent)="syncronizeQuoteToProductList($event)"
       (reloadProductsEvent)="loadProducts()">
     </app-cart>
