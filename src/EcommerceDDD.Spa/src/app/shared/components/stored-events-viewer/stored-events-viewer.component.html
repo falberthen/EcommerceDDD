@@ -8,14 +8,14 @@
     </div>
     <div class="row">
       <table class="table table-responsive">
-        <thead class="thead-light">
+        <thead>
           <tr>
             <th>Event</th>
             <th>Data</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let row of storedEventData" style="white-space: nowrap">
+          <tr *ngFor="let row of storedEventData">
             <td>
               <span class="event-type">{{ row.eventTypeName }}</span>
             </td>

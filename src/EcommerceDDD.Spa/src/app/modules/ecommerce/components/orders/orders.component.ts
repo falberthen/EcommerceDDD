@@ -93,6 +93,8 @@ export class OrdersComponent implements OnInit {
     switch (statusCode) {
       case ORDER_STATUS_CODES.placed:
         return 'placed';
+        case ORDER_STATUS_CODES.processed:
+        return 'processed';
       case ORDER_STATUS_CODES.paid:
         return 'paid';
       case ORDER_STATUS_CODES.shipped:
@@ -129,7 +131,8 @@ export class OrdersComponent implements OnInit {
     statusText: string,
     statusCode: number
   ) {
-    var order = this.orders.find((e) => e.orderId == orderId);
+    var order = this.orders
+      .find((e) => e.orderId == orderId);
     if (order) {
       order.statusText = statusText;
       order.statusCode = statusCode;

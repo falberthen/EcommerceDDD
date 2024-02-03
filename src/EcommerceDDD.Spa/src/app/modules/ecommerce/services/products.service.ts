@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { RestService } from '@core/services/http/rest.service';
 import { environment } from '@environments/environment';
 import { GetProductsRequest } from '../models/requests/GetProductsRequest';
-import { Observable } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
 import { ServiceResponse } from './ServiceResponse';
 
 @Injectable({
@@ -17,6 +17,11 @@ export class ProductsService extends RestService {
   }
 
   public getProducts(request: GetProductsRequest): Observable<ServiceResponse> {
-    return this.post(this.controllerName, request);
+    return this.post(this.controllerName, request).pipe(
+      catchError((error) => {
+        console.error('Error:', error);
+        return [];
+      })
+    );
   }
 }

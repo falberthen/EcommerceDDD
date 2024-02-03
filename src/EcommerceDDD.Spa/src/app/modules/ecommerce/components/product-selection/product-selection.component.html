@@ -9,7 +9,13 @@
           *ngFor="let product of products | sort:'name':'asc'">
           <div class="card product-container">
             <div class="card-body">
-              <h3 class="card-title product-title">{{ product.name }}</h3>
+              <h3 class="card-title product-title" title="{{ product.name }}">
+                {{ product.name }}
+              </h3>
+              <span class="product-price">
+                <span class="currency-symbol">
+                  {{product.currencySymbol}}</span>{{product.price}}
+              </span>
               <span class="badge badge-category mb-4">
                 {{product.category}}
               </span>
@@ -27,13 +33,24 @@
                 </div>
               </div>
               <div class="row mt-3 mb-2">
-                <div class="col-3">
-                  <span class="product-price">
-                    <span class="currency-symbol">
-                      {{product.currencySymbol}}</span>{{product.price}}
+                <div class="col-4">
+                  <ng-container *ngIf="product.quantityInStock > 0">
+                    <ng-container *ngIf="product.quantityInStock <= 10; else inStock">
+                      <span class="product-stock-quantity text-warning">
+                        Only <b>{{ product.quantityInStock }}</b> left in stock!
+                      </span>
+                    </ng-container>
+                    <ng-template #inStock>
+                      <span class="product-stock-quantity text-success">
+                        In Stock
+                      </span>
+                    </ng-template>
+                  </ng-container>
+                  <span *ngIf="product.quantityInStock === 0" class="product-stock-quantity">
+                    Out of Stock
                   </span>
                 </div>
-                <div class="col-9">
+                <div class="col-8" *ngIf="product.quantityInStock !== 0">
                   <div
                     *ngIf="product.quantity == 0" class="add-product-container">
                     <button

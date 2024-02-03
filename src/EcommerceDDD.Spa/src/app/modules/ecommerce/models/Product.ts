@@ -8,6 +8,7 @@ export class Product {
   currency: string;
   currencySymbol: string;
   quantity: number;
+  quantityInStock: number;
 
   constructor(
     productId: string,
@@ -18,7 +19,8 @@ export class Product {
     unitPrice: number,
     currency: string,
     currencySymbol: string,
-    quantity: number
+    quantity: number,
+    quantityInStock: number
   ) {
     this.productId = productId;
     this.name = name;
@@ -29,5 +31,6 @@ export class Product {
     this.currency = currency;
     this.currencySymbol = currencySymbol;
     this.quantity = quantity;
+    this.quantityInStock = quantityInStock;
   }
 }

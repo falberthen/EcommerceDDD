@@ -1,6 +1,6 @@
 table {
   margin-top: 5px;
-  display: inline-block;
+  display: block;
   overflow: auto;
 }
 th div {
@@ -9,7 +9,6 @@ th div {
 }
 
 .stored-events-viewer {
-  background-color: #fefef8;
   margin-bottom: 5%;
 
   .table-scroll {
@@ -19,7 +18,7 @@ th div {
     overflow-y: auto;
   }
   .event-type {
-    color: #4e8975;
+    color: #0e4860;
     font-weight: bolder;
   }
   .event-data {
