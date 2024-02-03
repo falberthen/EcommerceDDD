@@ -1,6 +1,6 @@
 ﻿namespace EcommerceDDD.Core.Infrastructure.Identity;
 
-public static class JwtExtensions
+public static class JwtExtension
 {
     public static IServiceCollection AddJwtAuthentication(this IServiceCollection services,
         IConfiguration configuration)

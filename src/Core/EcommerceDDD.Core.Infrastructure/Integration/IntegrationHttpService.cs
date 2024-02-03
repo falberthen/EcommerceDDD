@@ -26,26 +26,29 @@ public class IntegrationHttpService : IIntegrationHttpService
 
     public async Task<IntegrationHttpResponse> PostAsync(string path, object request)
     {
-        var tokenResponse = await _tokenRequester
-            .GetApplicationTokenAsync(_tokenIssuerSettings);
-
         var response = await _httpRequester.PostAsync<IntegrationHttpResponse>(
             $"{_integrationSettings.ApiGatewayBaseUrl}/{path}",
             request,
-            tokenResponse.AccessToken);
+            await GetAccessToken());
 
         return response;
     }
 
-    public async Task<IntegrationHttpResponse> DeleteAsync(string path, object request)
+    public async Task<IntegrationHttpResponse> PutAsync(string path, object? request = null)
     {
-        var tokenResponse = await _tokenRequester
-            .GetApplicationTokenAsync(_tokenIssuerSettings);
+        var response = await _httpRequester.PutAsync<IntegrationHttpResponse>(
+            $"{_integrationSettings.ApiGatewayBaseUrl}/{path}",
+            request,
+            await GetAccessToken());
+        return response;
+    }
 
+    public async Task<IntegrationHttpResponse> DeleteAsync(string path, object? request = null)
+    {       
         var response = await _httpRequester.DeleteAsync<IntegrationHttpResponse>(
             $"{_integrationSettings.ApiGatewayBaseUrl}/{path}",
             request,
-            tokenResponse.AccessToken);
+            await GetAccessToken());
 
         return response;
     }
@@ -53,13 +56,10 @@ public class IntegrationHttpService : IIntegrationHttpService
     public async Task<IntegrationHttpResponse<TResponse>> FilterAsync<TResponse>(string path, object request)
         where TResponse : class
     {
-        var tokenResponse = await _tokenRequester
-            .GetApplicationTokenAsync(_tokenIssuerSettings);
-
         var response = await _httpRequester.PostAsync<IntegrationHttpResponse<TResponse>>(
             $"{_integrationSettings.ApiGatewayBaseUrl}/{path}",
             request,
-            tokenResponse.AccessToken);
+            await GetAccessToken());
 
         return response;
     }
@@ -67,13 +67,17 @@ public class IntegrationHttpService : IIntegrationHttpService
     public async Task<IntegrationHttpResponse<TResponse>> GetAsync<TResponse>(string path)
         where TResponse : class
     {
-        var tokenResponse = await _tokenRequester
-            .GetApplicationTokenAsync(_tokenIssuerSettings);
-
         var response = await _httpRequester.GetAsync<IntegrationHttpResponse<TResponse>>(
             $"{_integrationSettings.ApiGatewayBaseUrl}/{path}",
-            tokenResponse.AccessToken);
+            await GetAccessToken());
 
         return response;
+    }
+
+    private async Task<string> GetAccessToken()
+    {
+        TokenResponse tokenResponse = await _tokenRequester
+            .GetApplicationTokenAsync(_tokenIssuerSettings);
+        return tokenResponse?.AccessToken ?? string.Empty;
     }
 }

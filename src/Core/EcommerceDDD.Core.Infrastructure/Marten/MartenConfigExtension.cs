@@ -1,6 +1,6 @@
 ﻿namespace EcommerceDDD.Core.Infrastructure.Marten;
 
-public static class MartenConfigExtensions
+public static class MartenConfigExtension
 {
     public static void AddMarten(this IServiceCollection services, 
         ConfigurationManager configuration,
@@ -36,6 +36,6 @@ public static class MartenConfigExtensions
 
             // Custom store options
             configureOptions?.Invoke(options);
-        });
+        }).UseLightweightSessions();
     }
 }

@@ -1,8 +1,8 @@
 ﻿namespace EcommerceDDD.Core.Infrastructure.Integration;
 
-public static class HttpServicesExtensions
+public static class HttpServicesExtension
 {
-    public static void ConfigureIntegrationHttpService(this IServiceCollection services, 
+    public static IServiceCollection ConfigureIntegrationHttpService(this IServiceCollection services, 
         IConfiguration configuration)
     {
         if (configuration is null)
@@ -22,5 +22,7 @@ public static class HttpServicesExtensions
         services.AddTransient<IIntegrationHttpService, IntegrationHttpService>();
         services.AddTransient<IHttpRequester, HttpRequester>();
         services.AddTransient<ITokenRequester, TokenRequester>();
+
+        return services;
     }
 }

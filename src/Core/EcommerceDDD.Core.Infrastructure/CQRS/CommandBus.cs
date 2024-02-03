@@ -11,9 +11,10 @@ public class CommandBus : ICommandBus
         _logger = logger;
     }
 
-    public Task Send<TCommand>(TCommand command) where TCommand : ICommand
+    public Task SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken)
+        where TCommand : ICommand
     {
         _logger.LogInformation("Sending command: {command}", command);
-        return _mediator.Send(command);
+        return _mediator.Send(command, cancellationToken);
     }
 }

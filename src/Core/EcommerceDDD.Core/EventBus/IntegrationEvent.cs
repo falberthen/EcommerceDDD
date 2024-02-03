@@ -1,12 +1,22 @@
-﻿
-namespace EcommerceDDD.Core.EventBus;
+﻿namespace EcommerceDDD.Core.EventBus;
 
 public class IntegrationEvent : IIntegrationEvent
 {
-    public IntegrationEvent()
+    public Guid Id { get; } = Guid.NewGuid();
+    public string EventName { get; } // Event name identifier
+    public string JSON_Payload { get; } // Serialized data
+
+    public static IntegrationEvent FromNotification(
+        INotification domainEvent)
     {
-        Id = Guid.NewGuid();
+        return new IntegrationEvent(domainEvent);
     }
 
-    public Guid Id { get; set; }
+    public IntegrationEvent() { }
+
+    private IntegrationEvent(INotification @event)
+    {
+        EventName = @event.GetType().Name;
+        JSON_Payload = JsonConvert.SerializeObject(@event);
+    }    
 }

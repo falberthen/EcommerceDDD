@@ -1,6 +1,6 @@
 ﻿namespace EcommerceDDD.Core.Infrastructure.WebApi;
 
-public static class SwaggerExtensions
+public static class SwaggerExtension
 {
     public static IServiceCollection AddSwagger(this IServiceCollection services, 
         IConfiguration configuration)

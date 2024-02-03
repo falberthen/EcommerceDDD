@@ -1,7 +1,6 @@
 ﻿namespace EcommerceDDD.Core.Testing;
 
-public sealed class DummyIntegrationEvent : IntegrationEvent
+public sealed class DummyIntegrationEvent : IIntegrationEvent
 {
-    public Guid Id { get; set; }
-    public string Text { get; set; }
+    public Guid Id => Guid.NewGuid();
 }
