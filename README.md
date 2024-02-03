@@ -21,38 +21,66 @@ This project is an experimental full-stack application I use to combine several 
 
 
 ## Architecture
-The overall architecture is organized with `Core`, `Crosscutting` and `Services`.
+<a href="images/diagram.jpg" target="_blank">
+<img src="images/diagram.jpg"/>
+</a>
 
-### Core
-It defines all the building blocks and abstractions to be used on every underlying project.
+```
+  ├── Core
+  ├── Core.Infrastructure
+  ├── Crosscutting
+  │   ├── ApiGateway
+  │   └── IdentityServer
+  ├── Services
+  │   ├── CustomerManagement
+  │   ├── InventoryManagement
+  │   ├── OrderProcessing
+  │   ├── PaymentProcessing
+  │   ├── ProductCatalog
+  │   │   ├── API
+  │   │   ├── Application
+  │   │   ├── Domain
+  │   │   └── Infrastructure
+  │   ├── QuoteManagement
+  │   └── ShipmentProcessing
+  ├── SPA
+  └── docker-compose
+```
 
-### Core.Infrastructure
-It implements infrastructure matters to be used by microservices. Also, it centralizes third-party packages.
+- **Core** <br/>
+It defines the building blocks and abstractions used on all underlying projects. Its nature is very abstract, with no implementations.
 
-### Crosscutting
-It contains projects with logic needed to cross over the microservices, such as `IdentityServer` and `API gateway`.
+- **Core.Infrastructure** <br/>
+It holds some abstractions and implementation for infrastructure to be used by all microservices and underlying dependencies.
 
-<br/>
+- **Crosscutting** <br/>
+It contains project implementations that cross-cut all microservices, such as `IdentityServer` and `API gateway`.
 
-### Services
-The microservices composing the back-end, are built to be as simple as possible, structured with `Domain`, `Application`, `API`, `Infrastructure`.
+- **Services** <br/>
+The microservices composing the backend are built to be as simple as possible, structured as a vertically sliced structure with  `API`, `Application`, `Domain,` and `Infrastructure.`
 
-#### - Domain
+    ```
+    ├── Products
+    │   ├── API
+    │   ├── Application
+    │   ├── Domain
+    │   └── Infrastructure
+    ```
 
-This is where the business logic resides, with a structured implementation of the domain through aggregates, commands, value objects, domain services, repository definitions, and domain events.
+  - **API** <br/>
+  RESTful API for enabling communication between client and server.
 
-#### - Application
+  - **Application:** <br/> 
+  It orchestrates the interactions between the external world and the domain to perform application tasks through use cases by `handling commands and queries`. 
 
-It orchestrates the interactions between the external world and the domain to perform application tasks through use cases by handling commands and queries. 
+  - **Domain:** <br/>
+  A structured implementation of the domain through aggregates, commands, value objects, domain services, repository definitions, and domain events.
 
-#### - Infrastructure
+  - **Infrastructure:** <br/>
+  It is a supporting library for upper layers, handling infrastructural matters such as data persistence with *implementing repositories*, database mapping, and external integrations.
 
-It acts as a supporting library for higher layers. It handles infrastructural matters and data persistence.
-
-<br/>
-
-### Presentation
-A lightweight Angular-based `SPA` providing a functional and user-friendly UI.
+  - **SPA (Single Page Application):** <br/>
+  A lightweight Angular-based `SPA` providing a functional and user-friendly UI.
 
 <br/>
 
@@ -89,12 +117,11 @@ A lightweight Angular-based `SPA` providing a functional and user-friendly UI.
   </li>
 </ul>
 
-<br/><br/>
-
+<br/>
 
 ## What do you need to run it 
 
-### Running the microservices using Docker
+#### Running the microservices using Docker
 
 The project was designed to be easily run within docker containers, hence all you need is 1 command line to up everything. Make sure you have `Docker` installed and have fun!
 
