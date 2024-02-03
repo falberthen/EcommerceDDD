@@ -5,6 +5,7 @@ services.AddSignalR();
 services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddJwtAuthentication(builder.Configuration);
+services.AddHealthChecks();
 
 // Ocelot
 builder.Configuration.AddJsonFile("ocelot.json");
@@ -31,11 +32,12 @@ services.AddCors(o =>
 
 // App
 var app = builder.Build();
-app.UseRouting();
 app.UseWebSockets();
+app.UseRouting();
 app.UseCors("CorsPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseHealthChecks();
 
 // SignalR Hubs
 app.UseEndpoints(endpoints =>
@@ -43,6 +45,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
     endpoints.MapHub<OrderStatusHub>("orderstatushub");
 });
+
 
 app.UseOcelot().Wait();
 app.Run();

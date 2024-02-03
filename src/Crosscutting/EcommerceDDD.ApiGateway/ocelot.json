@@ -25,7 +25,7 @@
       ],
       "UpstreamHttpMethod": [ "GET", "PUT" ]
     },
-    // Products
+    // Product Catalog
     {
       "UpstreamPathTemplate": "/api/products",
       "DownstreamPathTemplate": "/api/products",
@@ -38,19 +38,32 @@
       ],
       "UpstreamHttpMethod": [ "Post" ]
     },
+    // Inventory Management
     {
-      "UpstreamPathTemplate": "/api/products/{everything}",
-      "DownstreamPathTemplate": "/api/products/{everything}",
+      "UpstreamPathTemplate": "/api/inventory",
+      "DownstreamPathTemplate": "/api/inventory",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "ecommerceddd-products",
+          "Host": "ecommerceddd-inventory",
           "Port": 80
         }
       ],
-      "UpstreamHttpMethod": [ "Post" ]
+      "UpstreamHttpMethod": [ "GET", "POST" ]
     },
-    // Quotes
+    {
+      "UpstreamPathTemplate": "/api/inventory/{everything}",
+      "DownstreamPathTemplate": "/api/inventory/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-inventory",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET", "PUT", "POST" ]
+    },
+    // Quote Management
     {
       "DownstreamPathTemplate": "/api/quotes",
       "UpstreamPathTemplate": "/api/quotes",
@@ -75,7 +88,7 @@
       ],
       "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ]
     },
-    // Orders
+    // Order Processing
     {
       "DownstreamPathTemplate": "/api/orders",
       "UpstreamPathTemplate": "/api/orders",
@@ -100,7 +113,7 @@
       ],
       "UpstreamHttpMethod": [ "GET", "PUT", "DELETE", "POST" ]
     },
-    // Payments
+    // Payment Processing
     {
       "DownstreamPathTemplate": "/api/payments",
       "UpstreamPathTemplate": "/api/payments",
@@ -125,7 +138,7 @@
       ],
       "UpstreamHttpMethod": [ "DELETE" ]
     },
-    // Shipments
+    // Shipment Processing
     {
       "DownstreamPathTemplate": "/api/shipments",
       "UpstreamPathTemplate": "/api/shipments",

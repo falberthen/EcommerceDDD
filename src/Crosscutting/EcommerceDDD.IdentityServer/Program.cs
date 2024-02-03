@@ -6,6 +6,7 @@ services.AddEndpointsApiExplorer();
 services.AddMemoryCache();
 services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+services.AddHealthChecks();
 
 // Token settings
 var tokenIssuerSettings = builder.Configuration.GetSection("TokenIssuerSettings");
@@ -69,10 +70,11 @@ builder.Services.AddCors(o =>
 
 // App
 var app = builder.Build();
-
+app.UseRouting();
 app.UseCors("CorsPolicy");
 app.UseIdentityServer();
 app.UseAuthorization();
 app.MapControllers();
+app.UseHealthChecks();
 
 app.MigrateDatabase().Run();
