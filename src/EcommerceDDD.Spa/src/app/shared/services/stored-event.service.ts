@@ -1,4 +1,5 @@
-import { Injectable, ViewContainerRef } from '@angular/core';
+import { DestroyRef, Injectable, ViewContainerRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { StoredEventData } from 'src/app/modules/ecommerce/models/StoredEventData';
 import { StoredEventsViewerComponent } from 'src/app/shared/components/stored-events-viewer/stored-events-viewer.component';
 
@@ -6,6 +7,9 @@ import { StoredEventsViewerComponent } from 'src/app/shared/components/stored-ev
   providedIn: 'root',
 })
 export class StoredEventService {
+  
+  private destroryRef = inject(DestroyRef);
+
   public showStoredEvents(
     storedEventViewContainerRef: ViewContainerRef,
     storedEventData: StoredEventData[]
@@ -16,7 +20,7 @@ export class StoredEventService {
     );
 
     componentRef.instance.storedEventData = storedEventData;
-    componentRef.instance.destroyComponent.subscribe((event: any) => {
+    componentRef.instance.destroyComponent.pipe(takeUntilDestroyed(this.destroryRef)).subscribe(() => {
       componentRef.destroy();
     });
   }
