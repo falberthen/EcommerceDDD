@@ -3,6 +3,7 @@ import {
   OnInit,
   ViewChild,
   ViewContainerRef,
+  inject,
 } from '@angular/core';
 import { faList } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '@core/services/auth.service';
@@ -10,7 +11,7 @@ import { SignalrService } from '@core/services/signalr.service';
 import { StoredEventService } from '@shared/services/stored-event.service';
 import { OrdersService } from '../../services/orders.service';
 import { Order } from '../../models/Order';
-import { firstValueFrom } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 import { ORDER_STATUS_CODES } from '@ecommerce/constants/appConstants';
 import { LoaderService } from '@core/services/loader.service';
 
@@ -29,15 +30,13 @@ export class OrdersComponent implements OnInit {
   storedEventsViewerComponentRef: any;
   hubHelloMessage!: string;
 
-  constructor(
-    private ordersService: OrdersService,
-    private authService: AuthService,
-    private signalrService: SignalrService,
-    private storedEventService: StoredEventService,
-    private loaderService: LoaderService,
-  ) {}
+  private ordersService = inject(OrdersService);
+  private authService = inject(AuthService);
+  private signalrService = inject(SignalrService);
+  private storedEventService = inject(StoredEventService);
+  private loaderService = inject(LoaderService);
 
-  async ngOnInit() {
+  async ngOnInit(): Promise<void> {
     if (this.authService.currentCustomer) {
       const customer = this.authService.currentCustomer;
       this.customerId = customer.id;
@@ -55,7 +54,7 @@ export class OrdersComponent implements OnInit {
     );
   }
 
-  get isLoading() {
+  get isLoading(): Observable<boolean> {
     return this.loaderService.loading$;
   }
 
@@ -65,7 +64,7 @@ export class OrdersComponent implements OnInit {
     return firstPart.toUpperCase();
   }
 
-  async showOrderStoredEvents(orderId: string) {
+  async showOrderStoredEvents(orderId: string): Promise<void> {
     await firstValueFrom(this.ordersService.getOrderStoredEvents(orderId)).then(
       (result) => {
         if (result.success) {
@@ -78,7 +77,7 @@ export class OrdersComponent implements OnInit {
     );
   }
 
-  async loadOrders() {
+  async loadOrders(): Promise<void>{
     await firstValueFrom(this.ordersService
       .getOrders(this.customerId))
       .then((result) => {
@@ -106,7 +105,7 @@ export class OrdersComponent implements OnInit {
     }
   }
 
-  private async addCustomerToSignalrGroup() {
+  private async addCustomerToSignalrGroup(): Promise<void> {
     if (this.signalrService.connection.state != 'Disconnected') return;
 
     // SignalR
@@ -128,8 +127,8 @@ export class OrdersComponent implements OnInit {
     orderId: string,
     statusText: string,
     statusCode: number
-  ) {
-    var order = this.orders.find((e) => e.orderId == orderId);
+  ): void {
+    const order = this.orders.find((e) => e.orderId == orderId);
     if (order) {
       order.statusText = statusText;
       order.statusCode = statusCode;
