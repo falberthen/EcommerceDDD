@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NotificationService } from '@core/services/notification.service';
@@ -14,15 +14,12 @@ import { RegisterCustomerRequest } from '@ecommerce/models/requests/RegisterCust
 export class CustomerAccountComponent implements OnInit {
   accountForm!: FormGroup;
   returnUrl!: string;
-
-  constructor(
-    private router: Router,
-    private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
-    private loaderService: LoaderService,
-    private customersService: CustomersService,
-    private notificationService: NotificationService
-  ) {}
+  private router = inject(Router);
+  private formBuilder= inject(FormBuilder);
+  private route = inject(ActivatedRoute);
+  private loaderService = inject(LoaderService);
+  private customersService = inject(CustomersService);
+  private notificationService = inject(NotificationService)
 
   ngOnInit() {
     this.accountForm = this.formBuilder.group({
@@ -54,12 +51,12 @@ export class CustomerAccountComponent implements OnInit {
     }
 
     const customerRegistration = new RegisterCustomerRequest(
-      this.f.email.value,
-      this.f.name.value,
-      this.f.shippingAddress.value,
-      this.f.password.value,
-      this.f.passwordConfirm.value,
-      this.f.creditLimit.value
+      this.formControls.email.value,
+      this.formControls.name.value,
+      this.formControls.shippingAddress.value,
+      this.formControls.password.value,
+      this.formControls.passwordConfirm.value,
+      this.formControls.creditLimit.value
     );
 
     this.customersService
@@ -73,7 +70,7 @@ export class CustomerAccountComponent implements OnInit {
   }
 
   // getter for easy access to form fields
-  private get f() {
+  private get formControls() {
     return this.accountForm.controls;
   }
 }
