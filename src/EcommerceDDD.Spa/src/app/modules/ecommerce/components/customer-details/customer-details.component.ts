@@ -104,7 +104,7 @@ export class CustomerDetailsComponent implements OnInit {
     await firstValueFrom(this.customersService.loadCustomerDetails()).then(
       (result) => {
         if (result.success) {
-          var data = result.data;
+          const data = result.data;
           this.customer = new Customer(
             data.id,
             data.name,
