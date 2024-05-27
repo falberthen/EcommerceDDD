@@ -16,10 +16,12 @@
             formControlName="email"
             placeholder="Login"
             [ngClass]="{ 'is-invalid': isFieldInvalid('email') }"
-          />
-          <div class="invalid-feedback" *ngIf="isFieldInvalid('email')">
-            Email is required
-          </div>
+            />
+          @if (isFieldInvalid('email')) {
+            <div class="invalid-feedback">
+              Email is required
+            </div>
+          }
         </div>
         <div class="form-group mt-3">
           <input
@@ -30,10 +32,12 @@
             formControlName="password"
             placeholder="Password"
             [ngClass]="{ 'is-invalid': isFieldInvalid('password') }"
-          />
-          <div class="invalid-feedback" *ngIf="isFieldInvalid('password')">
-            Password is required
-          </div>
+            />
+          @if (isFieldInvalid('password')) {
+            <div class="invalid-feedback">
+              Password is required
+            </div>
+          }
         </div>
         <div class="row mt-3">
           <div class="col-lg-12">
@@ -42,7 +46,7 @@
               class="btn btn-primary login-button"
               value="Log In"
               [disabled]="loginForm.invalid || (isLoading | async)"
-            />
+              />
           </div>
         </div>
       </form>
@@ -52,19 +56,20 @@
       <div class="col-lg-12">
         <a [routerLink]="['/customer-account']" class="create-account-link"
           >Create my account</a
-        >
+          >
+        </div>
       </div>
     </div>
   </div>
-</div>
-<div class="container mt-3">
-  <div class="stargazers-container alert alert-dark">
-    Did you like it?<strong> give a star!</strong><br /><br />
-    <github-button
-      type="stargazers"
-      size="large"
-      namespace="falberthen"
-      repo="EcommerceDDD"
-    ></github-button>
+  <div class="container mt-3">
+    <div class="stargazers-container alert alert-dark">
+      Did you like it?<strong> give a star!</strong><br /><br />
+      <github-button
+        type="stargazers"
+        size="large"
+        namespace="falberthen"
+        repo="EcommerceDDD"
+      ></github-button>
+    </div>
   </div>
-</div>
+  

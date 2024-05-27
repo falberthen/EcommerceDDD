@@ -1,13 +1,17 @@
 <div class="ddl-currency-container">
   <div class="currency-icon-container">
-    <fa-icon
-      [icon]="faEuroSign"
-      *ngIf="getCurrentCurrency() == 'EUR'">
-    </fa-icon>
-    <fa-icon
-      [icon]="faDollarSign"
-      *ngIf="getCurrentCurrency() != 'EUR'">
-    </fa-icon>
+    @if (getCurrentCurrency() == 'EUR') {
+      <fa-icon
+        [icon]="faEuroSign"
+        >
+      </fa-icon>
+    }
+    @if (getCurrentCurrency() != 'EUR') {
+      <fa-icon
+        [icon]="faDollarSign"
+        >
+      </fa-icon>
+    }
   </div>
   <div class="currency-selector-container">
     <div ngbDropdown class="d-inline-block">
