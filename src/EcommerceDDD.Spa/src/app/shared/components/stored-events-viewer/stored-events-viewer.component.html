@@ -1,11 +1,12 @@
 <div class="card fadeInDown stored-events-viewer">
   <div class="card-body">
-    <div
-      *ngIf="storedEventData && storedEventData.length == 0"
-      class="alert alert-danger"
-    >
-      No events to display
-    </div>
+    @if (storedEventData && storedEventData.length == 0) {
+      <div
+        class="alert alert-danger"
+        >
+        No events to display
+      </div>
+    }
     <div class="row">
       <table class="table table-responsive">
         <thead>
@@ -15,14 +16,16 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let row of storedEventData">
-            <td>
-              <span class="event-type">{{ row.eventTypeName }}</span>
-            </td>
-            <td>
-              <span class="event-data">{{ row.eventData }}</span>
-            </td>
-          </tr>
+          @for (row of storedEventData; track row) {
+            <tr>
+              <td>
+                <span class="event-type">{{ row.eventTypeName }}</span>
+              </td>
+              <td>
+                <span class="event-data">{{ row.eventData }}</span>
+              </td>
+            </tr>
+          }
         </tbody>
       </table>
     </div>

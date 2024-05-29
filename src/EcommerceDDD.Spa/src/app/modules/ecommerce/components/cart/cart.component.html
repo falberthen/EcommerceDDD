@@ -2,7 +2,6 @@
 <div class="stored-event-viewer-container">
   <template #storedEventViewerContainer></template>
 </div>
-
 <div class="card cart-details-container">
   <div class="card-body">
     <div class="cart-header">
@@ -10,80 +9,94 @@
         <div class="col-7">
           <h4>Shopping Cart</h4>
         </div>
-        <div class="col-5 quote-history" *ngIf="quote">
-          <a class="text-secondary event-link"
-            (click)="showQuoteStoredEvents()">
-            <fa-icon [icon]="faList"></fa-icon>
-            Quote Events
-          </a>
-        </div>
+        @if (quote) {
+          <div class="col-5 quote-history">
+            <a class="text-secondary event-link"
+              (click)="showQuoteStoredEvents()">
+              <fa-icon [icon]="faList"></fa-icon>
+              Quote Events
+            </a>
+          </div>
+        }
       </div>
       <hr />
     </div>
-    <div *ngIf="(isLoading | async) && !quote">
-      <app-loader-skeleton></app-loader-skeleton>
-    </div>
-    <div *ngIf="!(isLoading | async) && !quote"
-      class="empty-cart-message alert alert-danger">
-      Your cart is empty.
-    </div>
-    <div *ngIf="!(isLoading | async) && quote && quote.items.length == 0"
-      class="empty-cart-message alert alert-danger">
-      Your cart is empty.
-    </div>
-    <div class="cart-body" *ngIf="quote && quote.items.length > 0">
-      <div *ngIf="quote">
-        <div class="row mb-4" *ngFor="let quoteItem of quote.items; index as i">
-          <div class="col-1">
-            <button (click)="removeItem(quoteItem)" class="btn remove-item">
-              <fa-icon [icon]="faMinusCircle" title="Remove"></fa-icon>
-            </button>
-          </div>
-          <div class="col-7">
-            <span class="product-name">
-              {{ quoteItem.productName }}
-            </span>
-          </div>
-          <div class="col-4">
-            <div class="row">
-              <span class="product-price">
-                <span class="currency-symbol">
-                  {{ quoteItem.currencySymbol }}
-                </span>
-                {{ quoteItem.unitPrice }}
-              </span>
-            </div>
-            <div class="row">
-              <span class="product-qty">
-                Qty: <b>{{ quoteItem.quantity }}</b>
-              </span>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <hr />
-          <div class="total-to-pay-container mb-3">
-            <b>Total:</b>
-            <span>
-              {{ quote.currencySymbol }}{{ quote.totalPrice.toFixed(2) }}
-            </span>
-          </div>
-        </div>
-        <div class="place-order-container">
-          <button
-            (click)="cancelQuote()"
-            class="btn btn-danger cancel-quote"
-            [disabled]="isLoading | async">
-            Cancel
-          </button>
-          <button
-            (click)="placeOrder()"
-            class="btn btn-success"
-            [disabled]="isLoading | async">
-            Place Order
-          </button>
-        </div>
+    @if ((isLoading | async) && !quote) {
+      <div>
+        <app-loader-skeleton></app-loader-skeleton>
       </div>
-    </div>
+    }
+    @if (!(isLoading | async) && !quote) {
+      <div
+        class="empty-cart-message alert alert-danger">
+        Your cart is empty.
+      </div>
+    }
+    @if (!(isLoading | async) && quote && quote.items.length == 0) {
+      <div
+        class="empty-cart-message alert alert-danger">
+        Your cart is empty.
+      </div>
+    }
+    @if (quote && quote.items.length > 0) {
+      <div class="cart-body">
+        @if (quote) {
+          <div>
+            @for (quoteItem of quote.items; track quoteItem; let i = $index) {
+              <div class="row mb-4">
+                <div class="col-1">
+                  <button (click)="removeItem(quoteItem)" class="btn remove-item">
+                    <fa-icon [icon]="faMinusCircle" title="Remove"></fa-icon>
+                  </button>
+                </div>
+                <div class="col-7">
+                  <span class="product-name">
+                    {{ quoteItem.productName }}
+                  </span>
+                </div>
+                <div class="col-4">
+                  <div class="row">
+                    <span class="product-price">
+                      <span class="currency-symbol">
+                        {{ quoteItem.currencySymbol }}
+                      </span>
+                      {{ quoteItem.unitPrice }}
+                    </span>
+                  </div>
+                  <div class="row">
+                    <span class="product-qty">
+                      Qty: <b>{{ quoteItem.quantity }}</b>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            }
+            <div class="row">
+              <hr />
+              <div class="total-to-pay-container mb-3">
+                <b>Total:</b>
+                <span>
+                  {{ quote.currencySymbol }}{{ quote.totalPrice.toFixed(2) }}
+                </span>
+              </div>
+            </div>
+            <div class="place-order-container">
+              <button
+                (click)="cancelQuote()"
+                class="btn btn-danger cancel-quote"
+                [disabled]="isLoading | async">
+                Cancel
+              </button>
+              <button
+                (click)="placeOrder()"
+                class="btn btn-success"
+                [disabled]="isLoading | async">
+                Place Order
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    }
   </div>
 </div>
