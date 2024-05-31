@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -23,3 +22,31 @@ jobs:
       run: dotnet build --no-restore EcommerceDDD.sln
     - name: Test
       run: dotnet test --no-build --verbosity normal EcommerceDDD.sln
+
+  setup-node:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Node.js runtime
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+    - name: Cache Node.js install
+      uses: actions/cache@v3
+      with:
+        path: src/EcommerceDDD.Spa/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('src/EcommerceDDD.Spa/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    - name: Install deps
+      run: npm ci # Better than npm i, ref: https://docs.npmjs.com/cli/v10/commands/npm-ci
+      working-directory: src/EcommerceDDD.Spa
+
+  spa-test-and-verify:
+    runs-on: ubuntu-latest
+    needs: setup-node
+
+    steps:
+    - name: Run Jest suits
+      run: npm run test
