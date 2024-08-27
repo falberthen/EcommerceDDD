@@ -1,13 +1,6 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Domain;
 
-public sealed class PaymentId : StronglyTypedId<Guid>
+public sealed class PaymentId(Guid value) : StronglyTypedId<Guid>(value)
 {
-    public static PaymentId Of(Guid value)
-    {
-        return new PaymentId(value);
-    }
-
-    public PaymentId(Guid value) : base(value)
-    {
-    }
+    public static PaymentId Of(Guid value) => new PaymentId(value);
 }

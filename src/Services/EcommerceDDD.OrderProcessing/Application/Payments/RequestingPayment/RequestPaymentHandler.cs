@@ -1,23 +1,15 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Application.Payments.RequestingPayment;
 
-public class RequestPaymentHandler : ICommandHandler<RequestPayment>
+public class RequestPaymentHandler(
+    IIntegrationHttpService integrationHttpService,
+    IOrderStatusBroadcaster orderStatusBroadcaster,
+    IEventStoreRepository<Order> orderWriteRepository,
+    IConfiguration configuration) : ICommandHandler<RequestPayment>
 {
-    private readonly IIntegrationHttpService _integrationHttpService;
-    private readonly IOrderStatusBroadcaster _orderStatusBroadcaster;
-    private readonly IEventStoreRepository<Order> _orderWriteRepository;
-    private readonly IConfiguration _configuration;
-
-    public RequestPaymentHandler(
-        IIntegrationHttpService integrationHttpService,
-        IOrderStatusBroadcaster orderStatusBroadcaster,
-        IEventStoreRepository<Order> orderWriteRepository,
-        IConfiguration configuration)
-    {
-        _integrationHttpService = integrationHttpService;
-        _orderStatusBroadcaster = orderStatusBroadcaster;
-        _orderWriteRepository = orderWriteRepository;
-        _configuration = configuration;
-    }
+    private readonly IIntegrationHttpService _integrationHttpService = integrationHttpService;
+    private readonly IOrderStatusBroadcaster _orderStatusBroadcaster = orderStatusBroadcaster;
+    private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
+    private readonly IConfiguration _configuration = configuration;
 
     public async Task Handle(RequestPayment command, CancellationToken cancellationToken)
     {

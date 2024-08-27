@@ -1,17 +1,11 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Application.Payments.RecordingPayment;
 
-public class RecordPaymentHandler : ICommandHandler<RecordPayment>
+public class RecordPaymentHandler(
+    IOrderStatusBroadcaster orderStatusBroadcaster,
+    IEventStoreRepository<Order> orderWriteRepository) : ICommandHandler<RecordPayment>
 {
-    private readonly IOrderStatusBroadcaster _orderStatusBroadcaster;
-    private readonly IEventStoreRepository<Order> _orderWriteRepository;
-
-    public RecordPaymentHandler(
-        IOrderStatusBroadcaster orderStatusBroadcaster,
-        IEventStoreRepository<Order> orderWriteRepository)
-    {
-        _orderStatusBroadcaster = orderStatusBroadcaster;
-        _orderWriteRepository = orderWriteRepository;        
-    }
+    private readonly IOrderStatusBroadcaster _orderStatusBroadcaster = orderStatusBroadcaster;
+    private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
 
     public async Task Handle(RecordPayment command, CancellationToken cancellationToken)
     {

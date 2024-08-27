@@ -1,17 +1,11 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Application.Shipments.RecordingShipment;
 
-public class RecordShipmentHandler : ICommandHandler<RecordShipment>
+public class RecordShipmentHandler(
+    IOrderStatusBroadcaster orderStatusBroadcaster,
+    IEventStoreRepository<Order> orderWriteRepository) : ICommandHandler<RecordShipment>
 {
-    private readonly IOrderStatusBroadcaster _orderStatusBroadcaster;
-    private readonly IEventStoreRepository<Order> _orderWriteRepository;
-
-    public RecordShipmentHandler(
-        IOrderStatusBroadcaster orderStatusBroadcaster,
-        IEventStoreRepository<Order> orderWriteRepository)
-    {
-        _orderStatusBroadcaster = orderStatusBroadcaster;
-        _orderWriteRepository = orderWriteRepository;
-    }
+    private readonly IOrderStatusBroadcaster _orderStatusBroadcaster = orderStatusBroadcaster;
+    private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
 
     public async Task Handle(RecordShipment command, CancellationToken cancellationToken)
     {

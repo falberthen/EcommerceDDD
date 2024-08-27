@@ -12,8 +12,5 @@ public record class GetOrderEventHistory : IQuery<IList<OrderEventHistory>>
         return new GetOrderEventHistory(orderId);
     }
 
-    private GetOrderEventHistory(OrderId orderId)
-    {
-        OrderId = orderId;
-    }
+    private GetOrderEventHistory(OrderId orderId) => OrderId = orderId;
 }

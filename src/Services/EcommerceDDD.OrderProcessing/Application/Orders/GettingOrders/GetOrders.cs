@@ -12,8 +12,5 @@ public record class GetOrders : IQuery<IList<OrderViewModel>>
         return new GetOrders(customerId);
     }
 
-    private GetOrders(CustomerId customerId)
-    {
-        CustomerId = customerId;
-    }
+    private GetOrders(CustomerId customerId) => CustomerId = customerId;
 }

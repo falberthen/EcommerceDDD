@@ -2,12 +2,10 @@ namespace EcommerceDDD.OrderProcessing.API.Controllers;
 
 [Route("api/orders")]
 [ApiController]
-public class OrdersController : CustomControllerBase
+public class OrdersController(
+    ICommandBus commandBus,
+    IQueryBus queryBus) : CustomControllerBase(commandBus, queryBus)
 {
-    public OrdersController(
-        ICommandBus commandBus,
-        IQueryBus queryBus)
-        : base(commandBus, queryBus) { }
 
     /// <summary>
     /// Get customer's orders

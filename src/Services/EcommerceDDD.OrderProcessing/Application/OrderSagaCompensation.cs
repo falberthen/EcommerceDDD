@@ -3,19 +3,14 @@
 /// <summary>
 /// Handles compensation events for OrderSaga
 /// </summary>
-public class OrderSagaCompensation :
+public class OrderSagaCompensation(ICommandBus commandBus) :
     IEventHandler<PaymentFailed>,
     IEventHandler<CustomerReachedCreditLimit>,
     IEventHandler<ShipmentFailed>,
     IEventHandler<ProductWasOutOfStock>,
     IEventHandler<OrderCanceled>    
 {
-    private readonly ICommandBus _commandBus;
-
-    public OrderSagaCompensation(ICommandBus commandBus)
-    {
-        _commandBus = commandBus;
-    }
+    private readonly ICommandBus _commandBus = commandBus;
 
     public Task Handle(PaymentFailed @integrationEvent, 
         CancellationToken cancellationToken)

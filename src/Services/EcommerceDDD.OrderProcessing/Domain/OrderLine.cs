@@ -21,8 +21,5 @@ public class OrderLine
         return new OrderLine(productItem);
     }
 
-    private OrderLine(ProductItem productItem)
-    {
-        ProductItem = productItem;
-    }
+    private OrderLine(ProductItem productItem) => ProductItem = productItem;
 }
