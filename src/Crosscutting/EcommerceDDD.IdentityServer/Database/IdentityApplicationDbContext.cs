@@ -3,15 +3,9 @@
 public class IdentityApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
     public IdentityApplicationDbContext(DbContextOptions<IdentityApplicationDbContext> options)
-        : base(options)
-    {
-        Database.Migrate();
-    }
+        : base(options) => Database.Migrate();
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
-    }
+    protected override void OnModelCreating(ModelBuilder modelBuilder) => base.OnModelCreating(modelBuilder);
 }
 
 //https://blog.devgenius.io/identityserver4-authentication-with-asp-net-identity-for-user-management-6449bb985d21

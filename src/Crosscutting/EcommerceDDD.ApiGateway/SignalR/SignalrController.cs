@@ -3,14 +3,9 @@ namespace EcommerceDDD.ApiGateway.SignalR;
 [Authorize]
 [Route("api/signalr")]
 [ApiController]
-public class SignalrController : ControllerBase
+public class SignalrController(IOrderStatusUpdater orderStatusUpdater) : ControllerBase
 {
-    private IOrderStatusUpdater _orderStatusUpdater;
-
-    public SignalrController(IOrderStatusUpdater orderStatusUpdater)
-    {
-        _orderStatusUpdater = orderStatusUpdater;
-    }
+    private IOrderStatusUpdater _orderStatusUpdater = orderStatusUpdater;
 
     [HttpPost, Route("updateorderstatus")]
     public async Task<IActionResult> UpdateOrderStatus([FromBody] UpdateOrderStatusRequest request)

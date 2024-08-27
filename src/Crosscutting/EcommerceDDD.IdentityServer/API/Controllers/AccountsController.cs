@@ -3,15 +3,10 @@
 [AllowAnonymous]
 [ApiController]
 [Route("api/accounts")]
-public class AccountsController : CustomControllerBase
+public class AccountsController(
+    IIdentityManager identityManager) : CustomControllerBase
 {
-    private readonly IIdentityManager _identityManager;
-    
-    public AccountsController(
-        IIdentityManager identityManager)
-    {
-        _identityManager = identityManager;
-    }
+    private readonly IIdentityManager _identityManager = identityManager;
 
     [HttpPost, Route("login")]
     public async Task<IActionResult> UserLogin(LoginRequest request)

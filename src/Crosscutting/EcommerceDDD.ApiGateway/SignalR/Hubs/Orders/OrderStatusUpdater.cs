@@ -8,18 +8,12 @@ public interface IOrderStatusUpdater
 /// <summary>
 /// Broadcasting service for Order status
 /// </summary>
-public class OrderStatusUpdater : IOrderStatusUpdater
+public class OrderStatusUpdater(
+    IHubContext<OrderStatusHub, IOrderStatusHubClient> broadCastHub,
+    ILogger<OrderStatusUpdater> logger) : IOrderStatusUpdater
 {
-    private IHubContext<OrderStatusHub, IOrderStatusHubClient> _broadCastHub { get; }
-    private readonly ILogger<OrderStatusUpdater> _logger;
-
-    public OrderStatusUpdater(
-        IHubContext<OrderStatusHub, IOrderStatusHubClient> broadCastHub,
-        ILogger<OrderStatusUpdater> logger)
-    {
-        _broadCastHub = broadCastHub;
-        _logger = logger;
-    }
+    private IHubContext<OrderStatusHub, IOrderStatusHubClient> _broadCastHub { get; } = broadCastHub;
+    private readonly ILogger<OrderStatusUpdater> _logger = logger;
 
     public async Task UpdateOrderStatus(
         Guid customerId,
