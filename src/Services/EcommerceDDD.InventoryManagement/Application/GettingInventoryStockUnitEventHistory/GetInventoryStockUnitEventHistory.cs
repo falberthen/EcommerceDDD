@@ -13,8 +13,5 @@ public record class GetInventoryStockUnitEventHistory : IQuery<IList<InventorySt
         return new GetInventoryStockUnitEventHistory(productId);
     }
 
-    private GetInventoryStockUnitEventHistory(ProductId productId)
-    {
-        ProductId = productId;
-    }
+    private GetInventoryStockUnitEventHistory(ProductId productId) => ProductId = productId;
 }

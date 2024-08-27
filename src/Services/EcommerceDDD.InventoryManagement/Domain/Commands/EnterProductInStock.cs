@@ -13,8 +13,6 @@ public record class EnterProductInStock : ICommand
         return new EnterProductInStock(productIdsQuantities);
     }
 
-    private EnterProductInStock(List<Tuple<ProductId, int>> productIdsQuantities)
-    {
-        ProductIdsQuantities = productIdsQuantities;
-    }
+    private EnterProductInStock(List<Tuple<ProductId, int>> productIdsQuantities) 
+        => ProductIdsQuantities = productIdsQuantities;
 }

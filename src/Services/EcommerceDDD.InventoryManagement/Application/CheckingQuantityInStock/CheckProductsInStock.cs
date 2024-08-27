@@ -5,14 +5,8 @@ public record class CheckProductsInStock : IQuery<IList<InventoryStockUnitViewMo
     public IList<ProductId> ProductIds { get; private set; }
 
     public static CheckProductsInStock Create(
-        IList<ProductId> productIds)
-    {
-        return new CheckProductsInStock(productIds);
-    }
+        IList<ProductId> productIds) => new CheckProductsInStock(productIds);
 
     private CheckProductsInStock(
-        IList<ProductId> productIds)
-    {
-        ProductIds = productIds;
-    }
+        IList<ProductId> productIds) => ProductIds = productIds;
 }
