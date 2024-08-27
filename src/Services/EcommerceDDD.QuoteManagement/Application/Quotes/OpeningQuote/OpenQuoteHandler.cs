@@ -1,17 +1,11 @@
 ﻿namespace EcommerceDDD.QuoteManagement.Application.Quotes.OpeningQuote;
 
-public class OpenQuoteHandler : ICommandHandler<OpenQuote>
-{
-    private readonly IEventStoreRepository<Quote> _quoteWriteRepository;
-    private readonly ICustomerOpenQuoteChecker _customerOpenQuoteChecker;
-
-    public OpenQuoteHandler(IEventStoreRepository<
+public class OpenQuoteHandler(IEventStoreRepository<
         Quote> quoteWriteRepository,
-        ICustomerOpenQuoteChecker customerOpenQuoteChecker)
-    {
-        _quoteWriteRepository = quoteWriteRepository;
-        _customerOpenQuoteChecker = customerOpenQuoteChecker;
-    }
+    ICustomerOpenQuoteChecker customerOpenQuoteChecker) : ICommandHandler<OpenQuote>
+{
+    private readonly IEventStoreRepository<Quote> _quoteWriteRepository = quoteWriteRepository;
+    private readonly ICustomerOpenQuoteChecker _customerOpenQuoteChecker = customerOpenQuoteChecker;
 
     public async Task Handle(OpenQuote command, CancellationToken cancellationToken)
     {

@@ -1,13 +1,8 @@
 ﻿namespace EcommerceDDD.QuoteManagement.Application.Quotes.OpeningQuote;
 
-public class CustomerOpenQuoteChecker : ICustomerOpenQuoteChecker
+public class CustomerOpenQuoteChecker(IQuerySession querySession) : ICustomerOpenQuoteChecker
 {
-    private readonly IQuerySession _querySession;
-
-    public CustomerOpenQuoteChecker(IQuerySession querySession)
-    {
-        _querySession = querySession;
-    }
+    private readonly IQuerySession _querySession = querySession;
 
     public Task<bool> CustomerHasOpenQuote(CustomerId customerId)
     {

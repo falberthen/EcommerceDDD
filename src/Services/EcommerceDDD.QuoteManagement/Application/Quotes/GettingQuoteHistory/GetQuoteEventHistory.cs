@@ -12,8 +12,5 @@ public record class GetQuoteEventHistory : IQuery<IList<QuoteEventHistory>>
         return new GetQuoteEventHistory(quoteId);
     }
 
-    private GetQuoteEventHistory(QuoteId quoteId)
-    {
-        QuoteId = quoteId;
-    }
+    private GetQuoteEventHistory(QuoteId quoteId) => QuoteId = quoteId;
 }

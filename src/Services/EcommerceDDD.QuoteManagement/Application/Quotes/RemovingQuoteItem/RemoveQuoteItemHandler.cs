@@ -2,14 +2,9 @@
 
 namespace EcommerceDDD.QuoteManagement.Application.Quotes.RemovingQuoteItem;
 
-public class RemoveQuoteItemHandler : ICommandHandler<RemoveQuoteItem>
+public class RemoveQuoteItemHandler(IEventStoreRepository<Quote> quoteWriteRepository) : ICommandHandler<RemoveQuoteItem>
 {
-    private readonly IEventStoreRepository<Quote> _quoteWriteRepository;
-
-    public RemoveQuoteItemHandler(IEventStoreRepository<Quote> quoteWriteRepository)
-    {
-        _quoteWriteRepository = quoteWriteRepository;
-    }
+    private readonly IEventStoreRepository<Quote> _quoteWriteRepository = quoteWriteRepository;
 
     public async Task Handle(RemoveQuoteItem command, CancellationToken cancellationToken)
     {

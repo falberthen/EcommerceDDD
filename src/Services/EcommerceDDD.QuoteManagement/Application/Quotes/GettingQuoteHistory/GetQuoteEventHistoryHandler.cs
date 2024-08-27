@@ -1,13 +1,8 @@
 ﻿namespace EcommerceDDD.QuoteManagement.Application.Quotes.GettingQuoteHistory;
 
-public class GetQuoteEventHistoryHandler : IQueryHandler<GetQuoteEventHistory, IList<QuoteEventHistory>> 
+public class GetQuoteEventHistoryHandler(IQuerySession querySession) : IQueryHandler<GetQuoteEventHistory, IList<QuoteEventHistory>> 
 {
-    private readonly IQuerySession _querySession;
-
-    public GetQuoteEventHistoryHandler(IQuerySession querySession)
-    {
-        _querySession = querySession;
-    }
+    private readonly IQuerySession _querySession = querySession;
 
     public Task<IList<QuoteEventHistory>> Handle(GetQuoteEventHistory query, CancellationToken cancellationToken)
     {

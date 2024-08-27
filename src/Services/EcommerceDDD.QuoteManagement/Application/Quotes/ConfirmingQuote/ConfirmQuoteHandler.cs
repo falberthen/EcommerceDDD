@@ -1,14 +1,9 @@
 ﻿namespace EcommerceDDD.QuoteManagement.Application.Quotes.ConfirmingQuote;
 
-public class ConfirmQuoteHandler : ICommandHandler<ConfirmQuote>
+public class ConfirmQuoteHandler(
+    IEventStoreRepository<Quote> quoteWriteRepository) : ICommandHandler<ConfirmQuote>
 {
-    private readonly IEventStoreRepository<Quote> _quoteWriteRepository;
-
-    public ConfirmQuoteHandler(        
-        IEventStoreRepository<Quote> quoteWriteRepository)
-    {
-        _quoteWriteRepository = quoteWriteRepository;
-    }
+    private readonly IEventStoreRepository<Quote> _quoteWriteRepository = quoteWriteRepository;
 
     public async Task Handle(ConfirmQuote command, CancellationToken cancellationToken)
     {

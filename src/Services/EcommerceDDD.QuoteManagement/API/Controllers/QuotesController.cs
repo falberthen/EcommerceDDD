@@ -3,12 +3,10 @@ namespace EcommerceDDD.QuoteManagement.API.Controllers;
 [Authorize]
 [ApiController]
 [Route("api/quotes")]
-public class QuotesController : CustomControllerBase
+public class QuotesController(
+    ICommandBus commandBus,
+    IQueryBus queryBus) : CustomControllerBase(commandBus, queryBus)
 {
-    public QuotesController(
-        ICommandBus commandBus,
-        IQueryBus queryBus)
-        : base(commandBus, queryBus) { }
 
     /// <summary>
     /// Get the current customer's quote

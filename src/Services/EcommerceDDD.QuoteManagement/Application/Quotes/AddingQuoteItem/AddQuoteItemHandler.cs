@@ -1,17 +1,11 @@
 ﻿namespace EcommerceDDD.QuoteManagement.Application.Quotes.AddingQuoteItem;
 
-public class AddQuoteItemHandler : ICommandHandler<AddQuoteItem>
+public class AddQuoteItemHandler(
+    IEventStoreRepository<Quote> quoteWriteRepository,
+    IProductMapper productMapper) : ICommandHandler<AddQuoteItem>
 {
-    private readonly IEventStoreRepository<Quote> _quoteWriteRepository;
-    private readonly IProductMapper _productMapper;
-
-    public AddQuoteItemHandler(
-        IEventStoreRepository<Quote> quoteWriteRepository,
-        IProductMapper productMapper)
-    {
-        _quoteWriteRepository = quoteWriteRepository;
-        _productMapper = productMapper;
-    }
+    private readonly IEventStoreRepository<Quote> _quoteWriteRepository = quoteWriteRepository;
+    private readonly IProductMapper _productMapper = productMapper;
 
     public async Task Handle(AddQuoteItem command, CancellationToken cancellationToken)
     {

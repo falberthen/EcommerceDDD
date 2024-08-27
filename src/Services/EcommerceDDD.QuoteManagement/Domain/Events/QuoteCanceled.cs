@@ -12,8 +12,5 @@ public record class QuoteCanceled : DomainEvent
         return new QuoteCanceled(quoteId);
     }
 
-    private QuoteCanceled(Guid quoteId)
-    {
-        QuoteId = quoteId;
-    }
+    private QuoteCanceled(Guid quoteId) => QuoteId = quoteId;
 }

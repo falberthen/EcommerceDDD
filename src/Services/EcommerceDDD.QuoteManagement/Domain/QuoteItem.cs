@@ -20,8 +20,5 @@ public class QuoteItem
         ProductItem.ChangeQuantity(quantity);
     }
 
-    private QuoteItem(ProductItem productItem)
-    {
-        ProductItem = productItem;
-    }
+    private QuoteItem(ProductItem productItem) => ProductItem = productItem;
 }
