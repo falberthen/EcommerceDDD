@@ -14,20 +14,11 @@ public abstract class AggregateRoot<TKey> : Entity<TKey>, IAggregateRoot<TKey>
 
     public long Version { get; protected set; }
 
-    public IEnumerable<IDomainEvent> GetUncommittedEvents()
-    {
-        return _uncommittedEvents;
-    }
+    public IEnumerable<IDomainEvent> GetUncommittedEvents() => _uncommittedEvents;
 
-    public void ClearUncommittedEvents()
-    {
-        _uncommittedEvents.Clear();
-    }
+    public void ClearUncommittedEvents() => _uncommittedEvents.Clear();
 
-    protected void AppendEvent(IDomainEvent @event)
-    {
-        _uncommittedEvents.Enqueue(@event);
-    }
+    protected void AppendEvent(IDomainEvent @event) => _uncommittedEvents.Enqueue(@event);
 
     [JsonIgnore]
     private readonly Queue<IDomainEvent> _uncommittedEvents = new Queue<IDomainEvent>();

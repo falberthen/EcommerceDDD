@@ -21,12 +21,10 @@ public abstract class ValueObject<T>
         return GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
     }
 
-    public override int GetHashCode()
-    {
-        return GetEqualityComponents()
+    public override int GetHashCode() =>
+        GetEqualityComponents()
             .Select(x => x is not null ? x.GetHashCode() : 0)
             .Aggregate((x, y) => x ^ y);
-    }
 
     protected static bool EqualOperator(ValueObject<T> left, ValueObject<T> right)
     {
@@ -36,10 +34,7 @@ public abstract class ValueObject<T>
         return ReferenceEquals(left, right) || left.Equals(right);
     }
 
-    protected static bool NotEqualOperator(ValueObject<T> left, ValueObject<T> right)
-    {
-        return !(EqualOperator(left, right));
-    }
+    protected static bool NotEqualOperator(ValueObject<T> left, ValueObject<T> right) => !(EqualOperator(left, right));
 }
 
 // https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/implement-value-objects
