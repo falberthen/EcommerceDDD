@@ -15,10 +15,7 @@ public static class KafkaSetupExtension
     }
 
     public static IServiceCollection AddKafkaConsumerAndDebezium(this IServiceCollection services,
-        IConfiguration configuration)
-    {
-        return services
+        IConfiguration configuration) => services
             .ConfigureDebezium(configuration)
             .AddKafkaConsumer(configuration);
-    }
 }

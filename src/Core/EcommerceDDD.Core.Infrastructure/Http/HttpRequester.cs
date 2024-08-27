@@ -1,14 +1,9 @@
 ﻿namespace EcommerceDDD.Core.Infrastructure.Http;
 
-public class HttpRequester : IHttpRequester
+public class HttpRequester(IHttpClientFactory factory) : IHttpRequester
 {
-    private readonly HttpClient _httpClient;
+    private readonly HttpClient _httpClient = factory.CreateClient();
     private const string _scheme = "Bearer";
-
-    public HttpRequester(IHttpClientFactory factory)
-    {
-        _httpClient = factory.CreateClient();
-    }
 
     public async Task<T> PostAsync<T>(string url, object body, string? bearerToken = null)
         where T : class

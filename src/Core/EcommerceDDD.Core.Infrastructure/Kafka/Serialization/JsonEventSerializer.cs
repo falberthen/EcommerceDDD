@@ -29,8 +29,5 @@ public class JsonEventSerializer<T> : ISerializer<T>, IDeserializer<T>
         return @event!;
     }
 
-    public Type? GetEventType(string eventTypeName)
-    {
-        return TypeGetter.GetTypeFromCurrentDomainAssembly(eventTypeName);
-    }
+    public Type? GetEventType(string eventTypeName) => TypeGetter.GetTypeFromCurrentDomainAssembly(eventTypeName);
 }

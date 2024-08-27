@@ -1,15 +1,11 @@
 ﻿namespace EcommerceDDD.Core.Infrastructure.EventBus;
 
-public class EventPublisher : IEventPublisher
+public class EventPublisher(
+    IServiceScopeFactory serviceScopeFactory, 
+    ILogger<EventPublisher> logger) : IEventPublisher
 {
-    private readonly IServiceScopeFactory _serviceScopeFactory;
-    private readonly ILogger<EventPublisher> _logger;
-
-    public EventPublisher(IServiceScopeFactory serviceScopeFactory, ILogger<EventPublisher> logger)
-    {
-        _serviceScopeFactory = serviceScopeFactory;
-        _logger = logger;
-    }
+    private readonly IServiceScopeFactory _serviceScopeFactory = serviceScopeFactory;
+    private readonly ILogger<EventPublisher> _logger = logger;
 
     public async Task PublishEventAsync(INotification @event, CancellationToken cancellationToken)
     {

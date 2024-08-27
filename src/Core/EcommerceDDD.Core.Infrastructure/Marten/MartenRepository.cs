@@ -1,18 +1,12 @@
 ﻿namespace EcommerceDDD.Core.Infrastructure.Marten;
 
-public class MartenRepository<TA> : IEventStoreRepository<TA>
+public class MartenRepository<TA>(
+    IDocumentSession documentSession,
+    ILogger<MartenRepository<TA>> logger) : IEventStoreRepository<TA>
     where TA : class, IAggregateRoot<StronglyTypedId<Guid>>
 {
-    private readonly IDocumentSession _documentSession;
-    private readonly ILogger<MartenRepository<TA>> _logger;
-
-    public MartenRepository(
-        IDocumentSession documentSession, 
-        ILogger<MartenRepository<TA>> logger)
-    {
-        _documentSession = documentSession;
-        _logger = logger;
-    }
+    private readonly IDocumentSession _documentSession = documentSession;
+    private readonly ILogger<MartenRepository<TA>> _logger = logger;
 
     /// <summary>
     /// Stores uncommited events from an aggregate 
