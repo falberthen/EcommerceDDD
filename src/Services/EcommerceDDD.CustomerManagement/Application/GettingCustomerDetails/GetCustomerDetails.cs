@@ -12,8 +12,5 @@ public record class GetCustomerDetails : IQuery<CustomerDetails>
         return new GetCustomerDetails(customerId);
     }
 
-    private GetCustomerDetails(CustomerId customerId)
-    {
-        CustomerId = customerId;
-    }
+    private GetCustomerDetails(CustomerId customerId) => CustomerId = customerId;
 }

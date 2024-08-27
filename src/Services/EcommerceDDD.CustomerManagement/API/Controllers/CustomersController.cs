@@ -3,18 +3,12 @@
 [Authorize]
 [ApiController]
 [Route("api/customers")]
-public class CustomersController : CustomControllerBase
+public class CustomersController(
+    ITokenRequester tokenRequester,
+    ICommandBus commandBus,
+    IQueryBus queryBus) : CustomControllerBase(commandBus, queryBus)
 {
-    private ITokenRequester _tokenRequester { get; set; }
-
-    public CustomersController(
-        ITokenRequester tokenRequester,
-        ICommandBus commandBus,
-        IQueryBus queryBus)
-        : base(commandBus, queryBus)
-    {
-        _tokenRequester = tokenRequester;
-    }
+    private ITokenRequester _tokenRequester { get; set; } = tokenRequester;
 
     /// <summary>
     /// Get customer details using user's token

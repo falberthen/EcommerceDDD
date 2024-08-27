@@ -17,8 +17,5 @@ public class Address : ValueObject<Address>
         yield return StreetAddress;
     }
 
-    private Address(string address)
-    {
-        StreetAddress = address;
-    }
+    private Address(string address) => StreetAddress = address;
 }

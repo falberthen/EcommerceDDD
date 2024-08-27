@@ -1,13 +1,8 @@
 ﻿namespace EcommerceDDD.CustomerManagement.Application.RegisteringCustomer;
 
-public class EmailUniquenessChecker : IEmailUniquenessChecker
+public class EmailUniquenessChecker(IQuerySession querySession) : IEmailUniquenessChecker
 {
-    private readonly IQuerySession _querySession;
-
-    public EmailUniquenessChecker(IQuerySession querySession)
-    {
-        _querySession = querySession;
-    }
+    private readonly IQuerySession _querySession = querySession;
 
     public bool IsUnique(string customerEmail)
     {

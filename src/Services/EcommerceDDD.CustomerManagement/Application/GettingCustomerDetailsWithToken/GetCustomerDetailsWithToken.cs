@@ -12,8 +12,5 @@ public record class GetCustomerDetailsWithToken : IQuery<CustomerDetails>
         return new GetCustomerDetailsWithToken(userAccessToken);
     }
 
-    private GetCustomerDetailsWithToken(string userAccessToken)
-    {
-        UserAccessToken = userAccessToken;
-    }
+    private GetCustomerDetailsWithToken(string userAccessToken) => UserAccessToken = userAccessToken;
 }
