@@ -16,10 +16,7 @@ public class Money : ValueObject<Money>
         return new Money(value, currencyCode);
     }
 
-    public static Money operator *(decimal number, Money rightValue)
-    {
-        return new Money(number * rightValue.Amount, rightValue.Currency.Code);
-    }
+    public static Money operator *(decimal number, Money rightValue) => new Money(number * rightValue.Amount, rightValue.Currency.Code);
 
     public static Money operator +(Money money1, Money money2)
     {

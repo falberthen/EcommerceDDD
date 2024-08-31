@@ -1,17 +1,11 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Application.Orders.CompletingOrder;
 
-public class CompleteOrderHandler : ICommandHandler<CompleteOrder>
+public class CompleteOrderHandler(
+    IOrderStatusBroadcaster orderStatusBroadcaster,
+    IEventStoreRepository<Order> orderWriteRepository) : ICommandHandler<CompleteOrder>
 {
-    private readonly IOrderStatusBroadcaster _orderStatusBroadcaster;
-    private readonly IEventStoreRepository<Order> _orderWriteRepository;
-
-    public CompleteOrderHandler(
-        IOrderStatusBroadcaster orderStatusBroadcaster,
-        IEventStoreRepository<Order> orderWriteRepository)
-    {
-        _orderStatusBroadcaster = orderStatusBroadcaster;
-        _orderWriteRepository = orderWriteRepository;
-    }
+    private readonly IOrderStatusBroadcaster _orderStatusBroadcaster = orderStatusBroadcaster;
+    private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
 
     public async Task Handle(CompleteOrder command, CancellationToken cancellationToken)
     {

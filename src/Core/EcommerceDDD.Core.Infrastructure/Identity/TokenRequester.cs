@@ -2,23 +2,16 @@
 
 namespace EcommerceDDD.Core.Infrastructure.Identity;
 
-public class TokenRequester : ITokenRequester
+public class TokenRequester(
+    IMemoryCache cache,
+    IHttpContextAccessor httpContextAccessor,
+    IHttpClientFactory factory) : ITokenRequester
 {
-    private readonly HttpClient _httpClient;
-    private readonly IMemoryCache _cache;
-    private readonly IHttpContextAccessor _contextAccessor;
+    private readonly HttpClient _httpClient = factory.CreateClient();
+    private readonly IMemoryCache _cache = cache;
+    private readonly IHttpContextAccessor _contextAccessor = httpContextAccessor;
 
     private const string _applicationKey = "ApplicationToken";
-
-    public TokenRequester(
-        IMemoryCache cache, 
-        IHttpContextAccessor httpContextAccessor,
-        IHttpClientFactory factory)
-    {
-        _contextAccessor = httpContextAccessor;
-        _httpClient = factory.CreateClient();
-        _cache = cache;
-    }
 
     // Caching application token
     public async Task<TokenResponse> GetApplicationTokenAsync(TokenIssuerSettings settings)

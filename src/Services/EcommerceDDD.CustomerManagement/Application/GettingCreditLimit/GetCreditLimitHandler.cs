@@ -1,13 +1,8 @@
 ﻿namespace EcommerceDDD.CustomerManagement.Application.GettingCreditLimit;
 
-public class GetCreditLimitHandler : IQueryHandler<GetCreditLimit, CreditLimitModel>
+public class GetCreditLimitHandler(IQuerySession querySession) : IQueryHandler<GetCreditLimit, CreditLimitModel>
 {
-    private readonly IQuerySession _querySession;
-
-    public GetCreditLimitHandler(IQuerySession querySession)
-    {
-        _querySession = querySession;
-    }
+    private readonly IQuerySession _querySession = querySession;
 
     public Task<CreditLimitModel> Handle(GetCreditLimit query, CancellationToken cancellationToken)
     {        

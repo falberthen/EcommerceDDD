@@ -1,17 +1,11 @@
 ﻿namespace EcommerceDDD.QuoteManagement.Infrastructure.ProductMapping;
 
-public class ProductMapper : IProductMapper
+public class ProductMapper(
+    IIntegrationHttpService integrationHttpService,
+    IConfiguration configuration) : IProductMapper
 {
-    private readonly IIntegrationHttpService _integrationHttpService;
-    private readonly IConfiguration _configuration;
-
-    public ProductMapper(
-        IIntegrationHttpService integrationHttpService,
-        IConfiguration configuration)
-    {
-        _integrationHttpService = integrationHttpService;
-        _configuration = configuration;
-    }
+    private readonly IIntegrationHttpService _integrationHttpService = integrationHttpService;
+    private readonly IConfiguration _configuration = configuration;
 
     /// <summary>
     /// Maps product from catalog

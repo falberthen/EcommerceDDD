@@ -1,17 +1,11 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Application.Payments.CancelingPayment;
 
-public class RequestCancelPaymentHandler : ICommandHandler<RequestCancelPayment>
+public class RequestCancelPaymentHandler(
+    IIntegrationHttpService integrationHttpService,
+    IConfiguration configuration) : ICommandHandler<RequestCancelPayment>
 {
-    private readonly IIntegrationHttpService _integrationHttpService;
-    private readonly IConfiguration _configuration;
-
-    public RequestCancelPaymentHandler(
-        IIntegrationHttpService integrationHttpService,
-        IConfiguration configuration)
-    {
-        _integrationHttpService = integrationHttpService;
-        _configuration = configuration;
-    }
+    private readonly IIntegrationHttpService _integrationHttpService = integrationHttpService;
+    private readonly IConfiguration _configuration = configuration;
 
     public async Task Handle(RequestCancelPayment command, CancellationToken cancellationToken)
     {

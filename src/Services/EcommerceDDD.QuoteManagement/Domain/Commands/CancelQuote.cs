@@ -13,8 +13,5 @@ public record class CancelQuote : ICommand
         return new CancelQuote(quoteId);
     }
 
-    private CancelQuote(QuoteId quoteId)
-    {
-        QuoteId = quoteId;
-    }
+    private CancelQuote(QuoteId quoteId) => QuoteId = quoteId;
 }

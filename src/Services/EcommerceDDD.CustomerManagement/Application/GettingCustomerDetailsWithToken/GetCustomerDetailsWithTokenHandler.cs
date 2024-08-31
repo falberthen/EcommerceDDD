@@ -1,20 +1,13 @@
 ﻿namespace EcommerceDDD.CustomerManagement.Api.Application.GettingCustomerDetailsWithToken;
 
-public class GetCustomerDetailsWithTokenHandler : IQueryHandler<GetCustomerDetailsWithToken, CustomerDetails>
+public class GetCustomerDetailsWithTokenHandler(
+    IOptions<TokenIssuerSettings> tokenIssuerSettings,
+    IHttpRequester httpRequester,
+    IQuerySession querySession) : IQueryHandler<GetCustomerDetailsWithToken, CustomerDetails>
 {
-    private readonly TokenIssuerSettings _tokenIssuerSettings;
-    private readonly IQuerySession _querySession;
-    private readonly IHttpRequester _requester;
-
-    public GetCustomerDetailsWithTokenHandler(
-        IOptions<TokenIssuerSettings> tokenIssuerSettings,
-        IHttpRequester httpRequester,
-        IQuerySession querySession)
-    {
-        _tokenIssuerSettings = tokenIssuerSettings.Value;
-        _requester = httpRequester;
-        _querySession = querySession;
-    }
+    private readonly TokenIssuerSettings _tokenIssuerSettings = tokenIssuerSettings.Value;
+    private readonly IQuerySession _querySession = querySession;
+    private readonly IHttpRequester _requester = httpRequester;
 
     public async Task<CustomerDetails> Handle(GetCustomerDetailsWithToken query, 
         CancellationToken cancellationToken)

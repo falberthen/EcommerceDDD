@@ -5,10 +5,8 @@ public class InventoryStockUnit : AggregateRoot<InventoryStockUnitId>
     public ProductId ProductId { get; private set; }
     public int Quantity { get; private set; }
 
-    public static InventoryStockUnit EnterStockUnit(ProductId productId, int initialQuantity)
-    {
-        return new InventoryStockUnit(productId, initialQuantity);
-    }
+    public static InventoryStockUnit EnterStockUnit(ProductId productId, int initialQuantity) =>
+        new InventoryStockUnit(productId, initialQuantity);
 
     public void DecreaseStockQuantity(int quantityToDecrease)
     {
@@ -48,15 +46,9 @@ public class InventoryStockUnit : AggregateRoot<InventoryStockUnitId>
         Quantity = @event.InitialQuantity;
     }
 
-    private void Apply(StockQuantityDecreased @event)
-    {
-        Quantity -= @event.QuantityDecreased;
-    }
+    private void Apply(StockQuantityDecreased @event) => Quantity -= @event.QuantityDecreased;
 
-    private void Apply(StockQuantityIncreased @event)
-    {
-        Quantity += @event.QuantityIncreased;
-    }
+    private void Apply(StockQuantityIncreased @event) => Quantity += @event.QuantityIncreased;
 
     private InventoryStockUnit(ProductId productId, int initialQuantity)
     {

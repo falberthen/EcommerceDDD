@@ -12,8 +12,5 @@ public record class GetCreditLimit : IQuery<CreditLimitModel>
         return new GetCreditLimit(customerId);
     }
 
-    private GetCreditLimit(CustomerId customerId)
-    {
-        CustomerId = customerId;
-    }
+    private GetCreditLimit(CustomerId customerId) => CustomerId = customerId;
 }

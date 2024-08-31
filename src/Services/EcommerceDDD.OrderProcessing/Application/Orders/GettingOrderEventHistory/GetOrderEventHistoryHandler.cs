@@ -1,14 +1,9 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Application.GettingOrderEventHistory;
 
-public class GetOrderEventHistoryHandler : IQueryHandler<GetOrderEventHistory, IList<OrderEventHistory>> 
+public class GetOrderEventHistoryHandler(
+    IQuerySession querySession) : IQueryHandler<GetOrderEventHistory, IList<OrderEventHistory>> 
 {
-    private readonly IQuerySession _querySession;
-
-    public GetOrderEventHistoryHandler(
-        IQuerySession querySession)
-    {
-        _querySession = querySession;
-    }
+    private readonly IQuerySession _querySession = querySession;
 
     public async Task<IList<OrderEventHistory>> Handle(GetOrderEventHistory query, 
         CancellationToken cancellationToken)

@@ -1,14 +1,9 @@
 ﻿namespace EcommerceDDD.CustomerManagement.Api.Application.GettingCustomerDetails;
 
-public class GetCustomerDetailsHandler : IQueryHandler<GetCustomerDetails, CustomerDetails>
+public class GetCustomerDetailsHandler(
+    IQuerySession querySession) : IQueryHandler<GetCustomerDetails, CustomerDetails>
 {
-    private readonly IQuerySession _querySession;
-
-    public GetCustomerDetailsHandler(        
-        IQuerySession querySession)
-    {        
-        _querySession = querySession;
-    }
+    private readonly IQuerySession _querySession = querySession;
 
     public async Task<CustomerDetails> Handle(GetCustomerDetails query, 
         CancellationToken cancellationToken)

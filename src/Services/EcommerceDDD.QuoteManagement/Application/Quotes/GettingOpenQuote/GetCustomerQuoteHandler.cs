@@ -1,17 +1,11 @@
 ﻿namespace EcommerceDDD.QuoteManagement.Application.Quotes.GettingOpenQuote;
 
-public class GetCustomerQuoteHandler : IQueryHandler<GetCustomerQuote, QuoteViewModel>
+public class GetCustomerQuoteHandler(
+    IQuerySession querySession,
+    IProductMapper productMapper) : IQueryHandler<GetCustomerQuote, QuoteViewModel>
 {
-    private readonly IQuerySession _querySession;
-    private readonly IProductMapper _productMapper;
-
-    public GetCustomerQuoteHandler(
-        IQuerySession querySession,
-        IProductMapper productMapper)
-    {       
-        _querySession = querySession;
-        _productMapper = productMapper;
-    }
+    private readonly IQuerySession _querySession = querySession;
+    private readonly IProductMapper _productMapper = productMapper;
 
     public async Task<QuoteViewModel> Handle(GetCustomerQuote query, CancellationToken cancellationToken)
     {

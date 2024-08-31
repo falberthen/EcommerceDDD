@@ -1,13 +1,6 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Domain;
 
-public sealed class CustomerId : StronglyTypedId<Guid>
+public sealed class CustomerId(Guid value) : StronglyTypedId<Guid>(value)
 {
-    public static CustomerId Of(Guid value)
-    {
-        return new CustomerId(value);
-    }
-
-    public CustomerId(Guid value) : base(value)
-    {
-    }
+    public static CustomerId Of(Guid value) => new CustomerId(value);
 }

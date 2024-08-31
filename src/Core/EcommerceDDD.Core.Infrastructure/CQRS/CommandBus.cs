@@ -1,15 +1,9 @@
 ﻿namespace EcommerceDDD.Core.Infrastructure.CQRS;
 
-public class CommandBus : ICommandBus
+public class CommandBus(IMediator mediator, ILogger<CommandBus> logger) : ICommandBus
 {
-    private readonly IMediator _mediator;
-    private readonly ILogger<CommandBus> _logger;
-
-    public CommandBus(IMediator mediator, ILogger<CommandBus> logger)
-    {
-        _mediator = mediator;
-        _logger = logger;
-    }
+    private readonly IMediator _mediator = mediator;
+    private readonly ILogger<CommandBus> _logger = logger;
 
     public Task SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken)
         where TCommand : ICommand

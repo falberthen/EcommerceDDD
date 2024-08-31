@@ -12,8 +12,5 @@ public record class GetCustomerEventHistory : IQuery<IList<CustomerEventHistory>
         return new GetCustomerEventHistory(customerId);
     }
 
-    private GetCustomerEventHistory(CustomerId customerId)
-    {
-        CustomerId = customerId;
-    }
+    private GetCustomerEventHistory(CustomerId customerId) => CustomerId = customerId;
 }

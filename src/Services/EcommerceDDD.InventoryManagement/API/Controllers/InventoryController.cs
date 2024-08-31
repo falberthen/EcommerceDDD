@@ -3,12 +3,10 @@
 [Authorize]
 [Route("api/inventory")]
 [ApiController]
-public class InventoryController : CustomControllerBase
+public class InventoryController(
+    ICommandBus commandBus,
+    IQueryBus queryBus) : CustomControllerBase(commandBus, queryBus)
 {
-    public InventoryController(
-        ICommandBus commandBus,
-        IQueryBus queryBus)
-        : base(commandBus, queryBus) { }
 
     /// <summary>
     /// Checks the quantity of a given stock unit in stock

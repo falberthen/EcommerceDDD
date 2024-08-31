@@ -12,20 +12,11 @@ public abstract class StronglyTypedId<T> : ValueObject<StronglyTypedId<T>>
         Value = value;
     }
 
-    public override int GetHashCode()
-    {
-        return EqualityComparer<T>.Default.GetHashCode(Value);
-    }
+    public override int GetHashCode() => EqualityComparer<T>.Default.GetHashCode(Value);
 
-    public static bool operator ==(StronglyTypedId<T>? left, StronglyTypedId<T>? right)
-    {
-        return Equals(left, right);
-    }
+    public static bool operator ==(StronglyTypedId<T>? left, StronglyTypedId<T>? right) => Equals(left, right);
 
-    public static bool operator !=(StronglyTypedId<T>? left, StronglyTypedId<T>? right)
-    {
-        return !Equals(left, right);
-    }
+    public static bool operator !=(StronglyTypedId<T>? left, StronglyTypedId<T>? right) => !Equals(left, right);
 
     protected override IEnumerable<object> GetEqualityComponents()
     {

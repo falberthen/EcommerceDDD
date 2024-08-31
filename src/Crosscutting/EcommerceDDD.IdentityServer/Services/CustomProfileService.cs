@@ -8,22 +8,15 @@ using System.Security.Claims;
 
 namespace EcommerceDDD.IdentityServer.Services;
 
-public class CustomProfileService : IProfileService
+public class CustomProfileService(
+    UserManager<ApplicationUser> userMgr,
+    RoleManager<IdentityRole> roleMgr,
+    IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory) : IProfileService
 {
 
-    private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
-    private readonly UserManager<ApplicationUser> _userMgr;
-    private readonly RoleManager<IdentityRole> _roleMgr;
-
-    public CustomProfileService(
-        UserManager<ApplicationUser> userMgr,
-        RoleManager<IdentityRole> roleMgr,
-        IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory)
-    {
-        _userMgr = userMgr;
-        _roleMgr = roleMgr;
-        _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
-    }
+    private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
+    private readonly UserManager<ApplicationUser> _userMgr = userMgr;
+    private readonly RoleManager<IdentityRole> _roleMgr = roleMgr;
 
     public async Task GetProfileDataAsync(ProfileDataRequestContext context)
     {

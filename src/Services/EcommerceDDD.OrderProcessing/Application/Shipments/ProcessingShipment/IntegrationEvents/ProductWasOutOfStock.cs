@@ -1,13 +1,7 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Application.Shipments.ProcessingShipment.IntegrationEvents;
 
-public class ProductWasOutOfStock : IntegrationEvent
+public class ProductWasOutOfStock(Guid orderId) : IntegrationEvent
 {
-    public Guid OrderId { get; private set; }
-    public DateTime CheckedAt { get; private set; }
-
-    public ProductWasOutOfStock(Guid orderId)
-    {
-        OrderId = orderId;
-        CheckedAt = DateTime.UtcNow;
-    }
+    public Guid OrderId { get; private set; } = orderId;
+    public DateTime CheckedAt { get; private set; } = DateTime.UtcNow;
 }

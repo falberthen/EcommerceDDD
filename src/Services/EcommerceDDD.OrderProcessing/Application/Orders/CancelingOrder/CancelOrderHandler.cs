@@ -1,17 +1,11 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Application.Orders.CancelingOrder;
 
-public class CancelOrderHandler : ICommandHandler<CancelOrder>
+public class CancelOrderHandler(
+    IOrderStatusBroadcaster orderStatusBroadcaster,
+    IEventStoreRepository<Order> orderWriteRepository) : ICommandHandler<CancelOrder>
 {
-    private readonly IOrderStatusBroadcaster _orderStatusBroadcaster;
-    private readonly IEventStoreRepository<Order> _orderWriteRepository;
-
-    public CancelOrderHandler(
-        IOrderStatusBroadcaster orderStatusBroadcaster,
-        IEventStoreRepository<Order> orderWriteRepository)
-    {
-        _orderStatusBroadcaster = orderStatusBroadcaster;
-        _orderWriteRepository = orderWriteRepository;
-    }
+    private readonly IOrderStatusBroadcaster _orderStatusBroadcaster = orderStatusBroadcaster;
+    private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
 
     public async Task Handle(CancelOrder command, CancellationToken cancellationToken)
     {

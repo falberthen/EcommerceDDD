@@ -1,15 +1,10 @@
 ﻿namespace EcommerceDDD.InventoryManagement.Application.CheckingQuantityInStock;
 
-public class CheckProductsInStockHandler : 
+public class CheckProductsInStockHandler(
+    IQuerySession querySession) : 
     IQueryHandler<CheckProductsInStock, IList<InventoryStockUnitViewModel>>
 {
-    private readonly IQuerySession _querySession;
-
-    public CheckProductsInStockHandler(
-        IQuerySession querySession)
-    {
-        _querySession = querySession;
-    }
+    private readonly IQuerySession _querySession = querySession;
 
     public async Task<IList<InventoryStockUnitViewModel>> Handle(CheckProductsInStock query,
         CancellationToken cancellationToken)

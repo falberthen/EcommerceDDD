@@ -1,17 +1,10 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Application.Shipments.ProcessingShipment.IntegrationEvents;
 
-public class ShipmentFailed : IntegrationEvent
+public class ShipmentFailed(
+    Guid shippingId,
+    Guid orderId) : IntegrationEvent
 {
-    public Guid ShippingId { get; }
-    public Guid OrderId { get; }
-    public DateTime FailedAt { get; }
-
-    public ShipmentFailed(
-        Guid shippingId,
-        Guid orderId)
-    {
-        ShippingId = shippingId;
-        OrderId = orderId;
-        FailedAt = DateTime.UtcNow;
-    }
+    public Guid ShippingId { get; } = shippingId;
+    public Guid OrderId { get; } = orderId;
+    public DateTime FailedAt { get; } = DateTime.UtcNow;
 }

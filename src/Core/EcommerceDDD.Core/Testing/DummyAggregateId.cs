@@ -1,15 +1,9 @@
 ﻿namespace EcommerceDDD.Core.Testing;
 
-public sealed class DummyAggregateId : StronglyTypedId<Guid>
+public sealed class DummyAggregateId(Guid value) : StronglyTypedId<Guid>(value)
 {
-    public DummyAggregateId(Guid value) : base(value)
-    {
-    }
 }
 
-public sealed class AnotherFakeAggregateId : StronglyTypedId<Guid>
+public sealed class AnotherFakeAggregateId(Guid value) : StronglyTypedId<Guid>(value)
 {
-    public AnotherFakeAggregateId(Guid value) : base(value)
-    {
-    }
 }

@@ -1,18 +1,12 @@
 ﻿namespace EcommerceDDD.InventoryManagement.Application.EnteringProductInStock;
 
-public class EnterProductInStockHandler : ICommandHandler<EnterProductInStock>
+public class EnterProductInStockHandler(
+    IQuerySession querySession,
+    IEventStoreRepository<InventoryStockUnit> inventoryStockUnitWriteRepository
+        ) : ICommandHandler<EnterProductInStock>
 {
-    private readonly IQuerySession _querySession;
-    private readonly IEventStoreRepository<InventoryStockUnit> _inventoryStockUnitWriteRepository;
-
-    public EnterProductInStockHandler(
-        IQuerySession querySession,
-        IEventStoreRepository<InventoryStockUnit> inventoryStockUnitWriteRepository
-        )
-    {
-        _querySession = querySession;
-        _inventoryStockUnitWriteRepository = inventoryStockUnitWriteRepository;
-    }
+    private readonly IQuerySession _querySession = querySession;
+    private readonly IEventStoreRepository<InventoryStockUnit> _inventoryStockUnitWriteRepository = inventoryStockUnitWriteRepository;
 
     public async Task Handle(EnterProductInStock command, CancellationToken cancellationToken)
     {

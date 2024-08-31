@@ -1,20 +1,13 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Application.Orders.GettingOrders;
 
-public class GetOrdersHandler : IQueryHandler<GetOrders, IList<OrderViewModel>>
+public class GetOrdersHandler(
+    IQuerySession querySession,
+    IIntegrationHttpService integrationHttpService,
+    IConfiguration configuration) : IQueryHandler<GetOrders, IList<OrderViewModel>>
 {
-    private readonly IQuerySession _querySession;
-    private readonly IIntegrationHttpService _integrationHttpService;
-    private readonly IConfiguration _configuration;
-
-    public GetOrdersHandler(
-        IQuerySession querySession, 
-        IIntegrationHttpService integrationHttpService, 
-        IConfiguration configuration)
-    {
-        _querySession = querySession;
-        _integrationHttpService = integrationHttpService;
-        _configuration = configuration;
-    }
+    private readonly IQuerySession _querySession = querySession;
+    private readonly IIntegrationHttpService _integrationHttpService = integrationHttpService;
+    private readonly IConfiguration _configuration = configuration;
 
     public async Task<IList<OrderViewModel>> Handle(GetOrders query, CancellationToken cancellationToken)
     {

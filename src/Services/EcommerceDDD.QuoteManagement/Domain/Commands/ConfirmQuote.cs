@@ -12,8 +12,5 @@ public record class ConfirmQuote : ICommand
 
         return new ConfirmQuote(quoteId);
     }
-    private ConfirmQuote(QuoteId quoteId)
-    {
-        QuoteId = quoteId;
-    }
+    private ConfirmQuote(QuoteId quoteId) => QuoteId = quoteId;
 }

@@ -1,14 +1,9 @@
 ﻿namespace EcommerceDDD.CustomerManagement.Api.Application.UpdatingCustomerInformation;
 
-public class UpdateCustomerInformationHandler : ICommandHandler<UpdateCustomerInformation>
+public class UpdateCustomerInformationHandler(
+    IEventStoreRepository<Customer> customerWriteRepository) : ICommandHandler<UpdateCustomerInformation>
 {
-    private readonly IEventStoreRepository<Customer> _customerWriteRepository;
-
-    public UpdateCustomerInformationHandler(
-        IEventStoreRepository<Customer> customerWriteRepository)
-    {
-        _customerWriteRepository = customerWriteRepository;
-    }
+    private readonly IEventStoreRepository<Customer> _customerWriteRepository = customerWriteRepository;
 
     public async Task Handle(UpdateCustomerInformation command, CancellationToken cancellationToken)
     {

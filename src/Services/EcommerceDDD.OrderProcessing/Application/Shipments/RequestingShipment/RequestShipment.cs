@@ -12,8 +12,5 @@ public record class RequestShipment : ICommand
         return new RequestShipment(orderId);
     }
 
-    private RequestShipment(OrderId orderId)
-    {
-        OrderId = orderId;
-    }
+    private RequestShipment(OrderId orderId) => OrderId = orderId;
 }

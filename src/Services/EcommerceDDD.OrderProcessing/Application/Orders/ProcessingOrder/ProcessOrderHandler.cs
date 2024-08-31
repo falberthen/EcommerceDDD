@@ -1,23 +1,15 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
 
-public class ProcessOrderHandler : ICommandHandler<ProcessOrder>
+public class ProcessOrderHandler(
+    IIntegrationHttpService integrationHttpService,
+    IEventStoreRepository<Order> orderWriteRepository,
+    IEventPublisher eventPublisher,
+    IConfiguration configuration) : ICommandHandler<ProcessOrder>
 {
-    private readonly IIntegrationHttpService _integrationHttpService;
-    private readonly IEventStoreRepository<Order> _orderWriteRepository;
-    private readonly IEventPublisher _eventPublisher;
-    private readonly IConfiguration _configuration;
-
-    public ProcessOrderHandler(
-        IIntegrationHttpService integrationHttpService,
-        IEventStoreRepository<Order> orderWriteRepository,
-        IEventPublisher eventPublisher,
-        IConfiguration configuration)
-    {
-        _integrationHttpService = integrationHttpService;
-        _orderWriteRepository = orderWriteRepository;
-        _eventPublisher = eventPublisher;
-        _configuration = configuration;
-    }
+    private readonly IIntegrationHttpService _integrationHttpService = integrationHttpService;
+    private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
+    private readonly IEventPublisher _eventPublisher = eventPublisher;
+    private readonly IConfiguration _configuration = configuration;
 
     public async Task Handle(ProcessOrder command, CancellationToken cancellationToken)
     {

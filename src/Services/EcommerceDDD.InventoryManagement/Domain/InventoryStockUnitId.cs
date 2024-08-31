@@ -1,13 +1,6 @@
 ﻿namespace EcommerceDDD.InventoryManagement.Domain;
 
-public sealed class InventoryStockUnitId : StronglyTypedId<Guid>
+public sealed class InventoryStockUnitId(Guid value) : StronglyTypedId<Guid>(value)
 {
-    public static InventoryStockUnitId Of(Guid value)
-    {
-        return new InventoryStockUnitId(value);
-    }
-
-    public InventoryStockUnitId(Guid value) : base(value)
-    {
-    }
+    public static InventoryStockUnitId Of(Guid value) => new InventoryStockUnitId(value);
 }

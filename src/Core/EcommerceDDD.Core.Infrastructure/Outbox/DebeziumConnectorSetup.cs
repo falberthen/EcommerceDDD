@@ -5,19 +5,13 @@ public interface IDebeziumConnectorSetup
     Task StartConfiguringAsync(CancellationToken cancellationToken = default);
 }
 
-public class DebeziumConnectorSetup : IDebeziumConnectorSetup
+public class DebeziumConnectorSetup(
+    IOptions<DebeziumSettings> debeziumSettings,
+    ILogger<DebeziumConnectorSetup> logger) : IDebeziumConnectorSetup
 {
-    private readonly DebeziumSettings _debeziumSettings;
-    private readonly ILogger<DebeziumConnectorSetup> _logger;
+    private readonly DebeziumSettings _debeziumSettings = debeziumSettings.Value ?? throw new ArgumentNullException(nameof(debeziumSettings));
+    private readonly ILogger<DebeziumConnectorSetup> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private static readonly HttpClient _httpClient = new HttpClient();
-
-    public DebeziumConnectorSetup(
-        IOptions<DebeziumSettings> debeziumSettings,
-        ILogger<DebeziumConnectorSetup> logger)
-    {
-        _debeziumSettings = debeziumSettings.Value ?? throw new ArgumentNullException(nameof(debeziumSettings));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
 
     public async Task StartConfiguringAsync(CancellationToken cancellationToken = default)
     {

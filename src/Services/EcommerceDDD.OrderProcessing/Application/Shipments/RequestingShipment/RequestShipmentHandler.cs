@@ -1,20 +1,13 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Application.Shipments.RequestingShipment;
 
-public class RequestShipmentHandler : ICommandHandler<RequestShipment>
+public class RequestShipmentHandler(
+    IIntegrationHttpService integrationHttpService,
+    IEventStoreRepository<Order> orderWriteRepository,
+    IConfiguration configuration) : ICommandHandler<RequestShipment>
 {
-    private readonly IIntegrationHttpService _integrationHttpService;
-    private readonly IEventStoreRepository<Order> _orderWriteRepository;
-    private readonly IConfiguration _configuration;
-
-    public RequestShipmentHandler(
-        IIntegrationHttpService integrationHttpService,
-        IEventStoreRepository<Order> orderWriteRepository,
-        IConfiguration configuration)
-    {
-        _integrationHttpService = integrationHttpService;
-        _orderWriteRepository = orderWriteRepository;
-        _configuration = configuration;
-    }
+    private readonly IIntegrationHttpService _integrationHttpService = integrationHttpService;
+    private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
+    private readonly IConfiguration _configuration = configuration;
 
     public async Task Handle(RequestShipment command, CancellationToken cancellationToken)
     {

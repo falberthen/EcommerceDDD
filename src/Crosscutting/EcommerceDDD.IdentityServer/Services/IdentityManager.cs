@@ -3,24 +3,16 @@ using System.Net;
 
 namespace EcommerceDDD.IdentityServer.Services;
 
-public class IdentityManager : IIdentityManager
+public class IdentityManager(
+    ITokenRequester tokenRequester,
+    UserManager<ApplicationUser> userManager,
+    IOptions<TokenIssuerSettings> issuerSettings,
+    RoleManager<IdentityRole> roleManager) : IIdentityManager
 {
-    private readonly ITokenRequester _tokenRequester;
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly TokenIssuerSettings _issuerSettings;
-    public readonly RoleManager<IdentityRole> _roleManager;
-
-    public IdentityManager(
-        ITokenRequester tokenRequester, 
-        UserManager<ApplicationUser> userManager,
-        IOptions<TokenIssuerSettings> issuerSettings, 
-        RoleManager<IdentityRole> roleManager)
-    {
-        _tokenRequester = tokenRequester;
-        _userManager = userManager;
-        _issuerSettings = issuerSettings.Value;
-        _roleManager = roleManager;
-    }
+    private readonly ITokenRequester _tokenRequester = tokenRequester;
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
+    private readonly TokenIssuerSettings _issuerSettings = issuerSettings.Value;
+    public readonly RoleManager<IdentityRole> _roleManager = roleManager;
 
     public async Task<TokenResponse> AuthUserByCredentials(LoginRequest request)
     {

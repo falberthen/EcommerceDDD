@@ -13,8 +13,5 @@ public record class QuoteConfirmed : DomainEvent
     }
 
     private QuoteConfirmed(
-        Guid quoteId)
-    {
-        QuoteId = quoteId;
-    }
+        Guid quoteId) => QuoteId = quoteId;
 }

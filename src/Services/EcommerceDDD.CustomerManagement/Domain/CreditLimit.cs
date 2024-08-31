@@ -17,8 +17,5 @@ public class CreditLimit : ValueObject<CreditLimit>
         yield return Amount;
     }
 
-    private CreditLimit(decimal creditLimit)
-    {
-        Amount = creditLimit;        
-    }
+    private CreditLimit(decimal creditLimit) => Amount = creditLimit;
 }

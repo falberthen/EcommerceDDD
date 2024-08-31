@@ -1,13 +1,8 @@
 ﻿namespace EcommerceDDD.Core.Testing;
 
-public class DummyCommandHandler : ICommandHandler<DummyCommand>
+public class DummyCommandHandler(IEventStoreRepository<DummyAggregateRoot> repository) : ICommandHandler<DummyCommand>
 {
-    private readonly IEventStoreRepository<DummyAggregateRoot> _eventStoreRepository;
-
-    public DummyCommandHandler(IEventStoreRepository<DummyAggregateRoot> repository)
-    {
-        _eventStoreRepository = repository;
-    }
+    private readonly IEventStoreRepository<DummyAggregateRoot> _eventStoreRepository = repository;
 
     public async Task Handle(DummyCommand command, CancellationToken cancellationToken)
     {

@@ -63,12 +63,10 @@ public class CustomControllerBase : ControllerBase
         });
     }
 
-    protected IActionResult BadRequestActionResult(string resultErrors)
-    {
-        return BadRequest(new ApiResponse<IActionResult>
+    protected IActionResult BadRequestActionResult(string resultErrors) =>
+        BadRequest(new ApiResponse<IActionResult>
         {
             Success = false,
             Message = resultErrors
         });
-    }
 }

@@ -1,23 +1,15 @@
 ﻿namespace EcommerceDDD.CustomerManagement.Api.Application.RegisteringCustomer;
 
-public class RegisterCustomerHandler : ICommandHandler<RegisterCustomer>
+public class RegisterCustomerHandler(
+    IHttpRequester httpRequester,
+    IEmailUniquenessChecker uniquenessChecker,
+    IOptions<TokenIssuerSettings> tokenIssuerSettings,
+    IEventStoreRepository<Customer> customerWriteRepository) : ICommandHandler<RegisterCustomer>
 {
-    private readonly IHttpRequester _httpRequester;
-    private readonly IEmailUniquenessChecker _uniquenessChecker;
-    private readonly TokenIssuerSettings _tokenIssuerSettings;
-    private readonly IEventStoreRepository<Customer> _customerWriteRepository;
-
-    public RegisterCustomerHandler(
-        IHttpRequester httpRequester,
-        IEmailUniquenessChecker uniquenessChecker,
-        IOptions<TokenIssuerSettings> tokenIssuerSettings,        
-        IEventStoreRepository<Customer> customerWriteRepository)
-    {
-        _httpRequester = httpRequester;
-        _uniquenessChecker = uniquenessChecker;
-        _tokenIssuerSettings = tokenIssuerSettings.Value;
-        _customerWriteRepository = customerWriteRepository;
-    }
+    private readonly IHttpRequester _httpRequester = httpRequester;
+    private readonly IEmailUniquenessChecker _uniquenessChecker = uniquenessChecker;
+    private readonly TokenIssuerSettings _tokenIssuerSettings = tokenIssuerSettings.Value;
+    private readonly IEventStoreRepository<Customer> _customerWriteRepository = customerWriteRepository;
 
     public async Task Handle(RegisterCustomer command, CancellationToken cancellationToken)
     {
