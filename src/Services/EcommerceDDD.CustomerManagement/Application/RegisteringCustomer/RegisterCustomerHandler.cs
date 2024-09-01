@@ -6,10 +6,14 @@ public class RegisterCustomerHandler(
     IOptions<TokenIssuerSettings> tokenIssuerSettings,
     IEventStoreRepository<Customer> customerWriteRepository) : ICommandHandler<RegisterCustomer>
 {
-    private readonly IHttpRequester _httpRequester = httpRequester;
-    private readonly IEmailUniquenessChecker _uniquenessChecker = uniquenessChecker;
-    private readonly TokenIssuerSettings _tokenIssuerSettings = tokenIssuerSettings.Value;
-    private readonly IEventStoreRepository<Customer> _customerWriteRepository = customerWriteRepository;
+    private readonly IHttpRequester _httpRequester = httpRequester
+		?? throw new ArgumentNullException(nameof(httpRequester));
+    private readonly IEmailUniquenessChecker _uniquenessChecker = uniquenessChecker
+		?? throw new ArgumentNullException(nameof(uniquenessChecker));
+	private readonly TokenIssuerSettings _tokenIssuerSettings = tokenIssuerSettings.Value
+		?? throw new ArgumentNullException(nameof(tokenIssuerSettings));
+	private readonly IEventStoreRepository<Customer> _customerWriteRepository = customerWriteRepository
+		?? throw new ArgumentNullException(nameof(customerWriteRepository));
 
     public async Task Handle(RegisterCustomer command, CancellationToken cancellationToken)
     {
@@ -27,7 +31,7 @@ public class RegisterCustomerHandler(
             ?? throw new RecordNotFoundException($"An error occurred creating the customer's user.");
 
         if (!response.Success)
-            throw new RecordNotFoundException(response.Message);
+            throw new RecordNotFoundException(response?.Message!);
 
         await _customerWriteRepository
             .AppendEventsAsync(customer);

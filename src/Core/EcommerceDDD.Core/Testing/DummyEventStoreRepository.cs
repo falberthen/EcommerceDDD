@@ -1,7 +1,4 @@
-﻿
-
-
-namespace EcommerceDDD.Core.Testing;
+﻿namespace EcommerceDDD.Core.Testing;
 
 public class DummyEventStoreRepository<TA> : IEventStoreRepository<TA>
     where TA : class, IAggregateRoot<StronglyTypedId<Guid>>
@@ -22,9 +19,14 @@ public class DummyEventStoreRepository<TA> : IEventStoreRepository<TA>
 
     public void AppendToOutbox(INotification @event) { }    
 
-    public Task<TA> FetchStreamAsync(Guid id, int? version = null, CancellationToken cancellationToken = default) =>
-        Task.FromResult(AggregateStream.FirstOrDefault(c=>c.Stream == id)?.Aggregate);
+    public Task<TA> FetchStreamAsync(Guid id, int? version = null, CancellationToken cancellationToken = default) 
+		=> Task.FromResult(AggregateStream.FirstOrDefault(c=>c.Stream == id)?.Aggregate!);
 
-    public record class StreamAction(Guid Stream, TA Aggregate, long ExpectedVersion, IEnumerable<object> Events);
+    public record class StreamAction(
+		Guid Stream, 
+		TA Aggregate, 
+		long ExpectedVersion, 
+		IEnumerable<object> Events
+	);
 }
 

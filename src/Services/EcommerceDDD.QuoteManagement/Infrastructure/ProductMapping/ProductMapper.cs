@@ -1,4 +1,6 @@
-﻿namespace EcommerceDDD.QuoteManagement.Infrastructure.ProductMapping;
+﻿using EcommerceDDD.Core.Exceptions.Types;
+
+namespace EcommerceDDD.QuoteManagement.Infrastructure.ProductMapping;
 
 public class ProductMapper(
     IIntegrationHttpService integrationHttpService,

@@ -1,3 +1,5 @@
+using EcommerceDDD.Core.Exceptions.Types;
+
 namespace EcommerceDDD.CustomerManagement.Tests.Application;
 
 public class RegisterCustomerHandlerTests

@@ -1,37 +1,29 @@
 ﻿namespace EcommerceDDD.Core.Infrastructure.SignalR;
 
-public class OrderStatusBroadcaster : IOrderStatusBroadcaster
+public class OrderStatusBroadcaster(
+	IHttpRequester httpRequester,
+	ITokenRequester tokenRequester,
+	IOptions<TokenIssuerSettings> tokenIssuerSettings,
+	IOptions<IntegrationHttpSettings> integrationHttpSettings
+) : IOrderStatusBroadcaster
 {
-    private readonly IHttpRequester _httpRequester;
-    private readonly ITokenRequester _tokenRequester;
-    private readonly TokenIssuerSettings _tokenIssuerSettings;
-    private readonly IntegrationHttpSettings _integrationHttpSettings;
+	private readonly IHttpRequester _httpRequester = httpRequester
+		?? throw new ArgumentNullException(nameof(httpRequester));
+	private readonly ITokenRequester _tokenRequester = tokenRequester
+		?? throw new ArgumentNullException(nameof(tokenRequester));
+	private readonly TokenIssuerSettings _tokenIssuerSettings = tokenIssuerSettings?.Value
+		?? throw new ArgumentNullException(nameof(tokenIssuerSettings));
+	private readonly IntegrationHttpSettings _integrationHttpSettings = integrationHttpSettings?.Value
+		?? throw new ArgumentNullException(nameof(integrationHttpSettings));
 
-    public OrderStatusBroadcaster(
-        IHttpRequester httpRequester,
-        ITokenRequester tokenRequester,
-        IOptions<TokenIssuerSettings> tokenIssuerSettings,
-        IOptions<IntegrationHttpSettings> integrationHttpSettings)
-    {
-        if (tokenIssuerSettings is null)
-            throw new ArgumentNullException(nameof(tokenIssuerSettings));
-        if (integrationHttpSettings is null)
-            throw new ArgumentNullException(nameof(integrationHttpSettings));
+	public async Task UpdateOrderStatus(UpdateOrderStatusRequest request)
+	{
+		var tokenResponse = await _tokenRequester
+			.GetApplicationTokenAsync(_tokenIssuerSettings);
 
-        _httpRequester = httpRequester;
-        _tokenRequester = tokenRequester;
-        _tokenIssuerSettings = tokenIssuerSettings.Value;
-        _integrationHttpSettings = integrationHttpSettings.Value;
-    }
-
-    public async Task UpdateOrderStatus(UpdateOrderStatusRequest request)
-    {
-        var tokenResponse = await _tokenRequester
-            .GetApplicationTokenAsync(_tokenIssuerSettings);
-
-        await _httpRequester.PostAsync<IntegrationHttpResponse>(
-            $"{_integrationHttpSettings.ApiGatewayBaseUrl}/api/signalr/updateorderstatus",
-            request,
-            tokenResponse.AccessToken);
-    }
+		await _httpRequester.PostAsync<IntegrationHttpResponse>(
+			$"{_integrationHttpSettings.ApiGatewayBaseUrl}/api/signalr/updateorderstatus",
+			request,
+			tokenResponse.AccessToken);
+	}
 }

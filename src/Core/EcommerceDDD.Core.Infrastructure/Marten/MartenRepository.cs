@@ -1,20 +1,22 @@
 ﻿namespace EcommerceDDD.Core.Infrastructure.Marten;
 
 public class MartenRepository<TA>(
-    IDocumentSession documentSession,
-    ILogger<MartenRepository<TA>> logger) : IEventStoreRepository<TA>
-    where TA : class, IAggregateRoot<StronglyTypedId<Guid>>
+	IDocumentSession documentSession,
+    ILogger<MartenRepository<TA>> logger
+) : IEventStoreRepository<TA> where TA : class, IAggregateRoot<StronglyTypedId<Guid>>
 {
-    private readonly IDocumentSession _documentSession = documentSession;
-    private readonly ILogger<MartenRepository<TA>> _logger = logger;
+    private readonly IDocumentSession _documentSession = documentSession
+		?? throw new ArgumentNullException(nameof(documentSession));
+	private readonly ILogger<MartenRepository<TA>> _logger = logger
+		?? throw new ArgumentNullException(nameof(logger));
 
-    /// <summary>
-    /// Stores uncommited events from an aggregate 
-    /// </summary>
-    /// <param name="aggregate"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    public async Task<long> AppendEventsAsync(TA aggregate, CancellationToken cancellationToken = default)
+	/// <summary>
+	/// Stores uncommited events from an aggregate 
+	/// </summary>
+	/// <param name="aggregate"></param>
+	/// <param name="cancellationToken"></param>
+	/// <returns></returns>
+	public async Task<long> AppendEventsAsync(TA aggregate, CancellationToken cancellationToken = default)
     {
         var events = aggregate.GetUncommittedEvents().ToArray();
         var nextVersion = aggregate.Version + events.Length;

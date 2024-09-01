@@ -19,7 +19,7 @@ public class Shipment : AggregateRoot<ShipmentId>
         if (OrderId is null)
             throw new BusinessRuleException("The order id is required.");
 
-        if (ProductItems is null || shipmentData.ProductItems.Count == 0 )
+        if (ProductItems is null || shipmentData.ProductItems.Count == 0)
             throw new BusinessRuleException("There are no products to ship.");
 
         return new Shipment(shipmentData);
@@ -85,5 +85,5 @@ public class Shipment : AggregateRoot<ShipmentId>
         Apply(@event);
     }
 
-    private Shipment() {}
+    private Shipment() { }
 }

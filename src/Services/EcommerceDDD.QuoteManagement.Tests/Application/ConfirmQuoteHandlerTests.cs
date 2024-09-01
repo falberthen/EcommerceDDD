@@ -1,3 +1,5 @@
+using EcommerceDDD.Core.Exceptions.Types;
+
 namespace EcommerceDDD.QuoteManagement.Tests.Application;
 
 public class ConfirmQuoteHandlerTests

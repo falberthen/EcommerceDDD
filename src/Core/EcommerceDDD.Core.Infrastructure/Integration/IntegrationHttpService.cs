@@ -1,28 +1,19 @@
 ﻿namespace EcommerceDDD.Core.Infrastructure.Integration;
 
-public class IntegrationHttpService : IIntegrationHttpService
+public class IntegrationHttpService(
+	IHttpRequester httpRequester,
+	ITokenRequester tokenRequester,
+	IOptions<TokenIssuerSettings> tokenIssuerSettings,
+	IOptions<IntegrationHttpSettings> integrationSettings) : IIntegrationHttpService
 {
-    private readonly IHttpRequester _httpRequester;
-    private readonly ITokenRequester _tokenRequester;
-    private readonly TokenIssuerSettings _tokenIssuerSettings;
-    private readonly IntegrationHttpSettings _integrationSettings;
-
-    public IntegrationHttpService(
-        IHttpRequester httpRequester,
-        ITokenRequester tokenRequester,
-        IOptions<TokenIssuerSettings> tokenIssuerSettings,
-        IOptions<IntegrationHttpSettings> integrationSettings)
-    {
-        if (tokenIssuerSettings is null)
-            throw new ArgumentNullException(nameof(tokenIssuerSettings));
-        if (integrationSettings is null)
-            throw new ArgumentNullException(nameof(integrationSettings));
-
-        _httpRequester = httpRequester;
-        _tokenRequester = tokenRequester;
-        _tokenIssuerSettings = tokenIssuerSettings.Value;
-        _integrationSettings = integrationSettings.Value;
-    }
+    private readonly IHttpRequester _httpRequester = httpRequester 
+		?? throw new ArgumentNullException(nameof(httpRequester));
+    private readonly ITokenRequester _tokenRequester = tokenRequester
+		?? throw new ArgumentNullException(nameof(tokenRequester));
+	private readonly TokenIssuerSettings _tokenIssuerSettings = tokenIssuerSettings.Value
+		?? throw new ArgumentNullException(nameof(tokenIssuerSettings));
+	private readonly IntegrationHttpSettings _integrationSettings = integrationSettings.Value
+		?? throw new ArgumentNullException(nameof(integrationSettings));
 
     public async Task<IntegrationHttpResponse> PostAsync(string path, object request)
     {

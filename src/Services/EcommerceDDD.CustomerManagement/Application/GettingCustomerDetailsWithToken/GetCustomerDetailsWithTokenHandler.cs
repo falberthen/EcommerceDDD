@@ -5,9 +5,12 @@ public class GetCustomerDetailsWithTokenHandler(
     IHttpRequester httpRequester,
     IQuerySession querySession) : IQueryHandler<GetCustomerDetailsWithToken, CustomerDetails>
 {
-    private readonly TokenIssuerSettings _tokenIssuerSettings = tokenIssuerSettings.Value;
-    private readonly IQuerySession _querySession = querySession;
-    private readonly IHttpRequester _requester = httpRequester;
+    private readonly TokenIssuerSettings _tokenIssuerSettings = tokenIssuerSettings.Value 
+		?? throw new ArgumentNullException(nameof(tokenIssuerSettings));
+    private readonly IQuerySession _querySession = querySession
+		?? throw new ArgumentNullException(nameof(querySession));
+    private readonly IHttpRequester _requester = httpRequester
+		?? throw new ArgumentNullException(nameof(httpRequester));
 
     public async Task<CustomerDetails> Handle(GetCustomerDetailsWithToken query, 
         CancellationToken cancellationToken)

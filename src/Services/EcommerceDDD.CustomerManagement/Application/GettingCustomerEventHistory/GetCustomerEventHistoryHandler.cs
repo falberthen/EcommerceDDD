@@ -3,7 +3,8 @@
 public class GetCustomerEventHistoryHandler(
     IQuerySession querySession) : IQueryHandler<GetCustomerEventHistory, IList<CustomerEventHistory>> 
 {
-    private readonly IQuerySession _querySession = querySession;
+    private readonly IQuerySession _querySession = querySession
+		?? throw new ArgumentNullException(nameof(querySession));
 
     public async Task<IList<CustomerEventHistory>> Handle(GetCustomerEventHistory query, 
         CancellationToken cancellationToken)

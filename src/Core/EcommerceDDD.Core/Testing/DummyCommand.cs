@@ -1,3 +1,3 @@
 ﻿namespace EcommerceDDD.Core.Testing;
 
-public record class DummyCommand(DummyAggregateId Id) : ICommand {}
+public record class DummyCommand(DummyAggregateId Id) : ICommand { }

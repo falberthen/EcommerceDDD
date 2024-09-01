@@ -1,4 +1,6 @@
-﻿namespace EcommerceDDD.PaymentProcessing.Application.ProcessingPayment;
+﻿using EcommerceDDD.Core.Exceptions.Types;
+
+namespace EcommerceDDD.PaymentProcessing.Application.ProcessingPayment;
 
 public class ProcessPaymentHandler : ICommandHandler<ProcessPayment>
 {

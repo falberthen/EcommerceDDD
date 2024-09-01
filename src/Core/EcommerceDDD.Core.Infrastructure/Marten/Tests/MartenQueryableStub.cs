@@ -5,7 +5,6 @@ public class MartenQueryableStub<TResult> : List<TResult>, IMartenQueryable<TRes
     private readonly IQueryProvider queryProviderMock = Substitute.For<IQueryProvider>();
 
     public Type ElementType => typeof(TResult);
-
     public Expression Expression => Expression.Constant(this);
     public QueryStatistics Statistics => throw new NotImplementedException();
 

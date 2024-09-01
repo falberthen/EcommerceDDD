@@ -1,3 +1,5 @@
+using EcommerceDDD.Core.Exceptions.Types;
+
 namespace EcommerceDDD.ProductCatalog.Tests;
 
 public class CurrencyTests
