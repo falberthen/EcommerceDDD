@@ -2,7 +2,8 @@
 
 public class EmailUniquenessChecker(IQuerySession querySession) : IEmailUniquenessChecker
 {
-    private readonly IQuerySession _querySession = querySession;
+    private readonly IQuerySession _querySession = querySession
+		?? throw new ArgumentNullException(nameof(querySession));
 
     public bool IsUnique(string customerEmail)
     {

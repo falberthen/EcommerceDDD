@@ -12,8 +12,10 @@ public class OrderStatusUpdater(
     IHubContext<OrderStatusHub, IOrderStatusHubClient> broadCastHub,
     ILogger<OrderStatusUpdater> logger) : IOrderStatusUpdater
 {
-    private IHubContext<OrderStatusHub, IOrderStatusHubClient> _broadCastHub { get; } = broadCastHub;
-    private readonly ILogger<OrderStatusUpdater> _logger = logger;
+    private IHubContext<OrderStatusHub, IOrderStatusHubClient> _broadCastHub { get; } = broadCastHub
+		?? throw new ArgumentNullException(nameof(broadCastHub));
+	private readonly ILogger<OrderStatusUpdater> _logger = logger
+		?? throw new ArgumentNullException(nameof(logger));
 
     public async Task UpdateOrderStatus(
         Guid customerId,

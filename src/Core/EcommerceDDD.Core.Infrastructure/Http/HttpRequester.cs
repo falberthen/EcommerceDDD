@@ -2,10 +2,11 @@
 
 public class HttpRequester(IHttpClientFactory factory) : IHttpRequester
 {
-    private readonly HttpClient _httpClient = factory.CreateClient();
-    private const string _scheme = "Bearer";
+	private readonly HttpClient _httpClient = factory?.CreateClient()
+	   ?? throw new ArgumentNullException(nameof(factory));
+	private const string _scheme = "Bearer";
 
-    public async Task<T> PostAsync<T>(string url, object body, string? bearerToken = null)
+	public async Task<T> PostAsync<T>(string url, object body, string? bearerToken = null)
         where T : class
     {
         SetAuthorizationHeader(bearerToken);

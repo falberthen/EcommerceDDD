@@ -3,7 +3,8 @@
 public class UpdateCustomerInformationHandler(
     IEventStoreRepository<Customer> customerWriteRepository) : ICommandHandler<UpdateCustomerInformation>
 {
-    private readonly IEventStoreRepository<Customer> _customerWriteRepository = customerWriteRepository;
+    private readonly IEventStoreRepository<Customer> _customerWriteRepository = customerWriteRepository
+		?? throw new ArgumentNullException(nameof(customerWriteRepository));
 
     public async Task Handle(UpdateCustomerInformation command, CancellationToken cancellationToken)
     {
@@ -23,8 +24,3 @@ public class UpdateCustomerInformationHandler(
             .AppendEventsAsync(customer, cancellationToken);
     }
 }
-
-public record UpdateUserRequest(
-    string Email, 
-    string Password, 
-    string PasswordConfirm);

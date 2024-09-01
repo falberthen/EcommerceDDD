@@ -24,3 +24,4 @@ global using Newtonsoft.Json;
 global using System.ComponentModel.DataAnnotations;
 global using System.Reflection;
 global using System.Security.Claims;
+global using Duende.IdentityServer.Extensions;

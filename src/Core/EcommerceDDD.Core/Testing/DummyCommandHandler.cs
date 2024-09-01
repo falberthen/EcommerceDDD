@@ -2,11 +2,12 @@
 
 public class DummyCommandHandler(IEventStoreRepository<DummyAggregateRoot> repository) : ICommandHandler<DummyCommand>
 {
-    private readonly IEventStoreRepository<DummyAggregateRoot> _eventStoreRepository = repository;
+	private readonly IEventStoreRepository<DummyAggregateRoot> _eventStoreRepository = repository ??
+		throw new ArgumentNullException(nameof(repository));
 
-    public async Task Handle(DummyCommand command, CancellationToken cancellationToken)
-    {
-        var aggregate = new DummyAggregateRoot(command.Id);
-        await _eventStoreRepository.AppendEventsAsync(aggregate);
-    }
+	public async Task Handle(DummyCommand command, CancellationToken cancellationToken)
+	{
+		var aggregate = new DummyAggregateRoot(command.Id);
+		await _eventStoreRepository.AppendEventsAsync(aggregate);
+	}
 }

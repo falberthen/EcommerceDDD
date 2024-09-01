@@ -2,7 +2,8 @@
 
 public class GetCreditLimitHandler(IQuerySession querySession) : IQueryHandler<GetCreditLimit, CreditLimitModel>
 {
-    private readonly IQuerySession _querySession = querySession;
+    private readonly IQuerySession _querySession = querySession
+		?? throw new ArgumentNullException(nameof(querySession));
 
     public Task<CreditLimitModel> Handle(GetCreditLimit query, CancellationToken cancellationToken)
     {        

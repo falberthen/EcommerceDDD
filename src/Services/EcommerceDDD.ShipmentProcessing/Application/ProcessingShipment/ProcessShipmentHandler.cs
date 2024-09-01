@@ -1,4 +1,6 @@
-﻿namespace EcommerceDDD.ShipmentProcessing.Application.ProcessingPayment.IntegrationEvents;
+﻿using EcommerceDDD.Core.Exceptions.Types;
+
+namespace EcommerceDDD.ShipmentProcessing.Application.ProcessingPayment.IntegrationEvents;
 
 public class ProcessShipmentHandler : ICommandHandler<ProcessShipment>
 {

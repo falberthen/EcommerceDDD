@@ -9,10 +9,14 @@ public class IdentityManager(
     IOptions<TokenIssuerSettings> issuerSettings,
     RoleManager<IdentityRole> roleManager) : IIdentityManager
 {
-    private readonly ITokenRequester _tokenRequester = tokenRequester;
-    private readonly UserManager<ApplicationUser> _userManager = userManager;
-    private readonly TokenIssuerSettings _issuerSettings = issuerSettings.Value;
-    public readonly RoleManager<IdentityRole> _roleManager = roleManager;
+    private readonly ITokenRequester _tokenRequester = tokenRequester
+		?? throw new ArgumentNullException(nameof(tokenRequester));
+    private readonly UserManager<ApplicationUser> _userManager = userManager
+		?? throw new ArgumentNullException(nameof(userManager));
+    private readonly TokenIssuerSettings _issuerSettings = issuerSettings.Value
+		?? throw new ArgumentNullException(nameof(issuerSettings));
+    public readonly RoleManager<IdentityRole> _roleManager = roleManager
+		?? throw new ArgumentNullException(nameof(roleManager));
 
     public async Task<TokenResponse> AuthUserByCredentials(LoginRequest request)
     {

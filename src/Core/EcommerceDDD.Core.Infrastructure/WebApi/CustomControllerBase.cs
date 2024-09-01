@@ -2,18 +2,18 @@
 
 public class CustomControllerBase : ControllerBase
 {
-    private readonly ICommandBus _commandBus;
-    private readonly IQueryBus _queryBus;
+    private readonly ICommandBus? _commandBus;
+    private readonly IQueryBus? _queryBus;
 
-    public CustomControllerBase() { }
+	public CustomControllerBase() { }
 
-    protected CustomControllerBase(
-        ICommandBus commandBus,
-        IQueryBus queryBus)
+    protected CustomControllerBase(ICommandBus commandBus, IQueryBus queryBus)
     {
-        _commandBus = commandBus;
-        _queryBus = queryBus;
-    }
+        _commandBus = commandBus
+			?? throw new ArgumentNullException(nameof(commandBus));
+		_queryBus = queryBus
+			?? throw new ArgumentNullException(nameof(queryBus));
+	}
 
     protected async new Task<IActionResult> Response<TResult>(IQuery<TResult> query,
         CancellationToken cancellationToken)
@@ -40,8 +40,7 @@ public class CustomControllerBase : ControllerBase
         });
     }
 
-    protected async new Task<IActionResult> Response(ICommand command,
-        CancellationToken cancellationToken)
+    protected async new Task<IActionResult> Response(ICommand command, CancellationToken cancellationToken)
     {
         try
         {
@@ -63,10 +62,10 @@ public class CustomControllerBase : ControllerBase
         });
     }
 
-    protected IActionResult BadRequestActionResult(string resultErrors) =>
-        BadRequest(new ApiResponse<IActionResult>
-        {
-            Success = false,
-            Message = resultErrors
-        });
+    protected IActionResult BadRequestActionResult(string resultErrors) 
+		=> BadRequest(new ApiResponse<IActionResult>
+			{
+				Success = false,
+				Message = resultErrors
+			});
 }

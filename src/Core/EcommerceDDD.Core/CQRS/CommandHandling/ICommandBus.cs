@@ -2,6 +2,6 @@
 
 public interface ICommandBus
 {
-    Task SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken)
-        where TCommand : ICommand;
+	Task SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken)
+		where TCommand : ICommand;
 }

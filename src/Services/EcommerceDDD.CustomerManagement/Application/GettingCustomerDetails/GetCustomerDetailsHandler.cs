@@ -3,7 +3,8 @@
 public class GetCustomerDetailsHandler(
     IQuerySession querySession) : IQueryHandler<GetCustomerDetails, CustomerDetails>
 {
-    private readonly IQuerySession _querySession = querySession;
+    private readonly IQuerySession _querySession = querySession
+		?? throw new ArgumentNullException(nameof(querySession));
 
     public async Task<CustomerDetails> Handle(GetCustomerDetails query, 
         CancellationToken cancellationToken)

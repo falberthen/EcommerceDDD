@@ -6,9 +6,11 @@ public class IntegrationEvent : IIntegrationEvent
     public string EventName { get; } // Event name identifier
     public string JSON_Payload { get; } // Serialized data
 
-    public static IntegrationEvent FromNotification(
-        INotification domainEvent)
+    public static IntegrationEvent FromNotification(INotification domainEvent)
     {
+		if(domainEvent == null) 
+			throw new ArgumentNullException(nameof(domainEvent));
+
         return new IntegrationEvent(domainEvent);
     }
 

@@ -1,4 +1,6 @@
-﻿namespace EcommerceDDD.InventoryManagement.Tests.Domain;
+﻿using EcommerceDDD.Core.Exceptions.Types;
+
+namespace EcommerceDDD.InventoryManagement.Tests.Domain;
 
 public class InventoryStockUnitTests
 {

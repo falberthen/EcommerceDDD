@@ -1,3 +1,3 @@
 ﻿namespace EcommerceDDD.Core.Domain;
 
-public interface IDomainEvent : INotification {}
+public interface IDomainEvent : INotification { }

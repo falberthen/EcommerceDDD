@@ -164,7 +164,7 @@ services:
       timeout: 3s
       retries: 10
     restart:
-      on-failure
+      always
     depends_on:
       - postgres
       - ecommerceddd-identityserver
@@ -189,7 +189,7 @@ services:
       timeout: 3s
       retries: 10
     restart:
-      on-failure
+      always
     depends_on:
       - postgres
       - ecommerceddd-identityserver
@@ -214,7 +214,7 @@ services:
       timeout: 3s
       retries: 10
     restart:
-      on-failure
+      always
     depends_on:
       - postgres      
       - ecommerceddd-identityserver
@@ -239,7 +239,7 @@ services:
       timeout: 3s
       retries: 10
     restart:
-      on-failure
+      always
     depends_on:
       - postgres      
       - ecommerceddd-identityserver
@@ -265,7 +265,7 @@ services:
       timeout: 3s
       retries: 10
     restart: 
-      on-failure
+      always
     depends_on:
       - postgres      
       - ecommerceddd-identityserver
@@ -290,7 +290,7 @@ services:
       timeout: 3s
       retries: 10
     restart:
-      on-failure
+      always
     depends_on:
       - postgres      
       - ecommerceddd-identityserver
@@ -317,7 +317,7 @@ services:
       timeout: 3s
       retries: 10
     restart:
-      on-failure
+      always
     depends_on:
       - postgres      
       - ecommerceddd-identityserver
@@ -344,7 +344,7 @@ services:
       timeout: 3s
       retries: 10
     restart:
-      on-failure
+      always
     depends_on:
       - postgres      
       - ecommerceddd-identityserver

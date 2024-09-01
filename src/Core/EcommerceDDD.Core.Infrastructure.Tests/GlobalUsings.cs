@@ -1,7 +1,10 @@
 global using EcommerceDDD.Core.Infrastructure.Http;
+global using EcommerceDDD.Core.Infrastructure.Identity;
 global using EcommerceDDD.Core.Infrastructure.Integration;
 global using EcommerceDDD.Core.Testing;
 global using FluentAssertions;
+global using Microsoft.AspNetCore.Http;
+global using Microsoft.Extensions.Caching.Memory;
 global using Newtonsoft.Json;
 global using NSubstitute;
 global using System.Net;
