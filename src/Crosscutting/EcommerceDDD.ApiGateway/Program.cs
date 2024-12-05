@@ -1,5 +1,15 @@
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
+const string corsPolicy = "CorsPolicy";
+
+// Ocelot
+services.AddOcelot(builder.Configuration).AddPolly();
+
+builder.Configuration.AddOcelotWithSwaggerSupport(options =>
+{
+	options.Folder = "Routes";
+});
+services.AddSwaggerForOcelot(builder.Configuration);
 
 services.AddSignalR();
 services.AddControllers();
@@ -7,20 +17,12 @@ services.AddEndpointsApiExplorer();
 services.AddJwtAuthentication(builder.Configuration);
 services.AddHealthChecks();
 
-// Ocelot
-builder.Configuration.AddJsonFile("ocelot.json");
-services.AddOcelot(builder.Configuration)
-    .AddCacheManager(x =>
-    {
-        x.WithDictionaryHandle();
-    });
-
 // Services
 services.AddScoped<IOrderStatusUpdater, OrderStatusUpdater>();
 
 // Cors
 services.AddCors(o =>
-    o.AddPolicy("CorsPolicy", builder => {
+    o.AddPolicy(corsPolicy, builder => {
         builder
         .AllowAnyMethod()
         .AllowAnyHeader()
@@ -30,22 +32,31 @@ services.AddCors(o =>
     }
 ));
 
+// Swagger for ocelot
+services.AddSwaggerGen();
+
 // App
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+	app.UseSwagger();
+}
+
 app.UseWebSockets();
 app.UseRouting();
-app.UseCors("CorsPolicy");
+app.UseCors(corsPolicy);
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseHealthChecks();
 
-// SignalR Hubs
-app.UseEndpoints(endpoints =>
+app.UseSwaggerForOcelotUI(options =>
 {
-    endpoints.MapControllers();
-    endpoints.MapHub<OrderStatusHub>("orderstatushub");
-});
+	options.PathToSwaggerGenerator = "/swagger/docs";
+}).UseOcelot().Wait();
 
+// SignalR Hubs
+app.MapControllers();
+app.MapHub<OrderStatusHub>("/orderstatushub");
 
-app.UseOcelot().Wait();
 app.Run();

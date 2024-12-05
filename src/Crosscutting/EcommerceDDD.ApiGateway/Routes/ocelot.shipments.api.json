@@ -1,0 +1,17 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/shipments",
+      "UpstreamPathTemplate": "/api/shipments",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-shipments",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ],
+      "SwaggerKey": "shipments"
+    }
+  ]
+}

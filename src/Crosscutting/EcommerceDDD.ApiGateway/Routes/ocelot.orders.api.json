@@ -1,0 +1,17 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/orders/{everything}",
+      "UpstreamPathTemplate": "/api/orders/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-orders",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE", "POST" ],
+      "SwaggerKey": "orders"
+    }
+  ]
+}

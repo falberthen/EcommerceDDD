@@ -1,0 +1,81 @@
+{
+  "SwaggerEndPoints": [
+    {
+      "Key": "customers",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "CustomerManagement API",
+          "Version": "v2",
+          "Url": "http://ecommerceddd-customers:80/swagger/v2/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "products",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "ProductCatalog API",
+          "Version": "v2",
+          "Url": "http://ecommerceddd-products:80/swagger/v2/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "inventory",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "InventoryManagement API",
+          "Version": "v2",
+          "Url": "http://ecommerceddd-inventory:80/swagger/v2/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "quotes",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "QuotesManagement API",
+          "Version": "v2",
+          "Url": "http://ecommerceddd-quotes:80/swagger/v2/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "orders",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "OrderProcessing API",
+          "Version": "v2",
+          "Url": "http://ecommerceddd-orders:80/swagger/v2/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "payments",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "PaymentsProcessing API",
+          "Version": "v2",
+          "Url": "http://ecommerceddd-payments:80/swagger/v2/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "shipments",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "ShipmentsProcessing API",
+          "Version": "v2",
+          "Url": "http://ecommerceddd-shipments:80/swagger/v2/swagger.json"
+        }
+      ]
+    }
+  ]
+}
