@@ -3,7 +3,6 @@ using System;
 using Duende.IdentityServer.EntityFramework.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,15 +11,13 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EcommerceDDD.IdentityServer.Migrations.IdentityServer.ConfigurationDb
 {
     [DbContext(typeof(ConfigurationDbContext))]
-    [Migration("20230529203545_InitialIdentityServerConfigurationDbMigration")]
-    partial class InitialIdentityServerConfigurationDbMigration
+    partial class ConfigurationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.5")
+                .HasAnnotation("ProductVersion", "8.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -436,6 +433,9 @@ namespace EcommerceDDD.IdentityServer.Migrations.IdentityServer.ConfigurationDb
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
+                    b.Property<int?>("PushedAuthorizationLifetime")
+                        .HasColumnType("integer");
+
                     b.Property<int>("RefreshTokenExpiration")
                         .HasColumnType("integer");
 
@@ -452,6 +452,9 @@ namespace EcommerceDDD.IdentityServer.Migrations.IdentityServer.ConfigurationDb
                         .HasColumnType("boolean");
 
                     b.Property<bool>("RequirePkce")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("RequirePushedAuthorization")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("RequireRequestObject")

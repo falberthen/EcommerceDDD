@@ -6,10 +6,12 @@ public static class MigrationManager
     {
         using (var scope = host.Services.CreateScope())
         {
-            scope.ServiceProvider
-                .GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
-
-            using (var context = scope.ServiceProvider.GetRequiredService<ConfigurationDbContext>())
+			scope.ServiceProvider
+				.GetRequiredService<IdentityApplicationDbContext>().Database.Migrate();
+			scope.ServiceProvider
+                .GetRequiredService<PersistedGrantDbContext>().Database.Migrate();			
+			
+			using (var context = scope.ServiceProvider.GetRequiredService<ConfigurationDbContext>())
             {
                 try
                 {

@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EcommerceDDD.IdentityServer.Migrations.IdentityServer.ConfigurationDb
 {
     /// <inheritdoc />
-    public partial class InitialIdentityServerConfigurationDbMigration : Migration
+    public partial class InitialConfigurationMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -113,7 +113,9 @@ namespace EcommerceDDD.IdentityServer.Migrations.IdentityServer.ConfigurationDb
                     Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Updated = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     LastAccessed = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    NonEditable = table.Column<bool>(type: "boolean", nullable: false)
+                    NonEditable = table.Column<bool>(type: "boolean", nullable: false),
+                    PushedAuthorizationLifetime = table.Column<int>(type: "integer", nullable: true),
+                    RequirePushedAuthorization = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
