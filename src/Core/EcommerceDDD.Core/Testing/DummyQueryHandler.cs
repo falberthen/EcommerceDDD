@@ -8,11 +8,9 @@ public class DummyQueryHandler(IEventStoreRepository<DummyAggregateRoot> reposit
     public async Task<DummyAggregateRoot> Handle(DummyQuery query, CancellationToken cancellationToken)
     {
         var aggregate = new DummyAggregateRoot(query.Id);
-        await _eventStoreRepository.AppendEventsAsync(aggregate);
+		aggregate.DoSomething();
+		await _eventStoreRepository.AppendEventsAsync(aggregate);
 
-        var storedAggregate = await _eventStoreRepository
-            .FetchStreamAsync(query.Id.Value);
-
-        return storedAggregate;
+        return aggregate;
     }
 }
