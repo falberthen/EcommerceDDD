@@ -1,0 +1,30 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/quotes",
+      "UpstreamPathTemplate": "/api/quotes",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-quotes",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "SwaggerKey": "quotes"
+    },
+    {
+      "DownstreamPathTemplate": "/api/quotes/{everything}",
+      "UpstreamPathTemplate": "/api/quotes/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-quotes",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ],
+      "SwaggerKey": "quotes"
+    }
+  ]
+}

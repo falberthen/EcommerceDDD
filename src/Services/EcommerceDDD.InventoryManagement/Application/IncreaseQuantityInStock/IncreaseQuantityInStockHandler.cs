@@ -1,19 +1,19 @@
 ﻿namespace EcommerceDDD.InventoryManagement.Application.DecreasingQuantityInStock;
 
 public class IncreaseQuantityInStockHandler(
-    IQuerySession querySession,
+	IQuerySessionWrapper querySession,
     IEventStoreRepository<InventoryStockUnit> inventoryStockUnitWriteRepository
-        ) : ICommandHandler<IncreaseStockQuantity>
+) : ICommandHandler<IncreaseStockQuantity>
 {
-    private readonly IQuerySession _querySession = querySession;
+    private readonly IQuerySessionWrapper _querySession = querySession;
     private readonly IEventStoreRepository<InventoryStockUnit> _inventoryStockUnitWriteRepository = inventoryStockUnitWriteRepository;
 
     public async Task Handle(IncreaseStockQuantity command, CancellationToken cancellationToken)
     {
         // Check if the product is already in stock
-        var existingEntry = await _querySession.Query<InventoryStockUnitDetails>()
+        var existingEntry = _querySession.Query<InventoryStockUnitDetails>()
             .Where(x => x.ProductId == command.ProductId.Value)
-            .FirstOrDefaultAsync() 
+            .FirstOrDefault() 
             ?? throw new RecordNotFoundException(
                 $"The product {command.ProductId.Value} was not found in the inventory.");
 

@@ -5,9 +5,9 @@ namespace EcommerceDDD.QuoteManagement.API.Controllers;
 [Route("api/quotes")]
 public class QuotesController(
     ICommandBus commandBus,
-    IQueryBus queryBus) : CustomControllerBase(commandBus, queryBus)
+    IQueryBus queryBus
+) : CustomControllerBase(commandBus, queryBus)
 {
-
     /// <summary>
     /// Get the current customer's quote
     /// </summary>
@@ -15,8 +15,8 @@ public class QuotesController(
     /// <param name="currencyCode"></param>
     /// <returns></returns>
     [HttpGet, Route("{customerId:guid}/quote/{quoteId:guid?}")]
-    [Authorize(Policy = Policies.CanRead)]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<QuoteViewModel>))]
+	[Authorize(Policy = Policies.CanRead)]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<QuoteViewModel>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetQuote([FromRoute] Guid customerId, [FromRoute] Guid? quoteId,
         CancellationToken cancellationToken) =>
@@ -33,8 +33,8 @@ public class QuotesController(
     /// <param name="quoteId"></param>
     /// <returns></returns>
     [HttpGet, Route("{quoteId:guid}/history")]
-    [Authorize(Policy = Policies.CanRead)]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<QuoteEventHistory>>))]
+	[Authorize(Roles = Roles.Customer, Policy = Policies.CanRead)]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<QuoteEventHistory>>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ListHistory([FromRoute] Guid quoteId,
         CancellationToken cancellationToken) =>
@@ -49,8 +49,8 @@ public class QuotesController(
     /// <param name="request"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(Policy = Policies.CanWrite)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+	[Authorize(Roles = Roles.Customer, Policy = Policies.CanWrite)]
+	[ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> OpenCustomerQuote([FromBody] OpenQuoteRequest request,
         CancellationToken cancellationToken) =>
@@ -68,8 +68,8 @@ public class QuotesController(
     /// <param name="request"></param>
     /// <returns></returns>
     [HttpPut, Route("{quoteId:guid}/items")]
-    [Authorize(Policy = Policies.CanWrite)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+	[Authorize(Roles = Roles.Customer, Policy = Policies.CanWrite)]
+	[ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> AddItem([FromRoute] Guid quoteId, 
         [FromBody] AddQuoteItemRequest request, CancellationToken cancellationToken) =>
@@ -88,8 +88,8 @@ public class QuotesController(
     /// <param name="productId"></param>
     /// <returns></returns>
     [HttpDelete, Route("{quoteId:guid}/items/{productId:guid}")]
-    [Authorize(Policy = Policies.CanDelete)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+	[Authorize(Roles = Roles.Customer, Policy = Policies.CanDelete)]
+	[ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> RemoveItem([FromRoute] Guid quoteId, [FromRoute] Guid productId,
         CancellationToken cancellationToken) =>
@@ -104,8 +104,8 @@ public class QuotesController(
     /// <param name="quoteId"></param>
     /// <returns></returns>
     [HttpDelete, Route("{quoteId:guid}")]
-    [Authorize(Policy = Policies.CanDelete)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+	[Authorize(Roles = Roles.Customer, Policy = Policies.CanDelete)]
+	[ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Cancel([FromRoute] Guid quoteId,
         CancellationToken cancellationToken) =>
@@ -120,8 +120,8 @@ public class QuotesController(
     /// <param name="quoteId"></param>
     /// <returns></returns>
     [HttpPut, Route("{quoteId:guid}/confirm")]
-    [Authorize(Policy = Policies.M2MAccess)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+	[Authorize(Policy = Policies.CanWrite)]
+	[ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Confirm([FromRoute] Guid quoteId,
         CancellationToken cancellationToken) =>

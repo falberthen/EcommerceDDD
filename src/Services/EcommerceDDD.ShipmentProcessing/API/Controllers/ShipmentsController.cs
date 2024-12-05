@@ -3,13 +3,11 @@ namespace EcommerceDDD.ShipmentProcessing.API.Controllers;
 [ApiController]
 [Route("api/shipments")]
 [Authorize(Policy = Policies.M2MAccess)]
-public class ShipmentsController : CustomControllerBase
+public class ShipmentsController(
+	ICommandBus commandBus,
+	IQueryBus queryBus
+) : CustomControllerBase(commandBus, queryBus)
 {
-    public ShipmentsController(
-        ICommandBus commandBus,
-        IQueryBus queryBus)
-        : base(commandBus, queryBus) { }
-
     [HttpPost]
     [Authorize(Policy = Policies.CanWrite)]
     [ProducesResponseType(StatusCodes.Status200OK)]

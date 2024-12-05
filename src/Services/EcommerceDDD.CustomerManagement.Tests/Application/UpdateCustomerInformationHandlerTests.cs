@@ -1,5 +1,3 @@
-using EcommerceDDD.CustomerManagement.Api.Application.UpdatingCustomerInformation;
-
 namespace EcommerceDDD.CustomerManagement.Tests.Application;
 
 public class UpdateCustomerInformationHandlerTests

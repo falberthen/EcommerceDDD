@@ -6,15 +6,17 @@ public class QueryHandlerTests
     public async Task ValidQuery_ShouldBeHandled()
     {
         // Given
-        var repository = new DummyEventStoreRepository<DummyAggregateRoot>();
         var query = new DummyQuery(new DummyAggregateId(Guid.NewGuid()));
-        var queryHandler = new DummyQueryHandler(repository);
+        var queryHandler = new DummyQueryHandler(_repository);
 
         // When
         var aggregate = await queryHandler.Handle(query, CancellationToken.None);
 
         // Then
         Assert.NotNull(aggregate);
-        aggregate.Id.Value.Should().Be(query.Id.Value);
-    }
+		aggregate.Id.Value.Should().Be(query.Id.Value);
+	}
+
+	private readonly IEventStoreRepository<DummyAggregateRoot> _repository =
+		Substitute.For<IEventStoreRepository<DummyAggregateRoot>>();
 }

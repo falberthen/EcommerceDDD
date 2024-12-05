@@ -1,0 +1,30 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/payments",
+      "UpstreamPathTemplate": "/api/payments",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-payments",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ],
+      "SwaggerKey": "payments"
+    },
+    {
+      "DownstreamPathTemplate": "/api/payments/{id}",
+      "UpstreamPathTemplate": "/api/payments/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-payments",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [ "DELETE" ],
+      "SwaggerKey": "payments"
+    }
+  ]
+}

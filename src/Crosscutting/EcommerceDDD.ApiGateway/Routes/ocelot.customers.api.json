@@ -1,0 +1,30 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/customers",
+      "UpstreamPathTemplate": "/api/customers",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-customers",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "SwaggerKey": "customers"
+    },
+    {
+      "DownstreamPathTemplate": "/api/customers/{customerId}",
+      "UpstreamPathTemplate": "/api/customers/{customerId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-customers",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "customers",
+      "UpstreamHttpMethod": [ "GET", "PUT" ]
+    }    
+  ]
+}

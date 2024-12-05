@@ -19,16 +19,15 @@ public class ProductInventoryHandler : IProductInventoryHandler
         foreach (var productItem in productItems)
         {
             var response = await _integrationHttpService
-                .PutAsync($"{apiRoute}/decrease-stock-quantity",
+                .PutAsync($"{apiRoute}/decrease-stock-quantity/{productItem.ProductId.Value}",
                     new DecreaseQuantityInStockRequest(
-                        productItem.ProductId.Value,
                         productItem.Quantity));
 
             if (response?.Success == false)
                 throw new ApplicationLogicException(
                     $"An error occurred decreasing stock quantity for product {productItem.ProductId.Value}.");
         }
-    }
+	}
 
     public async Task<bool> CheckProductsInStockAsync(IReadOnlyList<ProductItem> productItems)
     {
@@ -61,4 +60,4 @@ public class ProductInventoryHandler : IProductInventoryHandler
 
 public record class ProductInStockViewModel(Guid ProductId, int QuantityInStock);
 public record class CheckProductsInStockRequest(Guid[] ProductIds);
-public record class DecreaseQuantityInStockRequest(Guid ProductId, int DecreasedQuantity);
+public record class DecreaseQuantityInStockRequest(int DecreasedQuantity);

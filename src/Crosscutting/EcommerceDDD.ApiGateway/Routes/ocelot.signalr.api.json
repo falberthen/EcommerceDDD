@@ -1,0 +1,16 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/signalr/{everything}",
+      "DownstreamScheme": "ws",
+      "UpstreamPathTemplate": "/api/signalr/{everything}",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-apigateway",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ]
+    }
+  ]
+}

@@ -5,15 +5,20 @@ public class CommandHandlerTests
     [Fact]
     public async Task ValidCommand_ShouldBeHandled()
     {
-        // Given
-        var repository = new DummyEventStoreRepository<DummyAggregateRoot>();
+        // Given        
         var command = new DummyCommand(new DummyAggregateId(Guid.NewGuid()));
-        var commandHandler = new DummyCommandHandler(repository);
+        var commandHandler = new DummyCommandHandler(_repository);
 
-        // When
-        await commandHandler.Handle(command, CancellationToken.None);
+		// When
+		await commandHandler.Handle(command, CancellationToken.None);
 
-        // Then
-        repository.AggregateStream.Count().Should().Be(1);
-    }
+		// Then
+		await _repository.Received(1).AppendEventsAsync(
+			Arg.Is<DummyAggregateRoot>(aggregate => aggregate.Id.Value == command.Id.Value),
+			Arg.Any<CancellationToken>());
+
+	}
+
+	private readonly IEventStoreRepository<DummyAggregateRoot> _repository =
+		Substitute.For<IEventStoreRepository<DummyAggregateRoot>>();
 }

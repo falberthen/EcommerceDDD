@@ -3,14 +3,12 @@ namespace EcommerceDDD.PaymentProcessing.API.Controllers;
 [ApiController]
 [Route("api/payments")]
 [Authorize(Policy = Policies.M2MAccess)]
-public class PaymentsController : CustomControllerBase
-{
-    public PaymentsController(
-        ICommandBus commandBus,
-        IQueryBus queryBus)
-        : base(commandBus, queryBus) { }
-
-    [HttpPost]
+public class PaymentsController(
+	ICommandBus commandBus,
+	IQueryBus queryBus
+) : CustomControllerBase(commandBus, queryBus)
+{ 
+	[HttpPost]
     [Authorize(Policy = Policies.CanWrite)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
