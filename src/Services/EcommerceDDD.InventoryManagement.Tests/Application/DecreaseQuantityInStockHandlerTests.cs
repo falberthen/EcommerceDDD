@@ -2,45 +2,38 @@
 
 public class DecreaseQuantityInStockHandlerTests
 {
-    [Fact]
-    public async Task DecreaseStockQuantity_WithCommand_ShouldDecreaseProductInStock()
-    {
-        // Given
-        var productId = ProductId.Of(Guid.NewGuid());
-        var initialQuantity = 3;
-        var quantityIncreased = 1;
+	[Fact]
+	public async Task DecreaseStockQuantity_WithValidCommand_ShouldDecreaseStock()
+	{
+		// Given
+		var productId = Guid.NewGuid();
+		var existingEntry = new InventoryStockUnitDetails
+		{
+			Id = Guid.NewGuid(),
+			ProductId = productId,
+			QuantityInStock = 10
+		};
 
-        var inventoryStockUnit = InventoryStockUnit.EnterStockUnit(productId, initialQuantity);
-        await _inventoryStockUnitWriteRepository.AppendEventsAsync(inventoryStockUnit);
+		// Mocking query session  
+		var querySessionMock = Substitute.For<IQuerySessionWrapper>();
+		var queryableData = new List<InventoryStockUnitDetails> { existingEntry }.AsQueryable();
+		querySessionMock.Query<InventoryStockUnitDetails>()
+			.Returns(queryableData);
+		
+		var inventoryStockUnit = InventoryStockUnit.EnterStockUnit(ProductId.Of(productId), 10);
+		_inventoryStockUnitRepository.FetchStreamAsync(existingEntry.Id)
+			.Returns(inventoryStockUnit);
 
-        var decreaseQuantityInStock = DecreaseStockQuantity.Create(productId, quantityIncreased);
-        var decreaseQuantityInStockHandler = new DecreaseStockQuantityHandler(
-            _querySession, _inventoryStockUnitWriteRepository);
+		var handler = new DecreaseStockQuantityHandler(querySessionMock, _inventoryStockUnitRepository);
+		var command = DecreaseStockQuantity.Create(ProductId.Of(productId), 2);
 
-        var viewModel = new InventoryStockUnitDetails() 
-        { 
-            Id = inventoryStockUnit.Id.Value, 
-            ProductId = productId.Value, 
-            QuantityInStock = inventoryStockUnit.Quantity
-        };
-        var queryableStub = new MartenQueryableStub<InventoryStockUnitDetails>
-        {
-            viewModel
-        };
+		// When
+		await handler.Handle(command, CancellationToken.None);
 
-        // Mocking query session  
-        _querySession.Query<InventoryStockUnitDetails>()
-            .Returns(queryableStub);
+		// Then
+		Assert.Equal(8, inventoryStockUnit.Quantity); // 10 - 2
+	}
 
-        // When
-        await decreaseQuantityInStockHandler.Handle(decreaseQuantityInStock, CancellationToken.None);
-
-        // Then
-        var enteredInventoryStockUnit = _inventoryStockUnitWriteRepository
-            .AggregateStream.First().Aggregate;
-        enteredInventoryStockUnit.Quantity.Should().Be(initialQuantity - quantityIncreased);        
-    }
-
-    private readonly IQuerySession _querySession = Substitute.For<IQuerySession>();
-    private readonly DummyEventStoreRepository<InventoryStockUnit> _inventoryStockUnitWriteRepository = new();
+	private readonly IEventStoreRepository<InventoryStockUnit> _inventoryStockUnitRepository = 
+		Substitute.For<IEventStoreRepository<InventoryStockUnit>>();
 }

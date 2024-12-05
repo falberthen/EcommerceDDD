@@ -4,17 +4,17 @@ namespace EcommerceDDD.OrderProcessing.API.Controllers;
 [ApiController]
 public class OrdersController(
     ICommandBus commandBus,
-    IQueryBus queryBus) : CustomControllerBase(commandBus, queryBus)
+    IQueryBus queryBus
+) : CustomControllerBase(commandBus, queryBus)
 {
-
     /// <summary>
     /// Get customer's orders
     /// </summary>
     /// <param name="customerId"></param>
     /// <returns></returns>
     [HttpGet, Route("{customerId:guid}")]
-    [Authorize(Policy = Policies.CanRead)]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<OrderViewModel>>))]
+	[Authorize(Roles = Roles.Customer, Policy = Policies.CanRead)]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<OrderViewModel>>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ListCustomerOrders([FromRoute] Guid customerId, 
         CancellationToken cancellationToken) => 
@@ -29,8 +29,8 @@ public class OrdersController(
     /// <param name="orderId"></param>
     /// <returns></returns>
     [HttpGet, Route("{orderId:guid}/history")]
-    [Authorize(Policy = Policies.CanRead)]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<OrderEventHistory>>))]
+	[Authorize(Roles = Roles.Customer, Policy = Policies.CanRead)]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<OrderEventHistory>>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ListHistory([FromRoute] Guid orderId
         , CancellationToken cancellationToken) =>  
@@ -47,8 +47,8 @@ public class OrdersController(
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPost, Route("{customerId:guid}/{quoteId:guid}")]
-    [Authorize(Policy = Policies.CanWrite)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+	[Authorize(Roles = Roles.Customer, Policy = Policies.CanWrite)]
+	[ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> PlaceOrderFromQuote([FromRoute] Guid customerId, 
         [FromRoute] Guid quoteId, CancellationToken cancellationToken) =>

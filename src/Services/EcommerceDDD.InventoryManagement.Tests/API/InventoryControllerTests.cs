@@ -15,7 +15,6 @@ public class InventoryControllerTests
         Guid productId = Guid.NewGuid();
         var request = new DecreaseQuantityInStockRequest()
         {
-            ProductId = productId,
             DecreasedQuantity = 3
         };
 
@@ -23,7 +22,7 @@ public class InventoryControllerTests
 
         // When
         var response = await _inventoryController
-            .DecreaseQuantity(request, CancellationToken.None);
+            .DecreaseQuantity(productId, request, CancellationToken.None);
 
         // Then
         response.Should().BeOfType<OkObjectResult>();
@@ -36,7 +35,6 @@ public class InventoryControllerTests
         Guid productId = Guid.NewGuid();
         var request = new IncreaseQuantityInStockRequest()
         {
-            ProductId = productId,
             IncreasedQuantity = 3
         };
 
@@ -44,7 +42,7 @@ public class InventoryControllerTests
 
         // When
         var response = await _inventoryController
-            .IncreaseQuantity(request, CancellationToken.None);
+            .IncreaseQuantity(productId, request, CancellationToken.None);
 
         // Then
         response.Should().BeOfType<OkObjectResult>();

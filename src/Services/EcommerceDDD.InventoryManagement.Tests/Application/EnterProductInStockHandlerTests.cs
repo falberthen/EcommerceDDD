@@ -2,40 +2,37 @@
 
 public class EnterProductInStockHandlerTests
 {
-    [Fact]
-    public async Task EnterProductInStock_WithCommand_ShouldEnterProductInStock()
-    {
-        // Given
-        List<Tuple<ProductId, int>> productIdsQuantities = new()
-        {
-            new Tuple<ProductId, int>(ProductId.Of(Guid.NewGuid()), 1),
-            new Tuple<ProductId, int>(ProductId.Of(Guid.NewGuid()), 1),
-            new Tuple<ProductId, int>(ProductId.Of(Guid.NewGuid()), 1),
-        };
+	[Fact]
+	public async Task EnterProductInStock_WithCommand_ShouldEnterProductInStock()
+	{
+		// Given
+		List<Tuple<ProductId, int>> productIdsQuantities = new()
+		{
+			new Tuple<ProductId, int>(ProductId.Of(Guid.NewGuid()), 1),
+			new Tuple<ProductId, int>(ProductId.Of(Guid.NewGuid()), 1),
+			new Tuple<ProductId, int>(ProductId.Of(Guid.NewGuid()), 1),
+		};
 
-        foreach (var productId in productIdsQuantities)
-        {
-            var inventoryStockUnit = InventoryStockUnit.EnterStockUnit(productId.Item1, 1);
-            await _inventoryStockUnitWriteRepository.AppendEventsAsync(inventoryStockUnit);
-        }
+		var inventoryStockUnitDetails = new List<InventoryStockUnitDetails>();
+		var querySessionMock = Substitute.For<IQuerySessionWrapper>();
+		querySessionMock.Query<InventoryStockUnitDetails>()
+			.Returns(inventoryStockUnitDetails.AsQueryable());
 
-        var enterProductInStock = EnterProductInStock.Create(productIdsQuantities);
-        var enterProductInStockHandler = new EnterProductInStockHandler(_querySession,
-            _inventoryStockUnitWriteRepository);
+		var handler = new EnterProductInStockHandler(
+			querySessionMock, _inventoryStockUnitRepository);
 
-        // Mocking query session  
-        _querySession.Query<InventoryStockUnitDetails>()
-            .Returns(new MartenQueryableStub<InventoryStockUnitDetails>());
+		var enterProductInStock = EnterProductInStock.Create(productIdsQuantities);
 
-        // When
-        await enterProductInStockHandler.Handle(enterProductInStock, CancellationToken.None);
+		// When
+		await handler.Handle(enterProductInStock, CancellationToken.None);
 
-        // Then
-        _inventoryStockUnitWriteRepository.AggregateStream
-            .Select(unitEnteredInSock => unitEnteredInSock.Aggregate.ProductId).Should()
-            .OnlyContain(productId => productIdsQuantities.Any(tuple => tuple.Item1 == productId));
-    }
+		// Then
+		await _inventoryStockUnitRepository.Received(productIdsQuantities.Count)
+			.AppendEventsAsync(Arg.Is<InventoryStockUnit>(unit =>
+				productIdsQuantities.Any(tuple => tuple.Item1 == unit.ProductId)),
+				Arg.Any<CancellationToken>());
+	}
 
-    private readonly IQuerySession _querySession = Substitute.For<IQuerySession>();
-    private readonly DummyEventStoreRepository<InventoryStockUnit> _inventoryStockUnitWriteRepository = new();
+	private readonly IEventStoreRepository<InventoryStockUnit> _inventoryStockUnitRepository =
+			Substitute.For<IEventStoreRepository<InventoryStockUnit>>();
 }

@@ -3,16 +3,14 @@
 [ApiController]
 [Route("api/products")]
 [Authorize]
-public class ProductsController : CustomControllerBase
+public class ProductsController(
+	ICommandBus commandBus,
+	IQueryBus queryBus
+) : CustomControllerBase(commandBus, queryBus)
 {
-    public ProductsController(
-        ICommandBus commandBus,
-        IQueryBus queryBus)
-        : base(commandBus, queryBus) { }
-
     [HttpPost]
-    [Authorize(Policy = Policies.CanRead)]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<ProductViewModel>>))]
+	[Authorize(Policy = Policies.CanRead)]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<ProductViewModel>>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ListProducts([FromBody] GetProductsRequest request,
         CancellationToken cancellationToken) =>  

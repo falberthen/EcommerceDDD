@@ -34,7 +34,7 @@ public class RegisterCustomerHandler(
             throw new RecordNotFoundException(response?.Message!);
 
         await _customerWriteRepository
-            .AppendEventsAsync(customer);
+            .AppendEventsAsync(customer, cancellationToken);
     }
 
     private async Task<IntegrationHttpResponse> CreateUserForCustomer(RegisterCustomer command)

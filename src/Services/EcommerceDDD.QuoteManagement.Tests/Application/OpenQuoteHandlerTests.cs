@@ -2,30 +2,28 @@ namespace EcommerceDDD.QuoteManagement.Tests.Application;
 
 public class OpenQuoteHandlerTests
 {
-    [Fact]
-    public async Task OpenQuote_WithCommand_ShouldCreateQuote()
-    {
-        // Given
-        var customerId = CustomerId.Of(Guid.NewGuid());
-        _customerOpenQuoteChecker.CustomerHasOpenQuote(customerId)
-            .Returns(Task.FromResult(false));
+	[Fact]
+	public async Task OpenQuote_WithCommand_ShouldCreateQuote()
+	{
+		// Given
+		var customerId = CustomerId.Of(Guid.NewGuid());
 
-        var quoteWriteRepository = new DummyEventStoreRepository<Quote>();
-        var currency = Currency.OfCode(Currency.USDollar.Code);
+		var quoteWriteRepository = new DummyEventStoreRepository<Quote>();
+		var currency = Currency.OfCode(Currency.USDollar.Code);
 
-        var command = OpenQuote.Create(customerId, currency);
-        var commandHandler = new OpenQuoteHandler(quoteWriteRepository,
-            _customerOpenQuoteChecker);
+		var command = OpenQuote.Create(customerId, currency);
+		var commandHandler = new OpenQuoteHandler(quoteWriteRepository,
+			_customerOpenQuoteChecker);
 
-        // When
-        await commandHandler.Handle(command, CancellationToken.None);
+		// When
+		await commandHandler.Handle(command, CancellationToken.None);
 
-        // Then
-        quoteWriteRepository.AggregateStream.Should().HaveCount(1);
-        var openQuote = quoteWriteRepository.AggregateStream.First().Aggregate;
-        openQuote.CustomerId.Should().Be(customerId);
-        openQuote.Status.Should().Be(QuoteStatus.Open);
-    }
+		// Then
+		quoteWriteRepository.AggregateStream.Should().HaveCount(1);
+		var openQuote = quoteWriteRepository.AggregateStream.First().Aggregate;
+		openQuote.CustomerId.Should().Be(customerId);
+		openQuote.Status.Should().Be(QuoteStatus.Open);
+	}
 
-    private ICustomerOpenQuoteChecker _customerOpenQuoteChecker = Substitute.For<ICustomerOpenQuoteChecker>();
+	private ICustomerOpenQuoteChecker _customerOpenQuoteChecker = Substitute.For<ICustomerOpenQuoteChecker>();
 }

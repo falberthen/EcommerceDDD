@@ -1,11 +1,11 @@
 ﻿namespace EcommerceDDD.InventoryManagement.Application.EnteringProductInStock;
 
 public class EnterProductInStockHandler(
-    IQuerySession querySession,
+	IQuerySessionWrapper querySession,
     IEventStoreRepository<InventoryStockUnit> inventoryStockUnitWriteRepository
-        ) : ICommandHandler<EnterProductInStock>
+) : ICommandHandler<EnterProductInStock>
 {
-    private readonly IQuerySession _querySession = querySession;
+    private readonly IQuerySessionWrapper _querySession = querySession;
     private readonly IEventStoreRepository<InventoryStockUnit> _inventoryStockUnitWriteRepository = inventoryStockUnitWriteRepository;
 
     public async Task Handle(EnterProductInStock command, CancellationToken cancellationToken)
@@ -14,9 +14,8 @@ public class EnterProductInStockHandler(
         var productIds = command.ProductIdsQuantities
             .Select(pid => pid.Item1.Value).ToList();
 
-        var existingEntries = await _querySession.Query<InventoryStockUnitDetails>()
-            .Where(x => productIds.Contains(x.ProductId))
-            .ToListAsync();
+		var existingEntries = _querySession.Query<InventoryStockUnitDetails>()
+			.Where(x => productIds.Contains(x.ProductId));
 
         if (!existingEntries.Any())
         {

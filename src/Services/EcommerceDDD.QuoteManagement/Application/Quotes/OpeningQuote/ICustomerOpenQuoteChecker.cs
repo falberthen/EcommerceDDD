@@ -2,5 +2,5 @@
 
 public interface ICustomerOpenQuoteChecker
 {
-    Task<bool> CustomerHasOpenQuote(CustomerId customerId);
+	QuoteDetails? CheckCustomerOpenQuote(CustomerId customerId);
 }
