@@ -8,4 +8,5 @@ public record class ProductViewModel(
     string ImageUrl,
     string Price, 
     string CurrencySymbol,
-    int QuantityInStock);
+    int QuantityInStock,
+	int QuantityAddedToCart = 0);

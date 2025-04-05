@@ -9,7 +9,7 @@ public class OrdersControllerTests
     }
 
     [Fact]
-    public async Task ListCustomerOrders_WithQuoteId_ShouldReturnListOfOrderViewModel()
+    public async Task ListCustomerOrders_ShouldReturnListOfOrderViewModel()
     {
         // Given
         var customerId = Guid.NewGuid();
@@ -44,7 +44,7 @@ public class OrdersControllerTests
             .Returns(expectedData);
 
         // When
-        var response = await _ordersController.ListCustomerOrders(customerId, CancellationToken.None);
+        var response = await _ordersController.ListCustomerOrders(CancellationToken.None);
 
         // Then
         response.Should().BeOfType<OkObjectResult>()
@@ -89,7 +89,7 @@ public class OrdersControllerTests
     }
 
     [Fact]
-    public async Task PlaceOrderForCustomer_WithCustomerId_ShouldPlaceOrder()
+    public async Task PlaceOrderFromQuote_WithQuoteId_ShouldPlaceOrder()
     {
         // Given
         Guid customerId = Guid.NewGuid();
@@ -99,7 +99,7 @@ public class OrdersControllerTests
 
         // When
         var response = await _ordersController
-            .PlaceOrderFromQuote(customerId, quoteId, CancellationToken.None);
+            .PlaceOrderFromQuote(quoteId, CancellationToken.None);
 
         // Then
         response.Should().BeOfType<OkObjectResult>();

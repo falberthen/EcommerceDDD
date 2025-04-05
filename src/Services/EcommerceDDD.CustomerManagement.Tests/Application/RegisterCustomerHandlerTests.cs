@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace EcommerceDDD.CustomerManagement.Tests.Application;
 
 public class RegisterCustomerHandlerTests
@@ -7,7 +9,7 @@ public class RegisterCustomerHandlerTests
 		_options.Value
 			.Returns(new TokenIssuerSettings() { Authority = "http://url" });
 
-		_requester.PostAsync<IntegrationHttpResponse>(Arg.Any<string>(), Arg.Any<object>())!
+		_htpRequester.PostAsync<IntegrationHttpResponse>(Arg.Any<string>(), Arg.Any<object>())!
 		   .Returns(Task.FromResult(new IntegrationHttpResponse() { Success = true }));
 	}
 
@@ -15,17 +17,23 @@ public class RegisterCustomerHandlerTests
 	public async Task Register_WithCommand_ShouldRegisterCustomer()
 	{
 		// Given
+		Guid customerId = Guid.NewGuid();
+
 		_checker.IsUnique(Arg.Any<string>())
 			.Returns(true);
+		_htpRequester.PostAsync<IntegrationHttpResponse>(Arg.Any<string>(),
+			new RegisterUserRequest(customerId, _email, _password, _password))
+			.Returns(new IntegrationHttpResponse()
+			{
+				Data = JsonConvert.SerializeObject(new { userId = Guid.NewGuid() }),
+				Success = true
+			});
 
 		var confirmation = _password;
 		var registerCommand = RegisterCustomer
 			.Create(_email, _password, confirmation, _name, _streetAddress, _creditLimit);
 		var commandHandler = new RegisterCustomerHandler(
-			_requester,
-			_checker,
-			_options,
-			_dummyRepository);
+			_htpRequester, _checker, _options, _dummyRepository);
 
 		// When
 		await commandHandler.Handle(registerCommand, CancellationToken.None);
@@ -48,10 +56,7 @@ public class RegisterCustomerHandlerTests
 		var registerCommand = RegisterCustomer
 			.Create(_email, _password, confirmation, _name, _streetAddress, _creditLimit);
 		var commandHandler = new RegisterCustomerHandler(
-			_requester,
-			_checker,
-			_options,
-			_dummyRepository);
+			_htpRequester, _checker, _options, _dummyRepository);
 
 		// When
 		Func<Task> action = async () =>
@@ -66,8 +71,14 @@ public class RegisterCustomerHandlerTests
 	public const string _password = "p4ssw0rd";
 	public const string _streetAddress = "Rue XYZ";
 	public const decimal _creditLimit = 1000;
-	private IHttpRequester _requester = Substitute.For<IHttpRequester>();
+	private IHttpRequester _htpRequester = Substitute.For<IHttpRequester>();
 	private IEmailUniquenessChecker _checker = Substitute.For<IEmailUniquenessChecker>();
 	private IOptions<TokenIssuerSettings> _options = Substitute.For<IOptions<TokenIssuerSettings>>();
 	private DummyEventStoreRepository<Customer> _dummyRepository = new DummyEventStoreRepository<Customer>();
 }
+
+public record RegisterUserRequest(
+	Guid CustomerId,
+	string Email,
+	string Password,
+	string PasswordConfirm);

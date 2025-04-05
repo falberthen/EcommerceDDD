@@ -14,7 +14,7 @@ public class ProcessOrderHandler(
     public async Task Handle(ProcessOrder command, CancellationToken cancellationToken)
     {
         // Getting open quote data
-        var quote = await GetQuote(command)
+        var quote = await GetQuoteAsync(command)
             ?? throw new RecordNotFoundException($"No open quote found for customer {command.CustomerId}.");
         var quoteId = QuoteId.Of(quote.QuoteId);
 
@@ -55,11 +55,11 @@ public class ProcessOrderHandler(
             .PublishEventAsync(orderProcessedEvent!, cancellationToken);
     }
 
-    private async Task<QuoteViewModelResponse> GetQuote(ProcessOrder command)
+    private async Task<QuoteViewModelResponse> GetQuoteAsync(ProcessOrder command)
     {
         var apiRoute = _configuration["ApiRoutes:QuoteManagement"];
         var response = await _integrationHttpService.GetAsync<QuoteViewModelResponse>(
-            $"{apiRoute}/{command.CustomerId.Value}/quote/{command.QuoteId.Value}")
+            $"{apiRoute}/{command.QuoteId.Value}/details")
             ?? throw new ApplicationLogicException(
                 $"An error occurred retrieving quote for customer {command.CustomerId.Value}.");
 

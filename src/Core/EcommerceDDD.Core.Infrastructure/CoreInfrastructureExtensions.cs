@@ -16,6 +16,7 @@ public static class CoreInfrastructureExtensions
             .AddScoped<IQueryBus, QueryBus>()
             // Identity
             .AddJwtAuthentication(configuration)
+			.AddScoped<IUserInfoRequester, UserInfoRequester>()
             // Http integration
             .ConfigureIntegrationHttpService(configuration)
             // Swagger extensions

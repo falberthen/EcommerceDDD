@@ -11,7 +11,7 @@ global using EcommerceDDD.Core.Persistence;
 global using EcommerceDDD.QuoteManagement.API.Controllers.Requests;
 global using EcommerceDDD.QuoteManagement.Application.Products;
 global using EcommerceDDD.QuoteManagement.Application.Quotes;
-global using EcommerceDDD.QuoteManagement.Application.Quotes.GettingOpenQuote;
+global using EcommerceDDD.QuoteManagement.Application.Quotes.GettingQuoteById;
 global using EcommerceDDD.QuoteManagement.Application.Quotes.GettingQuoteHistory;
 global using EcommerceDDD.QuoteManagement.Application.Quotes.OpeningQuote;
 global using EcommerceDDD.QuoteManagement.Domain;

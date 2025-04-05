@@ -2,16 +2,13 @@
 
 public class IntegrationHttpService(
 	IHttpRequester httpRequester,
-	ITokenRequester tokenRequester,
-	IOptions<TokenIssuerSettings> tokenIssuerSettings,
+	ITokenRequester tokenRequester,	
 	IOptions<IntegrationHttpSettings> integrationSettings) : IIntegrationHttpService
 {
     private readonly IHttpRequester _httpRequester = httpRequester 
 		?? throw new ArgumentNullException(nameof(httpRequester));
     private readonly ITokenRequester _tokenRequester = tokenRequester
-		?? throw new ArgumentNullException(nameof(tokenRequester));
-	private readonly TokenIssuerSettings _tokenIssuerSettings = tokenIssuerSettings.Value
-		?? throw new ArgumentNullException(nameof(tokenIssuerSettings));
+		?? throw new ArgumentNullException(nameof(tokenRequester));	
 	private readonly IntegrationHttpSettings _integrationSettings = integrationSettings.Value
 		?? throw new ArgumentNullException(nameof(integrationSettings));
 
@@ -65,10 +62,10 @@ public class IntegrationHttpService(
         return response;
     }
 
-    private async Task<string> GetAccessToken()
+    private async Task<string?> GetAccessToken()
     {
-        TokenResponse tokenResponse = await _tokenRequester
-            .GetApplicationTokenAsync(_tokenIssuerSettings);
+        TokenResponse? tokenResponse = await _tokenRequester
+            .GetApplicationTokenAsync();
         return tokenResponse?.AccessToken ?? string.Empty;
     }
 }

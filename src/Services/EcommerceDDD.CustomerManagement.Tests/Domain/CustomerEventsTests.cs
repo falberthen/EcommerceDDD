@@ -5,8 +5,10 @@ public class CustomerEventsTests
     [Fact]
     public void Create_WithCustomerData_ShouldApplyCustomerRegisteredEvent()
     {
-        // Given
-        var customerData = new CustomerData(_email, _name, _address, _creditLimit);
+		// Given
+		var customerData = new CustomerData(
+			_email, _name, _address, _creditLimit
+		);
 
         // When
         var customer = Customer.Create(customerData);
@@ -20,9 +22,11 @@ public class CustomerEventsTests
     [Fact]
     public void UpdateInformation_WithCustomerData_ShouldApplyCustomerUpdatedEvent()
     {
-        // Given
-        var customerData = new CustomerData(_email, _name, _address, _creditLimit);
-        var customer = Customer.Create(customerData);
+		// Given
+		var customerData = new CustomerData(
+			_email, _name, _address, _creditLimit
+		);
+		var customer = Customer.Create(customerData);
 
         // When
         customer.UpdateInformation(customerData);
@@ -32,8 +36,8 @@ public class CustomerEventsTests
         Assert.NotNull(@event);
         @event.Should().BeOfType<CustomerUpdated>();
     }
-
-    private const string _email = "email@test.com";
+	
+	private const string _email = "email@test.com";
     private const string _name = "UserTest";
     private const string _address = "Rue XYZ";
     private const decimal _creditLimit = 1000;

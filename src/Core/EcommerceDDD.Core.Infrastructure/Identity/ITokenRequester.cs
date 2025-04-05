@@ -2,7 +2,7 @@
 
 public interface ITokenRequester
 {
-    Task<TokenResponse> GetApplicationTokenAsync(TokenIssuerSettings settings);
-    Task<TokenResponse> GetUserTokenAsync(TokenIssuerSettings settings, string userName, string password);
-    Task<string> GetUserTokenFromHttpContextAsync();
+    Task<TokenResponse?> GetApplicationTokenAsync();
+    Task<TokenResponse?> GetUserTokenFromCredentialsAsync(string userName, string password);
+    Task<string?> GetUserTokenFromHttpContextAsync();
 }

@@ -10,7 +10,7 @@ public class ProductsController(
 {
     [HttpPost]
 	[Authorize(Policy = Policies.CanRead)]
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<ProductViewModel>>))]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<ProductViewModel?>>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ListProducts([FromBody] GetProductsRequest request,
         CancellationToken cancellationToken) =>  

@@ -10,9 +10,9 @@ public class RemoveQuoteItemHandlerTests
         var productId = ProductId.Of(Guid.NewGuid());
         var productQuantity = 1;
         var currency = Currency.OfCode(Currency.USDollar.Code);
-        var openQuote = OpenQuote.Create(customerId, currency);
+        var openQuote = OpenQuote.Create(currency);
 
-        var quote = Quote.OpenQuote(openQuote.CustomerId, currency);
+        var quote = Quote.OpenQuoteForCustomer(customerId, currency);
         quote.AddItem(new QuoteItemData(quote.Id, productId, "Product",
             Money.Of(10, currency.Code), productQuantity));
 

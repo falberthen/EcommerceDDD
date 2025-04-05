@@ -20,6 +20,7 @@ global using EcommerceDDD.Core.Testing;
 global using IdentityModel.Client;
 global using Marten;
 global using MediatR;
+global using Microsoft.AspNetCore.Authentication;
 global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.AspNetCore.Builder;

@@ -2,15 +2,10 @@
 
 public record class GetCustomerEventHistory : IQuery<IList<CustomerEventHistory>>
 {
-    public CustomerId CustomerId { get; private set; }
-
-    public static GetCustomerEventHistory Create(CustomerId customerId)
+    public static GetCustomerEventHistory Create()
     {
-        if (customerId is null)
-            throw new ArgumentNullException(nameof(customerId));
-
-        return new GetCustomerEventHistory(customerId);
+        return new GetCustomerEventHistory();
     }
 
-    private GetCustomerEventHistory(CustomerId customerId) => CustomerId = customerId;
+    private GetCustomerEventHistory(){ }
 }

@@ -13,7 +13,7 @@ public class ConfirmQuoteHandlerTests
         const int productQuantity = 1;
         var currency = Currency.OfCode(Currency.USDollar.Code);
 
-        var quote = Quote.OpenQuote(customerId, currency);
+        var quote = Quote.OpenQuoteForCustomer(customerId, currency);
         quote.AddItem(new QuoteItemData(quote.Id, productId,"Product", 
             Money.Of(10, currency.Code), productQuantity));
 
@@ -38,7 +38,7 @@ public class ConfirmQuoteHandlerTests
         var customerId = CustomerId.Of(Guid.NewGuid());
         var currency = Currency.OfCode(Currency.USDollar.Code);
 
-        var quote = Quote.OpenQuote(customerId, currency);
+        var quote = Quote.OpenQuoteForCustomer(customerId, currency);
 
         var quoteWriteRepository = new DummyEventStoreRepository<Quote>();
         await quoteWriteRepository.AppendEventsAsync(quote);

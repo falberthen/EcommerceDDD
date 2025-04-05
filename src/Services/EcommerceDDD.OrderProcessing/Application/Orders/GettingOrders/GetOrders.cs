@@ -2,15 +2,10 @@
 
 public record class GetOrders : IQuery<IList<OrderViewModel>>
 {
-    public CustomerId CustomerId { get; private set; }
-
-    public static GetOrders Create(CustomerId customerId)
+    public static GetOrders Create()
     {
-        if (customerId is null)
-            throw new ArgumentNullException(nameof(customerId));
-
-        return new GetOrders(customerId);
+        return new GetOrders();
     }
 
-    private GetOrders(CustomerId customerId) => CustomerId = customerId;
+    private GetOrders() {}
 }

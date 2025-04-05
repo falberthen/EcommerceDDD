@@ -7,7 +7,7 @@ global using EcommerceDDD.Core.Infrastructure.Identity;
 global using EcommerceDDD.Core.Infrastructure.Integration;
 global using EcommerceDDD.Core.Infrastructure.WebApi;
 global using EcommerceDDD.Core.Testing;
-global using EcommerceDDD.CustomerManagement.Api.Application.GettingCustomerDetailsWithToken;
+global using EcommerceDDD.CustomerManagement.Api.Application.GettingCustomerDetails;
 global using EcommerceDDD.CustomerManagement.Api.Application.RegisteringCustomer;
 global using EcommerceDDD.CustomerManagement.Api.Application.UpdatingCustomerInformation;
 global using EcommerceDDD.CustomerManagement.API.Controllers;

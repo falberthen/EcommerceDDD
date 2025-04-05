@@ -1,31 +1,33 @@
-﻿namespace EcommerceDDD.QuoteManagement.Application.Quotes.GettingOpenQuote;
+﻿namespace EcommerceDDD.QuoteManagement.Application.Quotes.GettingCustomerOpenQuote;
 
-public class GetCustomerQuoteHandler(
-    IQuerySession querySession,
-    IProductMapper productMapper) : IQueryHandler<GetCustomerQuote, QuoteViewModel>
+public class GetCustomerOpenQuoteHandler(
+	IUserInfoRequester userInfoRequester,
+	IQuerySession querySession,
+    IProductMapper productMapper) : IQueryHandler<GetCustomerOpenQuote, QuoteViewModel>
 {
     private readonly IQuerySession _querySession = querySession;
     private readonly IProductMapper _productMapper = productMapper;
+	private IUserInfoRequester _userInfoRequester { get; set; } = userInfoRequester
+		?? throw new ArgumentNullException(nameof(userInfoRequester));
 
-    public async Task<QuoteViewModel> Handle(GetCustomerQuote query, CancellationToken cancellationToken)
+	public async Task<QuoteViewModel> Handle(GetCustomerOpenQuote query, CancellationToken cancellationToken)
     {
-        QuoteDetails? quoteDetails = default;
+		CustomerId customerId = default!;
+		UserInfo? userInfo = await _userInfoRequester
+			.RequestUserInfoAsync();
+
+		customerId = CustomerId.Of(userInfo!.CustomerId);		
+		
+		QuoteDetails? quoteDetails = default;
         var queryExpression = _querySession.Query<QuoteDetails>();
 
-        if (query.QuoteId is not null)
-        {
-            quoteDetails = queryExpression
-                .FirstOrDefault(q =>
-                    q.Id == query.QuoteId.Value);
-        }
-        else
-        {
-            quoteDetails = queryExpression
-                .FirstOrDefault(q => 
-                    q.CustomerId == query.CustomerId.Value && q.QuoteStatus == QuoteStatus.Open);
-        }
-        
-        QuoteViewModel viewModel = default!;        
+		// Customer's open quote
+		quoteDetails = queryExpression
+			.FirstOrDefault(q =>
+				q.CustomerId == customerId.Value
+				&& q.QuoteStatus == QuoteStatus.Open);
+
+		QuoteViewModel viewModel = default!;        
         if (quoteDetails is not null)
         {
             viewModel = new QuoteViewModel() with

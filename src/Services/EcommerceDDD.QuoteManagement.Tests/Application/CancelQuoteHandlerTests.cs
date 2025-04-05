@@ -1,17 +1,26 @@
+using EcommerceDDD.Core.Infrastructure.Identity;
+
 namespace EcommerceDDD.QuoteManagement.Tests.Application;
 
 public class CancelQuoteHandlerTests
 {
 	[Fact]
-	public async Task Cancel_WithCommand_ShouldCancelQuote()
+	public async Task CancelQuote_WithCommand_ShouldCancelQuote()
 	{
 		// Given
+		Guid customerId = Guid.NewGuid();
 		var quoteWriteRepository = new DummyEventStoreRepository<Quote>();
-		var customerId = CustomerId.Of(Guid.NewGuid());
 
-		var openCommand = OpenQuote.Create(customerId, _currency);
-		var openCommandHandler = new OpenQuoteHandler(quoteWriteRepository,
-			_customerOpenQuoteChecker);
+		_userInfoRequester.RequestUserInfoAsync()
+			.Returns(Task.FromResult(new UserInfo()
+			{
+				UserId = Guid.NewGuid().ToString(),
+				CustomerId = customerId
+			}));
+
+		var openCommand = OpenQuote.Create(_currency);
+		var openCommandHandler = new OpenQuoteHandler(_userInfoRequester, 
+			quoteWriteRepository, _customerOpenQuoteChecker);
 		await openCommandHandler.Handle(openCommand, CancellationToken.None);
 
 		var quote = quoteWriteRepository.AggregateStream.First().Aggregate;
@@ -27,4 +36,5 @@ public class CancelQuoteHandlerTests
 
 	private Currency _currency = Currency.OfCode(Currency.USDollar.Code);
 	private ICustomerOpenQuoteChecker _customerOpenQuoteChecker = Substitute.For<ICustomerOpenQuoteChecker>();
+	private IUserInfoRequester _userInfoRequester = Substitute.For<IUserInfoRequester>();
 }

@@ -34,7 +34,7 @@ public class AddQuoteItemHandlerTests
                     _productName, 10, Currency.USDollar.Code)
             });
 
-        var quote = Quote.OpenQuote(_customerId, _currency);
+        var quote = Quote.OpenQuoteForCustomer(_customerId, _currency);
 
         var quoteWriteRepository = new DummyEventStoreRepository<Quote>();
         await quoteWriteRepository.AppendEventsAsync(quote);
@@ -78,7 +78,7 @@ public class AddQuoteItemHandlerTests
                     _productName, 10, Currency.USDollar.Code)
             });
 
-        var quote = Quote.OpenQuote(_customerId, _currency);
+        var quote = Quote.OpenQuoteForCustomer(_customerId, _currency);
 
         var quoteWriteRepository = new DummyEventStoreRepository<Quote>();
         await quoteWriteRepository.AppendEventsAsync(quote);

@@ -1,4 +1,6 @@
-﻿namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
+﻿using System.Collections.Immutable;
+
+namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
 
 public class PlaceOrderHandler(
     IIntegrationHttpService integrationHttpService,
@@ -14,17 +16,26 @@ public class PlaceOrderHandler(
     public async Task Handle(PlaceOrder command, CancellationToken cancellationToken)
     {
         // Getting quote data
-        var quote = await GetQuote(command)
-            ?? throw new RecordNotFoundException($"No open quote found for customer {command.CustomerId}.");
+        var quote = await GetQuoteAsync(command)
+            ?? throw new RecordNotFoundException($"No open quote found for customer.");
         
         // Confirming quote
-        await ConfirmQuote(quote.QuoteId);
+        await ConfirmQuoteAsync(quote.QuoteId);
 
-        // Placing order
-        var orderData = new OrderData(
+		// Placing order
+		var oderItems = quote.Items.Select(qi => new ProductItemData()
+		{
+			ProductId = ProductId.Of(qi.ProductId),
+			ProductName = qi.ProductName,
+			Quantity = qi.Quantity,
+			UnitPrice = Money.Of(qi.UnitPrice, quote.CurrencyCode)
+		}).ToImmutableList();
+
+		var orderData = new OrderData(
             CustomerId.Of(quote.CustomerId),
             QuoteId.Of(quote.QuoteId),
-            Currency.OfCode(quote.CurrencyCode));
+            Currency.OfCode(quote.CurrencyCode),
+			oderItems);
 
         var order = Order.Place(orderData);
 
@@ -46,13 +57,13 @@ public class PlaceOrderHandler(
                 (int)order.Status));
     }
 
-    private async Task<QuoteViewModelResponse> GetQuote(PlaceOrder command)
+    private async Task<QuoteViewModelResponse> GetQuoteAsync(PlaceOrder command)
     {
         var apiRoute = _configuration["ApiRoutes:QuoteManagement"];
         var response = await _integrationHttpService.GetAsync<QuoteViewModelResponse>(
-            $"{apiRoute}/{command.CustomerId.Value}/quote/{command.QuoteId.Value}")
+            $"{apiRoute}/{command.QuoteId.Value}/details")
             ?? throw new ApplicationLogicException(
-                $"An error occurred retrieving quote for customer {command.CustomerId.Value}.");
+                $"An error occurred retrieving quote {command.QuoteId}.");
 
         if (!response.Success)
             throw new ApplicationLogicException(response?.Message ?? string.Empty);
@@ -61,7 +72,7 @@ public class PlaceOrderHandler(
         return responseData;
     }
 
-    private async Task ConfirmQuote(Guid quoteId)
+    private async Task ConfirmQuoteAsync(Guid quoteId)
     {
         var apiRoute = _configuration["ApiRoutes:QuoteManagement"];
         var response = await _integrationHttpService.PutAsync(

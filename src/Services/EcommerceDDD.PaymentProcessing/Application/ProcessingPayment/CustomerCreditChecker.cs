@@ -19,7 +19,7 @@ public class CustomerCreditChecker : ICustomerCreditChecker
         var apiRoute = _configuration["ApiRoutes:CustomerManagement"];
         var response = await _integrationHttpService
             .GetAsync<CreditLimitModel>(
-                $"{apiRoute}/{customerId.Value}/check-credit");
+                $"{apiRoute}/{customerId.Value}/credit");
 
         if (response?.Success == false)
             throw new ApplicationLogicException($"An error ocurred trying to obtain the credit limit for customer {customerId.Value}");

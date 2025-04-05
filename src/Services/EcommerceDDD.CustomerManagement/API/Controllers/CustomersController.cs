@@ -4,44 +4,9 @@
 [ApiController]
 [Route("api/customers")]
 public class CustomersController(
-	ITokenRequester tokenRequester, 
-	ICommandBus commandBus, 
+	ICommandBus commandBus,
 	IQueryBus queryBus) : CustomControllerBase(commandBus, queryBus)
 {
-	private ITokenRequester _tokenRequester { get; set; } = tokenRequester
-		?? throw new ArgumentNullException(nameof(tokenRequester));
-
-	/// <summary>
-	/// Get customer details using user's token
-	/// </summary>
-	/// <returns></returns>
-	[HttpGet]
-	[Authorize(Roles = Roles.Customer, Policy = Policies.CanRead)]
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<CustomerDetails>))]
-	[ProducesResponseType(StatusCodes.Status400BadRequest)]
-	public async Task<IActionResult> GetDetailsByUserToken(CancellationToken cancellationToken) =>
-		await Response(
-			GetCustomerDetailsWithToken.Create(
-				await _tokenRequester.GetUserTokenFromHttpContextAsync()),
-				cancellationToken
-		);
-
-	/// <summary>
-	/// Get customer event history
-	/// </summary>
-	/// <param name="customerId"></param>
-	/// <returns></returns>
-	[HttpGet, Route("{customerId:guid}/history")]
-	[Authorize(Roles = Roles.Customer, Policy = Policies.CanRead)]
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<CustomerEventHistory>>))]
-	[ProducesResponseType(StatusCodes.Status400BadRequest)]
-	public async Task<IActionResult> ListHistory([FromRoute] Guid customerId,
-		CancellationToken cancellationToken) =>
-		await Response(
-			GetCustomerEventHistory.Create(CustomerId.Of(customerId)),
-			cancellationToken
-		);
-
 	/// <summary>
 	/// Register a new customer
 	/// </summary>
@@ -65,19 +30,43 @@ public class CustomersController(
 		);
 
 	/// <summary>
+	/// Get customer details for authenticated users with identity 
+	/// </summary>
+	/// <returns></returns>
+	[HttpGet, Route("details")]
+	[Authorize(Roles = Roles.Customer, Policy = Policies.CanRead)]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<CustomerDetails>))]
+	[ProducesResponseType(StatusCodes.Status400BadRequest)]
+	public async Task<IActionResult> GetUserDetails(CancellationToken cancellationToken) =>
+		await Response(
+			GetCustomerDetails.Create(), cancellationToken
+		);
+
+	/// <summary>
+	/// Get customer event history
+	/// </summary>
+	/// <returns></returns>
+	[HttpGet, Route("history")]
+	[Authorize(Roles = Roles.Customer, Policy = Policies.CanRead)]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<IEventHistory>>))]
+	[ProducesResponseType(StatusCodes.Status400BadRequest)]
+	public async Task<IActionResult> ListHistory(CancellationToken cancellationToken) =>
+		await Response(
+			GetCustomerEventHistory.Create(), cancellationToken
+		);
+	
+	/// <summary>
 	/// Update customer's information
 	/// </summary>
 	/// <param name="request"></param>
 	/// <returns></returns>
-	[HttpPut, Route("{customerId:guid}")]
+	[HttpPut, Route("update")]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanWrite)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
-	public async Task<IActionResult> UpdateInformation([FromRoute] Guid customerId,
-		[FromBody] UpdateCustomerRequest request, CancellationToken cancellationToken) =>
+	public async Task<IActionResult> UpdateInformation([FromBody] UpdateCustomerRequest request, CancellationToken cancellationToken) =>
 		await Response(
 			UpdateCustomerInformation.Create(
-				CustomerId.Of(customerId),
 				request.Name,
 				request.ShippingAddress,
 				request.CreditLimit
@@ -85,7 +74,7 @@ public class CustomersController(
 		);
 
 	/// <summary>
-	/// Get customer details | M2M only
+	/// Get customer details by CustomerId | M2M only
 	/// </summary>
 	/// <returns></returns>
 	[HttpGet, Route("{customerId:guid}/details")]
@@ -95,7 +84,7 @@ public class CustomersController(
 	public async Task<IActionResult> GetDetailsByCustomerId([FromRoute] Guid customerId,
 		CancellationToken cancellationToken) =>
 		await Response(
-			GetCustomerDetails.Create(CustomerId.Of(customerId)),
+			GetCustomerDetailsById.Create(CustomerId.Of(customerId)),
 			cancellationToken
 		);
 
@@ -104,7 +93,7 @@ public class CustomersController(
 	/// </summary>
 	/// <param name="customerId"></param>
 	/// <returns></returns>
-	[HttpGet, Route("{customerId:guid}/check-credit")]
+	[HttpGet, Route("{customerId:guid}/credit")]
 	[Authorize(Policy = Policies.M2MAccess)]
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<CreditLimitModel>))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]

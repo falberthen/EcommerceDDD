@@ -1,81 +1,94 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Application.Orders.GettingOrders;
 
 public class GetOrdersHandler(
-    IQuerySession querySession,
-    IIntegrationHttpService integrationHttpService,
-    IConfiguration configuration) : IQueryHandler<GetOrders, IList<OrderViewModel>>
+	IQuerySession querySession,
+	IUserInfoRequester userInfoRequester,
+	IIntegrationHttpService integrationHttpService,
+	IConfiguration configuration) : IQueryHandler<GetOrders, IList<OrderViewModel>>
 {
-    private readonly IQuerySession _querySession = querySession;
-    private readonly IIntegrationHttpService _integrationHttpService = integrationHttpService;
-    private readonly IConfiguration _configuration = configuration;
+	private readonly IQuerySession _querySession = querySession;
+	private readonly IIntegrationHttpService _integrationHttpService = integrationHttpService;
+	private readonly IConfiguration _configuration = configuration;
+	private readonly IUserInfoRequester _userInfoRequester = userInfoRequester
+		?? throw new ArgumentNullException(nameof(userInfoRequester));
 
-    public async Task<IList<OrderViewModel>> Handle(GetOrders query, CancellationToken cancellationToken)
-    {
-        var orders = await _querySession.Query<OrderDetails>()
-            .Where(q => q.CustomerId == query.CustomerId.Value)
-            .ToListAsync();
+	public async Task<IList<OrderViewModel>> Handle(GetOrders query, CancellationToken cancellationToken)
+	{
+		var userInfo = await _userInfoRequester.RequestUserInfoAsync();
 
-        if (orders is null)
-            return Array.Empty<OrderViewModel>();
+		var orders = await _querySession.Query<OrderDetails>()
+			.Where(o => o.CustomerId == userInfo!.CustomerId)
+			.ToListAsync(cancellationToken);
 
-        var viewModels = await Task.WhenAll(orders.Select(async order =>
-        {
-            var quote = order.OrderStatus == OrderStatus.Placed 
-                ? await GetQuote(order) : null;
+		if (orders == null || orders.Count == 0)
+			return Array.Empty<OrderViewModel>();
 
-            var orderLines = order.OrderStatus == OrderStatus.Placed
-                ? quote!.Items.Select(quoteItem =>
-                    new OrderLineViewModel
-                    {
-                        ProductId = quoteItem.ProductId,
-                        ProductName = quoteItem.ProductName,
-                        UnitPrice = quoteItem.UnitPrice,
-                        Quantity = quoteItem.Quantity
-                    }).ToList()
-                : order.OrderLines.Select(orderline =>
-                    new OrderLineViewModel
-                    {
-                        ProductId = orderline.ProductId,
-                        ProductName = orderline.ProductName,
-                        UnitPrice = orderline.UnitPrice,
-                        Quantity = orderline.Quantity
-                    }).ToList();
+		var viewModels = await Task.WhenAll(
+			orders.Select(BuildOrderViewModel)
+		);
 
-            string currencySymbol = quote is not null ?
-                Currency.OfCode(quote?.CurrencyCode!).Symbol : order!.Currency.Symbol;
+		return viewModels.ToList();
+	}
 
-            var viewModel = new OrderViewModel
-            {
-                OrderId = order.Id,
-                QuoteId = order.QuoteId,
-                CustomerId = order.CustomerId,
-                CreatedAt = order.CreatedAt,
-                StatusCode = (int)order.OrderStatus,
-                StatusText = order.OrderStatus.ToString(),
-                OrderLines = orderLines,
-                CurrencySymbol = currencySymbol,
-                TotalPrice = quote?.TotalPrice ?? order.TotalPrice
-            };
+	private async Task<OrderViewModel> BuildOrderViewModel(OrderDetails order)
+	{
+		List<OrderLineViewModel> orderLines;
+		string currencySymbol;
 
-            return viewModel;
-        }));
+		if (order.OrderStatus == OrderStatus.Placed) // order was just placed
+		{
+			// retrieving quote details
+			var quote = await GetQuoteAsync(order);
+			orderLines = quote.Items.Select(item => 
+				new OrderLineViewModel
+				{
+					ProductId = item.ProductId,
+					ProductName = item.ProductName,
+					UnitPrice = item.UnitPrice,
+					Quantity = item.Quantity
+				}).ToList();
 
-        return viewModels.ToList();
-    }
+			currencySymbol = Currency
+				.OfCode(quote.CurrencyCode).Symbol;
+			order.TotalPrice = quote.TotalPrice;
+		}
+		else // Order has been processed and contains confirmed items
+		{
+			orderLines = order.OrderLines.Select(item => new OrderLineViewModel
+			{
+				ProductId = item.ProductId,
+				ProductName = item.ProductName,
+				UnitPrice = item.UnitPrice,
+				Quantity = item.Quantity
+			}).ToList();
 
+			currencySymbol = order.Currency.Symbol;
+		}
 
-    private async Task<QuoteViewModelResponse> GetQuote(OrderDetails order)
-    {
-        var apiRoute = _configuration["ApiRoutes:QuoteManagement"];
-        var response = await _integrationHttpService.GetAsync<QuoteViewModelResponse>(
-            $"{apiRoute}/{order.CustomerId}/quote/{order.QuoteId}")
-            ?? throw new ApplicationLogicException(
-                $"An error occurred retrieving quote for customer {order.CustomerId}.");
+		return new OrderViewModel
+		{
+			OrderId = order.Id,
+			QuoteId = order.QuoteId,
+			CustomerId = order.CustomerId,
+			CreatedAt = order.CreatedAt,
+			StatusCode = (int)order.OrderStatus,
+			StatusText = order.OrderStatus.ToString(),
+			OrderLines = orderLines,
+			CurrencySymbol = currencySymbol,
+			TotalPrice = order.TotalPrice
+		};
+	}
 
-        if (!response.Success)
-            throw new ApplicationLogicException(response?.Message ?? string.Empty);
+	private async Task<QuoteViewModelResponse> GetQuoteAsync(OrderDetails order)
+	{
+		var apiRoute = _configuration["ApiRoutes:QuoteManagement"];
+		var quoteResponse = await _integrationHttpService.GetAsync<QuoteViewModelResponse>(
+			$"{apiRoute}/{order.QuoteId}/details");
 
-        var responseData = response.Data!;
-        return responseData;
-    }
+		if (quoteResponse == null || !quoteResponse.Success)
+			throw new ApplicationLogicException(quoteResponse?.Message
+				?? $"Failed to retrieve quote for customer {order.CustomerId}.");
+
+		return quoteResponse.Data!;
+	}
 }
