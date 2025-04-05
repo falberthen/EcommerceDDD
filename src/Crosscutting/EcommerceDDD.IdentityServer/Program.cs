@@ -3,6 +3,7 @@ var services = builder.Services;
 
 services.AddControllers();
 services.AddEndpointsApiExplorer();
+services.AddCoreInfrastructure(builder.Configuration);
 services.AddMemoryCache();
 services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
@@ -57,21 +58,14 @@ builder.Services.AddIdentityServer(opt =>
     .AddAspNetIdentity<ApplicationUser>()
     .AddProfileService<CustomProfileService>();
 
-// Cors
-builder.Services.AddCors(o =>
-    o.AddPolicy("CorsPolicy", builder => {
-        builder
-        .AllowAnyMethod()
-        .AllowAnyHeader()
-        .AllowCredentials()
-        .WithOrigins("http://localhost:4200");
-    }
-));
-
 // App
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+	app.UseSwagger(builder.Configuration);
+
 app.UseRouting();
-app.UseCors("CorsPolicy");
+app.UseAuthentication();
 app.UseIdentityServer();
 app.UseAuthorization();
 app.MapControllers();

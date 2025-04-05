@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Options;
+
 namespace EcommerceDDD.Core.Infrastructure.Tests.Http;
 
 public class TokenRequesterTests
@@ -16,16 +18,19 @@ public class TokenRequesterTests
 		};
 		_httpClientFactory.CreateClient(Arg.Any<string>())
 			.Returns(httpClient);
+		_options.Value.Returns(new TokenIssuerSettings() { Authority = _url.AbsoluteUri });
 
 		var tokenRequester = new TokenRequester(
-			_cache, _contextAccessor, _httpClientFactory);
+			_cache, _contextAccessor,
+			_options,
+			_httpClientFactory);
 
 		_cache.CreateEntry(Arg.Any<object>())
 			.Returns(Substitute.For<ICacheEntry>());
 
 		// When
 		var response = await tokenRequester
-			.GetApplicationTokenAsync(new TokenIssuerSettings() { Authority = _url.AbsoluteUri });
+			.GetApplicationTokenAsync();
 
 		// Then
 		Assert.NotNull(response);
@@ -46,13 +51,13 @@ public class TokenRequesterTests
 		};
 		_httpClientFactory.CreateClient(Arg.Any<string>())
 			.Returns(httpClient);
+		_options.Value.Returns(new TokenIssuerSettings() { Authority = _url.AbsoluteUri });
 
 		var tokenRequester = new TokenRequester(
-			_cache, _contextAccessor, _httpClientFactory);
+			_cache, _contextAccessor, _options, _httpClientFactory);
 
 		// When
-		var response = await tokenRequester.GetUserTokenAsync(
-			new TokenIssuerSettings() { Authority = _url.AbsoluteUri },
+		var response = await tokenRequester.GetUserTokenFromCredentialsAsync(
 			"username", "password");
 
 		// Then
@@ -64,4 +69,6 @@ public class TokenRequesterTests
 	private IHttpClientFactory _httpClientFactory = Substitute.For<IHttpClientFactory>();
 	private IMemoryCache _cache = Substitute.For<IMemoryCache>();
 	private IHttpContextAccessor _contextAccessor = Substitute.For<IHttpContextAccessor>();
+	private IOptions<TokenIssuerSettings> _options = Substitute.For<IOptions<TokenIssuerSettings>>();
+	
 }

@@ -1,3 +1,4 @@
+global using System.Net;
 global using Duende.IdentityServer;
 global using Duende.IdentityServer.EntityFramework.DbContexts;
 global using Duende.IdentityServer.EntityFramework.Mappers;
