@@ -13,10 +13,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Koalesce.OpenAPI" Version="0.1.0-alpha" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
 	<PackageReference Include="Ocelot" Version="23.4.2" />
-	<PackageReference Include="MMLib.SwaggerForOcelot" Version="8.3.2" />
-	<PackageReference Include="Ocelot.Provider.Polly" Version="23.4.2" />
+	  <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.23" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,9 +25,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="ocelot.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Update="Ocelot\ocelot.accounts.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>

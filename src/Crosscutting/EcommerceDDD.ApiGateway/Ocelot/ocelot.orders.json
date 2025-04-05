@@ -10,8 +10,7 @@
           "Port": 80
         }
       ],
-      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE", "POST" ],
-      "SwaggerKey": "orders"
+      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE", "POST" ]
     }
   ]
 }

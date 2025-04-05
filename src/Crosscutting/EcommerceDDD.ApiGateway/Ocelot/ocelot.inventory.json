@@ -10,8 +10,7 @@
           "Port": 80
         }
       ],
-      "UpstreamHttpMethod": [ "GET", "POST" ],
-      "SwaggerKey": "inventory"
+      "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
       "UpstreamPathTemplate": "/api/inventory/{everything}",
@@ -23,8 +22,7 @@
           "Port": 80
         }
       ],
-      "UpstreamHttpMethod": [ "GET", "PUT", "POST" ],
-      "SwaggerKey": "inventory"
+      "UpstreamHttpMethod": [ "GET", "PUT", "POST" ]
     }
   ]
 }

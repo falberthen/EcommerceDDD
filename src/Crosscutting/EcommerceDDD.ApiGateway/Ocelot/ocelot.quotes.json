@@ -10,8 +10,7 @@
           "Port": 80
         }
       ],
-      "UpstreamHttpMethod": [ "GET", "POST" ],
-      "SwaggerKey": "quotes"
+      "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
       "DownstreamPathTemplate": "/api/quotes/{everything}",
@@ -23,8 +22,7 @@
           "Port": 80
         }
       ],
-      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ],
-      "SwaggerKey": "quotes"
+      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ]
     }
   ]
 }

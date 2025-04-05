@@ -10,8 +10,7 @@
           "Port": 80
         }
       ],
-      "UpstreamHttpMethod": [ "POST" ],
-      "SwaggerKey": "shipments"
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ]
 }

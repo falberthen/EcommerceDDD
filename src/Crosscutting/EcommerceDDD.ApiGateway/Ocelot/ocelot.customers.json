@@ -10,8 +10,7 @@
           "Port": 80
         }
       ],
-      "UpstreamHttpMethod": [ "GET", "POST" ],
-      "SwaggerKey": "customers"
+      "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
       "DownstreamPathTemplate": "/api/customers/{customerId}",
@@ -23,7 +22,6 @@
           "Port": 80
         }
       ],
-      "SwaggerKey": "customers",
       "UpstreamHttpMethod": [ "GET", "PUT" ]
     }    
   ]

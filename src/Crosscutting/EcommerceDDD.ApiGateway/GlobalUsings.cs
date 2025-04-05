@@ -1,4 +1,3 @@
-global using MMLib.SwaggerForOcelot.DependencyInjection;
 global using EcommerceDDD.ApiGateway.SignalR.Hubs.Order;
 global using EcommerceDDD.Core.Infrastructure.Identity;
 global using EcommerceDDD.Core.Infrastructure.WebApi;
@@ -6,5 +5,3 @@ global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.SignalR;
 global using Ocelot.DependencyInjection;
-global using Ocelot.Provider.Polly;
-global using Ocelot.Middleware;
