@@ -10,7 +10,7 @@ public class QuoteTests
         var currency = Currency.OfCode(Currency.USDollar.Code);
 
         // When
-        var quote = Quote.OpenQuote(customerId, currency);
+        var quote = Quote.OpenQuoteForCustomer(customerId, currency);
 
         // Then
         Assert.NotNull(quote);

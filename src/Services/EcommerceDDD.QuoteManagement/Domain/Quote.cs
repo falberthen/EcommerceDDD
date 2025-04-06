@@ -12,7 +12,7 @@ public class Quote : AggregateRoot<QuoteId>
 
     private List<QuoteItem> _quoteItems = default!;
 
-    public static Quote OpenQuote(CustomerId customerId, Currency currency)
+    public static Quote OpenQuoteForCustomer(CustomerId customerId, Currency currency)
     {
         if (customerId is null)
             throw new BusinessRuleException("The customer Id is required.");

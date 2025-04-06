@@ -5,7 +5,6 @@ public class CustomProfileService(
 	RoleManager<IdentityRole> roleMgr,
 	IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory) : IProfileService
 {
-
 	private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory = userClaimsPrincipalFactory
 		?? throw new ArgumentNullException(nameof(userClaimsPrincipalFactory));
 	private readonly UserManager<ApplicationUser> _userMgr = userMgr
@@ -50,4 +49,3 @@ public class CustomProfileService(
 		context.IsActive = user != null;
 	}
 }
-

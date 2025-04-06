@@ -9,9 +9,16 @@ services:
       postgres -c wal_level=logical -c max_wal_senders=5 -c max_replication_slots=5
     ports:
       - '5432:5432'
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     networks:
       - ecommercedddnet
     volumes:
+      - postgres:/var/lib/postgresql/data
       - './scripts/db_init.sql:/docker-entrypoint-initdb.d/db_init.sql'
     restart: 
       on-failure
@@ -34,6 +41,12 @@ services:
     image: confluentinc/cp-kafka:latest
     hostname: kafka
     container_name: kafka
+    healthcheck:
+      test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:9092"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     networks:
       - ecommercedddnet
     ports:
@@ -50,7 +63,7 @@ services:
       on-failure
     depends_on:      
       zookeeper:
-        condition: service_started
+        condition: service_started   
   
   init-kafka:
     image: confluentinc/cp-kafka:latest  
@@ -60,12 +73,11 @@ services:
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: 'kafka:29092'
-    command: |
-      "
-      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic Orders --replication-factor 1 --partitions 1
-      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic Payments --replication-factor 1 --partitions 1
-      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic Shipments --replication-factor 1 --partitions 1
-      "
+    command: >
+      /bin/sh -c "sleep 10 &&
+        kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic Orders --replication-factor 1 --partitions 1 &&
+        kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic Payments --replication-factor 1 --partitions 1 &&
+        kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic Shipments --replication-factor 1 --partitions 1"
     restart: 
       on-failure
     depends_on:      
@@ -144,14 +156,18 @@ services:
       interval: 40s
       timeout: 30s
       retries: 3
-      start_period: 30s
+      start_period: 60s
       start_interval: 30s
     ports:
       - '5001:80'
     networks:
       - ecommercedddnet
     restart: 
-      on-failure
+      always
+    depends_on:
+      postgres:
+        condition: 
+            service_healthy
 
   ecommerceddd-apigateway:
     image: ecommerceddd-apigateway
@@ -164,9 +180,11 @@ services:
       ASPNETCORE_URLS: 'http://+:80'    
     healthcheck:
       test: curl --fail http://ecommerceddd-apigateway:80/health || exit 1
-      interval: 40s
+      interval: 10s
       timeout: 30s
-      retries: 3
+      retries: 5
+      start_period: 60s
+      start_interval: 5s
     ports:
       - '5000:80'
     networks:
@@ -201,19 +219,20 @@ services:
       ASPNETCORE_URLS: 'http://+:80'   
     healthcheck:      
       test: curl --fail http://ecommerceddd-customers:80/health || exit 1
-      interval: 40s
+      interval: 10s
       timeout: 30s
-      retries: 3
-      start_period: 60s
+      retries: 5
+      start_period: 5s
+      start_interval: 5s
     ports:
       - '8001:80'    
     networks:
       - ecommercedddnet
     restart:
-      always
+      on-failure
     depends_on:
       postgres:
-        condition: service_started
+        condition: service_healthy
       ecommerceddd-identityserver:
         condition: service_started      
 
@@ -230,16 +249,18 @@ services:
       test: curl --fail http://ecommerceddd-products:80/health || exit 1
       interval: 40s
       timeout: 30s
-      retries: 3      
+      retries: 3
+      start_period: 60s    
+      start_interval: 5s
     ports:
       - '8002:80'
     networks:
       - ecommercedddnet
     restart:
-      always
+      on-failure
     depends_on:      
       postgres:
-        condition: service_started
+        condition: service_healthy
       ecommerceddd-identityserver:
         condition: service_started      
 
@@ -263,10 +284,10 @@ services:
     networks:
       - ecommercedddnet
     restart:
-      always
+      on-failure
     depends_on:
       postgres:
-        condition: service_started
+        condition: service_healthy
       ecommerceddd-identityserver:
         condition: service_started      
       ecommerceddd-products:
@@ -283,21 +304,24 @@ services:
       ASPNETCORE_URLS: 'http://+:80'    
     healthcheck:      
       test: curl --fail http://ecommerceddd-quotes:80/health || exit 1
-      interval: 40s
+      interval: 10s
       timeout: 30s
-      retries: 3
-      start_period: 60s
+      retries: 5
+      start_period: 5s
+      start_interval: 5s
     ports:
       - '8004:80'
     networks:
       - ecommercedddnet    
     restart: 
-      always
+      on-failure
     depends_on:
       postgres:
-        condition: service_started
+        condition: service_healthy
       ecommerceddd-identityserver:
-        condition: service_started      
+        condition: service_started    
+      ecommerceddd-products:
+        condition: service_started
 
   ecommerceddd-orders:
     image: ecommerceddd-orders
@@ -310,25 +334,28 @@ services:
       ASPNETCORE_URLS: 'http://+:80'    
     healthcheck:      
       test: curl --fail http://ecommerceddd-orders:80/health || exit 1
-      interval: 40s
+      interval: 10s
       timeout: 30s
-      retries: 3
-      start_period: 60s
+      retries: 5
+      start_period: 5s
+      start_interval: 5s
     ports:
       - '8005:80'
     networks:
       - ecommercedddnet    
     restart:
-      always
+      on-failure
     depends_on:
       postgres:
-        condition: service_started      
+        condition: service_healthy      
       kafka:
-        condition: service_started
+        condition: service_healthy
       connect:
         condition: service_started
       ecommerceddd-identityserver:
-        condition: service_started      
+        condition: service_started  
+      ecommerceddd-products:
+        condition: service_started
 
   ecommerceddd-payments:
     image: ecommerceddd-payments
@@ -341,25 +368,28 @@ services:
       ASPNETCORE_URLS: 'http://+:80'    
     healthcheck:      
       test: curl --fail http://ecommerceddd-payments:80/health || exit 1
-      interval: 40s
+      interval: 10s
       timeout: 30s
-      retries: 3
-      start_period: 60s
+      retries: 5
+      start_period: 5s
+      start_interval: 5s
     ports:
       - '8006:80'
     networks:
       - ecommercedddnet    
     restart:
-      always
+      on-failure
     depends_on:
       postgres:
-        condition: service_started      
+        condition: service_healthy      
       kafka:
-        condition: service_started
+        condition: service_healthy
       connect:
         condition: service_started
       ecommerceddd-identityserver:
-        condition: service_started      
+        condition: service_started   
+      ecommerceddd-products:
+        condition: service_started
 
   ecommerceddd-shipments:
     image: ecommerceddd-shipments
@@ -372,25 +402,28 @@ services:
       ASPNETCORE_URLS: 'http://+:80'    
     healthcheck:      
       test: curl --fail http://ecommerceddd-shipments:80/health || exit 1
-      interval: 40s
+      interval: 10s
       timeout: 30s
-      retries: 3
-      start_period: 60s
+      retries: 5
+      start_period: 5s
+      start_interval: 5s
     ports:
       - '8007:80'
     networks:
       - ecommercedddnet    
     restart:
-      always
+      on-failure
     depends_on:
       postgres:
-        condition: service_started      
+        condition: service_healthy      
       kafka:
-        condition: service_started
+        condition: service_healthy
       connect:
         condition: service_started
       ecommerceddd-identityserver:
-        condition: service_started      
+        condition: service_started
+      ecommerceddd-products:
+        condition: service_started
 
 networks:
   ecommercedddnet:

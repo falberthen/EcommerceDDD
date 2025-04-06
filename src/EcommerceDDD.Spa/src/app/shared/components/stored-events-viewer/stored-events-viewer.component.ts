@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { StoredEventData } from '@ecommerce/models/StoredEventData';
+import { IEventHistory } from 'src/app/clients/models';
 
 @Component({
   selector: 'app-stored-event-viewer',
@@ -9,7 +9,7 @@ import { StoredEventData } from '@ecommerce/models/StoredEventData';
 export class StoredEventsViewerComponent {
   @Output('destroyComponent') destroyComponent: EventEmitter<any> =
     new EventEmitter();
-  storedEventData!: StoredEventData[];
+    eventHistory: IEventHistory[] | undefined;
 
   close() {
     this.destroyComponent.emit();

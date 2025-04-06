@@ -3,7 +3,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '@core/services/auth.service';
 import { LoaderService } from '@core/services/loader.service';
-import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -47,19 +46,18 @@ export class LoginComponent implements OnInit {
   }
 
   async onSubmit() {
-    // stop here if form is invalid
     if (this.loginForm.invalid) {
       return;
     }
 
-    await firstValueFrom(
-      this.authenticationService.login(
-        this.f.email.value,
-        this.f.password.value
-      )
-    ).then(() => {
+    const success = await this.authenticationService.login(
+      this.f.email.value,
+      this.f.password.value
+    );
+
+    if (success) {
       this.router.navigate([this.returnUrl]);
-    });
+    }
   }
 
   // getter for easy access to form fields

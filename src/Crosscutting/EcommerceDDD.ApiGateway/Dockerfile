@@ -4,6 +4,10 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
+# Switch to root user before installing curl
+USER root 
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
@@ -29,8 +33,8 @@ RUN addgroup --gid 1000 appgroup && adduser --uid 1000 --gid 1000 --home /app --
 COPY --from=publish /app/publish .
 
 # Copy ocelot.json and set permissions
-COPY src/Crosscutting/EcommerceDDD.ApiGateway/ocelot.json /app/ocelot.json
-RUN chown appuser:appgroup /app/ocelot.json && chmod 644 /app/ocelot.json
+COPY src/Crosscutting/EcommerceDDD.ApiGateway/Ocelot/ocelot.json /app/Ocelot/ocelot.json
+RUN chown appuser:appgroup /app/Ocelot/ocelot.json && chmod 644 /app/Ocelot/ocelot.json
 
 # Switch to the non-root user
 USER appuser

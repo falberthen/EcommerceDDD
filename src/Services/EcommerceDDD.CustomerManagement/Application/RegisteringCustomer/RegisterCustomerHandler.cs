@@ -27,7 +27,8 @@ public class RegisterCustomerHandler(
             command.CreditLimit);
 
         var customer = Customer.Create(customerData);
-        var response = await CreateUserForCustomer(command)
+
+        var response = await CreateUserForCustomerAsync(command, customer.Id)
             ?? throw new RecordNotFoundException($"An error occurred creating the customer's user.");
 
         if (!response.Success)
@@ -37,7 +38,7 @@ public class RegisterCustomerHandler(
             .AppendEventsAsync(customer, cancellationToken);
     }
 
-    private async Task<IntegrationHttpResponse> CreateUserForCustomer(RegisterCustomer command)
+    private async Task<IntegrationHttpResponse> CreateUserForCustomerAsync(RegisterCustomer command, CustomerId customerId)
     {
         try
         {
@@ -45,6 +46,7 @@ public class RegisterCustomerHandler(
             var result = await _httpRequester
                 .PostAsync<IntegrationHttpResponse>(identityServerCreateUserUrl,
                 new RegisterUserRequest(
+					customerId.Value,
                     command.Email, 
                     command.Password, 
                     command.PasswordConfirm));
@@ -57,5 +59,9 @@ public class RegisterCustomerHandler(
         }
     }
 
-    private record RegisterUserRequest(string Email, string Password, string PasswordConfirm);
+    private record RegisterUserRequest(
+		Guid CustomerId,
+		string Email, 
+		string Password, 
+		string PasswordConfirm);
 }

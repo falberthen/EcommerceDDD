@@ -1,25 +1,20 @@
 ﻿namespace EcommerceDDD.QuoteManagement.Domain.Commands;
 
 public record class OpenQuote : ICommand
-{
-    public CustomerId CustomerId { get; private set; }
+{    
     public Currency Currency { get; private set; }
 
-    public static OpenQuote Create(
-        CustomerId customerId,
+    public static OpenQuote Create(        
         Currency currency)
-    {
-        if (customerId is null)
-            throw new ArgumentNullException(nameof(customerId));
+    {        
         if (currency is null)
             throw new ArgumentNullException(nameof(currency));
 
-        return new OpenQuote(customerId, currency);
+        return new OpenQuote(currency);
     }
 
-    private OpenQuote(CustomerId customerId, Currency currency)
-    {
-        CustomerId = customerId;
+    private OpenQuote(Currency currency)
+    {        
         Currency = currency;
     }
 }

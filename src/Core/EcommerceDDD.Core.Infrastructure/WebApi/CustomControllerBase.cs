@@ -2,8 +2,8 @@
 
 public class CustomControllerBase : ControllerBase
 {
-    private readonly ICommandBus? _commandBus;
-    private readonly IQueryBus? _queryBus;
+    private readonly ICommandBus _commandBus;
+    private readonly IQueryBus _queryBus;
 
 	public CustomControllerBase() { }
 
@@ -22,7 +22,8 @@ public class CustomControllerBase : ControllerBase
 
         try
         {
-            result = await _queryBus.SendAsync(query, cancellationToken);
+            result = await _queryBus
+				.SendAsync(query, cancellationToken);
         }
         catch (OperationCanceledException)
         {
@@ -40,11 +41,13 @@ public class CustomControllerBase : ControllerBase
         });
     }
 
-    protected async new Task<IActionResult> Response(ICommand command, CancellationToken cancellationToken)
+    protected async new Task<IActionResult> Response(ICommand command, 
+		CancellationToken cancellationToken)
     {
         try
         {
-            await _commandBus.SendAsync(command, cancellationToken);
+            await _commandBus
+				.SendAsync(command, cancellationToken);
         }
         catch (OperationCanceledException)
         {

@@ -10,18 +10,15 @@ public class OrdersController(
     /// <summary>
     /// Get customer's orders
     /// </summary>
-    /// <param name="customerId"></param>
     /// <returns></returns>
-    [HttpGet, Route("{customerId:guid}")]
+    [HttpGet]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanRead)]
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<OrderViewModel>>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> ListCustomerOrders([FromRoute] Guid customerId, 
-        CancellationToken cancellationToken) => 
-         await Response(
-             GetOrders.Create(CustomerId.Of(customerId)),
-             cancellationToken
-        );
+    public async Task<IActionResult> ListCustomerOrders(CancellationToken cancellationToken) => 
+        await Response(
+			GetOrders.Create(), cancellationToken
+		);
 
     /// <summary>
     /// Get order event history
@@ -30,10 +27,9 @@ public class OrdersController(
     /// <returns></returns>
     [HttpGet, Route("{orderId:guid}/history")]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanRead)]
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<OrderEventHistory>>))]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<IEventHistory>>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> ListHistory([FromRoute] Guid orderId
-        , CancellationToken cancellationToken) =>  
+    public async Task<IActionResult> ListHistory([FromRoute] Guid orderId, CancellationToken cancellationToken) =>  
         await Response(
             GetOrderEventHistory.Create(OrderId.Of(orderId)),
             cancellationToken
@@ -42,19 +38,15 @@ public class OrdersController(
     /// <summary>
     /// Places an order from a quote
     /// </summary>
-    /// <param name="customerId"></param>
     /// <param name="quoteId"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpPost, Route("{customerId:guid}/{quoteId:guid}")]
+    [HttpPost, Route("quote/{quoteId:guid}")]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanWrite)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> PlaceOrderFromQuote([FromRoute] Guid customerId, 
-        [FromRoute] Guid quoteId, CancellationToken cancellationToken) =>
+    public async Task<IActionResult> PlaceOrderFromQuote([FromRoute] Guid quoteId, CancellationToken cancellationToken) =>
         await Response(
-            PlaceOrder.Create(CustomerId.Of(customerId),
-                QuoteId.Of(quoteId)),
-            cancellationToken
-        );
+            PlaceOrder.Create(QuoteId.Of(quoteId)), cancellationToken
+		);
 }

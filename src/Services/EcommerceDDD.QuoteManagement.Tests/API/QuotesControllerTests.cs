@@ -48,18 +48,16 @@ public class QuotesControllerTests
     public async Task OpenCustomerQuote_WithOpenQuoteRequest_ShouldOpeQuoteForCustomer()
     {
         // Given
-        Guid customerId = Guid.NewGuid();
-
         await _commandBus.SendAsync(Arg.Any<OpenQuote>(), CancellationToken.None);
 
         var request = new OpenQuoteRequest()
         {
-            CustomerId = customerId,
             CurrencyCode = Currency.USDollar.Code
         };
 
         // When
-        var response = await _quotesController.OpenCustomerQuote(request, CancellationToken.None);
+        var response = await _quotesController
+			.OpenQuoteForCustomer(request, CancellationToken.None);
 
         // Then
         response.Should().BeOfType<OkObjectResult>();

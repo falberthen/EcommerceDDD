@@ -31,7 +31,7 @@
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
 		<PackageReference Include="Polly" Version="8.5.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="7.1.0" />
-		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="7.1.0" />		
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="7.1.0" />
 	</ItemGroup>
 
 	<ItemGroup>

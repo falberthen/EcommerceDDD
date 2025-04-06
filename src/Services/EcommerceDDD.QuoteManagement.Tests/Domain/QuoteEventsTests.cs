@@ -9,7 +9,7 @@ public class QuoteEventsTests
         var currency = Currency.OfCode(Currency.USDollar.Code);
 
         // When
-        var quote = Quote.OpenQuote(_customerId, currency);
+        var quote = Quote.OpenQuoteForCustomer(_customerId, currency);
 
         // Then
         var @event = quote.GetUncommittedEvents().LastOrDefault() as QuoteOpen;
@@ -22,7 +22,7 @@ public class QuoteEventsTests
     {
         // Given
         var currency = Currency.OfCode(Currency.USDollar.Code);
-        var quote = Quote.OpenQuote(_customerId, currency); 
+        var quote = Quote.OpenQuoteForCustomer(_customerId, currency); 
         
         // When
         quote.Cancel();
@@ -41,7 +41,7 @@ public class QuoteEventsTests
         var quoteItem = new QuoteItemData(_quoteId, _productId, "Product",
             Money.Of(10, currency.Code), 1);
 
-        var quote = Quote.OpenQuote(_customerId, currency);
+        var quote = Quote.OpenQuoteForCustomer(_customerId, currency);
 
         // When        
         quote.AddItem(quoteItem);
@@ -61,7 +61,7 @@ public class QuoteEventsTests
         var quoteItem = new QuoteItemData(_quoteId, _productId, "Product",
             Money.Of(10, currency.Code), 1);
 
-        var quote = Quote.OpenQuote(customerId, currency);
+        var quote = Quote.OpenQuoteForCustomer(customerId, currency);
         quote.AddItem(quoteItem);
 
         // When        
@@ -81,7 +81,7 @@ public class QuoteEventsTests
         var quoteItem = new QuoteItemData(_quoteId, _productId, "Product",
             Money.Of(10, currency.Code), 1);
 
-        var quote = Quote.OpenQuote(_customerId, currency);
+        var quote = Quote.OpenQuoteForCustomer(_customerId, currency);
         quote.AddItem(quoteItem);
 
         // When        
@@ -101,7 +101,7 @@ public class QuoteEventsTests
         var currency = Currency.OfCode(Currency.USDollar.Code);
         var quoteItem = new QuoteItemData(_quoteId, _productId, "Product",
             Money.Of(10, currency.Code), 1);
-        var quote = Quote.OpenQuote(_customerId, currency);
+        var quote = Quote.OpenQuoteForCustomer(_customerId, currency);
         quote.AddItem(quoteItem);
 
         // When        

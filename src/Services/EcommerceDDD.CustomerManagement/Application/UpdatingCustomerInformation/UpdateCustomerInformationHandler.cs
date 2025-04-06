@@ -1,16 +1,29 @@
 ﻿namespace EcommerceDDD.CustomerManagement.Api.Application.UpdatingCustomerInformation;
 
 public class UpdateCustomerInformationHandler(
-    IEventStoreRepository<Customer> customerWriteRepository) : ICommandHandler<UpdateCustomerInformation>
+	IUserInfoRequester userInfoRequester,
+	IQuerySession querySession,
+	IEventStoreRepository<Customer> customerWriteRepository) : ICommandHandler<UpdateCustomerInformation>
 {
     private readonly IEventStoreRepository<Customer> _customerWriteRepository = customerWriteRepository
 		?? throw new ArgumentNullException(nameof(customerWriteRepository));
+	private IUserInfoRequester _userInfoRequester { get; set; } = userInfoRequester
+		?? throw new ArgumentNullException(nameof(userInfoRequester));
+	private readonly IQuerySession _querySession = querySession
+		?? throw new ArgumentNullException(nameof(querySession));
 
-    public async Task Handle(UpdateCustomerInformation command, CancellationToken cancellationToken)
+	public async Task Handle(UpdateCustomerInformation command, CancellationToken cancellationToken)
     {
-        var customer = await _customerWriteRepository
-            .FetchStreamAsync(command.CustomerId.Value)
-            ?? throw new ArgumentNullException($"Customer {command.CustomerId.Value} not found.");
+		UserInfo? response = await _userInfoRequester
+			.RequestUserInfoAsync();
+
+		var customerDetails = _querySession.Query<CustomerDetails>()
+			.FirstOrDefault(c => c.Id == response!.CustomerId)
+			?? throw new RecordNotFoundException($"Customer not found.");
+
+		var customer = await _customerWriteRepository
+            .FetchStreamAsync(customerDetails.Id)
+            ?? throw new ArgumentNullException($"Customer {customerDetails.Id} not found.");
 
         var customerData = new CustomerData(
             customer.Email,

@@ -127,16 +127,17 @@ public class Order : AggregateRoot<OrderId>
 
     private void Apply(OrderPlaced @event)
     {
-        Id = OrderId.Of(@event.OrderId);
+		Status = OrderStatus.Placed;
+		Id = OrderId.Of(@event.OrderId);
         CustomerId = CustomerId.Of(@event.CustomerId);
         QuoteId = QuoteId.Of(@event.QuoteId);
         CreatedAt = @event.Timestamp;
-        Status = OrderStatus.Placed;
     }
 
     private void Apply(OrderProcessed @event)
     {
-        TotalPrice = Money.Of(@event.TotalPrice, @event.CurrencyCode);
+		Status = OrderStatus.Processed;
+		TotalPrice = Money.Of(@event.TotalPrice, @event.CurrencyCode);
 
         var currency = Currency.OfCode(@event.CurrencyCode);
         _orderLines = @event.OrderLines.Select(ol =>
@@ -148,8 +149,6 @@ public class Order : AggregateRoot<OrderId>
                     ol.Quantity,
                     currency)))
             .ToList();
-
-        Status = OrderStatus.Processed;
     }
 
     private void Apply(OrderPaid @event)

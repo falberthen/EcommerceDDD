@@ -21,11 +21,9 @@
               formControlName="email"
               placeholder="E-mail"
               [ngClass]="{ 'is-invalid': isFieldInvalid('email') }"
-              />
+            />
             @if (isFieldInvalid('email')) {
-              <div class="invalid-feedback">
-                Email is required
-              </div>
+            <div class="invalid-feedback">Email is required</div>
             }
           </div>
           <div class="form-group mt-3">
@@ -38,11 +36,9 @@
               formControlName="name"
               placeholder="Name"
               [ngClass]="{ 'is-invalid': isFieldInvalid('name') }"
-              />
+            />
             @if (isFieldInvalid('name')) {
-              <div class="invalid-feedback">
-                Name is required
-              </div>
+            <div class="invalid-feedback">Name is required</div>
             }
           </div>
           <div class="form-group mt-3">
@@ -57,13 +53,9 @@
               formControlName="shippingAddress"
               placeholder="Shipping Address"
               [ngClass]="{ 'is-invalid': isFieldInvalid('shippingAddress') }"
-              />
+            />
             @if (isFieldInvalid('shippingAddress')) {
-              <div
-                class="invalid-feedback"
-                >
-                Shipping Address is required
-              </div>
+            <div class="invalid-feedback">Shipping Address is required</div>
             }
           </div>
           <div class="form-group mt-3">
@@ -76,11 +68,9 @@
               formControlName="password"
               placeholder="Password"
               [ngClass]="{ 'is-invalid': isFieldInvalid('password') }"
-              />
+            />
             @if (isFieldInvalid('password')) {
-              <div class="invalid-feedback">
-                Password is required
-              </div>
+            <div class="invalid-feedback">Password is required</div>
             }
           </div>
           <div class="form-group mt-3">
@@ -95,11 +85,9 @@
               formControlName="passwordConfirm"
               placeholder="Confirmation"
               [ngClass]="{ 'is-invalid': isFieldInvalid('passwordConfirm') }"
-              />
+            />
             @if (isFieldInvalid('password')) {
-              <div class="invalid-feedback">
-                Password confirm is required
-              </div>
+            <div class="invalid-feedback">Password confirm is required</div>
             }
           </div>
           <div class="form-group mt-3">
@@ -114,11 +102,9 @@
               formControlName="creditLimit"
               placeholder="Credit limit"
               [ngClass]="{ 'is-invalid': isFieldInvalid('creditLimit') }"
-              />
+            />
             @if (isFieldInvalid('creditLimit')) {
-              <div class="invalid-feedback">
-                Credit Limit is required
-              </div>
+            <div class="invalid-feedback">Credit Limit is required</div>
             }
           </div>
           <div class="row mt-3">
@@ -128,14 +114,14 @@
                 [routerLink]="['/home']"
                 class="btn btn-secondary footer-item"
                 [disabled]="isLoading | async"
-                >
+              >
                 Cancel
               </button>
               <button
                 (click)="onSubmit()"
                 class="btn btn-primary footer-item"
                 [disabled]="accountForm.invalid || (isLoading | async)"
-                >
+              >
                 Create
               </button>
             </div>

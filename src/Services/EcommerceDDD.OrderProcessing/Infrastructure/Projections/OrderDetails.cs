@@ -28,7 +28,8 @@ public class OrderDetails
     {
         OrderLines = BuildOrderLines(@event.OrderLines);
         Currency = Currency.OfCode(@event.CurrencyCode);
-        TotalPrice = @event.TotalPrice;
+		OrderStatus = OrderStatus.Processed;
+		TotalPrice = @event.TotalPrice;
     }
 
     internal void Apply(OrderPaid paid)

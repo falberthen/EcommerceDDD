@@ -9,14 +9,15 @@ public class AccountsController(IIdentityManager identityManager) : CustomContro
 		?? throw new ArgumentNullException(nameof(identityManager));
 
 	[HttpPost, Route("login")]
-    public async Task<IActionResult> UserLogin(LoginRequest request)
+	[ProducesResponseType(typeof(LoginResult), StatusCodes.Status200OK)]
+	public async Task<IActionResult> UserLogin(LoginRequest request)
     {
         try
         {
-            var response = await _identityManager
+			LoginResult result = await _identityManager
                 .AuthUserByCredentials(request);
 
-            return Ok(response);
+            return Ok(result);
         }
         catch (Exception e)
         {
@@ -25,11 +26,12 @@ public class AccountsController(IIdentityManager identityManager) : CustomContro
     }
 
     [HttpPost, Route("register")]
-    public async Task<IActionResult> Register(RegisterUserRequest request)
+	[ProducesResponseType(typeof(UserRegisteredResult), StatusCodes.Status200OK)]
+	public async Task<IActionResult> Register(RegisterUserRequest request)
     {
         try
         {
-            var result = await _identityManager
+			UserRegisteredResult result = await _identityManager
                 .RegisterNewUser(request);
 
             return Ok(new

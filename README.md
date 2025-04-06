@@ -95,6 +95,7 @@ The microservices composing the backend are built to be as simple as possible, s
     for cross-platform backend with:
     <ul>
       <li>.NET 8</li>
+      <li><b>Koalesce 0.1.0-alpha</b></li>
       <li>Ocelot 23.4.2</li>
       <li>MMLib.SwaggerForOcelot 8.3.2</li>
       <li>Marten 7.33.2</li>
@@ -116,6 +117,7 @@ The microservices composing the backend are built to be as simple as possible, s
   <li>
     <a href='https://angular.io/' target="_blank">Angular v18.2.11</a> and <a href='http://www.typescriptlang.org/' target="_blank">TypeScript 5.5.4</a> for the frontend with:
     <ul>
+      <li>Kiota 1.0.0-preview.92</li>
       <li>Jest 29.7.0</li>
       <li>NgBootstrap 17.0.1/ Bootstrap 5.2.3</li>
       <li>Font Awesome 6.4.0</li>

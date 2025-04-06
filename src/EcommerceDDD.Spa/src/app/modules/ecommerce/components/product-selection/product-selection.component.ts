@@ -3,13 +3,15 @@ import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { CartComponent } from '../cart/cart.component';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { LoaderService } from '@core/services/loader.service';
-import { ProductsService } from '../../services/products.service';
 import { CurrencyNotificationService } from '../../services/currency-notification.service';
-import { Product } from '../../models/Product';
-import { GetProductsRequest } from '../../models/requests/GetProductsRequest';
-import { Quote, QuoteItem } from '../../models/Quote';
-import { firstValueFrom } from 'rxjs';
 import { LOCAL_STORAGE_ENTRIES } from '../../constants/appConstants';
+import { KiotaClientService } from '@core/services/kiota-client.service';
+import {
+  GetProductsRequest,
+  ProductViewModel,
+  QuoteItemViewModel,
+  QuoteViewModel,
+} from 'src/app/clients/models';
 
 @Component({
   selector: 'app-products',
@@ -20,12 +22,12 @@ export class ProductSelectionComponent implements OnInit {
   @ViewChild('cart') cart!: CartComponent;
   currentCurrency!: string;
   customerId!: string;
-  products: Product[] = [];
+  products: ProductViewModel[] = [];
   faPlusCircle = faPlusCircle;
 
   constructor(
     public loaderService: LoaderService,
-    private productsService: ProductsService,
+    private kiotaClientService: KiotaClientService,
     private localStorageService: LocalStorageService,
     private currencyNotificationService: CurrencyNotificationService
   ) {}
@@ -57,20 +59,26 @@ export class ProductSelectionComponent implements OnInit {
   }
 
   async loadProducts() {
-    await firstValueFrom(
-      this.productsService.getProducts(
-        new GetProductsRequest(this.currentCurrency)
-      )
-    ).then((result) => {
-      this.products = result.data;
-      this.products.forEach((product) => {
-        product.quantity = 0;
-      });
-    });
+    try {
+      const request: GetProductsRequest = {
+        currencyCode: this.currentCurrency,
+        productIds: []
+      };
+
+      await this.kiotaClientService.client.api.products
+        .post(request)
+        .then((result) => {
+          if (result?.data) {
+            this.products = result.data!;
+          }
+        });
+    } catch (error) {
+      this.kiotaClientService.handleError(error);
+    }
   }
 
-  async saveCart(product: Product) {
-    if (!this.cart.quote) {
+  async saveCart(product: ProductViewModel) {
+    if (!this.cart?.quote) {
       await this.createQuote();
     }
 
@@ -78,33 +86,25 @@ export class ProductSelectionComponent implements OnInit {
   }
 
   async createQuote() {
-    await this.cart.createQuote().then(async (result) => {
-      if (result && result.success) {
-        await this.cart.getOpenQuote();
-      }
-    });
+    await this.cart.createQuote();
   }
 
-  async addQuoteItem(product: Product) {
-    await this.cart.addQuoteItem(product).then(async (result) => {
-      if (result && result.success) {
-        await this.cart.getOpenQuote();
-      }
-    });
+  async addQuoteItem(product: ProductViewModel) {
+    await this.cart.addQuoteItem(product);
   }
 
-  syncronizeQuoteToProductList(quote: Quote) {
+  syncronizeQuoteToProductList(quote: QuoteViewModel) {
     if (this.products && quote) {
       this.products.forEach((product) => {
-        var productFound = quote.items.filter(
-          (quoteItem: QuoteItem) => quoteItem.productId == product.productId
+        var productFound = quote.items!.filter(
+          (quoteItem: QuoteItemViewModel) =>
+            quoteItem.productId == product.productId
         );
 
         if (productFound.length > 0) {
-          product.quantity = productFound[0].quantity;
-        }
-        else{
-          product.quantity = 0;
+          product.quantityAddedToCart = productFound[0].quantity;
+        } else {
+          product.quantityAddedToCart = 0;
         }
       });
     }

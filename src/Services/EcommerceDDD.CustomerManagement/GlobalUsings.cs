@@ -10,7 +10,7 @@ global using EcommerceDDD.Core.Infrastructure.Marten;
 global using EcommerceDDD.Core.Infrastructure.WebApi;
 global using EcommerceDDD.Core.Persistence;
 global using EcommerceDDD.CustomerManagement.Api.Application.GettingCustomerDetails;
-global using EcommerceDDD.CustomerManagement.Api.Application.GettingCustomerDetailsWithToken;
+global using EcommerceDDD.CustomerManagement.Api.Application.GettingCustomerDetailsById;
 global using EcommerceDDD.CustomerManagement.Api.Application.RegisteringCustomer;
 global using EcommerceDDD.CustomerManagement.API.Controllers.Requests;
 global using EcommerceDDD.CustomerManagement.Application.GettingCreditLimit;

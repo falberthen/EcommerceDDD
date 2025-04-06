@@ -2,6 +2,6 @@
 
 public interface IIdentityManager
 {
-	Task<TokenResponse> AuthUserByCredentials(LoginRequest request);
-	Task<IdentityResult> RegisterNewUser(RegisterUserRequest request);
+	Task<LoginResult> AuthUserByCredentials(LoginRequest request);
+	Task<UserRegisteredResult> RegisterNewUser(RegisterUserRequest request);
 }

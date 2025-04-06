@@ -3,8 +3,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NotificationService } from '@core/services/notification.service';
 import { LoaderService } from '@core/services/loader.service';
-import { CustomersService } from '@ecommerce/services/customers.service';
-import { RegisterCustomerRequest } from '@ecommerce/models/requests/RegisterCustomerRequest';
+import { KiotaClientService } from '@core/services/kiota-client.service';
+import { RegisterCustomerRequest } from 'src/app/clients/models';
 
 @Component({
   selector: 'app-customer-account',
@@ -20,7 +20,7 @@ export class CustomerAccountComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private loaderService: LoaderService,
-    private customersService: CustomersService,
+    private kiotaClientService: KiotaClientService,
     private notificationService: NotificationService
   ) {}
 
@@ -47,29 +47,27 @@ export class CustomerAccountComponent implements OnInit {
     return field!.invalid && field!.touched;
   }
 
-  onSubmit() {
-    // stop here if form is invalid
-    if (this.accountForm.invalid) {
-      return;
+  async onSubmit() {
+    if (this.accountForm.invalid) return;
+
+    const customerRegistration: RegisterCustomerRequest = {
+      email: this.f.email.value,
+      name: this.f.name.value,
+      shippingAddress: this.f.shippingAddress.value,
+      password: this.f.password.value,
+      passwordConfirm: this.f.passwordConfirm.value,
+      creditLimit: this.f.creditLimit.value,
+    };
+
+    try {
+      await this.kiotaClientService.anonymousClient.api.customers.post(
+        customerRegistration
+      );
+      this.notificationService.showSuccess('Account successfully created!');
+      this.router.navigate([this.returnUrl]);
+    } catch (error) {
+      this.kiotaClientService.handleError(error);
     }
-
-    const customerRegistration = new RegisterCustomerRequest(
-      this.f.email.value,
-      this.f.name.value,
-      this.f.shippingAddress.value,
-      this.f.password.value,
-      this.f.passwordConfirm.value,
-      this.f.creditLimit.value
-    );
-
-    this.customersService
-      .registerCustomer(customerRegistration)
-      .subscribe((result) => {
-        if (result.success) {
-          this.notificationService.showSuccess('Account successfully created!');
-          this.router.navigate([this.returnUrl]);
-        }
-      });
   }
 
   // getter for easy access to form fields

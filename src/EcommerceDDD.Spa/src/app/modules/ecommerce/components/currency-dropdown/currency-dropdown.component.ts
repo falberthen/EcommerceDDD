@@ -35,11 +35,16 @@ export class CurrencyDropdownComponent implements OnInit {
   }
 
   setCurrency(currency: string) {
-    this.localStorageService.setValue(LOCAL_STORAGE_ENTRIES.storedCurrency, currency);
+    this.localStorageService.setValue(
+      LOCAL_STORAGE_ENTRIES.storedCurrency,
+      currency
+    );
     this.notificationService.changeCurrency(currency);
   }
 
   getCurrentCurrency() {
-    return this.localStorageService.getValueByKey(LOCAL_STORAGE_ENTRIES.storedCurrency);
+    return this.localStorageService.getValueByKey(
+      LOCAL_STORAGE_ENTRIES.storedCurrency
+    );
   }
 }

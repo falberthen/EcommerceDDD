@@ -2,106 +2,102 @@
   <div class="product-list-container">
     <div class="product-list">
       @if ((isLoading | async) && products.length == 0) {
-        <div class="card">
-          <app-loader-skeleton></app-loader-skeleton>
-        </div>
+      <div class="card">
+        <app-loader-skeleton></app-loader-skeleton>
+      </div>
       }
       <div class="container">
         @for (product of products | sort:'name':'asc'; track product) {
-          <div class="col-12"
-            >
-            <div class="card product-container">
-              <div class="card-body">
-                <h3 class="card-title product-title" title="{{ product.name }}">
-                  {{ product.name }}
-                </h3>
-                <span class="product-price">
-                  <span class="currency-symbol">
-                  {{product.currencySymbol}}</span>{{product.price}}
-                </span>
-                <span class="badge badge-category mb-4">
-                  {{product.category}}
-                </span>
-                <div class="row">
-                  <div class="col-2">
-                    <img
-                      src="{{ product.imageUrl }}"
-                      class="card-img-top product-img"
-                      />
-                  </div>
-                  <div class="col-10">
-                    <p class="card-text product-description">
-                      {{ product.description }}
-                    </p>
-                  </div>
+        <div class="col-12">
+          <div class="card product-container">
+            <div class="card-body">
+              <h3 class="card-title product-title" title="{{ product.name }}">
+                {{ product.name }}
+              </h3>
+              <span class="product-price">
+                <span class="currency-symbol">
+                  {{ product.currencySymbol }}</span
+                >{{ product.price }}
+              </span>
+              <span class="badge badge-category mb-4">
+                {{ product.category }}
+              </span>
+              <div class="row">
+                <div class="col-2">
+                  <img
+                    src="{{ product.imageUrl }}"
+                    class="card-img-top product-img"
+                  />
                 </div>
-                <div class="row mt-3 mb-2">
-                  <div class="col-4">
-                    @if (product.quantityInStock > 0) {
-                      @if (product.quantityInStock <= 10) {
-                        <span class="product-stock-quantity text-warning">
-                          Only <b>{{ product.quantityInStock }}</b> left in stock!
-                        </span>
-                      } @else {
-                        <span class="product-stock-quantity text-success">
-                          In Stock
-                        </span>
-                      }
-                    }
-                    @if (product.quantityInStock === 0) {
-                      <span class="product-stock-quantity">
-                        Out of Stock
-                      </span>
-                    }
-                  </div>
-                  @if (product.quantityInStock !== 0) {
-                    <div class="col-8">
-                      @if (product.quantity == 0) {
-                        <div
-                          class="add-product-container">
-                          <button
-                            (click)="saveCart(product)"
-                            class="btn btn-primary add-change-item-button"
-                            [disabled]="isLoading | async">
-                            <fa-icon
-                              [icon]="faPlusCircle"
-                            title="Add to Cart"></fa-icon>
-                            Add to Cart
-                          </button>
-                        </div>
-                      }
-                      @if (product.quantity > 0) {
-                        <div>
-                          <div class="change-quantity-container">
-                            <button
-                              (click)="addQuoteItem(product)"
-                              class="btn btn-secondary add-change-item-button"
-                              [disabled]="isLoading | async">
-                              Change quantity
-                            </button>
-                            <select
-                              [(ngModel)]="product.quantity"
-                              class="quantity-selector">
-                              <option value="1">1</option>
-                              <option value="2">2</option>
-                              <option value="3">3</option>
-                              <option value="4">4</option>
-                              <option value="5">5</option>
-                              <option value="6">6</option>
-                              <option value="7">7</option>
-                              <option value="8">8</option>
-                              <option value="9">9</option>
-                              <option value="10">10</option>
-                            </select>
-                          </div>
-                        </div>
-                      }
-                    </div>
+                <div class="col-10">
+                  <p class="card-text product-description">
+                    {{ product.description }}
+                  </p>
+                </div>
+              </div>
+              <div class="row mt-3 mb-2">
+                <div class="col-4">
+                  @if (product.quantityInStock === 0) {
+                  <span class="product-stock-quantity"> Out of Stock </span>
+                  } @else if (product.quantityInStock <= 10) {
+                  <span class="product-stock-quantity text-warning">
+                    Only <b>{{ product.quantityInStock }}</b> left in stock!
+                  </span>
+                  } @else {
+                  <span class="product-stock-quantity text-success">
+                    In Stock
+                  </span>
                   }
                 </div>
+
+                @if(product.quantityInStock > 0){
+                  <!-- Add to cart -->
+                  @if (product.quantityAddedToCart == 0) {
+                    <div class="col-8">
+                      <div class="add-product-container">
+                        <button
+                          (click)="saveCart(product)"
+                          class="btn btn-primary add-change-item-button"
+                          [disabled]="isLoading | async"
+                        >
+                          <fa-icon
+                            [icon]="faPlusCircle"
+                            title="Add to Cart"
+                          ></fa-icon>
+                          Add to Cart
+                        </button>
+                      </div>
+                    </div>
+                    } @else {
+                    <!-- Change quantity -->
+                    <div>
+                      <div class="change-quantity-container">
+                        <button
+                          (click)="addQuoteItem(product)"
+                          class="btn btn-secondary add-change-item-button"
+                          [disabled]="isLoading | async"
+                        >
+                          Change quantity
+                        </button>
+                        <select
+                          [(ngModel)]="product.quantityAddedToCart"
+                          class="quantity-selector"
+                        >
+                          <option
+                            *ngFor="let n of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+                            [ngValue]="n"
+                          >
+                            {{ n }}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                    }
+                }
               </div>
             </div>
           </div>
+        </div>
         }
       </div>
     </div>
@@ -110,7 +106,8 @@
     <app-cart
       #cart
       (sendQuoteItemsEvent)="syncronizeQuoteToProductList($event)"
-      (reloadProductsEvent)="loadProducts()">
+      (reloadProductsEvent)="loadProducts()"
+    >
     </app-cart>
   </div>
 </div>

@@ -1,6 +1,6 @@
 <div class="card fadeInDown stored-events-viewer">
   <div class="card-body">
-    @if (storedEventData && storedEventData.length == 0) {
+    @if (eventHistory && eventHistory.length == 0) {
       <div
         class="alert alert-danger"
         >
@@ -16,7 +16,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (row of storedEventData; track row) {
+          @for (row of eventHistory; track row) {
             <tr>
               <td>
                 <span class="event-type">{{ row.eventTypeName }}</span>

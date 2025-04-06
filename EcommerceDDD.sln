@@ -63,7 +63,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EcommerceDDD.InventoryManag
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EcommerceDDD.QuoteManagement.Tests", "src\Services\EcommerceDDD.QuoteManagement.Tests\EcommerceDDD.QuoteManagement.Tests.csproj", "{FD844762-CFC4-4A49-9831-042A86294BF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcommerceDDD.InventoryManagement.Tests", "src\Services\EcommerceDDD.InventoryManagement.Tests\EcommerceDDD.InventoryManagement.Tests.csproj", "{487D7187-2669-4BB8-A3A7-F39031EC818B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EcommerceDDD.InventoryManagement.Tests", "src\Services\EcommerceDDD.InventoryManagement.Tests\EcommerceDDD.InventoryManagement.Tests.csproj", "{487D7187-2669-4BB8-A3A7-F39031EC818B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

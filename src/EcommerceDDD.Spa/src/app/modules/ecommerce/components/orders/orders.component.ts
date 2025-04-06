@@ -1,18 +1,12 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  ViewContainerRef,
-} from '@angular/core';
+import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { faList } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '@core/services/auth.service';
 import { SignalrService } from '@core/services/signalr.service';
 import { StoredEventService } from '@shared/services/stored-event.service';
-import { OrdersService } from '../../services/orders.service';
-import { Order } from '../../models/Order';
-import { firstValueFrom } from 'rxjs';
-import { ORDER_STATUS_CODES } from '@ecommerce/constants/appConstants';
+import { ORDER_STATUS_CODES, SIGNALR } from '@ecommerce/constants/appConstants';
 import { LoaderService } from '@core/services/loader.service';
+import { KiotaClientService } from '@core/services/kiota-client.service';
+import { OrderViewModel } from 'src/app/clients/models';
 
 @Component({
   selector: 'app-orders',
@@ -24,23 +18,23 @@ export class OrdersComponent implements OnInit {
   storedEventViewerContainer!: ViewContainerRef;
 
   faList = faList;
-  customerId!: string;
-  orders: Order[] = [];
+  customerId?: string;
+  orders: OrderViewModel[] = [];
   storedEventsViewerComponentRef: any;
   hubHelloMessage!: string;
 
   constructor(
-    private ordersService: OrdersService,
+    private kiotaClientService: KiotaClientService,
     private authService: AuthService,
     private signalrService: SignalrService,
     private storedEventService: StoredEventService,
-    private loaderService: LoaderService,
+    private loaderService: LoaderService
   ) {}
 
   async ngOnInit() {
     if (this.authService.currentCustomer) {
       const customer = this.authService.currentCustomer;
-      this.customerId = customer.id;
+      this.customerId = customer.id!;
       await this.loadOrders();
     }
 
@@ -48,7 +42,7 @@ export class OrdersComponent implements OnInit {
     this.addCustomerToSignalrGroup();
 
     this.signalrService.connection.on(
-      'updateOrderStatus',
+      SIGNALR.updateOrderStatus,
       (orderId: string, statusText: string, statusCode: number) => {
         this.updateOrderStatus(orderId, statusText, statusCode);
       }
@@ -66,34 +60,40 @@ export class OrdersComponent implements OnInit {
   }
 
   async showOrderStoredEvents(orderId: string) {
-    await firstValueFrom(this.ordersService.getOrderStoredEvents(orderId)).then(
-      (result) => {
-        if (result.success) {
-          this.storedEventService.showStoredEvents(
-            this.storedEventViewerContainer,
-            result.data
-          );
-        }
-      }
-    );
+    try {
+      await this.kiotaClientService.client.api.orders
+        .byOrderId(orderId)
+        .history.get()
+        .then((result) => {
+          if (result!.success) {
+            this.storedEventService.showStoredEvents(
+              this.storedEventViewerContainer,
+              result?.data!
+            );
+          }
+        });
+    } catch (error) {
+      this.kiotaClientService.handleError(error);
+    }
   }
 
   async loadOrders() {
-    await firstValueFrom(this.ordersService
-      .getOrders(this.customerId))
-      .then((result) => {
-        if (result.success) {
-          this.orders = result.data;
+    try {
+      await this.kiotaClientService.client.api.orders.get().then((result) => {
+        if (result!.success) {
+          this.orders = result?.data!;
         }
-      }
-    );
+      });
+    } catch (error) {
+      this.kiotaClientService.handleError(error);
+    }
   }
 
   getStatusCssClass(statusCode: number): string {
     switch (statusCode) {
       case ORDER_STATUS_CODES.placed:
         return 'placed';
-        case ORDER_STATUS_CODES.processed:
+      case ORDER_STATUS_CODES.processed:
         return 'processed';
       case ORDER_STATUS_CODES.paid:
         return 'paid';
@@ -131,8 +131,7 @@ export class OrdersComponent implements OnInit {
     statusText: string,
     statusCode: number
   ) {
-    var order = this.orders
-      .find((e) => e.orderId == orderId);
+    var order = this.orders.find((e) => e.orderId == orderId);
     if (order) {
       order.statusText = statusText;
       order.statusCode = statusCode;
