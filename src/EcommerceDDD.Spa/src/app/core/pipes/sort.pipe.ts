@@ -1,10 +1,14 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'sort'
+  name: 'sort',
 })
 export class SortPipe implements PipeTransform {
-  transform(collection: any[], field: string, direction: 'asc' | 'desc'): any[] {
+  transform(
+    collection: any[],
+    field: string,
+    direction: 'asc' | 'desc'
+  ): any[] {
     if (!collection || !field) {
       return collection;
     }

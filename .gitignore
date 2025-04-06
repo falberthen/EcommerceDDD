@@ -344,3 +344,6 @@ healthchecksdb
 /NDependOut
 *.ndproj
 
+/src/EcommerceDDD.Spa/.vscode/settings.json
+/.gitignore
+/src/EcommerceDDD.Spa/.vscode/settings.json

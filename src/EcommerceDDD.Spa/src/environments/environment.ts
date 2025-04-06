@@ -1,6 +1,5 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:5000/api/',
-  authUrl: 'http://localhost:5001/api/',
+  gatewayBaseUrl: 'http://localhost:5000',
   signalrOrdersHubUrl: 'http://localhost:5000/orderstatushub',
 };

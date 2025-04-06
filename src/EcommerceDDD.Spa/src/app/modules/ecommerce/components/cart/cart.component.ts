@@ -7,16 +7,7 @@ import { CurrencyNotificationService } from '@ecommerce/services/currency-notifi
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { NotificationService } from '@core/services/notification.service';
 import { LoaderService } from '@core/services/loader.service';
-import { QuotesService } from '../../services/quotes.service';
-import { Quote, QuoteItem } from '../../models/Quote';
-import { Product } from '../../models/Product';
-import { RemoveQuoteItemRequest } from '../../models/requests/RemoveQuoteItemRequest';
-import { OpenQuoteRequest } from '../../models/requests/OpenQuoteRequest';
-import { AddQuoteItemRequest } from '../../models/requests/AddQuoteItemRequest';
-import { firstValueFrom } from 'rxjs';
-import { ServiceResponse } from '../../services/ServiceResponse';
 import { StoredEventService } from '@shared/services/stored-event.service';
-import { OrdersService } from '../../services/orders.service';
 import {
   Component,
   OnInit,
@@ -25,6 +16,14 @@ import {
   ViewContainerRef,
   ViewChild,
 } from '@angular/core';
+import { KiotaClientService } from '@core/services/kiota-client.service';
+import {
+  AddQuoteItemRequest,
+  OpenQuoteRequest,
+  ProductViewModel,
+  QuoteItemViewModel,
+  QuoteViewModel,
+} from 'src/app/clients/models';
 
 @Component({
   selector: 'app-cart',
@@ -39,9 +38,9 @@ export class CartComponent implements OnInit {
   @Output() placeOrderEvent = new EventEmitter();
   @Output() reloadProductsEvent = new EventEmitter();
 
-  quote?: Quote;
+  quote?: QuoteViewModel | undefined;
   currentCurrency!: string;
-  customerId!: string;
+  customerId?: string;
   faMinusCircle = faMinusCircle;
   faList = faList;
   isExpanded = false;
@@ -51,14 +50,13 @@ export class CartComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private quotesService: QuotesService,
-    private orderService: OrdersService,
     private loaderService: LoaderService,
     private localStorageService: LocalStorageService,
     private confirmationDialogService: ConfirmationDialogService,
     private currencyNotificationService: CurrencyNotificationService,
     private notificationService: NotificationService,
-    private storedEventService: StoredEventService
+    private storedEventService: StoredEventService,
+    private kiotaClientService: KiotaClientService
   ) {}
 
   async ngOnInit() {
@@ -71,7 +69,7 @@ export class CartComponent implements OnInit {
 
     if (this.authService.currentCustomer) {
       const customer = this.authService.currentCustomer;
-      this.customerId = customer.id;
+      this.customerId = customer.id!;
       await this.getOpenQuote();
     }
 
@@ -91,17 +89,21 @@ export class CartComponent implements OnInit {
   }
 
   async showQuoteStoredEvents() {
-    const result = this.quotesService
-      .getQuoteStoredEvents(this.quote!.quoteId);
-
-    await firstValueFrom(result).then((result) => {
-      if (result.success) {
-        this.storedEventService.showStoredEvents(
-          this.storedEventViewerContainer,
-          result.data
-        );
-      }
-    });
+    try {
+      await this.kiotaClientService.client.api.quotes
+        .byQuoteId(this.quote?.quoteId!)
+        .history.get()
+        .then((result) => {
+          if (result!.success) {
+            this.storedEventService.showStoredEvents(
+              this.storedEventViewerContainer,
+              result!.data!
+            );
+          }
+        });
+    } catch (error) {
+      this.kiotaClientService.handleError(error);
+    }
   }
 
   async cancelQuote() {
@@ -112,76 +114,90 @@ export class CartComponent implements OnInit {
       )
       .then(async (confirmed) => {
         if (confirmed) {
-          const result = await this.quotesService.cancelQuote(
-            this.quote!.quoteId
-          );
-
-          await firstValueFrom(result).then((result) => {
-            if (result.success) {
-              this.reloadProductsEvent.emit();
-              this.quote = undefined;
-            }
-          });
+          try {
+            await this.kiotaClientService.client.api.quotes
+              .byQuoteId(this.quote?.quoteId!)
+              .delete()
+              .then(async () => {
+                this.reloadProductsEvent.emit();
+                await this.getOpenQuote();
+              });
+          } catch (error) {
+            this.kiotaClientService.handleError(error);
+          }
         }
       });
   }
 
-  async getOpenQuote(): Promise<ServiceResponse | undefined> {
-    const result = this.quotesService.getOpenQuote(
-      this.customerId
-    );
+  async getOpenQuote() {
+    try {
+      await this.kiotaClientService.client.api.quotes.get().then((result) => {
+        if (result?.data?.quoteId) {
+          this.setQuote(result.data!);
+          this.emitQuote(result.data!);
+          return;
+        }
 
-    return firstValueFrom(result).then((result) => {
-      if (result.success) {
-        this.setQuote(result.data);
-        this.emitQuote(result.data);
-        return result;
-      }
-
-      return undefined;
-    });
+        this.quote = undefined;
+      });
+    } catch (error) {
+      this.kiotaClientService.handleError(error);
+    }
   }
 
-  async createQuote(): Promise<ServiceResponse> {
-    const request = new OpenQuoteRequest(
-      this.customerId,
-      this.currentCurrency);
-    return await firstValueFrom(
-      this.quotesService.openQuote(request)
-    );
+  async createQuote() {
+    const request : OpenQuoteRequest = {
+      currencyCode: this.currentCurrency
+    }
+
+    await this.kiotaClientService.client.api.quotes
+      .post(request)
+      .then(async () => {
+        await this.getOpenQuote();
+      })
+      .catch((error) => {
+        this.kiotaClientService.handleError(error);
+      });
   }
 
-  async addQuoteItem(product: Product): Promise<ServiceResponse> {
-    product.quantity = product.quantity == 0 ? 1 : Number(product.quantity);
-    const request = new AddQuoteItemRequest(
-      product.productId,
-      product.quantity,
-      this.currentCurrency
-    );
-    return await firstValueFrom(
-      this.quotesService
-        .addQuoteItem(this.quote!.quoteId, request)
-    );
+  async addQuoteItem(product: ProductViewModel) {
+    product.quantityAddedToCart =
+      product.quantityAddedToCart == 0
+        ? 1
+        : Number(product.quantityAddedToCart);
+
+    const request : AddQuoteItemRequest = {
+      productId: product.productId!,
+      quantity: product.quantityAddedToCart
+    };
+
+    return await this.kiotaClientService.client.api.quotes
+      .byQuoteId(this.quote?.quoteId!)
+      .items.put(request)
+      .then(async () => {
+        await this.getOpenQuote();
+      })
+      .catch((error) => {
+        this.kiotaClientService.handleError(error);
+      });
   }
 
-  async removeItem(quoteItem: QuoteItem) {
+  async removeItem(quoteItem: QuoteItemViewModel) {
     this.confirmationDialogService
       .confirm('Please confirm', 'Do you confirm you want to remove this item?')
       .then(async (confirmed) => {
         if (confirmed) {
-          const request = new RemoveQuoteItemRequest(
-            this.quote!.quoteId,
-            quoteItem.productId
-          );
-
-          const result = await this.quotesService
-            .removeQuoteItem(request);
-
-          await firstValueFrom(result).then(async (result) => {
-            if (result.success) {
-              await this.getOpenQuote();
-            }
-          });
+          try {
+            await this.kiotaClientService.client.api.quotes
+              .byQuoteId(this.quote?.quoteId!)
+              .items.byProductId(quoteItem.productId!)
+              .delete()
+              .then(async () => {
+                await this.getOpenQuote();
+              });
+          } catch (error) {
+            this.kiotaClientService.handleError(error);
+          }
         }
       });
   }
@@ -190,27 +206,29 @@ export class CartComponent implements OnInit {
     this.confirmationDialogService
       .confirm('Please confirm', 'Do you confirm you want to place an order?')
       .then(async (confirmed) => {
-        if (confirmed) {
-          const result = this.orderService.placeOrder(
-            this.customerId,
-            this.quote?.quoteId!
-          );
-
-          await firstValueFrom(result).then((result) => {
-            if (result.success) {
-              this.localStorageService.clearKey(LOCAL_STORAGE_ENTRIES.storedOpenQuote);
-              this.notificationService.showSuccess(
-                'Order placed with success.'
-              );
-              this.router.navigate(['/orders']);
-            }
-          });
+        if (this.quote && confirmed) {
+          try {
+            this.kiotaClientService.client.api.orders.quote
+              .byQuoteId(this.quote.quoteId!)
+              .post()
+              .then(() => {
+                this.localStorageService.clearKey(
+                  LOCAL_STORAGE_ENTRIES.storedOpenQuote
+                );
+                this.notificationService.showSuccess(
+                  'Order placed with success.'
+                );
+                this.router.navigate(['/orders']);
+              });
+          } catch (error) {
+            this.kiotaClientService.handleError(error);
+          }
         }
       });
   }
 
-  private setQuote(openQuote: Quote) {
-    if (openQuote == null) {
+  private setQuote(openQuote: QuoteViewModel) {
+    if (!openQuote) {
       this.localStorageService.clearKey(LOCAL_STORAGE_ENTRIES.storedOpenQuote);
       return;
     }
@@ -221,7 +239,7 @@ export class CartComponent implements OnInit {
     );
   }
 
-  private emitQuote(openQuote: Quote) {
+  private emitQuote(openQuote: QuoteViewModel) {
     // emiting quote object to product selection
     this.quote = openQuote;
     this.sendQuoteItemsEvent.emit(this.quote);

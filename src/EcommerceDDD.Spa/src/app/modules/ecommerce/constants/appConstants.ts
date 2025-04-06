@@ -8,7 +8,7 @@ export const LOCAL_STORAGE_ENTRIES = {
 
 export const ORDER_STATUS_CODES = {
   placed: 1,
-  processed:2,
+  processed: 2,
   paid: 3,
   shipped: 4,
   completed: 5,
@@ -16,5 +16,9 @@ export const ORDER_STATUS_CODES = {
 };
 
 export const ROUTE_PATHS = {
-  login: '/login'
-}
+  login: '/login',
+};
+
+export const SIGNALR = {
+  updateOrderStatus: 'updateOrderStatus',
+};

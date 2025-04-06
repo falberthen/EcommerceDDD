@@ -4,7 +4,7 @@ import { AuthService } from '../services/auth.service';
 import { TokenStorageService } from '../services/token-storage.service';
 
 @Injectable()
-export class AuthGuard  {
+export class AuthGuard {
   constructor(
     private authService: AuthService,
     private tokenStorageToken: TokenStorageService

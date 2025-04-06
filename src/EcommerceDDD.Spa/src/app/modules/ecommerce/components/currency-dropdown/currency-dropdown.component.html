@@ -1,16 +1,9 @@
 <div class="ddl-currency-container">
   <div class="currency-icon-container">
     @if (getCurrentCurrency() == 'EUR') {
-      <fa-icon
-        [icon]="faEuroSign"
-        >
-      </fa-icon>
-    }
-    @if (getCurrentCurrency() != 'EUR') {
-      <fa-icon
-        [icon]="faDollarSign"
-        >
-      </fa-icon>
+    <fa-icon [icon]="faEuroSign"> </fa-icon>
+    } @if (getCurrentCurrency() != 'EUR') {
+    <fa-icon [icon]="faDollarSign"> </fa-icon>
     }
   </div>
   <div class="currency-selector-container">

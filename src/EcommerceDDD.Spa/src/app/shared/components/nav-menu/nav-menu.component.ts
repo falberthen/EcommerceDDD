@@ -1,10 +1,6 @@
-import { firstValueFrom, Subscription } from 'rxjs';
 import { AuthService } from '@core/services/auth.service';
 import { TokenStorageService } from '@core/services/token-storage.service';
 import { LocalStorageService } from '@core/services/local-storage.service';
-import { CustomersService } from '@ecommerce/services/customers.service';
-import { Customer } from '@ecommerce/models/Customer';
-import { Quote } from '@ecommerce/models/Quote';
 import {
   ChangeDetectorRef,
   Component,
@@ -21,6 +17,9 @@ import {
   faUser,
 } from '@fortawesome/free-solid-svg-icons';
 import { LOCAL_STORAGE_ENTRIES } from '@ecommerce/constants/appConstants';
+import { KiotaClientService } from '@core/services/kiota-client.service';
+import { Subscription } from 'rxjs';
+import { CustomerDetails, QuoteViewModel } from 'src/app/clients/models';
 
 @Component({
   selector: 'app-nav-menu',
@@ -40,12 +39,12 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   isModalOpen = false;
   isLoggedIn = false;
   subscription!: Subscription;
-  customer!: Customer;
+  customer!: CustomerDetails;
 
   constructor(
     private cdr: ChangeDetectorRef,
     private authService: AuthService,
-    private customersService: CustomersService,
+    private kiotaClientService: KiotaClientService,
     private tokenStorageService: TokenStorageService,
     private localStorageService: LocalStorageService
   ) {}
@@ -68,9 +67,9 @@ export class NavMenuComponent implements OnInit, OnDestroy {
 
   get quoteItems() {
     let quoteStr = this.localStorageService.getValueByKey('openQuote');
-    if (quoteStr && quoteStr != 'undefined') {
-      var quote = JSON.parse(quoteStr) as Quote;
-      return quote.items.length;
+    if (quoteStr && quoteStr != 'undefined' && quoteStr != '{}') {
+      var quote = JSON.parse(quoteStr) as QuoteViewModel | undefined;
+      return quote?.items!.length;
     }
 
     return 0;
@@ -101,20 +100,27 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   }
 
   private async loadCustomerDetails() {
-    await firstValueFrom(this.customersService.loadCustomerDetails()).then(
-      (result) => {
-        if (result.success) {
-          var data = result.data;
-          this.customer = new Customer(
-            data.id,
-            data.name,
-            data.email,
-            data.shippingAddress,
-            data.creditLimit
-          );
-          this.storeLoadedCustomer();
-        }
-      }
-    );
+    try {
+      await this.kiotaClientService.client.api.customers.details
+        .get()
+        .then((result) => {
+          if (result!.success) {
+            const data = result!.data!;
+
+            const customerDetails: CustomerDetails = {
+              id: data.id,
+              name: data.name,
+              email: data.email,
+              shippingAddress: data.shippingAddress,
+              creditLimit: data.creditLimit,
+            };
+
+            this.customer = customerDetails;
+            this.storeLoadedCustomer();
+          }
+        });
+    } catch (error) {
+      this.kiotaClientService.handleError(error);
+    }
   }
 }

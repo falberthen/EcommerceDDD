@@ -1,16 +1,13 @@
-import { firstValueFrom } from 'rxjs';
 import { faList } from '@fortawesome/free-solid-svg-icons';
 import { LoaderService } from '@core/services/loader.service';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { NotificationService } from '@core/services/notification.service';
-import { Customer } from '../../models/Customer';
-import { UpdateCustomerRequest } from '../../models/requests/UpdateCustomerRequest';
-import { CustomersService } from '../../services/customers.service';
 import { StoredEventService } from '@shared/services/stored-event.service';
 import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LOCAL_STORAGE_ENTRIES } from '@ecommerce/constants/appConstants';
-import { AuthService } from '@core/services/auth.service';
+import { KiotaClientService } from '@core/services/kiota-client.service';
+import { CustomerDetails, UpdateCustomerRequest } from 'src/app/clients/models';
 
 @Component({
   selector: 'app-customer-details',
@@ -22,17 +19,16 @@ export class CustomerDetailsComponent implements OnInit {
   storedEventViewerContainer!: ViewContainerRef;
 
   customerDetailsForm!: FormGroup;
-  customer!: Customer;
+  customer!: CustomerDetails;
   faList = faList;
 
   constructor(
     private formBuilder: FormBuilder,
     private loaderService: LoaderService,
-    private customersService: CustomersService,
     private notificationService: NotificationService,
     private localStorageService: LocalStorageService,
     private storedEventService: StoredEventService,
-    private authService: AuthService
+    private kiotaClientService: KiotaClientService
   ) {}
 
   async ngOnInit() {
@@ -61,35 +57,39 @@ export class CustomerDetailsComponent implements OnInit {
       return;
     }
 
-    const customerUpdate = new UpdateCustomerRequest(
-      this.f.name.value,
-      this.f.shippingAddress.value,
-      this.f.creditLimit.value
-    );
+    const customerUpdate : UpdateCustomerRequest = {
+      name: this.f.name.value,
+      shippingAddress: this.f.shippingAddress.value,
+      creditLimit: this.f.creditLimit.value
+    }
 
-    await firstValueFrom(
-      this.customersService.updateCustomer(
-        this.customer.id,
-        customerUpdate)
-    ).then(async () => {
+    try {
+      await this.kiotaClientService.client.api.customers.update.put(
+        customerUpdate
+      );
+
       this.notificationService.showSuccess('Customer successfully updated!');
       await this.loadCustomerDetails();
-    });
+    } catch (error) {
+      this.kiotaClientService.handleError(error);
+    }
   }
 
   async showCustomerStoredEvents() {
-    await firstValueFrom(
-      this.customersService.getCustomerStoredEvents(
-        this.authService.currentCustomer!.id
-      )
-    ).then((result) => {
-      if (result.success) {
-        this.storedEventService.showStoredEvents(
-          this.storedEventViewerContainer,
-          result.data
-        );
-      }
-    });
+    try {
+      await this.kiotaClientService.client.api.customers.history
+        .get()
+        .then((result) => {
+          if (result!.success) {
+            this.storedEventService.showStoredEvents(
+              this.storedEventViewerContainer,
+              result!.data!
+            );
+          }
+        });
+    } catch (error) {
+      this.kiotaClientService.handleError(error);
+    }
   }
 
   private async storeLoadedCustomer() {
@@ -101,21 +101,27 @@ export class CustomerDetailsComponent implements OnInit {
   }
 
   private async loadCustomerDetails() {
-    await firstValueFrom(this.customersService.loadCustomerDetails()).then(
-      (result) => {
-        if (result.success) {
-          const data = result.data;
-          this.customer = new Customer(
-            data.id,
-            data.name,
-            data.email,
-            data.shippingAddress,
-            data.creditLimit
-          );
-          this.storeLoadedCustomer();
-        }
-      }
-    );
+    try {
+      await this.kiotaClientService.client.api.customers.details
+        .get()
+        .then((result) => {
+          if (result!.success) {
+            const data = result!.data!;
+            const customerDetails : CustomerDetails = {
+              id : data.id,
+              name: data.name,
+              email : data.email,
+              shippingAddress : data.shippingAddress,
+              creditLimit : data.creditLimit
+            };
+
+            this.customer = customerDetails;
+            this.storeLoadedCustomer();
+          }
+        });
+    } catch (error) {
+      this.kiotaClientService.handleError(error);
+    }
   }
 
   // getter for easy access to form fields
