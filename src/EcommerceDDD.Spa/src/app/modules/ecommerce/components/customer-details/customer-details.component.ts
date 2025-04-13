@@ -3,33 +3,32 @@ import { LoaderService } from '@core/services/loader.service';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { NotificationService } from '@core/services/notification.service';
 import { StoredEventService } from '@shared/services/stored-event.service';
-import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewContainerRef, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LOCAL_STORAGE_ENTRIES } from '@ecommerce/constants/appConstants';
 import { KiotaClientService } from '@core/services/kiota-client.service';
 import { CustomerDetails, UpdateCustomerRequest } from 'src/app/clients/models';
 
 @Component({
-  selector: 'app-customer-details',
-  templateUrl: './customer-details.component.html',
-  styleUrls: ['./customer-details.component.scss'],
+    selector: 'app-customer-details',
+    templateUrl: './customer-details.component.html',
+    styleUrls: ['./customer-details.component.scss'],
+    standalone: false
 })
 export class CustomerDetailsComponent implements OnInit {
+  private formBuilder = inject(FormBuilder);
+  private loaderService = inject(LoaderService);
+  private notificationService = inject(NotificationService);
+  private localStorageService = inject(LocalStorageService);
+  private storedEventService = inject(StoredEventService);
+  private kiotaClientService = inject(KiotaClientService);
+
   @ViewChild('storedEventViewerContainer', { read: ViewContainerRef })
   storedEventViewerContainer!: ViewContainerRef;
 
   customerDetailsForm!: FormGroup;
   customer!: CustomerDetails;
   faList = faList;
-
-  constructor(
-    private formBuilder: FormBuilder,
-    private loaderService: LoaderService,
-    private notificationService: NotificationService,
-    private localStorageService: LocalStorageService,
-    private storedEventService: StoredEventService,
-    private kiotaClientService: KiotaClientService
-  ) {}
 
   async ngOnInit() {
     await this.loadCustomerDetails();

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NotificationService } from '@core/services/notification.service';
@@ -7,22 +7,21 @@ import { KiotaClientService } from '@core/services/kiota-client.service';
 import { RegisterCustomerRequest } from 'src/app/clients/models';
 
 @Component({
-  selector: 'app-customer-account',
-  templateUrl: './customer-account.component.html',
-  styleUrls: ['./customer-account.component.scss'],
+    selector: 'app-customer-account',
+    templateUrl: './customer-account.component.html',
+    styleUrls: ['./customer-account.component.scss'],
+    standalone: false
 })
 export class CustomerAccountComponent implements OnInit {
+  private router = inject(Router);
+  private formBuilder = inject(FormBuilder);
+  private route = inject(ActivatedRoute);
+  private loaderService = inject(LoaderService);
+  private kiotaClientService = inject(KiotaClientService);
+  private notificationService = inject(NotificationService);
+
   accountForm!: FormGroup;
   returnUrl!: string;
-
-  constructor(
-    private router: Router,
-    private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
-    private loaderService: LoaderService,
-    private kiotaClientService: KiotaClientService,
-    private notificationService: NotificationService
-  ) {}
 
   ngOnInit() {
     this.accountForm = this.formBuilder.group({

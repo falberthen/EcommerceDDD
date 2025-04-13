@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewContainerRef, inject } from '@angular/core';
 import { faList } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '@core/services/auth.service';
 import { SignalrService } from '@core/services/signalr.service';
@@ -9,11 +9,18 @@ import { KiotaClientService } from '@core/services/kiota-client.service';
 import { OrderViewModel } from 'src/app/clients/models';
 
 @Component({
-  selector: 'app-orders',
-  templateUrl: './orders.component.html',
-  styleUrls: ['./orders.component.scss'],
+    selector: 'app-orders',
+    templateUrl: './orders.component.html',
+    styleUrls: ['./orders.component.scss'],
+    standalone: false
 })
 export class OrdersComponent implements OnInit {
+  private kiotaClientService = inject(KiotaClientService);
+  private authService = inject(AuthService);
+  private signalrService = inject(SignalrService);
+  private storedEventService = inject(StoredEventService);
+  private loaderService = inject(LoaderService);
+
   @ViewChild('storedEventViewerContainer', { read: ViewContainerRef })
   storedEventViewerContainer!: ViewContainerRef;
 
@@ -22,14 +29,6 @@ export class OrdersComponent implements OnInit {
   orders: OrderViewModel[] = [];
   storedEventsViewerComponentRef: any;
   hubHelloMessage!: string;
-
-  constructor(
-    private kiotaClientService: KiotaClientService,
-    private authService: AuthService,
-    private signalrService: SignalrService,
-    private storedEventService: StoredEventService,
-    private loaderService: LoaderService
-  ) {}
 
   async ngOnInit() {
     if (this.authService.currentCustomer) {

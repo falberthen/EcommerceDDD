@@ -1,4 +1,4 @@
-import { Optional, SkipSelf, NgModule } from '@angular/core';
+import { NgModule, inject } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from './services/auth.service';
 import { AuthGuard } from './guards/auth.guard';
@@ -30,7 +30,9 @@ import { SignalrService } from './services/signalr.service';
   ],
 })
 export class CoreModule {
-  constructor(@Optional() @SkipSelf() core: CoreModule) {
+  constructor() {
+    const core = inject(CoreModule, { optional: true, skipSelf: true })!;
+
     if (core) {
       throw new Error('You should import core module only in the root module');
     }

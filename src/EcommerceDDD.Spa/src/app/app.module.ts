@@ -14,6 +14,7 @@ import { ServerErrorInterceptor } from '@core/interceptors/server-error.intercep
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LoaderInterceptor } from '@core/interceptors/loader.interceptor';
 import { NavMenuComponent } from '@shared/components/nav-menu/nav-menu.component';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [AppComponent, NavMenuComponent],
@@ -22,9 +23,9 @@ import { NavMenuComponent } from '@shared/components/nav-menu/nav-menu.component
     CoreModule,
     EcommerceModule,
     AuthenticationModule,
-    BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
+    CommonModule,
     RouterModule.forRoot(APP_ROUTES),
     NgbModule,
   ],

@@ -1,4 +1,4 @@
-import { Injectable, Injector } from '@angular/core';
+import { Injectable, Injector, inject } from '@angular/core';
 import {
   HttpEvent,
   HttpInterceptor,
@@ -12,7 +12,8 @@ import { NotificationService } from '../services/notification.service';
 
 @Injectable()
 export class ServerErrorInterceptor implements HttpInterceptor {
-  constructor(private injector: Injector) {}
+  private injector = inject(Injector);
+
 
   intercept(
     req: HttpRequest<any>,

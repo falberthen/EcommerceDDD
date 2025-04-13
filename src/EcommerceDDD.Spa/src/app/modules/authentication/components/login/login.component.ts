@@ -1,25 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '@core/services/auth.service';
 import { LoaderService } from '@core/services/loader.service';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss'],
+    standalone: false
 })
 export class LoginComponent implements OnInit {
+  private router = inject(Router);
+  private formBuilder = inject(FormBuilder);
+  private route = inject(ActivatedRoute);
+  private loaderService = inject(LoaderService);
+  private authenticationService = inject(AuthService);
+
   loginForm!: FormGroup;
   returnUrl!: string;
 
-  constructor(
-    private router: Router,
-    private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
-    private loaderService: LoaderService,
-    private authenticationService: AuthService
-  ) {
+  constructor() {
     // redirect to home if already logged in
     if (this.authenticationService.currentUser) {
       this.router.navigate(['/home']);

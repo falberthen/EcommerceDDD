@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { CartComponent } from '../cart/cart.component';
 import { LocalStorageService } from '@core/services/local-storage.service';
@@ -14,23 +14,22 @@ import {
 } from 'src/app/clients/models';
 
 @Component({
-  selector: 'app-products',
-  templateUrl: './product-selection.component.html',
-  styleUrls: ['./product-selection.component.scss'],
+    selector: 'app-products',
+    templateUrl: './product-selection.component.html',
+    styleUrls: ['./product-selection.component.scss'],
+    standalone: false
 })
 export class ProductSelectionComponent implements OnInit {
+  loaderService = inject(LoaderService);
+  private kiotaClientService = inject(KiotaClientService);
+  private localStorageService = inject(LocalStorageService);
+  private currencyNotificationService = inject(CurrencyNotificationService);
+
   @ViewChild('cart') cart!: CartComponent;
   currentCurrency!: string;
   customerId!: string;
   products: ProductViewModel[] = [];
   faPlusCircle = faPlusCircle;
-
-  constructor(
-    public loaderService: LoaderService,
-    private kiotaClientService: KiotaClientService,
-    private localStorageService: LocalStorageService,
-    private currencyNotificationService: CurrencyNotificationService
-  ) {}
 
   async ngOnInit() {
     var storedCurrency = this.localStorageService.getValueByKey(

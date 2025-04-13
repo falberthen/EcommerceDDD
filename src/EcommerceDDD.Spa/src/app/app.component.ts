@@ -1,18 +1,17 @@
-import { AfterViewInit, Component, Renderer2 } from '@angular/core';
+import { AfterViewInit, Component, Renderer2, inject } from '@angular/core';
 import { LoaderService } from '@core/services/loader.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    standalone: false
 })
 export class AppComponent implements AfterViewInit {
-  title = 'ecommerceddd-spa';
+  private loaderService = inject(LoaderService);
+  private renderer = inject(Renderer2);
 
-  constructor(
-    private loaderService: LoaderService,
-    private renderer: Renderer2
-  ) {}
+  title = 'ecommerceddd-spa';
 
   ngAfterViewInit() {
     this.loaderService.loading$.subscribe((status: boolean) => {
