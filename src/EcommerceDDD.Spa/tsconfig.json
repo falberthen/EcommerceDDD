@@ -17,7 +17,6 @@
     "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
     "declaration": false,
-    "downlevelIteration": true,
     "experimentalDecorators": true,
     "useDefineForClassFields": true,
     "moduleResolution": "node",

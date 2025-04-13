@@ -8,14 +8,7 @@ import { LocalStorageService } from '@core/services/local-storage.service';
 import { NotificationService } from '@core/services/notification.service';
 import { LoaderService } from '@core/services/loader.service';
 import { StoredEventService } from '@shared/services/stored-event.service';
-import {
-  Component,
-  OnInit,
-  Output,
-  EventEmitter,
-  ViewContainerRef,
-  ViewChild,
-} from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewContainerRef, ViewChild, inject } from '@angular/core';
 import { KiotaClientService } from '@core/services/kiota-client.service';
 import {
   AddQuoteItemRequest,
@@ -26,11 +19,22 @@ import {
 } from 'src/app/clients/models';
 
 @Component({
-  selector: 'app-cart',
-  templateUrl: './cart.component.html',
-  styleUrls: ['./cart.component.scss'],
+    selector: 'app-cart',
+    templateUrl: './cart.component.html',
+    styleUrls: ['./cart.component.scss'],
+    standalone: false
 })
 export class CartComponent implements OnInit {
+  private router = inject(Router);
+  private authService = inject(AuthService);
+  private loaderService = inject(LoaderService);
+  private localStorageService = inject(LocalStorageService);
+  private confirmationDialogService = inject(ConfirmationDialogService);
+  private currencyNotificationService = inject(CurrencyNotificationService);
+  private notificationService = inject(NotificationService);
+  private storedEventService = inject(StoredEventService);
+  private kiotaClientService = inject(KiotaClientService);
+
   @ViewChild('storedEventViewerContainer', { read: ViewContainerRef })
   storedEventViewerContainer!: ViewContainerRef;
 
@@ -46,18 +50,6 @@ export class CartComponent implements OnInit {
   isExpanded = false;
   isModalOpen = false;
   storedEventsViewerComponentRef: any;
-
-  constructor(
-    private router: Router,
-    private authService: AuthService,
-    private loaderService: LoaderService,
-    private localStorageService: LocalStorageService,
-    private confirmationDialogService: ConfirmationDialogService,
-    private currencyNotificationService: CurrencyNotificationService,
-    private notificationService: NotificationService,
-    private storedEventService: StoredEventService,
-    private kiotaClientService: KiotaClientService
-  ) {}
 
   async ngOnInit() {
     const storedCurrency = this.localStorageService.getValueByKey(

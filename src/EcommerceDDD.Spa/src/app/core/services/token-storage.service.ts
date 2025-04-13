@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { LocalStorageService } from './local-storage.service';
 
 const TOKEN_KEY = 'auth-token';
@@ -7,7 +7,8 @@ const TOKEN_KEY = 'auth-token';
   providedIn: 'root',
 })
 export class TokenStorageService {
-  constructor(private localStorageService: LocalStorageService) {}
+  private localStorageService = inject(LocalStorageService);
+
 
   public setToken(token: string) {
     this.localStorageService.setValue(TOKEN_KEY, token);

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { LocalStorageService } from './local-storage.service';
 import { TokenStorageService } from './token-storage.service';
@@ -15,18 +15,16 @@ import { CustomerDetails, LoginResult } from 'src/app/clients/models';
   providedIn: 'root',
 })
 export class AuthService {
+  private kiotaClientService = inject(KiotaClientService);
+  private tokenStorageToken = inject(TokenStorageService);
+  private localStorageService = inject(LocalStorageService);
+  private router = inject(Router);
+  private notificationService = inject(NotificationService);
+
   private isLogged = new Subject<boolean>();
 
   // Observable string streams
   isLoggedAnnounced$ = this.isLogged.asObservable();
-
-  constructor(
-    private kiotaClientService: KiotaClientService,
-    private tokenStorageToken: TokenStorageService,
-    private localStorageService: LocalStorageService,
-    private router: Router,
-    private notificationService: NotificationService
-  ) {}
 
   public get currentUser(): string | null {
     const storedUser = this.localStorageService.getValueByKey(

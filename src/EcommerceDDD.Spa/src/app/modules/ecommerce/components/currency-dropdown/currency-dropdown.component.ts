@@ -1,23 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { faDollarSign, faEuroSign } from '@fortawesome/free-solid-svg-icons';
 import { LOCAL_STORAGE_ENTRIES } from '@ecommerce/constants/appConstants';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { CurrencyNotificationService } from '@ecommerce/services/currency-notification.service';
 
 @Component({
-  selector: 'app-currency-dropdown',
-  templateUrl: './currency-dropdown.component.html',
-  styleUrls: ['./currency-dropdown.component.css'],
+    selector: 'app-currency-dropdown',
+    templateUrl: './currency-dropdown.component.html',
+    styleUrls: ['./currency-dropdown.component.css'],
+    standalone: false
 })
 export class CurrencyDropdownComponent implements OnInit {
+  private localStorageService = inject(LocalStorageService);
+  private notificationService = inject(CurrencyNotificationService);
+
   faDollarSign = faDollarSign;
   faEuroSign = faEuroSign;
   currentCurrency!: string;
-
-  constructor(
-    private localStorageService: LocalStorageService,
-    private notificationService: CurrencyNotificationService
-  ) {}
 
   ngOnInit() {
     this.notificationService.currentCurrency.subscribe(

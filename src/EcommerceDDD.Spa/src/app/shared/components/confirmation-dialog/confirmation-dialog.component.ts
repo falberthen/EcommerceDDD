@@ -1,18 +1,19 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-confirmation-dialog',
-  templateUrl: 'confirmation-dialog.component.html',
-  styleUrls: ['confirmation-dialog.component.scss'],
+    selector: 'app-confirmation-dialog',
+    templateUrl: 'confirmation-dialog.component.html',
+    styleUrls: ['confirmation-dialog.component.scss'],
+    standalone: false
 })
 export class ConfirmationDialogComponent implements OnInit {
+  private activeModal = inject(NgbActiveModal);
+
   @Input() title!: string;
   @Input() message!: string;
   @Input() btnOkText!: string;
   @Input() btnCancelText!: string;
-
-  constructor(private activeModal: NgbActiveModal) {}
 
   ngOnInit() {}
 

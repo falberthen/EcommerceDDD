@@ -1,14 +1,7 @@
 import { AuthService } from '@core/services/auth.service';
 import { TokenStorageService } from '@core/services/token-storage.service';
 import { LocalStorageService } from '@core/services/local-storage.service';
-import {
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-  ViewContainerRef,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewContainerRef, inject } from '@angular/core';
 import {
   faList,
   faShoppingBasket,
@@ -22,11 +15,18 @@ import { Subscription } from 'rxjs';
 import { CustomerDetails, QuoteViewModel } from 'src/app/clients/models';
 
 @Component({
-  selector: 'app-nav-menu',
-  templateUrl: './nav-menu.component.html',
-  styleUrls: ['./nav-menu.component.scss'],
+    selector: 'app-nav-menu',
+    templateUrl: './nav-menu.component.html',
+    styleUrls: ['./nav-menu.component.scss'],
+    standalone: false
 })
 export class NavMenuComponent implements OnInit, OnDestroy {
+  private cdr = inject(ChangeDetectorRef);
+  private authService = inject(AuthService);
+  private kiotaClientService = inject(KiotaClientService);
+  private tokenStorageService = inject(TokenStorageService);
+  private localStorageService = inject(LocalStorageService);
+
   @ViewChild('storedEventViewerContainer', { read: ViewContainerRef })
   storedEventViewerContainer!: ViewContainerRef;
 
@@ -40,14 +40,6 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   isLoggedIn = false;
   subscription!: Subscription;
   customer!: CustomerDetails;
-
-  constructor(
-    private cdr: ChangeDetectorRef,
-    private authService: AuthService,
-    private kiotaClientService: KiotaClientService,
-    private tokenStorageService: TokenStorageService,
-    private localStorageService: LocalStorageService
-  ) {}
 
   async ngOnInit() {
     this.subscription = this.authService.isLoggedAnnounced$.subscribe(
