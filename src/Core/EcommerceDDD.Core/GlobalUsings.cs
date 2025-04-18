@@ -5,7 +5,6 @@ global using EcommerceDDD.Core.EventBus;
 global using EcommerceDDD.Core.Exceptions.Types;
 global using EcommerceDDD.Core.Persistence;
 global using Marten.Schema;
-global using MediatR;
 global using Newtonsoft.Json;
 global using Newtonsoft.Json.Serialization;
 global using System;

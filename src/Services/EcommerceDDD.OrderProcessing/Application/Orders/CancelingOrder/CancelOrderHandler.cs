@@ -2,12 +2,13 @@
 
 public class CancelOrderHandler(
     IOrderStatusBroadcaster orderStatusBroadcaster,
-    IEventStoreRepository<Order> orderWriteRepository) : ICommandHandler<CancelOrder>
+    IEventStoreRepository<Order> orderWriteRepository
+) : ICommandHandler<CancelOrder>
 {
     private readonly IOrderStatusBroadcaster _orderStatusBroadcaster = orderStatusBroadcaster;
     private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
 
-    public async Task Handle(CancelOrder command, CancellationToken cancellationToken)
+    public async Task HandleAsync(CancelOrder command, CancellationToken cancellationToken)
     {
         var order = await _orderWriteRepository
             .FetchStreamAsync(command.OrderId.Value) 

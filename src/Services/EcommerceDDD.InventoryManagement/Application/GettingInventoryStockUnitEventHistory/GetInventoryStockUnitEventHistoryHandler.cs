@@ -1,12 +1,12 @@
 ﻿namespace EcommerceDDD.InventoryManagement.Application.GettingInventoryStockUnitEventHistory;
 
 public class GetInventoryStockUnitEventHistoryHandler(
-    IQuerySession querySession) : 
-    IQueryHandler<GetInventoryStockUnitEventHistory, IList<InventoryStockUnitEventHistory>> 
+    IQuerySession querySession
+) : IQueryHandler<GetInventoryStockUnitEventHistory, IList<InventoryStockUnitEventHistory>> 
 {
     private readonly IQuerySession _querySession = querySession;
 
-    public async Task<IList<InventoryStockUnitEventHistory>> Handle(GetInventoryStockUnitEventHistory query,
+    public async Task<IList<InventoryStockUnitEventHistory>> HandleAsync(GetInventoryStockUnitEventHistory query,
         CancellationToken cancellationToken)
     {
         var stockUnitEventStory = await _querySession.Query<InventoryStockUnitEventHistory>()

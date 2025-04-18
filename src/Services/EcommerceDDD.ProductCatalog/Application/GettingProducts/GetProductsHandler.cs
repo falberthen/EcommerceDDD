@@ -19,7 +19,7 @@ public class GetProductsHandler : IQueryHandler<GetProducts, IList<ProductViewMo
         _configuration = configuration;
     }
 
-    public async Task<IList<ProductViewModel>> Handle(GetProducts query, 
+    public async Task<IList<ProductViewModel>> HandleAsync(GetProducts query, 
         CancellationToken cancellationToken)
     {
         var productsViewModel = new List<ProductViewModel>();

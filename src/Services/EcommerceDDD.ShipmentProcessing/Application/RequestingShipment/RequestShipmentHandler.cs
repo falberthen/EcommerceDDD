@@ -13,7 +13,7 @@ public class RequestShipmentHandler : ICommandHandler<RequestShipment>
         _shipmentWriteRepository = shipmentWriteRepository;        
     }
 
-    public async Task Handle(RequestShipment command, CancellationToken cancellationToken)
+    public async Task HandleAsync(RequestShipment command, CancellationToken cancellationToken)
     {
         var producIds = command.ProductItems
             .Select(pid => pid.ProductId.Value)

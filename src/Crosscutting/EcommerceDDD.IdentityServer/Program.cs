@@ -1,3 +1,5 @@
+using EcommerceDDD.Core.Infrastructure.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
@@ -5,8 +7,6 @@ services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddCoreInfrastructure(builder.Configuration);
 services.AddMemoryCache();
-services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 services.AddHealthChecks();
 
 // Token settings

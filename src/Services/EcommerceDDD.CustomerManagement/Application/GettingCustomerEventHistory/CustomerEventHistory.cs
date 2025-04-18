@@ -7,7 +7,7 @@ public record CustomerEventHistory(
     string EventData,
     DateTime Timestamp) : IEventHistory
 {
-    public static CustomerEventHistory Create(IEvent @event, Guid aggregateId)
+    public static CustomerEventHistory Create(Marten.Events.IEvent @event, Guid aggregateId)
     {
         var serialized = JsonConvert.SerializeObject(@event.Data);
         return new CustomerEventHistory(

@@ -1,7 +1,8 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Application;
 
-public class OrderSaga(ICommandBus commandBus) :
-    IEventHandler<OrderPlaced>,
+public class OrderSaga(
+	ICommandBus commandBus
+) : IEventHandler<OrderPlaced>,
     IEventHandler<OrderProcessed>,
     IEventHandler<PaymentFinalized>,
     IEventHandler<ShipmentFinalized>
@@ -14,7 +15,7 @@ public class OrderSaga(ICommandBus commandBus) :
     /// <param name="@domainEvent"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task Handle(OrderPlaced @domainEvent,
+    public async Task HandleAsync(OrderPlaced @domainEvent,
         CancellationToken cancellationToken)
     {
         var processOrderCommand = ProcessOrder.Create(
@@ -32,7 +33,7 @@ public class OrderSaga(ICommandBus commandBus) :
     /// <param name="@domainEvent"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task Handle(OrderProcessed @domainEvent,
+    public async Task HandleAsync(OrderProcessed @domainEvent,
         CancellationToken cancellationToken)
     {
         var requestPaymentCommand = RequestPayment.Create(
@@ -50,7 +51,7 @@ public class OrderSaga(ICommandBus commandBus) :
     /// <param name="@integrationEvent"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task Handle(PaymentFinalized @integrationEvent,
+    public async Task HandleAsync(PaymentFinalized @integrationEvent,
         CancellationToken cancellationToken)
     {
         // recording payment        
@@ -73,7 +74,7 @@ public class OrderSaga(ICommandBus commandBus) :
     /// <param name="@integrationEvent"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task Handle(ShipmentFinalized @integrationEvent,
+    public async Task HandleAsync(ShipmentFinalized @integrationEvent,
         CancellationToken cancellationToken)
     {
         // recording shipment
@@ -88,5 +89,4 @@ public class OrderSaga(ICommandBus commandBus) :
             ShipmentId.Of(@integrationEvent.ShipmentId));
         await _commandBus.SendAsync(completeOrderCommand, cancellationToken);
     }
-
 }

@@ -1,10 +1,12 @@
 ﻿namespace EcommerceDDD.QuoteManagement.Application.Quotes.CancelingQuote;
 
-public class CancelQuoteHandler(IEventStoreRepository<Quote> quoteWriteRepository) : ICommandHandler<CancelQuote>
+public class CancelQuoteHandler(
+	IEventStoreRepository<Quote> quoteWriteRepository
+) : ICommandHandler<CancelQuote>
 {
     private readonly IEventStoreRepository<Quote> _quoteWriteRepository = quoteWriteRepository;
 
-    public async Task Handle(CancelQuote command, CancellationToken cancellationToken)
+    public async Task HandleAsync(CancelQuote command, CancellationToken cancellationToken)
     {
         var quote = await _quoteWriteRepository
             .FetchStreamAsync(command.QuoteId.Value)

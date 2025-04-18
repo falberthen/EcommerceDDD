@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.Core.Exceptions.Types;
-
-namespace EcommerceDDD.Core.Infrastructure.Identity;
+﻿namespace EcommerceDDD.Core.Infrastructure.Identity;
 
 public class TokenRequester(
 	IMemoryCache cache,

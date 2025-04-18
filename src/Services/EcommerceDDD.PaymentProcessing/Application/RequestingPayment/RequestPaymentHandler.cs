@@ -13,7 +13,7 @@ public class RequestPaymentHandler : ICommandHandler<RequestPayment>
         _paymentWriteRepository = paymentWriteRepository;
     }
 
-    public async Task Handle(RequestPayment command, CancellationToken cancellationToken)
+    public async Task HandleAsync(RequestPayment command, CancellationToken cancellationToken)
     {
         var paymentData = new PaymentData(
             command.CustomerId, 

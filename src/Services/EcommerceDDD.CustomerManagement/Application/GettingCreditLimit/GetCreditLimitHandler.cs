@@ -5,7 +5,7 @@ public class GetCreditLimitHandler(IQuerySession querySession) : IQueryHandler<G
     private readonly IQuerySession _querySession = querySession
 		?? throw new ArgumentNullException(nameof(querySession));
 
-    public Task<CreditLimitModel> Handle(GetCreditLimit query, CancellationToken cancellationToken)
+    public Task<CreditLimitModel> HandleAsync(GetCreditLimit query, CancellationToken cancellationToken)
     {        
         var customer = _querySession.Query<CustomerDetails>()
         .FirstOrDefault(c => c.Id == query.CustomerId.Value)

@@ -1,14 +1,13 @@
+using EcommerceDDD.OrderProcessing.Application;
+
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
 services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddCoreInfrastructure(builder.Configuration);
+services.AddHandlersFromType(typeof(OrderSaga));
 services.AddHealthChecks();
-
-// Mediator        
-builder.Services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(typeof(PlaceOrderHandler).Assembly));
 
 // Services
 services.AddScoped<IOrderStatusBroadcaster, OrderStatusBroadcaster>();

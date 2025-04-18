@@ -1,19 +1,18 @@
-﻿using System.Collections.Immutable;
-
-namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
+﻿namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
 
 public class PlaceOrderHandler(
     IIntegrationHttpService integrationHttpService,
     IEventStoreRepository<Order> orderWriteRepository,
     IOrderStatusBroadcaster orderStatusBroadcaster,
-    IConfiguration configuration) : ICommandHandler<PlaceOrder>
+    IConfiguration configuration
+) : ICommandHandler<PlaceOrder>
 {
     private readonly IIntegrationHttpService _integrationHttpService = integrationHttpService;
     private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
     private readonly IOrderStatusBroadcaster _orderStatusBroadcaster = orderStatusBroadcaster;
     private readonly IConfiguration _configuration = configuration;
 
-    public async Task Handle(PlaceOrder command, CancellationToken cancellationToken)
+    public async Task HandleAsync(PlaceOrder command, CancellationToken cancellationToken)
     {
         // Getting quote data
         var quote = await GetQuoteAsync(command)

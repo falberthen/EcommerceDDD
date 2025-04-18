@@ -2,12 +2,12 @@
 
 public class KafkaConsumer : IEventConsumer
 {
-    private readonly IEventPublisher _eventPublisher;
+    private readonly IEventBus _eventPublisher;
     private readonly IConsumer<string, INotification> _consumer;
     private readonly ILogger<KafkaConsumer> _logger;
 
     public KafkaConsumer(
-        IEventPublisher eventPublisher,
+        IEventBus eventPublisher,
         JsonEventSerializer<INotification> serializer,
         IOptions<KafkaConsumerConfig> kafkaConsumerConfig,
         ILogger<KafkaConsumer> logger)

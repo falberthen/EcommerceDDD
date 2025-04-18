@@ -4,11 +4,8 @@ var services = builder.Services;
 services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddCoreInfrastructure(builder.Configuration);
+services.AddHandlersFromType(typeof(RegisterCustomerHandler));
 services.AddHealthChecks();
-
-// Mediator        
-builder.Services.AddMediatR(cfg =>
-	cfg.RegisterServicesFromAssembly(typeof(RegisterCustomerHandler).Assembly));
 
 // Services
 services.AddScoped<IEmailUniquenessChecker, EmailUniquenessChecker>();

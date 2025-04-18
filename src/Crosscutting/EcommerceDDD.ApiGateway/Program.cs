@@ -1,8 +1,3 @@
-using Koalesce.Core.Extensions;
-using Koalesce.OpenAPI;
-using Microsoft.Extensions.Options;
-using Ocelot.Middleware;
-
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 IServiceCollection services = builder.Services;
 

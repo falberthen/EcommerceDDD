@@ -5,12 +5,12 @@ public class DummyQueryHandler(IEventStoreRepository<DummyAggregateRoot> reposit
     private readonly IEventStoreRepository<DummyAggregateRoot> _eventStoreRepository = repository
 		?? throw new ArgumentNullException(nameof(repository));
 
-    public async Task<DummyAggregateRoot> Handle(DummyQuery query, CancellationToken cancellationToken)
-    {
-        var aggregate = new DummyAggregateRoot(query.Id);
+	public async Task<DummyAggregateRoot> HandleAsync(DummyQuery query, CancellationToken cancellationToken)
+	{
+		var aggregate = new DummyAggregateRoot(query.Id);
 		aggregate.DoSomething();
 		await _eventStoreRepository.AppendEventsAsync(aggregate);
 
-        return aggregate;
-    }
+		return aggregate;
+	}
 }

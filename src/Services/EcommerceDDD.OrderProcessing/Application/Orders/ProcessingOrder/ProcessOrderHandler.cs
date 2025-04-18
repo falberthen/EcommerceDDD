@@ -3,15 +3,16 @@
 public class ProcessOrderHandler(
     IIntegrationHttpService integrationHttpService,
     IEventStoreRepository<Order> orderWriteRepository,
-    IEventPublisher eventPublisher,
-    IConfiguration configuration) : ICommandHandler<ProcessOrder>
+    IEventBus eventPublisher,
+    IConfiguration configuration
+) : ICommandHandler<ProcessOrder>
 {
     private readonly IIntegrationHttpService _integrationHttpService = integrationHttpService;
     private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
-    private readonly IEventPublisher _eventPublisher = eventPublisher;
+    private readonly IEventBus _eventPublisher = eventPublisher;
     private readonly IConfiguration _configuration = configuration;
 
-    public async Task Handle(ProcessOrder command, CancellationToken cancellationToken)
+    public async Task HandleAsync(ProcessOrder command, CancellationToken cancellationToken)
     {
         // Getting open quote data
         var quote = await GetQuoteAsync(command)

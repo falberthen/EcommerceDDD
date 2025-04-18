@@ -1,9 +1,10 @@
-﻿namespace EcommerceDDD.CustomerManagement.Api.Application.UpdatingCustomerInformation;
+﻿namespace EcommerceDDD.CustomerManagement.Application.UpdatingCustomerInformation;
 
 public class UpdateCustomerInformationHandler(
 	IUserInfoRequester userInfoRequester,
 	IQuerySession querySession,
-	IEventStoreRepository<Customer> customerWriteRepository) : ICommandHandler<UpdateCustomerInformation>
+	IEventStoreRepository<Customer> customerWriteRepository
+) : ICommandHandler<UpdateCustomerInformation>
 {
     private readonly IEventStoreRepository<Customer> _customerWriteRepository = customerWriteRepository
 		?? throw new ArgumentNullException(nameof(customerWriteRepository));
@@ -12,7 +13,7 @@ public class UpdateCustomerInformationHandler(
 	private readonly IQuerySession _querySession = querySession
 		?? throw new ArgumentNullException(nameof(querySession));
 
-	public async Task Handle(UpdateCustomerInformation command, CancellationToken cancellationToken)
+	public async Task HandleAsync(UpdateCustomerInformation command, CancellationToken cancellationToken)
     {
 		UserInfo? response = await _userInfoRequester
 			.RequestUserInfoAsync();

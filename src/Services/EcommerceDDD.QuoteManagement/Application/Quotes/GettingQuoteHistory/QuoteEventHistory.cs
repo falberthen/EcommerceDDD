@@ -7,7 +7,7 @@ public record QuoteEventHistory(
     string EventData,
     DateTime Timestamp) : IEventHistory
 {
-    public static QuoteEventHistory Create(IEvent @event, Guid aggregateId)
+    public static QuoteEventHistory Create(Marten.Events.IEvent @event, Guid aggregateId)
     {
         var serialized = JsonConvert.SerializeObject(@event.Data);
         return new QuoteEventHistory(

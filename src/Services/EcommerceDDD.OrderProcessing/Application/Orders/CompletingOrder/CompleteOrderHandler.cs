@@ -2,12 +2,13 @@
 
 public class CompleteOrderHandler(
     IOrderStatusBroadcaster orderStatusBroadcaster,
-    IEventStoreRepository<Order> orderWriteRepository) : ICommandHandler<CompleteOrder>
+    IEventStoreRepository<Order> orderWriteRepository
+) : ICommandHandler<CompleteOrder>
 {
     private readonly IOrderStatusBroadcaster _orderStatusBroadcaster = orderStatusBroadcaster;
     private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
 
-    public async Task Handle(CompleteOrder command, CancellationToken cancellationToken)
+    public async Task HandleAsync(CompleteOrder command, CancellationToken cancellationToken)
     {
         await Task.Delay(TimeSpan.FromSeconds(3)); // 3-second delay
 

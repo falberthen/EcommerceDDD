@@ -1,14 +1,13 @@
+using EcommerceDDD.Core.Infrastructure.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
 services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddCoreInfrastructure(builder.Configuration);
+services.AddHandlersFromType(typeof(RequestPaymentHandler));
 services.AddHealthChecks();
-
-// Mediator        
-builder.Services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(typeof(RequestPaymentHandler).Assembly));
 
 // Services
 services.AddScoped<ICustomerCreditChecker, CustomerCreditChecker>();

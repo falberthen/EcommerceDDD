@@ -1,5 +1,3 @@
-using EcommerceDDD.ShipmentProcessing.Infrastructure.InventoryHandling;
-
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
@@ -7,11 +5,8 @@ services.AddHttpClient();
 services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddCoreInfrastructure(builder.Configuration);
+services.AddHandlersFromType(typeof(RequestShipmentHandler));
 services.AddHealthChecks();
-
-// Mediator        
-builder.Services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(typeof(RequestShipmentHandler).Assembly));
 
 // Services
 services.AddTransient<IProductInventoryHandler, ProductInventoryHandler>();

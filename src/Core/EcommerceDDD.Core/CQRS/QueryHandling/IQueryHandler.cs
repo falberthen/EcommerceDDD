@@ -1,4 +1,7 @@
 namespace EcommerceDDD.Core.CQRS.QueryHandling;
 
-public interface IQueryHandler<in TQuery, TResponse> : IRequestHandler<TQuery, TResponse>
-	where TQuery : IQuery<TResponse> { }
+public interface IQueryHandler<TQuery, TResponse>
+	where TQuery : IQuery<TResponse>
+{
+	Task<TResponse> HandleAsync(TQuery query, CancellationToken cancellationToken);
+}

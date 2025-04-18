@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.CustomerManagement.Api.Application.GettingCustomerDetails;
+﻿namespace EcommerceDDD.CustomerManagement.Application.GettingCustomerDetails;
 
 public record class GetCustomerDetails : IQuery<CustomerDetails>
 {

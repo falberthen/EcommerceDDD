@@ -1,16 +1,19 @@
 ﻿namespace EcommerceDDD.Core.Infrastructure.CQRS;
 
-public class CommandBus(IMediator mediator, ILogger<CommandBus> logger) : ICommandBus
+public class CommandBus(
+	IServiceProvider serviceProvider,
+	ILogger<CommandBus> logger
+) : ICommandBus
 {
-	private readonly IMediator _mediator = mediator 
-		?? throw new ArgumentNullException(nameof(mediator));
-	private readonly ILogger<CommandBus> _logger = logger 
-		?? throw new ArgumentNullException(nameof(logger));
-
-	public Task SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken)
+	public async Task SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken)
 		where TCommand : ICommand
 	{
-		_logger.LogInformation("Sending command: {command}", command);
-		return _mediator.Send(command, cancellationToken);
+		logger.LogInformation("Sending command: {command}", command);
+
+		var handlerType = typeof(ICommandHandler<>).MakeGenericType(command.GetType());
+		dynamic? handler = serviceProvider.GetService(handlerType)
+			?? throw new InvalidOperationException($"Handler for command {command.GetType().Name} not registered.");
+
+		await handler.HandleAsync((dynamic)command, cancellationToken);
 	}
 }

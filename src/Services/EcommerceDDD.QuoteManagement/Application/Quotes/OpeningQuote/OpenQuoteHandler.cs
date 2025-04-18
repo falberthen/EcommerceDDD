@@ -3,14 +3,15 @@
 public class OpenQuoteHandler(
 	IUserInfoRequester userInfoRequester,
 	IEventStoreRepository<Quote> quoteWriteRepository,
-    ICustomerOpenQuoteChecker customerOpenQuoteChecker) : ICommandHandler<OpenQuote>
+    ICustomerOpenQuoteChecker customerOpenQuoteChecker
+) : ICommandHandler<OpenQuote>
 {
     private readonly IEventStoreRepository<Quote> _quoteWriteRepository = quoteWriteRepository;
     private readonly ICustomerOpenQuoteChecker _customerOpenQuoteChecker = customerOpenQuoteChecker;
 	private IUserInfoRequester _userInfoRequester { get; set; } = userInfoRequester
 		?? throw new ArgumentNullException(nameof(userInfoRequester));
 
-	public async Task Handle(OpenQuote command, CancellationToken cancellationToken)
+	public async Task HandleAsync(OpenQuote command, CancellationToken cancellationToken)
     {
 		UserInfo? userInfo = await _userInfoRequester
 			.RequestUserInfoAsync();
