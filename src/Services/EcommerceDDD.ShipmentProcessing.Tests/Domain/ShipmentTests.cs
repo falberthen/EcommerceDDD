@@ -19,14 +19,14 @@ public class ShipmentTests
         // When
         var shipment = Shipment.Create(shipmentData);
 
-        // Then
-        Assert.NotNull(shipment);
-        shipment.OrderId.Value.Should().Be(orderId.Value);
-        shipment.CreatedAt.Should().NotBe(null);
-        shipment.ShippedAt.Should().Be(null);
-        shipment.ProductItems.Count().Should().Be(productItems.Count());
-        shipment.Status.Should().Be(ShipmentStatus.Pending);
-    }
+        // Then        
+		Assert.NotNull(shipment);
+		Assert.Equal(shipment.OrderId.Value, orderId.Value);
+		Assert.NotEqual(default(DateTime), shipment.CreatedAt); 
+		Assert.Null(shipment.ShippedAt);
+		Assert.Equal(shipment.ProductItems.Count(), productItems.Count());
+		Assert.Equal(ShipmentStatus.Pending, shipment.Status);
+	}
 
     [Fact]
     public void Complete_WithShipment_ShouldCompleteShipment()
@@ -45,13 +45,13 @@ public class ShipmentTests
         shipment.Complete();
 
         // Then
-        Assert.NotNull(shipment);
-        shipment.OrderId.Value.Should().Be(orderId.Value);
-        shipment.CreatedAt.Should().NotBe(null);
-        shipment.ShippedAt.Should().NotBe(null);
-        shipment.ProductItems.Count().Should().Be(productItems.Count());
-        shipment.Status.Should().Be(ShipmentStatus.Shipped);
-    }
+		Assert.NotNull(shipment);
+		Assert.Equal(shipment.OrderId.Value, orderId.Value);
+		Assert.NotEqual(default(DateTime), shipment.CreatedAt);
+		Assert.NotNull(shipment.ShippedAt);
+		Assert.Equal(shipment.ProductItems.Count(), productItems.Count());
+		Assert.Equal(ShipmentStatus.Shipped, shipment.Status);
+	}
 
     [Fact]
     public void Create_WithEmptyProductItems_ShouldThrowException()
@@ -61,11 +61,8 @@ public class ShipmentTests
         var productItems = new List<ProductItem>();                    
         var shipmentData = new ShipmentData(orderId, productItems);
 
-        // When
-        Action action = () =>
-            Shipment.Create(shipmentData);
-
-        // Then
-        action.Should().Throw<BusinessRuleException>();
-    }
+		// When & Then
+		BusinessRuleException exception = Assert.Throws<BusinessRuleException>(() =>
+			Shipment.Create(shipmentData));
+	}
 }

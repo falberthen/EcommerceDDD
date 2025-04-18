@@ -6,7 +6,6 @@ global using EcommerceDDD.ProductCatalog.API.Controllers;
 global using EcommerceDDD.ProductCatalog.API.Controllers.Requests;
 global using EcommerceDDD.ProductCatalog.Application.Products.GettingProducts;
 global using EcommerceDDD.ProductCatalog.Domain;
-global using FluentAssertions;
 global using Microsoft.AspNetCore.Mvc;
 global using NSubstitute;
 global using Xunit;

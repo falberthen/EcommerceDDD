@@ -24,13 +24,13 @@ public class OpenQuoteHandlerTests
 			quoteWriteRepository, _customerOpenQuoteChecker);
 
 		// When
-		await commandHandler.Handle(command, CancellationToken.None);
+		await commandHandler.HandleAsync(command, CancellationToken.None);
 
-		// Then
-		quoteWriteRepository.AggregateStream.Should().HaveCount(1);
-		var openQuote = quoteWriteRepository.AggregateStream.First().Aggregate;
-		openQuote.CustomerId.Should().Be(customerId);
-		openQuote.Status.Should().Be(QuoteStatus.Open);
+		// Then		
+		Assert.Single(quoteWriteRepository.AggregateStream);
+		var openQuote = quoteWriteRepository.AggregateStream.First().Aggregate;		
+		Assert.Equal(customerId, openQuote.CustomerId);
+		Assert.Equal(QuoteStatus.Open, openQuote.Status);
 	}
 
 	private ICustomerOpenQuoteChecker _customerOpenQuoteChecker = Substitute.For<ICustomerOpenQuoteChecker>();

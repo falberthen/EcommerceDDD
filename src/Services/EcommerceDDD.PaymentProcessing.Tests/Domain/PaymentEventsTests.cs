@@ -22,7 +22,7 @@ public class PaymentEventsTests
         // Then
         var @event = payment.GetUncommittedEvents().LastOrDefault() as PaymentCreated;
         Assert.NotNull(@event);
-        @event.Should().BeOfType<PaymentCreated>();
+		Assert.IsType<PaymentCreated>(@event);
     }
 
     [Fact]
@@ -44,6 +44,6 @@ public class PaymentEventsTests
         // Then
         var @event = payment.GetUncommittedEvents().LastOrDefault() as PaymentCompleted;
         Assert.NotNull(@event);
-        @event.Should().BeOfType<PaymentCompleted>();
+		Assert.IsType<PaymentCompleted>(@event);
     }
 }

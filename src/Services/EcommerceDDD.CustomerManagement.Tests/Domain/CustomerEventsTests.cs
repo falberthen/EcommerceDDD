@@ -16,7 +16,7 @@ public class CustomerEventsTests
         // Then
         var @event = customer.GetUncommittedEvents().LastOrDefault() as CustomerRegistered;
         Assert.NotNull(@event);
-        @event.Should().BeOfType<CustomerRegistered>();
+        Assert.IsType<CustomerRegistered>(@event);
     }
 
     [Fact]
@@ -34,7 +34,7 @@ public class CustomerEventsTests
         // Then
         var @event = customer.GetUncommittedEvents().LastOrDefault() as CustomerUpdated;
         Assert.NotNull(@event);
-        @event.Should().BeOfType<CustomerUpdated>();
+		Assert.IsType<CustomerUpdated>(@event);
     }
 	
 	private const string _email = "email@test.com";

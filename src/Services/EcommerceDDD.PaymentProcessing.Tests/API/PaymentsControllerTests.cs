@@ -31,7 +31,7 @@ public class PaymentsControllerTests
             Arg.Any<CancellationToken>());
 
         // Then
-        response.Should().BeOfType<OkObjectResult>();
+		Assert.IsType<OkObjectResult>(response);
     }
 
     private ICommandBus _commandBus = Substitute.For<ICommandBus>();

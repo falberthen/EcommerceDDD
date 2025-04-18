@@ -33,8 +33,8 @@ public class TokenRequesterTests
 			.GetApplicationTokenAsync();
 
 		// Then
-		Assert.NotNull(response);
-		response.HttpStatusCode.Should().Be(HttpStatusCode.OK);
+		Assert.NotNull(response);		
+		Assert.Equal(HttpStatusCode.OK, response.HttpStatusCode);
 	}
 
 	[Fact]
@@ -62,7 +62,7 @@ public class TokenRequesterTests
 
 		// Then
 		Assert.NotNull(response);
-		response.HttpStatusCode.Should().Be(HttpStatusCode.OK);
+		Assert.Equal(HttpStatusCode.OK, response.HttpStatusCode);
 	}
 
 	private Uri _url = new Uri("http://test.com");

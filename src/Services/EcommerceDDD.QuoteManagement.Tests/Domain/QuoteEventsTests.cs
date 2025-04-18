@@ -14,8 +14,8 @@ public class QuoteEventsTests
         // Then
         var @event = quote.GetUncommittedEvents().LastOrDefault() as QuoteOpen;
         Assert.NotNull(@event);
-        @event.Should().BeOfType<QuoteOpen>();
-    }
+		Assert.IsType<QuoteOpen>(@event);
+	}
 
     [Fact]
     public void Cancel_WithQuote_ShouldApplyQuoteCanceledEvent()
@@ -30,8 +30,8 @@ public class QuoteEventsTests
         // Then
         var @event = quote.GetUncommittedEvents().LastOrDefault() as QuoteCanceled;
         Assert.NotNull(@event);
-        @event.Should().BeOfType<QuoteCanceled>();
-    }
+		Assert.IsType<QuoteCanceled>(@event);
+	}
 
     [Fact]
     public void AddingItem_WithQuoteItemData_ShouldApplyQuoteItemAddedEvent()
@@ -49,7 +49,7 @@ public class QuoteEventsTests
         // Then
         var @event = quote.GetUncommittedEvents().LastOrDefault() as QuoteItemAdded;
         Assert.NotNull(@event);
-        @event.Should().BeOfType<QuoteItemAdded>();
+		Assert.IsType<QuoteItemAdded>(@event);
     }
 
     [Fact]
@@ -69,9 +69,9 @@ public class QuoteEventsTests
 
         // Then
         var @event = quote.GetUncommittedEvents().LastOrDefault() as QuoteItemRemoved;
-        Assert.NotNull(@event);
-        @event.Should().BeOfType<QuoteItemRemoved>();
-    }
+        Assert.NotNull(@event);        
+		Assert.IsType<QuoteItemRemoved>(@event);
+	}
 
     [Fact]
     public void AddItem_ForExistingItem_ShouldApplyQuoteItemQuantityChangedEvent()
@@ -91,8 +91,8 @@ public class QuoteEventsTests
         // Then
         var @event = quote.GetUncommittedEvents().LastOrDefault() as QuoteItemQuantityChanged;
         Assert.NotNull(@event);
-        @event.Should().BeOfType<QuoteItemQuantityChanged>();
-    }
+		Assert.IsType<QuoteItemQuantityChanged>(@event);
+	}
 
     [Fact]
     public void Confirm_WithQuote_ShouldApplyQuoteConfirmedEvent()
@@ -110,7 +110,7 @@ public class QuoteEventsTests
         // Then
         var @event = quote.GetUncommittedEvents().LastOrDefault() as QuoteConfirmed;
         Assert.NotNull(@event);
-        @event.Should().BeOfType<QuoteConfirmed>();
+		Assert.IsType<QuoteConfirmed>(@event);
     }
 
     private QuoteId _quoteId = QuoteId.Of(Guid.NewGuid());

@@ -14,7 +14,6 @@ global using EcommerceDDD.InventoryManagement.Domain;
 global using EcommerceDDD.InventoryManagement.Domain.Commands;
 global using EcommerceDDD.InventoryManagement.Domain.Events;
 global using EcommerceDDD.InventoryManagement.Infrastructure.Projections;
-global using FluentAssertions;
 global using Microsoft.AspNetCore.Mvc;
 global using NSubstitute;
 global using Xunit;

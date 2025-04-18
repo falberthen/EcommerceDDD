@@ -21,17 +21,18 @@ public class CancelQuoteHandlerTests
 		var openCommand = OpenQuote.Create(_currency);
 		var openCommandHandler = new OpenQuoteHandler(_userInfoRequester, 
 			quoteWriteRepository, _customerOpenQuoteChecker);
-		await openCommandHandler.Handle(openCommand, CancellationToken.None);
+		await openCommandHandler.HandleAsync(openCommand, CancellationToken.None);
 
 		var quote = quoteWriteRepository.AggregateStream.First().Aggregate;
 		var cancelCommand = CancelQuote.Create(quote.Id);
 		var cancelCommandHandler = new CancelQuoteHandler(quoteWriteRepository);
 
 		// When
-		await cancelCommandHandler.Handle(cancelCommand, CancellationToken.None);
+		await cancelCommandHandler.HandleAsync(cancelCommand, CancellationToken.None);
 
-		// Then
-		quote.Status.Should().Be(QuoteStatus.Cancelled);
+		// Then		
+		Assert.Equal(QuoteStatus.Cancelled, quote.Status);
+
 	}
 
 	private Currency _currency = Currency.OfCode(Currency.USDollar.Code);

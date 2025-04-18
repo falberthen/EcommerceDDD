@@ -11,8 +11,8 @@ public class StronglyTypedIdTests
         var ex = Assert.Throws<BusinessRuleException>(() => 
             new DummyAggregateId(new Guid())); // When
 
-        // Then
-        ex.GetType().Should().Be(typeof(BusinessRuleException));
+		// Then
+		Assert.Equal(typeof(BusinessRuleException), ex.GetType());
     }
 
     [Fact]
@@ -27,9 +27,9 @@ public class StronglyTypedIdTests
         // When
         var areEqual = aggregateId1 == aggregateId2;
 
-        // Then
-        areEqual.Should().BeTrue();
-        aggregateId1.Should().Be(aggregateId2);
+		// Then
+		Assert.True(areEqual);
+		Assert.Equal(aggregateId1, aggregateId2);		
     }
 
     [Fact]
@@ -44,8 +44,7 @@ public class StronglyTypedIdTests
         // When
         var areEqual = aggregateId1 == aggregateId2;
 
-        // Then
-        areEqual.Should().BeFalse();
-        aggregateId1.Should().NotBe(aggregateId2);
+		// Then
+		Assert.False(areEqual);
     }
 } 

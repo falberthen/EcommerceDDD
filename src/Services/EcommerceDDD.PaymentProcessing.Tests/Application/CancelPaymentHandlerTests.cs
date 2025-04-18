@@ -19,15 +19,15 @@ public class CancelPaymentHandlerTests
         var cancelPaymentHandler = new CancelPaymentHandler(paymentWriteRepository);
 
         // When
-        await cancelPaymentHandler.Handle(cancelPayment, CancellationToken.None);
+        await cancelPaymentHandler.HandleAsync(cancelPayment, CancellationToken.None);
 
-        // Then
-        Assert.NotNull(payment);
-        payment.OrderId.Should().Be(orderId);
-        payment.CreatedAt.Should().NotBe(null);
-        payment.CompletedAt.Should().Be(null);
-        payment.CanceledAt.Should().NotBe(null);        
-        payment.TotalAmount.Amount.Should().Be(totalAmount.Amount);
-        payment.Status.Should().Be(PaymentStatus.Canceled);
-    }
+        // Then        
+		Assert.NotNull(payment);
+		Assert.Equal(payment.OrderId, orderId);
+		Assert.NotNull(payment.CreatedAt);
+		Assert.Null(payment.CompletedAt);
+		Assert.NotNull(payment.CanceledAt);
+		Assert.Equal(payment.TotalAmount.Amount, totalAmount.Amount);
+		Assert.Equal(PaymentStatus.Canceled, payment.Status);
+	}
 }

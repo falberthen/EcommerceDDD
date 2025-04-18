@@ -40,16 +40,19 @@ public class CompleteOrderHandlerTests
         var completeOrderHandler = new CompleteOrderHandler(_orderStatusBroadcaster, orderWriteRepository);
 
         // When
-        await completeOrderHandler.Handle(completeOrder, CancellationToken.None);
+        await completeOrderHandler.HandleAsync(completeOrder, CancellationToken.None);
 
         // Then
         var completedOrder = orderWriteRepository.AggregateStream.First().Aggregate;
-        completedOrder.CustomerId.Should().Be(customerId);
-        completedOrder.QuoteId.Should().Be(quoteId);
-        completedOrder.PaymentId.Should().Be(paymentId);
-        completedOrder.ShipmentId.Should().Be(shipmentId);
-        completedOrder.OrderLines?.Count.Should().Be(quoteItems.Count);        
-        completedOrder.Status.Should().Be(OrderStatus.Completed);
+
+
+		Assert.NotNull(completedOrder);
+		Assert.Equal(completedOrder.CustomerId, customerId);
+		Assert.Equal(completedOrder.QuoteId, quoteId);
+		Assert.Equal(completedOrder.PaymentId, paymentId);
+		Assert.Equal(completedOrder.ShipmentId, shipmentId);
+		Assert.Equal(completedOrder.OrderLines.Count, quoteItems.Count);
+		Assert.Equal(OrderStatus.Completed, completedOrder.Status);
     }
 
     private IOrderStatusBroadcaster _orderStatusBroadcaster = Substitute.For<IOrderStatusBroadcaster>();

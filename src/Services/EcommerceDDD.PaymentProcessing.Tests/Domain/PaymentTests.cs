@@ -18,12 +18,12 @@ public class PaymentTests
         var payment = Payment.Create(paymentData);
 
         // Then
-        Assert.NotNull(payment);
-        payment.OrderId.Value.Should().Be(orderId.Value);
-        payment.TotalAmount.Amount.Should().Be(totalAmount.Amount);
-        payment.CompletedAt.Should().Be(null);
-        payment.Status.Should().Be(PaymentStatus.Pending);
-    }
+		Assert.NotNull(payment);
+		Assert.Equal(payment.OrderId, orderId);		
+		Assert.Null(payment.CompletedAt);		
+		Assert.Equal(payment.TotalAmount.Amount, totalAmount.Amount);
+		Assert.Equal(PaymentStatus.Pending, payment.Status);
+	}
 
     [Fact]
     public void Complete_WithPayment_ShouldCompletePayment()
@@ -42,11 +42,11 @@ public class PaymentTests
         // When
         payment.Complete();
 
-        // Then
-        Assert.NotNull(payment);
-        payment.OrderId.Value.Should().Be(orderId.Value);
-        payment.TotalAmount.Amount.Should().Be(totalAmount.Amount);
-        payment.CompletedAt.Should().NotBe(null);
-        payment.Status.Should().Be(PaymentStatus.Completed);
-    }
+        // Then        
+		Assert.NotNull(payment);
+		Assert.Equal(payment.OrderId, orderId);		
+		Assert.NotNull(payment.CompletedAt);		
+		Assert.Equal(payment.TotalAmount.Amount, totalAmount.Amount);
+		Assert.Equal(PaymentStatus.Completed, payment.Status);
+	}
 }

@@ -1,5 +1,3 @@
-using EcommerceDDD.Core.EventBus;
-
 namespace EcommerceDDD.ShipmentProcessing.Tests.Application;
 
 public class ShipPackageHandlerTests
@@ -22,7 +20,7 @@ public class ShipPackageHandlerTests
 
         var requestShipment = RequestShipment.Create(orderId, productItems);
         var requestShipmentHandler = new RequestShipmentHandler(_commandBus, shipmentWriteRepository);
-        await requestShipmentHandler.Handle(requestShipment, CancellationToken.None);
+        await requestShipmentHandler.HandleAsync(requestShipment, CancellationToken.None);
         var shipment = shipmentWriteRepository.AggregateStream.First().Aggregate;
         Assert.NotNull(shipment);
 
@@ -31,19 +29,19 @@ public class ShipPackageHandlerTests
             shipmentWriteRepository, _eventPublisher);
 
         // When
-        await shipPackageHandler.Handle(shipPackage, CancellationToken.None);
+        await shipPackageHandler.HandleAsync(shipPackage, CancellationToken.None);
 
         // Then
         var shippedPackage = shipmentWriteRepository.AggregateStream.First().Aggregate;
-        Assert.NotNull(shippedPackage);
-        shipment.OrderId.Should().Be(orderId);
-        shipment.ProductItems.Count().Should().Be(productItems.Count());
-        shipment.CreatedAt.Should().NotBe(null);
-        shipment.ShippedAt.Should().NotBe(null);
-        shipment.Status.Should().Be(ShipmentStatus.Shipped);
-    }
+		Assert.NotNull(shipment);
+		Assert.Equal(shipment.OrderId, orderId);
+		Assert.NotEqual(default(DateTime), shipment.CreatedAt);
+		Assert.NotNull(shipment.ShippedAt);
+		Assert.Equal(shipment.ProductItems.Count(), productItems.Count());
+		Assert.Equal(ShipmentStatus.Shipped, shipment.Status);
+	}
 
-    private ICommandBus _commandBus = Substitute.For<ICommandBus>();    
+	private ICommandBus _commandBus = Substitute.For<ICommandBus>();    
     private IProductInventoryHandler _availabilityChecker = Substitute.For<IProductInventoryHandler>();
-    private IEventPublisher _eventPublisher = Substitute.For<IEventPublisher>();
+    private IEventBus _eventPublisher = Substitute.For<IEventBus>();
 }

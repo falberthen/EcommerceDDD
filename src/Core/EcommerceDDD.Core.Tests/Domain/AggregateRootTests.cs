@@ -1,3 +1,5 @@
+using NSubstitute.Core;
+
 namespace EcommerceDDD.Core.Tests.Domain;
 
 public class AggregateRootTests
@@ -12,10 +14,10 @@ public class AggregateRootTests
         var aggregateRoot1 = new DummyAggregateRoot(aggregateId);
         var aggregateRoot2 = new DummyAggregateRoot(aggregateId);
 
-        // Then
-        (aggregateRoot1.GetHashCode() == aggregateRoot2.GetHashCode()).Should().BeFalse();
-        aggregateRoot1.Equals(aggregateRoot2).Should().BeFalse();
-    }
+		// Then
+		Assert.False(aggregateRoot1.GetHashCode() == aggregateRoot2.GetHashCode());
+		Assert.False(aggregateRoot1.Equals(aggregateRoot2));
+	}
 
     [Fact]
     public void AppendSeveralDomainEvents_ShouldReturnEqualUncommitedEventsAmount()
@@ -29,7 +31,7 @@ public class AggregateRootTests
         for (int i = 0; i < domainEventsNumber; i++)
             aggregateRoot.DoSomething();
 
-        // Then
-        aggregateRoot.GetUncommittedEvents().Count().Should().Be(domainEventsNumber);        
+		// Then
+		Assert.Equal(aggregateRoot.GetUncommittedEvents().Count(), domainEventsNumber);
     }
 }

@@ -32,7 +32,7 @@ public class HttpRequesterTests
 
 		// Then
 		Assert.NotNull(response);
-		response!.Count.Should().Be(dummyResponse.Count);
+		Assert.Equal(response!.Count,dummyResponse.Count);
 	}
 
 	[Fact]
@@ -57,7 +57,7 @@ public class HttpRequesterTests
 
 		// Then
 		Assert.NotNull(response);
-		response!.Success.Should().BeTrue();
+		Assert.True(response!.Success);
 	}
 
 	[Fact]
@@ -83,7 +83,7 @@ public class HttpRequesterTests
 
 		// Then
 		Assert.NotNull(response);
-		response!.Success.Should().BeTrue();
+		Assert.True(response!.Success);
 	}
 
 	[Fact]
@@ -109,7 +109,7 @@ public class HttpRequesterTests
 
 		// Then
 		Assert.NotNull(response);
-		response!.Success.Should().BeTrue();
+		Assert.True(response!.Success);
 	}
 
 	private Uri _url = new Uri("http://test.com");

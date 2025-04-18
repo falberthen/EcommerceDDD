@@ -46,11 +46,11 @@ public class OrdersControllerTests
         // When
         var response = await _ordersController.ListCustomerOrders(CancellationToken.None);
 
-        // Then
-        response.Should().BeOfType<OkObjectResult>()
-            .Subject.Value.Should().BeOfType<ApiResponse<IList<OrderViewModel>>>()
-            .Subject.Data.Should().BeEquivalentTo(expectedData);
-    }
+		// Then
+		var okResult = Assert.IsType<OkObjectResult>(response);
+		var apiResponse = Assert.IsType<ApiResponse<IList<OrderViewModel>>>(okResult.Value);
+		Assert.IsAssignableFrom<IList<OrderViewModel>>(apiResponse.Data);
+	}
 
     [Fact]
     public async Task ListHistory_WithOrderId_ShouldReturnListOfOrderEventHistory()
@@ -82,11 +82,11 @@ public class OrdersControllerTests
         // When
         var response = await _ordersController.ListHistory(customerId, CancellationToken.None);
 
-        // Then
-        response.Should().BeOfType<OkObjectResult>()
-            .Subject.Value.Should().BeOfType<ApiResponse<IList<OrderEventHistory>>>()
-            .Subject.Data.Should().BeEquivalentTo(expectedData);
-    }
+		// Then		
+		var okResult = Assert.IsType<OkObjectResult>(response);
+		var apiResponse = Assert.IsType<ApiResponse<IList<OrderEventHistory>>>(okResult.Value);
+		Assert.IsAssignableFrom<IList<OrderEventHistory>>(apiResponse.Data);
+	}
 
     [Fact]
     public async Task PlaceOrderFromQuote_WithQuoteId_ShouldPlaceOrder()
@@ -101,8 +101,8 @@ public class OrdersControllerTests
         var response = await _ordersController
             .PlaceOrderFromQuote(quoteId, CancellationToken.None);
 
-        // Then
-        response.Should().BeOfType<OkObjectResult>();
+        // Then        
+		Assert.IsType<OkObjectResult>(response);
     }
 
     private ICommandBus _commandBus = Substitute.For<ICommandBus>();

@@ -10,13 +10,12 @@ public class CommandHandlerTests
         var commandHandler = new DummyCommandHandler(_repository);
 
 		// When
-		await commandHandler.Handle(command, CancellationToken.None);
+		await commandHandler.HandleAsync(command, CancellationToken.None);
 
 		// Then
 		await _repository.Received(1).AppendEventsAsync(
 			Arg.Is<DummyAggregateRoot>(aggregate => aggregate.Id.Value == command.Id.Value),
 			Arg.Any<CancellationToken>());
-
 	}
 
 	private readonly IEventStoreRepository<DummyAggregateRoot> _repository =

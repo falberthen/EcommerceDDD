@@ -16,7 +16,6 @@ global using EcommerceDDD.QuoteManagement.Application.Quotes.RemovingQuoteItem;
 global using EcommerceDDD.QuoteManagement.Domain;
 global using EcommerceDDD.QuoteManagement.Domain.Commands;
 global using EcommerceDDD.QuoteManagement.Domain.Events;
-global using FluentAssertions;
 global using Microsoft.AspNetCore.Mvc;
 global using NSubstitute;
 global using Xunit;

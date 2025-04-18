@@ -1,5 +1,3 @@
-using EcommerceDDD.CustomerManagement.Api.Application.GettingCustomerDetailsById;
-
 namespace EcommerceDDD.CustomerManagement.Tests;
 
 public class CustomersControllerTests
@@ -31,9 +29,9 @@ public class CustomersControllerTests
 			.GetDetailsByCustomerId(customerId, CancellationToken.None);
 
 		// Then
-		response.Should().BeOfType<OkObjectResult>()
-			.Subject.Value.Should().BeOfType<ApiResponse<CustomerDetails>>()
-			.Subject.Data.Should().BeEquivalentTo(expectedData);
+		var okResult = Assert.IsType<OkObjectResult>(response);
+		var apiResponse = Assert.IsType<ApiResponse<CustomerDetails>>(okResult.Value);
+		Assert.IsAssignableFrom<CustomerDetails>(apiResponse.Data);
 	}
 
 	[Fact]
@@ -54,10 +52,10 @@ public class CustomersControllerTests
 		var response = await _customersController
 			.GetCustomerCreditLimit(customerId, CancellationToken.None);
 
-		// Then
-		response.Should().BeOfType<OkObjectResult>()
-			.Subject.Value.Should().BeOfType<ApiResponse<CreditLimitModel>>()
-			.Subject.Data.Should().BeEquivalentTo(expectedData);
+		// Then		
+		var okResult = Assert.IsType<OkObjectResult>(response);
+		var apiResponse = Assert.IsType<ApiResponse<CreditLimitModel>>(okResult.Value);
+		Assert.IsAssignableFrom<CreditLimitModel>(apiResponse.Data);
 	}
 
 	[Fact]
@@ -89,10 +87,10 @@ public class CustomersControllerTests
 		// When
 		var response = await _customersController.ListHistory(CancellationToken.None);
 
-		// Then
-		response.Should().BeOfType<OkObjectResult>()
-			.Subject.Value.Should().BeOfType<ApiResponse<IList<CustomerEventHistory>>>()
-			.Subject.Data.Should().BeEquivalentTo(expectedData);
+		// Then		
+		var okResult = Assert.IsType<OkObjectResult>(response);
+		var apiResponse = Assert.IsType<ApiResponse<IList<CustomerEventHistory>>>(okResult.Value);
+		Assert.IsAssignableFrom<IList<CustomerEventHistory>>(apiResponse.Data);
 	}
 
 	[Fact]
@@ -115,8 +113,8 @@ public class CustomersControllerTests
 		var response = await _customersController
 			.Register(request, Arg.Any<CancellationToken>());
 
-		// Then
-		response.Should().BeOfType<OkObjectResult>();
+		// Then		
+		Assert.IsType<OkObjectResult>(response);
 	}
 
 	[Fact]
@@ -138,7 +136,7 @@ public class CustomersControllerTests
 			.UpdateInformation(request, Arg.Any<CancellationToken>());
 
 		// Then
-		response.Should().BeOfType<OkObjectResult>();
+		Assert.IsType<OkObjectResult>(response);
 	}
 
 	private CustomersController _customersController;

@@ -14,8 +14,8 @@ public class QuoteTests
 
         // Then
         Assert.NotNull(quote);
-        quote.CustomerId.Should().Be(quote.CustomerId);
-        quote.CreatedAt.Should().NotBe(null);
-        quote.Status.Should().Be(QuoteStatus.Open);
-    }
+		Assert.NotEqual(default(DateTime), quote.CreatedAt);
+		Assert.Equal(quote.CustomerId, quote.CustomerId);
+		Assert.Equal(QuoteStatus.Open, quote.Status);
+	}
 }

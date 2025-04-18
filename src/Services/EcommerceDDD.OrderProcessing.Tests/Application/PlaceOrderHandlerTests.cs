@@ -34,13 +34,14 @@ public class PlaceOrderHandlerTests
 			_integrationHttpService, orderWriteRepository, _orderStatusBroadcaster, _configuration);
 
 		// When
-		await placeOrderHandler.Handle(placeOrder, CancellationToken.None);
+		await placeOrderHandler.HandleAsync(placeOrder, CancellationToken.None);
 
 		// Then
 		var placedOrder = orderWriteRepository.AggregateStream.First().Aggregate;
-		placedOrder.CustomerId.Should().Be(customerId);
-		placedOrder.QuoteId.Should().Be(_quoteId);
-		placedOrder.Status.Should().Be(OrderStatus.Placed);
+		Assert.NotNull(placedOrder);
+		Assert.Equal(placedOrder.CustomerId, customerId);
+		Assert.Equal(placedOrder.QuoteId, _quoteId);
+		Assert.Equal(OrderStatus.Placed, placedOrder.Status);
 	}
 
 	[Fact]
@@ -49,17 +50,13 @@ public class PlaceOrderHandlerTests
 		// Given
 		var currency = Currency.OfCode(Currency.USDollar.Code);
 		var orderWriteRepository = new DummyEventStoreRepository<Order>();
-
 		var placeOrder = PlaceOrder.Create(_quoteId);
 		var placeOrderHandler = new PlaceOrderHandler(_integrationHttpService,
 			orderWriteRepository, _orderStatusBroadcaster, _configuration);
 
-		// When
-		Func<Task> action = async () =>
-			await placeOrderHandler.Handle(placeOrder, CancellationToken.None);
-
-		// Then
-		await action.Should().ThrowAsync<ApplicationLogicException>();
+		// When & Then
+		await Assert.ThrowsAsync<ApplicationLogicException>(() =>
+			placeOrderHandler.HandleAsync(placeOrder, CancellationToken.None));
 	}
 
 	private readonly QuoteId _quoteId = QuoteId.Of(Guid.NewGuid());

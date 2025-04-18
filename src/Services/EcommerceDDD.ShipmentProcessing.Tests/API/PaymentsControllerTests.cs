@@ -36,8 +36,8 @@ public class ShipmentsControllerTests
             CancellationToken.None);
 
         // Then
-        response.Should().BeOfType<OkObjectResult>();
-    }
+		Assert.IsType<OkObjectResult>(response);
+	}
 
     private ICommandBus _commandBus = Substitute.For<ICommandBus>();
     private IQueryBus _queryBus = Substitute.For<IQueryBus>();
