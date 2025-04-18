@@ -8,7 +8,7 @@ public class EnterProductInStockHandler(
     private readonly IQuerySessionWrapper _querySession = querySession;
     private readonly IEventStoreRepository<InventoryStockUnit> _inventoryStockUnitWriteRepository = inventoryStockUnitWriteRepository;
 
-    public async Task Handle(EnterProductInStock command, CancellationToken cancellationToken)
+    public async Task HandleAsync(EnterProductInStock command, CancellationToken cancellationToken)
     {
         // Check if the product is already in stock
         var productIds = command.ProductIdsQuantities

@@ -2,7 +2,7 @@ global using EcommerceDDD.Core.CQRS.CommandHandling;
 global using EcommerceDDD.Core.CQRS.QueryHandling;
 global using EcommerceDDD.Core.Domain;
 global using EcommerceDDD.Core.Exceptions.Types;
-global using EcommerceDDD.Core.Infrastructure;
+global using EcommerceDDD.Core.Infrastructure.Extensions;
 global using EcommerceDDD.Core.Infrastructure.Identity;
 global using EcommerceDDD.Core.Infrastructure.Integration;
 global using EcommerceDDD.Core.Infrastructure.Marten;

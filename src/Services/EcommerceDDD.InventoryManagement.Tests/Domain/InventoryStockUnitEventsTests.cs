@@ -15,13 +15,13 @@ public class InventoryStockUnitEventsTests
 
         // Then
         Assert.NotNull(inventoryStockUnit);
-        inventoryStockUnit.ProductId.Value.Should().Be(productId.Value);
-        inventoryStockUnit.Quantity.Should().Be(initialQuantity);
+		Assert.Equal(inventoryStockUnit.ProductId.Value, productId.Value);
+		Assert.Equal(inventoryStockUnit.Quantity, initialQuantity);
 
         var @event = inventoryStockUnit.GetUncommittedEvents()
             .LastOrDefault() as UnitEnteredInStock;
         Assert.NotNull(@event);
-        @event.Should().BeOfType<UnitEnteredInStock>();
+		Assert.IsType<UnitEnteredInStock>(@event);
     }
 
     [Fact]
@@ -41,8 +41,8 @@ public class InventoryStockUnitEventsTests
         var @event = inventoryStockUnit.GetUncommittedEvents()
             .LastOrDefault() as StockQuantityDecreased;
         Assert.NotNull(@event);
-        @event.Should().BeOfType<StockQuantityDecreased>();
-    }
+		Assert.IsType<StockQuantityDecreased>(@event);
+	}
 
     [Fact]
     public void IncreaseStockQuantity_WithDecreasedQuantity_ShouldApplyStockQuantityIncreasedEvent()
@@ -61,6 +61,6 @@ public class InventoryStockUnitEventsTests
         var @event = inventoryStockUnit.GetUncommittedEvents()
             .LastOrDefault() as StockQuantityIncreased;
         Assert.NotNull(@event);
-        @event.Should().BeOfType<StockQuantityIncreased>();
+		Assert.IsType<StockQuantityIncreased>(@event);
     }
 }

@@ -1,7 +1,4 @@
-﻿using IdentityModel;
-using System.Security.Claims;
-
-namespace EcommerceDDD.Core.Infrastructure.Identity;
+﻿namespace EcommerceDDD.Core.Infrastructure.Identity;
 
 public class UserInfoRequester(IHttpContextAccessor httpContextAccessor) : IUserInfoRequester
 {

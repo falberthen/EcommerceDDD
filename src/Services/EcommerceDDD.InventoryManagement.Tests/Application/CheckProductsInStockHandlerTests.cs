@@ -8,15 +8,16 @@ public class CheckProductsInStockHandlerTests
 		// Given
 		Random random = new Random();
 		var productIds = Enumerable.Range(1, 10)
-			.Select(_ => ProductId.Of(Guid.NewGuid())).ToList();
+			.Select(_ => ProductId.Of(Guid.NewGuid()))
+			.ToList();
+
 		var stockUnitDetails = productIds
-			.Select(vm => new InventoryStockUnitDetails()
+			.Select(vm => new InventoryStockUnitDetails
 			{
 				ProductId = vm.Value,
 				QuantityInStock = random.Next(1, 101)
 			});
-		
-		// Mocking query session  
+
 		var querySessionMock = Substitute.For<IQuerySessionWrapper>();
 		var queryableData = stockUnitDetails.AsQueryable();
 		querySessionMock.Query<InventoryStockUnitDetails>()
@@ -27,13 +28,13 @@ public class CheckProductsInStockHandlerTests
 
 		// When
 		var result = await checkProductsInStockHandler
-			.Handle(checkProductsInStock, CancellationToken.None);
+			.HandleAsync(checkProductsInStock, CancellationToken.None);
 
 		// Then
-		result.Select(viewModel => viewModel.ProductId).Should()
-			.OnlyContain(productId => productIds.Any(pid => pid.Value == productId));
-
-		result.Select(viewModel => viewModel.QuantityInStock).Should()
-			.OnlyContain(quantityInStock => quantityInStock > 0);
+		Assert.All(result, viewModel =>
+		{
+			Assert.Contains(productIds, pid => pid.Value == viewModel.ProductId);
+			Assert.True(viewModel.QuantityInStock > 0);
+		});
 	}
 }

@@ -10,11 +10,11 @@ public class QueryHandlerTests
         var queryHandler = new DummyQueryHandler(_repository);
 
         // When
-        var aggregate = await queryHandler.Handle(query, CancellationToken.None);
+        var aggregate = await queryHandler.HandleAsync(query, CancellationToken.None);
 
         // Then
         Assert.NotNull(aggregate);
-		aggregate.Id.Value.Should().Be(query.Id.Value);
+		Assert.Equal(aggregate.Id.Value, query.Id.Value);
 	}
 
 	private readonly IEventStoreRepository<DummyAggregateRoot> _repository =

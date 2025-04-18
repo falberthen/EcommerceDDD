@@ -3,14 +3,15 @@
 public class GetCustomerOpenQuoteHandler(
 	IUserInfoRequester userInfoRequester,
 	IQuerySession querySession,
-    IProductMapper productMapper) : IQueryHandler<GetCustomerOpenQuote, QuoteViewModel>
+    IProductMapper productMapper
+) : IQueryHandler<GetCustomerOpenQuote, QuoteViewModel>
 {
     private readonly IQuerySession _querySession = querySession;
     private readonly IProductMapper _productMapper = productMapper;
 	private IUserInfoRequester _userInfoRequester { get; set; } = userInfoRequester
 		?? throw new ArgumentNullException(nameof(userInfoRequester));
 
-	public async Task<QuoteViewModel> Handle(GetCustomerOpenQuote query, CancellationToken cancellationToken)
+	public async Task<QuoteViewModel> HandleAsync(GetCustomerOpenQuote query, CancellationToken cancellationToken)
     {
 		CustomerId customerId = default!;
 		UserInfo? userInfo = await _userInfoRequester

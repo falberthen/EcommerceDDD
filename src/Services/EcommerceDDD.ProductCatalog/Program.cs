@@ -1,3 +1,5 @@
+using EcommerceDDD.Core.Infrastructure.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
@@ -5,11 +7,9 @@ builder.AddDatabaseSetup();
 services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddCoreInfrastructure(builder.Configuration);
-services.AddHealthChecks();
+services.AddHandlersFromType(typeof(GetProductsHandler));
 
-// Mediator        
-services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(typeof(GetProductsHandler).Assembly));
+services.AddHealthChecks();
 
 // Services
 services.AddScoped<IProducts, ProductRepository>();

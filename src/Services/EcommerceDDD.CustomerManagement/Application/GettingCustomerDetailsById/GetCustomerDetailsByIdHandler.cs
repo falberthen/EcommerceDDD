@@ -6,7 +6,7 @@ public class GetCustomerDetailsByIdHandler(
     private readonly IQuerySession _querySession = querySession
 		?? throw new ArgumentNullException(nameof(querySession));
 
-    public async Task<CustomerDetails> Handle(GetCustomerDetailsById query, 
+    public async Task<CustomerDetails> HandleAsync(GetCustomerDetailsById query, 
         CancellationToken cancellationToken)
     {
         var customer = await _querySession.Query<CustomerDetails>()

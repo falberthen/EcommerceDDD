@@ -1,5 +1,3 @@
-using Newtonsoft.Json;
-
 namespace EcommerceDDD.CustomerManagement.Tests.Application;
 
 public class RegisterCustomerHandlerTests
@@ -36,13 +34,13 @@ public class RegisterCustomerHandlerTests
 			_htpRequester, _checker, _options, _dummyRepository);
 
 		// When
-		await commandHandler.Handle(registerCommand, CancellationToken.None);
+		await commandHandler.HandleAsync(registerCommand, CancellationToken.None);
 
 		// Then
 		var addedCustomer = _dummyRepository.AggregateStream.First().Aggregate;
-		addedCustomer.Email.Should().Be(registerCommand.Email);
-		addedCustomer.Name.Should().Be(registerCommand.Name);
-		addedCustomer.ShippingAddress.Should().Be(Address.FromStreetAddress(_streetAddress));
+		Assert.Equal(addedCustomer.Email, registerCommand.Email);
+		Assert.Equal(addedCustomer.Name, registerCommand.Name);
+		Assert.Equal(addedCustomer.ShippingAddress, Address.FromStreetAddress(_streetAddress));
 	}
 
 	[Fact]
@@ -51,19 +49,15 @@ public class RegisterCustomerHandlerTests
 		// Given       
 		_checker.IsUnique(Arg.Any<string>())
 			.Returns(false);
-
 		var confirmation = _password;
 		var registerCommand = RegisterCustomer
 			.Create(_email, _password, confirmation, _name, _streetAddress, _creditLimit);
 		var commandHandler = new RegisterCustomerHandler(
 			_htpRequester, _checker, _options, _dummyRepository);
 
-		// When
-		Func<Task> action = async () =>
-			await commandHandler.Handle(registerCommand, CancellationToken.None);
-
-		// Then
-		await action.Should().ThrowAsync<BusinessRuleException>();
+		// When & Then
+		await Assert.ThrowsAsync<BusinessRuleException>(() =>
+			commandHandler.HandleAsync(registerCommand, CancellationToken.None));
 	}
 
 	public const string _email = "email@test.com";

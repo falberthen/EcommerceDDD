@@ -1,6 +1,3 @@
-using Marten;
-using Marten.Linq;
-
 namespace EcommerceDDD.CustomerManagement.Tests.Application;
 
 public class UpdateCustomerInformationHandlerTests
@@ -50,13 +47,13 @@ public class UpdateCustomerInformationHandlerTests
 			_userInfoRequester, _querySession, customerWriteRepository);
 
 		// Act
-		await commandHandler.Handle(updateCommand, CancellationToken.None);
+		await commandHandler.HandleAsync(updateCommand, CancellationToken.None);
 		var updatedCustomer = await customerWriteRepository
 			.FetchStreamAsync(customer.Id.Value);
 
 		// Assert
-		updatedCustomer.Name.Should().Be("New Name");
-		updatedCustomer.ShippingAddress.Should().Be(Address.FromStreetAddress("New Address"));
+		Assert.Equal("New Name", updatedCustomer.Name);
+		Assert.Equal(updatedCustomer.ShippingAddress, Address.FromStreetAddress("New Address"));		
 	}
 
 	private IUserInfoRequester _userInfoRequester = Substitute.For<IUserInfoRequester>();

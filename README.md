@@ -17,8 +17,7 @@ This project is an experimental full-stack application I use to combine several 
 <img src="images/ecommerceddd-3.gif" width="600px"/>
 </a>
 
-<br/><br/>
-
+---
 
 ## Architecture
 <a href="images/diagram.jpg" target="_blank">
@@ -86,7 +85,7 @@ The microservices composing the backend are built to be as simple as possible, s
   - **SPA (Single Page Application)** <br/>
   A lightweight Angular-based `SPA` providing a functional and user-friendly UI.
 
-<br/>
+---
 
 ## Technologies used
 <ul>
@@ -95,38 +94,34 @@ The microservices composing the backend are built to be as simple as possible, s
     for cross-platform backend with:
     <ul>
       <li>.NET 8</li>
-      <li><b>Koalesce 0.1.0-alpha</b></li>
-      <li>Ocelot 23.4.2</li>
-      <li>MMLib.SwaggerForOcelot 8.3.2</li>
-      <li>Marten 7.33.2</li>
-      <li>Entity Framework Core 9.0.0</li>
-      <li>Npgsql.EntityFrameworkCore.PostgreSQL</li>
-      <li>Postgres for Entity Framework Core 8.0.0</li>
-      <li>ASP.NET Core Identity 8.0.0</li>
-      <li>ASP.NET Core Authentication JwtBearer 8.0.0</li>
-      <li>Duende IdentityServer 7.0.8</li>
-      <li>MediatR 12.4.1</li>
-      <li>Polly 8.4.2</li>
-      <li>Fluent Assertions 7.0.0</li>
-      <li>XUnit 2.9.2</li>
+      <li><b>Koalesce.OpenAPI 0.1.1-alpha.2</b></li>
+      <li>Ocelot 23.4.3</li>
+      <li>Marten 7.40.0</li>
+      <li>Confluent Kafka 2.10.0</li>
+      <li>Entity Framework Core 8.0.15</li>
+      <li>Npgsql.EntityFrameworkCore.PostgreSQL 8.0.11</li>
+      <li>ASP.NET Core Identity 8.0.15</li>
+      <li>ASP.NET Core Authentication JwtBearer 8.0.15</li>
+      <li>Duende IdentityServer 7.2.1</li>
+      <li>Polly 8.5.2</li>
+      <li>XUnit 2.9.3</li>
       <li>NSubstitute 5.3.0</li>
-      <li>SwaggerGen/SwaggerUI 7.1.0</li>
-      <li>Confluent Kafka 2.6.1</li>
+      <li>SwaggerGen/SwaggerUI 8.1.1</li>
     </ul>
   </li>
   <li>
-    <a href='https://angular.io/' target="_blank">Angular v18.2.11</a> and <a href='http://www.typescriptlang.org/' target="_blank">TypeScript 5.5.4</a> for the frontend with:
+    <a href='https://angular.io/' target="_blank">Angular v19.2.7</a> and <a href='http://www.typescriptlang.org/' target="_blank">TypeScript 5.5.4</a> for the frontend with:
     <ul>
-      <li>Kiota 1.0.0-preview.92</li>
+      <li>Kiota 1.0.2</li>
       <li>Jest 29.7.0</li>
-      <li>NgBootstrap 17.0.1/ Bootstrap 5.2.3</li>
-      <li>Font Awesome 6.4.0</li>
-      <li>Toastr 17.0.2</li>
+      <li>NgBootstrap 18.0.0/ Bootstrap 5.3.5</li>
+      <li>Font Awesome 6.7.2</li>
+      <li>Toastr 19.0.0</li>
     </ul>
   </li>
 </ul>
 
-<br/>
+---
 
 ## What do you need to run it 
 
@@ -147,13 +142,13 @@ Using a terminal, run:
 
 You can also set the `docker-compose.dcproj` as a Startup project on Visual Studio if you want to run it while debugging. 
 
-<br/>
+---
 
 ### Running the Angular SPA
     
 Using a terminal, navigate to `EcommerceDDD.Spa` and run for the following commands the node packages and serving the SPA on `http://localhost:4200` respectively:
 
 ```console
- $ npm install #first time only
+ $ npm install
  $ ng serve
 ```

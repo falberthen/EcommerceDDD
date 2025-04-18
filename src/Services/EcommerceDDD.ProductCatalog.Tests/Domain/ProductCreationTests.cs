@@ -21,13 +21,13 @@ public class ProductCreationTests
         // When
         var product = Product.Create(productData);
 
-        // Then
-        Assert.NotNull(product);
-        product.Id.Should().NotBe(null);
-        product.Name.Should().Be(productName);
-        product.Category.Should().Be(productCategory);
-        product.Description.Should().Be(productDescription);
-        product.ImageUrl.Should().Be(productImageUrl);
-        product.UnitPrice.Should().Be(productPrice);
+		// Then
+		Assert.NotNull(product);
+		Assert.NotNull(product.Id);
+		Assert.Equal(product.Name, productName);
+		Assert.Equal(product.Category, productCategory);
+		Assert.Equal(product.Description, productDescription);
+		Assert.Equal(product.ImageUrl, productImageUrl);
+		Assert.Equal(product.UnitPrice, productPrice);
     }
 }

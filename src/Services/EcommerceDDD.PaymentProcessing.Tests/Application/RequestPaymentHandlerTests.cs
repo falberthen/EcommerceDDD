@@ -17,17 +17,17 @@ public class RequestPaymentHandlerTests
         var requestPaymentHandler = new RequestPaymentHandler(_commandBus, paymentWriteRepository);
 
         // When
-        await requestPaymentHandler.Handle(requestPayment, CancellationToken.None);
+        await requestPaymentHandler.HandleAsync(requestPayment, CancellationToken.None);
 
         // Then
-        var payment = paymentWriteRepository.AggregateStream.First().Aggregate;
-        Assert.NotNull(payment);
-        payment.OrderId.Should().Be(orderId);
-        payment.CreatedAt.Should().NotBe(null);
-        payment.CompletedAt.Should().Be(null);
-        payment.TotalAmount.Amount.Should().Be(totalAmount.Amount);
-        payment.Status.Should().Be(PaymentStatus.Pending);
-    }
+        var payment = paymentWriteRepository.AggregateStream.First().Aggregate;        
+		Assert.NotNull(payment);
+		Assert.Equal(payment.OrderId, orderId);
+		Assert.NotNull(payment.CreatedAt);
+		Assert.Null(payment.CompletedAt);
+		Assert.Equal(payment.TotalAmount.Amount, totalAmount.Amount);
+		Assert.Equal(PaymentStatus.Pending, payment.Status);
+	}
 
     private ICommandBus _commandBus = Substitute.For<ICommandBus>();
 }

@@ -11,7 +11,7 @@ public class RequestPaymentHandler(
     private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
     private readonly IConfiguration _configuration = configuration;
 
-    public async Task Handle(RequestPayment command, CancellationToken cancellationToken)
+    public async Task HandleAsync(RequestPayment command, CancellationToken cancellationToken)
     {
         var order = await _orderWriteRepository
             .FetchStreamAsync(command.OrderId.Value)

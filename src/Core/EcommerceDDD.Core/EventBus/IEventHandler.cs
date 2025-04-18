@@ -1,5 +1,6 @@
 ﻿namespace EcommerceDDD.Core.EventBus;
 
-public interface IEventHandler<in TEvent> : INotificationHandler<TEvent>
-    where TEvent : INotification
-{ }
+public interface IEventHandler<TEvent> where TEvent : INotification
+{
+	Task HandleAsync(TEvent @event, CancellationToken cancellationToken);
+}

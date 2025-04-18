@@ -7,7 +7,7 @@ public class RecordShipmentHandler(
     private readonly IOrderStatusBroadcaster _orderStatusBroadcaster = orderStatusBroadcaster;
     private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
 
-    public async Task Handle(RecordShipment command, CancellationToken cancellationToken)
+    public async Task HandleAsync(RecordShipment command, CancellationToken cancellationToken)
     {
         var order = await _orderWriteRepository
             .FetchStreamAsync(command.OrderId.Value)

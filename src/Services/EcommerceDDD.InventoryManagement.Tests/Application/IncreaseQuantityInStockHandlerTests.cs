@@ -32,7 +32,7 @@ public class IncreaseQuantityInStockHandlerTests
 		var increaseQuantityInStock = IncreaseStockQuantity.Create(productId, quantityIncreased);
 
 		// When
-		await increaseQuantityInStockHandler.Handle(increaseQuantityInStock, CancellationToken.None);
+		await increaseQuantityInStockHandler.HandleAsync(increaseQuantityInStock, CancellationToken.None);
 
 		// Then
 		Assert.Equal(initialQuantity + quantityIncreased, inventoryStockUnit.Quantity);

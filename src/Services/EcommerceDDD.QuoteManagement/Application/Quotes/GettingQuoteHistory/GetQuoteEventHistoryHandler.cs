@@ -1,10 +1,12 @@
 ﻿namespace EcommerceDDD.QuoteManagement.Application.Quotes.GettingQuoteHistory;
 
-public class GetQuoteEventHistoryHandler(IQuerySession querySession) : IQueryHandler<GetQuoteEventHistory, IList<QuoteEventHistory>> 
+public class GetQuoteEventHistoryHandler(
+	IQuerySession querySession
+) : IQueryHandler<GetQuoteEventHistory, IList<QuoteEventHistory>> 
 {
     private readonly IQuerySession _querySession = querySession;
 
-    public Task<IList<QuoteEventHistory>> Handle(GetQuoteEventHistory query, CancellationToken cancellationToken)
+    public Task<IList<QuoteEventHistory>> HandleAsync(GetQuoteEventHistory query, CancellationToken cancellationToken)
     {
         var quoteHistory = _querySession.Query<QuoteEventHistory>()
            .OrderBy(c => c.Timestamp)

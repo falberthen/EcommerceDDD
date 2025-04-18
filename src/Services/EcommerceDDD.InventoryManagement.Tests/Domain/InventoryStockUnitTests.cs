@@ -1,112 +1,99 @@
-﻿using EcommerceDDD.Core.Exceptions.Types;
-
-namespace EcommerceDDD.InventoryManagement.Tests.Domain;
+﻿namespace EcommerceDDD.InventoryManagement.Tests.Domain;
 
 public class InventoryStockUnitTests
 {
-    [Fact]
-    public void EnterStockUnit_WithProductAndQuantity_ShouldEnterStockUnit()
-    {
-        // Given        
-        var productId = ProductId.Of(Guid.NewGuid());
-        var initialQuantity = 10;
+	[Fact]
+	public void EnterStockUnit_WithProductAndQuantity_ShouldEnterStockUnit()
+	{
+		// Given        
+		var productId = ProductId.Of(Guid.NewGuid());
+		var initialQuantity = 10;
 
-        // When
-        var inventoryStockUnit = InventoryStockUnit
-            .EnterStockUnit(productId, initialQuantity);
+		// When
+		var inventoryStockUnit = InventoryStockUnit
+			.EnterStockUnit(productId, initialQuantity);
 
-        // Then
-        Assert.NotNull(inventoryStockUnit);
-        inventoryStockUnit.ProductId.Value.Should().Be(productId.Value);
-        inventoryStockUnit.Quantity.Should().Be(initialQuantity);        
-    }
+		// Then
+		Assert.NotNull(inventoryStockUnit);
+		Assert.Equal(inventoryStockUnit.ProductId.Value, productId.Value);
+		Assert.Equal(inventoryStockUnit.Quantity, initialQuantity);
+	}
 
-    [Fact]
-    public void DecreaseStockQuantity_WithQuantityToDecrease_ShouldDecreasesInventoryStockUnitQuantity()
-    {
-        // Given        
-        var productId = ProductId.Of(Guid.NewGuid());
-        var initialQuantity = 10;
-        var quantityToDecrease = 6;
+	[Fact]
+	public void DecreaseStockQuantity_WithQuantityToDecrease_ShouldDecreasesInventoryStockUnitQuantity()
+	{
+		// Given        
+		var productId = ProductId.Of(Guid.NewGuid());
+		var initialQuantity = 10;
+		var quantityToDecrease = 6;
 
-        var inventoryStockUnit = InventoryStockUnit
-            .EnterStockUnit(productId, initialQuantity);
+		var inventoryStockUnit = InventoryStockUnit
+			.EnterStockUnit(productId, initialQuantity);
 
-        // When
-        inventoryStockUnit.DecreaseStockQuantity(quantityToDecrease);
+		// When
+		inventoryStockUnit.DecreaseStockQuantity(quantityToDecrease);
 
-        // Then
-        Assert.NotNull(inventoryStockUnit);
-        inventoryStockUnit.ProductId.Value.Should().Be(productId.Value);
-        inventoryStockUnit.Quantity.Should().Be(initialQuantity - quantityToDecrease);
-    }
+		// Then
+		Assert.NotNull(inventoryStockUnit);
+		Assert.Equal(inventoryStockUnit.ProductId.Value, productId.Value);
+		Assert.Equal(inventoryStockUnit.Quantity, initialQuantity - quantityToDecrease);
+	}
 
-    [Fact]
-    public void IncreaseStockQuantity_WithQuantityToDecrease_ShouldIncreaseInventoryStockUnitQuantity()
-    {
-        // Given        
-        var productId = ProductId.Of(Guid.NewGuid());
-        var initialQuantity = 10;
-        var quantityToDecrease = 6;
+	[Fact]
+	public void IncreaseStockQuantity_WithQuantityToDecrease_ShouldIncreaseInventoryStockUnitQuantity()
+	{
+		// Given        
+		var productId = ProductId.Of(Guid.NewGuid());
+		var initialQuantity = 10;
+		var quantityToDecrease = 6;
 
-        var inventoryStockUnit = InventoryStockUnit
-            .EnterStockUnit(productId, initialQuantity);
+		var inventoryStockUnit = InventoryStockUnit
+			.EnterStockUnit(productId, initialQuantity);
 
-        // When
-        inventoryStockUnit.IncreaseStockQuantity(quantityToDecrease);
+		// When
+		inventoryStockUnit.IncreaseStockQuantity(quantityToDecrease);
 
-        // Then
-        Assert.NotNull(inventoryStockUnit);
-        inventoryStockUnit.ProductId.Value.Should().Be(productId.Value);
-        inventoryStockUnit.Quantity.Should().Be(initialQuantity + quantityToDecrease);
-    }
+		// Then
+		Assert.NotNull(inventoryStockUnit);
+		Assert.Equal(inventoryStockUnit.ProductId.Value, productId.Value);
+		Assert.Equal(inventoryStockUnit.Quantity, initialQuantity + quantityToDecrease);
+	}
 
-    [Fact]
-    public void EnterStockUnit_WithInitialQuantityLessThanZero_ShouldThrowException()
-    {
-        // Given        
-        var productId = ProductId.Of(Guid.NewGuid());
-        var initialQuantity = -1;
+	[Fact]
+	public void EnterStockUnit_WithInitialQuantityLessThanZero_ShouldThrowException()
+	{
+		// Given        
+		var productId = ProductId.Of(Guid.NewGuid());
+		var initialQuantity = -1;
 
-        // When
-        Func<InventoryStockUnit> action = () =>
-            InventoryStockUnit.EnterStockUnit(productId, initialQuantity);
+		// When & Then
+		Assert.Throws<BusinessRuleException>(() =>
+			InventoryStockUnit.EnterStockUnit(productId, initialQuantity));
+	}
 
-        // Then
-        action.Should().Throw<BusinessRuleException>();
-    }
+	[Fact]
+	public void IncreaseStockQuantity_WithIncreasedQuantityEqualsZero_ShouldThrowException()
+	{
+		// Given        
+		var productId = ProductId.Of(Guid.NewGuid());
+		var initialQuantity = 10;
+		var inventoryStockUnit = InventoryStockUnit.EnterStockUnit(productId, initialQuantity);
 
-    [Fact]
-    public void IncreaseStockQuantity_WithIncreasedQuantityEqualsZero_ShouldThrowException()
-    {
-        // Given        
-        var productId = ProductId.Of(Guid.NewGuid());
-        var initialQuantity = 10;
-        var inventoryStockUnit = InventoryStockUnit
-            .EnterStockUnit(productId, initialQuantity);
+		// When & Then
+		Assert.Throws<BusinessRuleException>(() =>
+			inventoryStockUnit.IncreaseStockQuantity(0));
+	}
 
-        // When
-        Action action = () =>
-            inventoryStockUnit.IncreaseStockQuantity(0);
+	[Fact]
+	public void DecreaseStockQuantity_WithIncreasedQuantityEqualsZero_ShouldThrowException()
+	{
+		// Given        
+		var productId = ProductId.Of(Guid.NewGuid());
+		var initialQuantity = 10;
+		var inventoryStockUnit = InventoryStockUnit.EnterStockUnit(productId, initialQuantity);
 
-        // Then
-        action.Should().Throw<BusinessRuleException>();
-    }
-
-    [Fact]
-    public void DecreaseStockQuantity_WithIncreasedQuantityEqualsZero_ShouldThrowException()
-    {
-        // Given        
-        var productId = ProductId.Of(Guid.NewGuid());
-        var initialQuantity = 10;
-        var inventoryStockUnit = InventoryStockUnit
-            .EnterStockUnit(productId, initialQuantity);
-
-        // When
-        Action action = () =>
-            inventoryStockUnit.DecreaseStockQuantity(0);
-
-        // Then
-        action.Should().Throw<BusinessRuleException>();
-    }
+		// When & Then
+		Assert.Throws<BusinessRuleException>(() =>
+			inventoryStockUnit.DecreaseStockQuantity(0));
+	}
 }

@@ -28,7 +28,7 @@ public class DecreaseQuantityInStockHandlerTests
 		var command = DecreaseStockQuantity.Create(ProductId.Of(productId), 2);
 
 		// When
-		await handler.Handle(command, CancellationToken.None);
+		await handler.HandleAsync(command, CancellationToken.None);
 
 		// Then
 		Assert.Equal(8, inventoryStockUnit.Quantity); // 10 - 2

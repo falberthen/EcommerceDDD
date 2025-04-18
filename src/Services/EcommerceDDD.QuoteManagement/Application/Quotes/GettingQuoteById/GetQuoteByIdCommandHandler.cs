@@ -2,12 +2,13 @@
 
 public class GetQuoteByIdCommandHandler(
 	IQuerySession querySession,
-	IProductMapper productMapper) : IQueryHandler<GetQuoteById, QuoteViewModel>
+	IProductMapper productMapper
+) : IQueryHandler<GetQuoteById, QuoteViewModel>
 {
 	private readonly IQuerySession _querySession = querySession;
 	private readonly IProductMapper _productMapper = productMapper;
 
-	public async Task<QuoteViewModel> Handle(GetQuoteById query, CancellationToken cancellationToken)
+	public async Task<QuoteViewModel> HandleAsync(GetQuoteById query, CancellationToken cancellationToken)
 	{
 		QuoteDetails? quoteDetails = default;
 		var queryExpression = _querySession.Query<QuoteDetails>();

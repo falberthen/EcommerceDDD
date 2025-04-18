@@ -10,7 +10,7 @@ public class CancelPaymentHandler : ICommandHandler<CancelPayment>
         _paymentWriteRepository = paymentWriteRepository;
     }
 
-    public async Task Handle(CancelPayment command,
+    public async Task HandleAsync(CancelPayment command,
         CancellationToken cancellationToken)
     {
         var payment = await _paymentWriteRepository

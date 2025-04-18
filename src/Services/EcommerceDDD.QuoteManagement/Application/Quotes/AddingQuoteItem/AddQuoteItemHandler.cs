@@ -2,12 +2,13 @@
 
 public class AddQuoteItemHandler(
     IEventStoreRepository<Quote> quoteWriteRepository,
-    IProductMapper productMapper) : ICommandHandler<AddQuoteItem>
+    IProductMapper productMapper
+) : ICommandHandler<AddQuoteItem>
 {
     private readonly IEventStoreRepository<Quote> _quoteWriteRepository = quoteWriteRepository;
     private readonly IProductMapper _productMapper = productMapper;
 
-    public async Task Handle(AddQuoteItem command, CancellationToken cancellationToken)
+    public async Task HandleAsync(AddQuoteItem command, CancellationToken cancellationToken)
     {
         var quote = await _quoteWriteRepository
             .FetchStreamAsync(command.QuoteId.Value)

@@ -17,7 +17,7 @@ public class ShipmentEventsTests
         // Then
         var @event = shipment.GetUncommittedEvents().LastOrDefault() as ShipmentCreated;
         Assert.NotNull(@event);
-        @event.Should().BeOfType<ShipmentCreated>();
+		Assert.IsType<ShipmentCreated>(@event);
     }
 
     [Fact]
@@ -34,7 +34,7 @@ public class ShipmentEventsTests
         // Then
         var @event = shipment.GetUncommittedEvents().LastOrDefault() as PackageShipped;
         Assert.NotNull(@event);
-        @event.Should().BeOfType<PackageShipped>();
+		Assert.IsType<PackageShipped>(@event);
     }
 
     List<ProductItem> _productItems = new List<ProductItem>() {

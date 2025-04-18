@@ -20,11 +20,11 @@ public class CustomerTests
 
         // Then
         Assert.NotNull(customer);
-        customer.Id.Value.Should().NotBe(Guid.Empty);
-        customer.Email.Should().Be(email);
-        customer.Name.Should().Be(name);
-        customer.ShippingAddress.Should().Be(Address.FromStreetAddress(shippingAddress));
-        customer.CreditLimit.Should().Be(CreditLimit.Create(creditLimit));
+        Assert.NotEqual(customer.Id.Value, Guid.Empty);
+        Assert.Equal(customer.Email, email);
+		Assert.Equal(customer.Name, name);
+		Assert.Equal(customer.ShippingAddress, Address.FromStreetAddress(shippingAddress));
+		Assert.Equal(customer.CreditLimit, CreditLimit.Create(creditLimit));
     }
 
     [Fact]
@@ -56,10 +56,10 @@ public class CustomerTests
 
         // Then
         Assert.NotNull(customer);
-        customer.Id.Value.Should().NotBe(Guid.Empty);
-        customer.Email.Should().Be(email);
-        customer.Name.Should().Be(newName);
-        customer.ShippingAddress.Should().Be(Address.FromStreetAddress(newShippingAddress));
-        customer.CreditLimit.Should().Be(CreditLimit.Create(newCreditLimit));
-    }
+		Assert.NotEqual(customer.Id.Value, Guid.Empty);
+		Assert.Equal(customer.Email, email);
+		Assert.Equal(customer.Name, newName);
+		Assert.Equal(customer.ShippingAddress, Address.FromStreetAddress(newShippingAddress));
+		Assert.Equal(customer.CreditLimit, CreditLimit.Create(newCreditLimit));
+	}
 }

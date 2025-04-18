@@ -15,7 +15,6 @@ global using EcommerceDDD.OrderProcessing.Application.Payments.RecordingPayment;
 global using EcommerceDDD.OrderProcessing.Domain;
 global using EcommerceDDD.OrderProcessing.Domain.Commands;
 global using EcommerceDDD.OrderProcessing.Domain.Events;
-global using FluentAssertions;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.Extensions.Configuration;
 global using NSubstitute;

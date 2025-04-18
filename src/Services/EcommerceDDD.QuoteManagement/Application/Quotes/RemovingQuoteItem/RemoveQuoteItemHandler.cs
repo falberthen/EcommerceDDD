@@ -1,20 +1,20 @@
-﻿using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+﻿namespace EcommerceDDD.QuoteManagement.Application.Quotes.RemovingQuoteItem;
 
-namespace EcommerceDDD.QuoteManagement.Application.Quotes.RemovingQuoteItem;
-
-public class RemoveQuoteItemHandler(IEventStoreRepository<Quote> quoteWriteRepository) : ICommandHandler<RemoveQuoteItem>
+public class RemoveQuoteItemHandler(
+	IEventStoreRepository<Quote> quoteWriteRepository
+) : ICommandHandler<RemoveQuoteItem>
 {
-    private readonly IEventStoreRepository<Quote> _quoteWriteRepository = quoteWriteRepository;
+	private readonly IEventStoreRepository<Quote> _quoteWriteRepository = quoteWriteRepository;
 
-    public async Task Handle(RemoveQuoteItem command, CancellationToken cancellationToken)
-    {
-        var quote = await _quoteWriteRepository
-        .FetchStreamAsync(command.QuoteId.Value)
-            ?? throw new RecordNotFoundException($"The quote {command.QuoteId} not found.");
+	public async Task HandleAsync(RemoveQuoteItem command, CancellationToken cancellationToken)
+	{
+		var quote = await _quoteWriteRepository
+		.FetchStreamAsync(command.QuoteId.Value)
+			?? throw new RecordNotFoundException($"The quote {command.QuoteId} not found.");
 
-        quote.RemoveItem(command.ProductId);
+		quote.RemoveItem(command.ProductId);
 
-        await _quoteWriteRepository
-            .AppendEventsAsync(quote);
-    }
+		await _quoteWriteRepository
+			.AppendEventsAsync(quote);
+	}
 }

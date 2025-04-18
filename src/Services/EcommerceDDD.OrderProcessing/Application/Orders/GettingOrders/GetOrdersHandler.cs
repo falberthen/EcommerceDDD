@@ -4,7 +4,8 @@ public class GetOrdersHandler(
 	IQuerySession querySession,
 	IUserInfoRequester userInfoRequester,
 	IIntegrationHttpService integrationHttpService,
-	IConfiguration configuration) : IQueryHandler<GetOrders, IList<OrderViewModel>>
+	IConfiguration configuration
+) : IQueryHandler<GetOrders, IList<OrderViewModel>>
 {
 	private readonly IQuerySession _querySession = querySession;
 	private readonly IIntegrationHttpService _integrationHttpService = integrationHttpService;
@@ -12,7 +13,7 @@ public class GetOrdersHandler(
 	private readonly IUserInfoRequester _userInfoRequester = userInfoRequester
 		?? throw new ArgumentNullException(nameof(userInfoRequester));
 
-	public async Task<IList<OrderViewModel>> Handle(GetOrders query, CancellationToken cancellationToken)
+	public async Task<IList<OrderViewModel>> HandleAsync(GetOrders query, CancellationToken cancellationToken)
 	{
 		var userInfo = await _userInfoRequester.RequestUserInfoAsync();
 

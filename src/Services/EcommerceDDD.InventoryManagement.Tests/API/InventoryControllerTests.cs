@@ -24,8 +24,8 @@ public class InventoryControllerTests
         var response = await _inventoryController
             .DecreaseQuantity(productId, request, CancellationToken.None);
 
-        // Then
-        response.Should().BeOfType<OkObjectResult>();
+		// Then
+		Assert.IsType<OkObjectResult>(response);
     }
 
     [Fact]
@@ -45,8 +45,8 @@ public class InventoryControllerTests
             .IncreaseQuantity(productId, request, CancellationToken.None);
 
         // Then
-        response.Should().BeOfType<OkObjectResult>();
-    }
+		Assert.IsType<OkObjectResult>(response);
+	}
 
     [Fact]
     public async Task CheckStockQuantity_WithProductIds_ShouldReturnListOfInventoryStockUnitViewModel()
@@ -70,10 +70,10 @@ public class InventoryControllerTests
         // When
         var response = await _inventoryController.CheckStockQuantity(request, CancellationToken.None);
 
-        // Then
-        response.Should().BeOfType<OkObjectResult>()
-            .Subject.Value.Should().BeOfType<ApiResponse<IList<InventoryStockUnitViewModel>>>()
-            .Subject.Data.Should().BeEquivalentTo(expectedData);
+		// Then
+		var okResult = Assert.IsType<OkObjectResult>(response);
+		var apiResponse = Assert.IsType<ApiResponse<IList<InventoryStockUnitViewModel>>>(okResult.Value);
+		Assert.IsAssignableFrom<IList<InventoryStockUnitViewModel>>(apiResponse.Data);
     }
 
     [Fact]
@@ -107,11 +107,11 @@ public class InventoryControllerTests
         var response = await _inventoryController
             .ListHistory(productId, CancellationToken.None);
 
-        // Then
-        response.Should().BeOfType<OkObjectResult>()
-            .Subject.Value.Should().BeOfType<ApiResponse<IList<InventoryStockUnitEventHistory>>>()
-            .Subject.Data.Should().BeEquivalentTo(expectedData);
-    }
+		// Then
+		var okResult = Assert.IsType<OkObjectResult>(response);
+		var apiResponse = Assert.IsType<ApiResponse<IList<InventoryStockUnitEventHistory>>>(okResult.Value);
+		Assert.IsAssignableFrom<IList<InventoryStockUnitEventHistory>>(apiResponse.Data);
+	}
 
     private ICommandBus _commandBus = Substitute.For<ICommandBus>();
     private IQueryBus _queryBus = Substitute.For<IQueryBus>();

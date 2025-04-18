@@ -7,7 +7,7 @@ public class RequestCancelPaymentHandler(
     private readonly IIntegrationHttpService _integrationHttpService = integrationHttpService;
     private readonly IConfiguration _configuration = configuration;
 
-    public async Task Handle(RequestCancelPayment command, CancellationToken cancellationToken)
+    public async Task HandleAsync(RequestCancelPayment command, CancellationToken cancellationToken)
     {
         var apiRoute = _configuration["ApiRoutes:PaymentProcessing"];
         var response = await _integrationHttpService.DeleteAsync(

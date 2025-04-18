@@ -1,3 +1,5 @@
+using EcommerceDDD.Core.Infrastructure.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
@@ -5,11 +7,8 @@ services.AddHttpClient();
 services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddCoreInfrastructure(builder.Configuration);
+services.AddHandlersFromType(typeof(OpenQuoteHandler));
 services.AddHealthChecks();
-
-// Mediator        
-services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(typeof(OpenQuoteHandler).Assembly));
 
 // Services
 services.AddScoped<ICustomerOpenQuoteChecker, CustomerOpenQuoteChecker>();

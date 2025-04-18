@@ -1,10 +1,11 @@
-﻿namespace EcommerceDDD.CustomerManagement.Api.Application.RegisteringCustomer;
+﻿namespace EcommerceDDD.CustomerManagement.Application.RegisteringCustomer;
 
 public class RegisterCustomerHandler(
     IHttpRequester httpRequester,
     IEmailUniquenessChecker uniquenessChecker,
     IOptions<TokenIssuerSettings> tokenIssuerSettings,
-    IEventStoreRepository<Customer> customerWriteRepository) : ICommandHandler<RegisterCustomer>
+    IEventStoreRepository<Customer> customerWriteRepository
+) : ICommandHandler<RegisterCustomer>
 {
     private readonly IHttpRequester _httpRequester = httpRequester
 		?? throw new ArgumentNullException(nameof(httpRequester));
@@ -15,7 +16,7 @@ public class RegisterCustomerHandler(
 	private readonly IEventStoreRepository<Customer> _customerWriteRepository = customerWriteRepository
 		?? throw new ArgumentNullException(nameof(customerWriteRepository));
 
-    public async Task Handle(RegisterCustomer command, CancellationToken cancellationToken)
+    public async Task HandleAsync(RegisterCustomer command, CancellationToken cancellationToken)
     {
         if (!_uniquenessChecker.IsUnique(command.Email))
             throw new BusinessRuleException("This e-mail is already in use.");

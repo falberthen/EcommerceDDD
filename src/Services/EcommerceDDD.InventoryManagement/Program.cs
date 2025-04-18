@@ -1,15 +1,12 @@
-
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
 services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddCoreInfrastructure(builder.Configuration);
-services.AddHealthChecks();
+services.AddHandlersFromType(typeof(CheckProductsInStockHandler));
 
-// Mediator        
-services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(typeof(CheckProductsInStockHandler).Assembly));
+services.AddHealthChecks();
 
 // Services
 services.AddScoped<IEventStoreRepository<InventoryStockUnit>, MartenRepository<InventoryStockUnit>>();
@@ -32,6 +29,7 @@ if (app.Environment.IsDevelopment())
 
 // Seed products to inventory
 await app.SeedInventoryCatalogAsync(builder.Configuration);
+
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();

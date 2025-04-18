@@ -9,7 +9,7 @@ public class RequestShipmentHandler(
     private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
     private readonly IConfiguration _configuration = configuration;
 
-    public async Task Handle(RequestShipment command, CancellationToken cancellationToken)
+    public async Task HandleAsync(RequestShipment command, CancellationToken cancellationToken)
     {
         var order = await _orderWriteRepository
             .FetchStreamAsync(command.OrderId.Value)

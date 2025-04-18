@@ -21,17 +21,17 @@ public class ProcessPaymentHandlerTests
         // When
         var processPayment = ProcessPayment.Create(payment.Id);
         var processPaymentHandler = new ProcessPaymentHandler(_customerCreditChecker, paymentWriteRepository);
-        await processPaymentHandler.Handle(processPayment, CancellationToken.None);
+        await processPaymentHandler.HandleAsync(processPayment, CancellationToken.None);
 
         // Then
-        var completedPayment = paymentWriteRepository.AggregateStream.First().Aggregate;
-        Assert.NotNull(completedPayment);
-        payment.OrderId.Should().Be(orderId);
-        payment.CreatedAt.Should().NotBe(null);
-        payment.CompletedAt.Should().NotBe(null);
-        payment.TotalAmount.Amount.Should().Be(totalAmount.Amount);
-        payment.Status.Should().Be(PaymentStatus.Completed);
-    }
+        var completedPayment = paymentWriteRepository.AggregateStream.First().Aggregate;        
+		Assert.NotNull(payment);
+		Assert.Equal(payment.OrderId, orderId);
+		Assert.NotNull(payment.CreatedAt);
+		Assert.NotNull(payment.CompletedAt);
+		Assert.Equal(payment.TotalAmount.Amount, totalAmount.Amount);
+		Assert.Equal(PaymentStatus.Completed, payment.Status);
+	}
 
     [Fact]
     public async Task ProcessPayment_WithoutEnoughCredit_CancelPayment()
@@ -54,18 +54,18 @@ public class ProcessPaymentHandlerTests
         var processPaymentHandler = new ProcessPaymentHandler(_customerCreditChecker, paymentWriteRepository);
 
         // When
-        await processPaymentHandler.Handle(processPayment, CancellationToken.None);
+        await processPaymentHandler.HandleAsync(processPayment, CancellationToken.None);
 
         // Then
         var canceledPayment = paymentWriteRepository.AggregateStream.First().Aggregate;
-        Assert.NotNull(canceledPayment);
-        payment.OrderId.Should().Be(orderId);
-        payment.CreatedAt.Should().NotBe(null);
-        payment.CompletedAt.Should().Be(null);
-        payment.CanceledAt.Should().NotBe(null);
-        payment.TotalAmount.Amount.Should().Be(totalAmount.Amount);
-        payment.Status.Should().Be(PaymentStatus.Canceled);
-    }
+		Assert.NotNull(payment);
+		Assert.Equal(payment.OrderId, orderId);
+		Assert.NotNull(payment.CreatedAt);
+		Assert.Null(payment.CompletedAt);
+		Assert.NotNull(payment.CanceledAt);
+		Assert.Equal(payment.TotalAmount.Amount, totalAmount.Amount);
+		Assert.Equal(PaymentStatus.Canceled, payment.Status);
+	}
 
     private ICustomerCreditChecker _customerCreditChecker = Substitute.For<ICustomerCreditChecker>();
 }

@@ -23,10 +23,11 @@ public class RemoveQuoteItemHandlerTests
         var commandHandler = new RemoveQuoteItemHandler(quoteWriteRepository);
 
         // When
-        await commandHandler.Handle(command, CancellationToken.None);
+        await commandHandler.HandleAsync(command, CancellationToken.None);
 
         // Then        
         var storedQuote = quoteWriteRepository.AggregateStream.First().Aggregate;
-        storedQuote.Items.Count.Should().Be(0);
+		Assert.NotNull(storedQuote);
+		Assert.Empty(storedQuote.Items);
     }
 }

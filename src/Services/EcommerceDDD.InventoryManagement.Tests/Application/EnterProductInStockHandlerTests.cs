@@ -24,7 +24,7 @@ public class EnterProductInStockHandlerTests
 		var enterProductInStock = EnterProductInStock.Create(productIdsQuantities);
 
 		// When
-		await handler.Handle(enterProductInStock, CancellationToken.None);
+		await handler.HandleAsync(enterProductInStock, CancellationToken.None);
 
 		// Then
 		await _inventoryStockUnitRepository.Received(productIdsQuantities.Count)

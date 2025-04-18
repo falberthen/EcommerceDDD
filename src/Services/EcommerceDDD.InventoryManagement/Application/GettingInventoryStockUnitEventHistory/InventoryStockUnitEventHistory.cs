@@ -7,7 +7,7 @@ public record InventoryStockUnitEventHistory(
     string EventData,
     DateTime Timestamp) : IEventHistory
 {
-    public static InventoryStockUnitEventHistory Create(IEvent @event, Guid aggregateId)
+    public static InventoryStockUnitEventHistory Create(Marten.Events.IEvent @event, Guid aggregateId)
     {
         var serialized = JsonConvert.SerializeObject(@event.Data);
         return new InventoryStockUnitEventHistory(

@@ -1,4 +1,6 @@
-﻿public class DecreaseStockQuantityHandler(
+﻿namespace EcommerceDDD.InventoryManagement.Application.DecreasingQuantityInStock;
+
+public class DecreaseStockQuantityHandler(
 	IQuerySessionWrapper querySession,
 	IEventStoreRepository<InventoryStockUnit> inventoryStockUnitWriteRepository
 ) : ICommandHandler<DecreaseStockQuantity>
@@ -6,7 +8,7 @@
 	private readonly IQuerySessionWrapper _querySession = querySession;
 	private readonly IEventStoreRepository<InventoryStockUnit> _inventoryStockUnitWriteRepository = inventoryStockUnitWriteRepository;
 
-	public async Task Handle(DecreaseStockQuantity command, CancellationToken cancellationToken)
+	public async Task HandleAsync(DecreaseStockQuantity command, CancellationToken cancellationToken)
 	{
 		// Check if the product is already in stock
 		var query = _querySession.Query<InventoryStockUnitDetails>()

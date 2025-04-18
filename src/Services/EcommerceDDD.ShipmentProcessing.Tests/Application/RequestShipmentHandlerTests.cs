@@ -18,17 +18,17 @@ public class RequestShipmentHandlerTests
         var requestShipmentHandler = new RequestShipmentHandler(_commandBus, shipmentWriteRepository);
 
         // When
-        await requestShipmentHandler.Handle(requestShipment, CancellationToken.None);
+        await requestShipmentHandler.HandleAsync(requestShipment, CancellationToken.None);
 
         // Then
         var shipment = shipmentWriteRepository.AggregateStream.First().Aggregate;
-        Assert.NotNull(shipment);
-        shipment.OrderId.Should().Be(orderId);
-        shipment.ProductItems.Count().Should().Be(productItems.Count());
-        shipment.CreatedAt.Should().NotBe(null);
-        shipment.ShippedAt.Should().Be(null);
-        shipment.Status.Should().Be(ShipmentStatus.Pending);
-    }
+        Assert.NotNull(shipment);        
+		Assert.Equal(shipment.OrderId, orderId);
+		Assert.Equal(shipment.ProductItems.Count(), productItems.Count());
+		Assert.NotEqual(default(DateTime), shipment.CreatedAt);
+		Assert.Null(shipment.ShippedAt);
+		Assert.Equal(ShipmentStatus.Pending, shipment.Status);
+	}
 
     private ICommandBus _commandBus = Substitute.For<ICommandBus>();    
 }

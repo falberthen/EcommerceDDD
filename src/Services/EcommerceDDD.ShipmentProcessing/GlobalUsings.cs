@@ -24,3 +24,5 @@ global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.AspNetCore.Mvc;
 global using Newtonsoft.Json;
 global using System.ComponentModel.DataAnnotations;
+global using EcommerceDDD.Core.Infrastructure.Extensions;
+global using EcommerceDDD.ShipmentProcessing.Infrastructure.InventoryHandling;

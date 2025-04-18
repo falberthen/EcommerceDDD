@@ -13,10 +13,8 @@
     <None Remove="HttpRequests\**" />
   </ItemGroup>
 
-  <ItemGroup>
-	<PackageReference Include="FluentAssertions" Version="7.0.0" />
-	<PackageReference Include="Marten" Version="7.33.2" />
-	<PackageReference Include="MediatR" Version="12.4.1" />	
+  <ItemGroup>	
+	<PackageReference Include="Marten" Version="7.40.0" />
 	<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	<PackageReference Include="NSubstitute" Version="5.3.0" />
 	<PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.11.0" />

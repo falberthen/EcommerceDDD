@@ -20,13 +20,14 @@ public class CancelOrderHandlerTests
         var cancelOrderHandler = new CancelOrderHandler(_orderStatusBroadcaster, orderWriteRepository);
 
         // When
-        await cancelOrderHandler.Handle(cancelOrder, CancellationToken.None);
+        await cancelOrderHandler.HandleAsync(cancelOrder, CancellationToken.None);
 
         // Then
         var canceledOrder = orderWriteRepository.AggregateStream.First().Aggregate;
-        canceledOrder.CustomerId.Should().Be(customerId);
-        canceledOrder.QuoteId.Should().Be(quoteId);
-        canceledOrder.Status.Should().Be(OrderStatus.Canceled);
+		Assert.NotNull(canceledOrder);
+		Assert.Equal(canceledOrder.CustomerId, customerId);
+		Assert.Equal(canceledOrder.QuoteId, quoteId);
+		Assert.Equal(OrderStatus.Canceled, canceledOrder.Status);
     }
 
     private IOrderStatusBroadcaster _orderStatusBroadcaster = Substitute.For<IOrderStatusBroadcaster>();
