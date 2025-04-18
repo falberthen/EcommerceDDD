@@ -67,6 +67,7 @@ export class KiotaClientService {
 
     // Fallbacks
     message =
+      error?.additionalData?.message ||
       error?.response?.statusText ||
       error?.message ||
       message;
