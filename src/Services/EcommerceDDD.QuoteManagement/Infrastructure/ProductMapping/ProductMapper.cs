@@ -1,35 +1,37 @@
-﻿using EcommerceDDD.Core.Exceptions.Types;
+﻿using EcommerceDDD.ServiceClients.ApiGateway.Models;
 
 namespace EcommerceDDD.QuoteManagement.Infrastructure.ProductMapping;
 
-public class ProductMapper(
-    IIntegrationHttpService integrationHttpService,
-    IConfiguration configuration) : IProductMapper
+public class ProductMapper(ApiGatewayClient apiGatewayClient) : IProductMapper
 {
-    private readonly IIntegrationHttpService _integrationHttpService = integrationHttpService;
-    private readonly IConfiguration _configuration = configuration;
+	/// <summary>
+	/// Maps product from catalog
+	/// </summary>
+	/// <param name="productIds"></param>
+	/// <param name="currency"></param>
+	/// <param name="cancellationToken"></param>
+	/// <returns></returns>
+	/// <exception cref="RecordNotFoundException"></exception>
+	public async Task<IEnumerable<ProductViewModel>> MapProductFromCatalogAsync(IEnumerable<ProductId> productIds, 
+		Currency currency, CancellationToken cancellationToken)
+	{
+		var productIdValues = productIds
+			.Select(p => (Guid?)p.Value)
+			.ToList();
 
-    /// <summary>
-    /// Maps product from catalog
-    /// </summary>
-    /// <param name="productIds"></param>
-    /// <param name="currency"></param>
-    /// <returns></returns>
-    /// <exception cref="RecordNotFoundException"></exception>
-    public async Task<IEnumerable<ProductViewModel>> MapProductFromCatalogAsync(
-        IEnumerable<ProductId> productIds, Currency currency)
-    {
-        var productIdValues = productIds.Select(p => p.Value).ToArray();
-        var apiRoute = _configuration["ApiRoutes:ProductCatalog"];
-        var response = await _integrationHttpService.FilterAsync<List<ProductViewModel>>(
-            apiRoute, new GetProductsRequest(currency.Code, productIdValues));
+		// Bringing all products from the catalog
+		var request = new GetProductsRequest()
+		{
+			CurrencyCode = currency.Code,
+			ProductIds = productIdValues
+		};
+		var response = await apiGatewayClient.Api.Products
+			.PostAsync(request, cancellationToken: cancellationToken);
 
-        if (response?.Success == false)
-            throw new RecordNotFoundException("An error occurred retrieving products.");
+		if (response?.Success == false || response?.Data is null)
+			throw new HttpRequestException("An error occurred while retrieving products.");
 
-        var productViewModel = response?.Data!;
-        return productViewModel;
-    }
+		var productViewModel = response?.Data!;
+		return productViewModel;
+	}
 }
-
-public record class GetProductsRequest(string CurrencyCode, Guid[] ProductIds);

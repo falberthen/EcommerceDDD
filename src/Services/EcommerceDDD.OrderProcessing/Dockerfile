@@ -17,6 +17,7 @@ WORKDIR /src
 COPY ["src/Services/EcommerceDDD.OrderProcessing/EcommerceDDD.OrderProcessing.csproj", "src/Services/EcommerceDDD.OrderProcessing/"]
 COPY ["src/Core/EcommerceDDD.Core.Infrastructure/EcommerceDDD.Core.Infrastructure.csproj", "src/Core/EcommerceDDD.Core.Infrastructure/"]
 COPY ["src/Core/EcommerceDDD.Core/EcommerceDDD.Core.csproj", "src/Core/EcommerceDDD.Core/"]
+COPY ["src/Crosscutting/EcommerceDDD.ServiceClients/EcommerceDDD.ServiceClients.csproj", "src/Crosscutting/EcommerceDDD.ServiceClients/"]
 RUN dotnet restore "./src/Services/EcommerceDDD.OrderProcessing/./EcommerceDDD.OrderProcessing.csproj"
 COPY . .
 WORKDIR "/src/src/Services/EcommerceDDD.OrderProcessing"

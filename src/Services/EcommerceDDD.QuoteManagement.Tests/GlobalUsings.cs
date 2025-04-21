@@ -6,7 +6,6 @@ global using EcommerceDDD.Core.Infrastructure.WebApi;
 global using EcommerceDDD.Core.Testing;
 global using EcommerceDDD.QuoteManagement.API.Controllers;
 global using EcommerceDDD.QuoteManagement.API.Controllers.Requests;
-global using EcommerceDDD.QuoteManagement.Application.Products;
 global using EcommerceDDD.QuoteManagement.Application.Quotes.AddingQuoteItem;
 global using EcommerceDDD.QuoteManagement.Application.Quotes.CancelingQuote;
 global using EcommerceDDD.QuoteManagement.Application.Quotes.ConfirmingQuote;

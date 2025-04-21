@@ -1,5 +1,3 @@
-using EcommerceDDD.QuoteManagement.Application.Quotes.GettingCustomerOpenQuote;
-
 namespace EcommerceDDD.QuoteManagement.API.Controllers;
 
 [Authorize]

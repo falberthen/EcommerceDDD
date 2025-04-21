@@ -4,15 +4,15 @@ public class GetOrderEventHistoryHandler(
     IQuerySession querySession
 ) : IQueryHandler<GetOrderEventHistory, IList<OrderEventHistory>> 
 {
-    private readonly IQuerySession _querySession = querySession;
+	private readonly IQuerySession _querySession = querySession;
 
-    public async Task<IList<OrderEventHistory>> HandleAsync(GetOrderEventHistory query, 
+	public async Task<IList<OrderEventHistory>> HandleAsync(GetOrderEventHistory query, 
         CancellationToken cancellationToken)
     {
         var quoteHistory = await _querySession.Query<OrderEventHistory>()
            .Where(c => c.AggregateId == query.OrderId.Value)
            .OrderBy(c => c.Timestamp)
-           .ToListAsync();
+           .ToListAsync(cancellationToken);
 
         return quoteHistory.ToList();
     }

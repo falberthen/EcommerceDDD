@@ -1,3 +1,5 @@
+using EcommerceDDD.ServiceClients.ApiGateway.Models;
+
 namespace EcommerceDDD.OrderProcessing.Tests.Application;
 
 public class PlaceOrderHandlerTests
@@ -11,27 +13,43 @@ public class PlaceOrderHandlerTests
 		var currency = Currency.OfCode(Currency.USDollar.Code);
 
 		var orderWriteRepository = new DummyEventStoreRepository<Order>();
+		var apiClient = new ApiGatewayClient(_requestAdapter);
 
-		var responseConfirmedQuote = new IntegrationHttpResponse<QuoteViewModelResponse>()
+		// return mocked view model
+		var viewModelResponse = new QuoteViewModel()
 		{
-			Success = true,
-			Data = new QuoteViewModelResponse(
-				_quoteId.Value,
-				customerId.Value,
-				new List<QuoteItemViewModel>()
+			QuoteId = _quoteId.Value,
+			CustomerId = customerId.Value,
+			CurrencySymbol = currency.Symbol,
+			CurrencyCode = currency.Code,
+			Items = new List<QuoteItemViewModel>()
+			{
+				new QuoteItemViewModel()
 				{
-					new QuoteItemViewModel(productId.Value, "Product", 10, 200)
-				}, currency.Code, 200)
+					ProductId = productId.Value,
+					ProductName = "Product",
+					Quantity = 10,
+					UnitPrice = 200
+				}
+			}
 		};
 
-		_integrationHttpService.GetAsync<QuoteViewModelResponse>(Arg.Any<string>())
-			.Returns(Task.FromResult(responseConfirmedQuote));
-		_integrationHttpService.PutAsync(Arg.Any<string>())
-			.Returns(Task.FromResult(new IntegrationHttpResponse() { Success = true }));
+		var quoteApiResponse = new QuoteViewModelApiResponse()
+		{
+			Data = viewModelResponse,
+			Success = true
+		};
+
+		// mocked kiota request
+		_requestAdapter.SendAsync(
+			Arg.Is<RequestInformation>(req => req.PathParameters.Values.Contains(_quoteId.Value)),
+			Arg.Any<ParsableFactory<QuoteViewModelApiResponse>>(),
+			Arg.Any<Dictionary<string, ParsableFactory<IParsable>>>(),
+			Arg.Any<CancellationToken>())
+		.Returns(quoteApiResponse);
 
 		var placeOrder = PlaceOrder.Create(_quoteId);
-		var placeOrderHandler = new PlaceOrderHandler(
-			_integrationHttpService, orderWriteRepository, _orderStatusBroadcaster, _configuration);
+		var placeOrderHandler = new PlaceOrderHandler(apiClient, orderWriteRepository, _orderStatusBroadcaster);
 
 		// When
 		await placeOrderHandler.HandleAsync(placeOrder, CancellationToken.None);
@@ -50,17 +68,17 @@ public class PlaceOrderHandlerTests
 		// Given
 		var currency = Currency.OfCode(Currency.USDollar.Code);
 		var orderWriteRepository = new DummyEventStoreRepository<Order>();
+		var apiClient = new ApiGatewayClient(_requestAdapter);
+
 		var placeOrder = PlaceOrder.Create(_quoteId);
-		var placeOrderHandler = new PlaceOrderHandler(_integrationHttpService,
-			orderWriteRepository, _orderStatusBroadcaster, _configuration);
+		var placeOrderHandler = new PlaceOrderHandler(apiClient, orderWriteRepository, _orderStatusBroadcaster);
 
 		// When & Then
 		await Assert.ThrowsAsync<ApplicationLogicException>(() =>
 			placeOrderHandler.HandleAsync(placeOrder, CancellationToken.None));
 	}
 
-	private readonly QuoteId _quoteId = QuoteId.Of(Guid.NewGuid());
-	private IIntegrationHttpService _integrationHttpService = Substitute.For<IIntegrationHttpService>();
+	private readonly QuoteId _quoteId = QuoteId.Of(Guid.NewGuid());	
 	private IOrderStatusBroadcaster _orderStatusBroadcaster = Substitute.For<IOrderStatusBroadcaster>();
-	private IConfiguration _configuration = Substitute.For<IConfiguration>();
+	private IRequestAdapter _requestAdapter = Substitute.For<IRequestAdapter>();
 }

@@ -1,22 +1,28 @@
-﻿namespace EcommerceDDD.OrderProcessing.Application.Payments.CancelingPayment;
+﻿using EcommerceDDD.ServiceClients.ApiGateway.Models;
 
-public class RequestCancelPaymentHandler(
-    IIntegrationHttpService integrationHttpService,
-    IConfiguration configuration) : ICommandHandler<RequestCancelPayment>
+namespace EcommerceDDD.OrderProcessing.Application.Payments.CancelingPayment;
+
+public class RequestCancelPaymentHandler(ApiGatewayClient apiGatewayClient) : ICommandHandler<RequestCancelPayment>
 {
-    private readonly IIntegrationHttpService _integrationHttpService = integrationHttpService;
-    private readonly IConfiguration _configuration = configuration;
+	private readonly ApiGatewayClient _apiGatewayClient = apiGatewayClient;
 
-    public async Task HandleAsync(RequestCancelPayment command, CancellationToken cancellationToken)
-    {
-        var apiRoute = _configuration["ApiRoutes:PaymentProcessing"];
-        var response = await _integrationHttpService.DeleteAsync(
-            $"{apiRoute}/{command.PaymentId.Value}",
-            new CancelPaymentRequest((int)command.PaymentCancellationReason));
+	public async Task HandleAsync(RequestCancelPayment command, CancellationToken cancellationToken)
+	{
+		var cancelRequest = new CancelPaymentRequest()
+		{
+			PaymentCancellationReason = (int)command.PaymentCancellationReason
+		};
 
-        if (response?.Success == false)
-            throw new ApplicationLogicException($"An error occurred requesting cancelling payment {command.PaymentId.Value}.");
-    }
+		try
+		{
+			var paymentsRequestBuilder = _apiGatewayClient.Api.Payments[command.PaymentId.Value];
+			await paymentsRequestBuilder
+				.DeleteAsync(cancelRequest, cancellationToken: cancellationToken);
+		}
+		catch (Microsoft.Kiota.Abstractions.ApiException ex)
+		{
+			throw new ApplicationLogicException(
+				$"An error occurred requesting cancelling payment {command.PaymentId.Value}.");
+		}
+	}
 }
-
-public record class CancelPaymentRequest(int PaymentCancellationReason);

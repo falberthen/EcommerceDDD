@@ -13,8 +13,8 @@ public class GetQuoteByIdCommandHandler(
 		QuoteDetails? quoteDetails = default;
 		var queryExpression = _querySession.Query<QuoteDetails>();
 		quoteDetails = queryExpression
-				.FirstOrDefault(q =>
-					q.Id == query.QuoteId.Value);
+			.FirstOrDefault(q =>
+				q.Id == query.QuoteId.Value);
 
 		QuoteViewModel viewModel = default!;
 		if (quoteDetails is not null)
@@ -40,7 +40,7 @@ public class GetQuoteByIdCommandHandler(
 
 				// Getting product data from catalog
 				var productsData = await _productMapper
-					.MapProductFromCatalogAsync(producIds, currency)
+					.MapProductFromCatalogAsync(producIds, currency, cancellationToken)
 					?? throw new RecordNotFoundException($"The was no data for the provided products.");
 
 				var catalogItems = new List<QuoteItemViewModel>();
@@ -50,12 +50,12 @@ public class GetQuoteByIdCommandHandler(
 						p.ProductId == quoteItem.ProductId)
 						?? throw new ApplicationLogicException(
 							$"The product {quoteItem.ProductId} is invalid.");
-
+					
 					catalogItems.Add(new QuoteItemViewModel()
 					{
-						ProductId = product.ProductId,
-						ProductName = product.Name,
-						UnitPrice = product.Price,
+						ProductId = product.ProductId!.Value,
+						ProductName = product.Name!,
+						UnitPrice = Convert.ToDecimal(product.Price!.Value),
 						CurrencySymbol = currency.Symbol,
 						Quantity = quoteItem.Quantity
 					});

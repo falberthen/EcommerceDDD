@@ -29,6 +29,7 @@ This project is an experimental full-stack application I use to combine several 
 ├── Core.Infrastructure
 │
 ├── Crosscutting
+│   ├── ServiceClients
 │   ├── ApiGateway
 │   └── IdentityServer
 │
@@ -107,6 +108,7 @@ The microservices composing the backend are built to be as simple as possible, s
       <li>XUnit 2.9.3</li>
       <li>NSubstitute 5.3.0</li>
       <li>SwaggerGen/SwaggerUI 8.1.1</li>
+      <li>Microsoft.Kiota.* 1.17.2</li>
     </ul>
   </li>
   <li>

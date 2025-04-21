@@ -5,22 +5,22 @@ public class CompleteOrderHandler(
     IEventStoreRepository<Order> orderWriteRepository
 ) : ICommandHandler<CompleteOrder>
 {
-    private readonly IOrderStatusBroadcaster _orderStatusBroadcaster = orderStatusBroadcaster;
-    private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
+	private readonly IOrderStatusBroadcaster _orderStatusBroadcaster = orderStatusBroadcaster;
+	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
 
-    public async Task HandleAsync(CompleteOrder command, CancellationToken cancellationToken)
+	public async Task HandleAsync(CompleteOrder command, CancellationToken cancellationToken)
     {
-        await Task.Delay(TimeSpan.FromSeconds(3)); // 3-second delay
+		await Task.Delay(TimeSpan.FromSeconds(3)); // 3-second delay
 
-        var order = await _orderWriteRepository
-            .FetchStreamAsync(command.OrderId.Value)
+		var order = await _orderWriteRepository
+			.FetchStreamAsync(command.OrderId.Value, cancellationToken: cancellationToken)
             ?? throw new RecordNotFoundException($"Failed to find the order {command.OrderId}.");
 
         // Completing order
         order.Complete(command.ShipmentId);
 
         await _orderWriteRepository
-            .AppendEventsAsync(order);
+			.AppendEventsAsync(order, cancellationToken: cancellationToken);
         
         // Updating order status on the UI with SignalR
         await _orderStatusBroadcaster.UpdateOrderStatus(

@@ -1,19 +1,14 @@
 ﻿namespace EcommerceDDD.ShipmentProcessing.Application.RequestingShipment;
 
-public class RequestShipmentHandler : ICommandHandler<RequestShipment>
+public class RequestShipmentHandler(
+	ICommandBus commandBus,
+	IEventStoreRepository<Shipment> shipmentWriteRepository
+) : ICommandHandler<RequestShipment>
 {
-    private readonly ICommandBus _commandBus;
-    private readonly IEventStoreRepository<Shipment> _shipmentWriteRepository;
+	private readonly ICommandBus _commandBus = commandBus;
+	private readonly IEventStoreRepository<Shipment> _shipmentWriteRepository = shipmentWriteRepository;
 
-    public RequestShipmentHandler(
-        ICommandBus commandBus,
-        IEventStoreRepository<Shipment> shipmentWriteRepository)
-    {
-        _commandBus = commandBus;        
-        _shipmentWriteRepository = shipmentWriteRepository;        
-    }
-
-    public async Task HandleAsync(RequestShipment command, CancellationToken cancellationToken)
+	public async Task HandleAsync(RequestShipment command, CancellationToken cancellationToken)
     {
         var producIds = command.ProductItems
             .Select(pid => pid.ProductId.Value)
@@ -23,8 +18,9 @@ public class RequestShipmentHandler : ICommandHandler<RequestShipment>
         var shipment = Shipment.Create(shipmentData);
 
         await _shipmentWriteRepository
-            .AppendEventsAsync(shipment, cancellationToken);
+			.AppendEventsAsync(shipment, cancellationToken);
 
-        await _commandBus.SendAsync(ProcessShipment.Create(shipment.Id), cancellationToken);        
+        await _commandBus
+			.SendAsync(ProcessShipment.Create(shipment.Id), cancellationToken);        
     }
 }

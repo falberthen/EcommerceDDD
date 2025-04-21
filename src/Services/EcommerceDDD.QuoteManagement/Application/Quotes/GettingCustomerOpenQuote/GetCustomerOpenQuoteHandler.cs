@@ -6,8 +6,8 @@ public class GetCustomerOpenQuoteHandler(
     IProductMapper productMapper
 ) : IQueryHandler<GetCustomerOpenQuote, QuoteViewModel>
 {
-    private readonly IQuerySession _querySession = querySession;
-    private readonly IProductMapper _productMapper = productMapper;
+	private readonly IQuerySession _querySession = querySession;
+	private readonly IProductMapper _productMapper = productMapper;
 	private IUserInfoRequester _userInfoRequester { get; set; } = userInfoRequester
 		?? throw new ArgumentNullException(nameof(userInfoRequester));
 
@@ -52,7 +52,7 @@ public class GetCustomerOpenQuoteHandler(
 
                 // Getting product data from catalog
                 var productsData = await _productMapper
-                    .MapProductFromCatalogAsync(producIds, currency)
+                    .MapProductFromCatalogAsync(producIds, currency, cancellationToken)
                     ?? throw new RecordNotFoundException($"The was no data for the provided products.");
 
                 var catalogItems = new List<QuoteItemViewModel>();
@@ -63,15 +63,15 @@ public class GetCustomerOpenQuoteHandler(
                         ?? throw new ApplicationLogicException(
                             $"The product {quoteItem.ProductId} is invalid.");
 
-                    catalogItems.Add(new QuoteItemViewModel()
-                    {
-                        ProductId = product.ProductId,
-                        ProductName = product.Name,
-                        UnitPrice = product.Price,
-                        CurrencySymbol = currency.Symbol,                        
-                        Quantity = quoteItem.Quantity
-                    });
-                }
+					catalogItems.Add(new QuoteItemViewModel()
+					{
+						ProductId = product.ProductId!.Value,
+						ProductName = product.Name!,
+						UnitPrice = Convert.ToDecimal(product.Price!.Value),
+						CurrencySymbol = currency.Symbol,
+						Quantity = quoteItem.Quantity
+					});
+				}
 
                 viewModel = viewModel with { Items = catalogItems };
                 viewModel.CurrencySymbol = currency.Symbol;

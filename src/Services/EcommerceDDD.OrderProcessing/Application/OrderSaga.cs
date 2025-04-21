@@ -7,15 +7,15 @@ public class OrderSaga(
     IEventHandler<PaymentFinalized>,
     IEventHandler<ShipmentFinalized>
 {
-    private readonly ICommandBus _commandBus = commandBus;
+	private readonly ICommandBus _commandBus = commandBus;
 
-    /// <summary>
-    /// Processing placed order
-    /// </summary>
-    /// <param name="@domainEvent"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    public async Task HandleAsync(OrderPlaced @domainEvent,
+	/// <summary>
+	/// Processing placed order
+	/// </summary>
+	/// <param name="@domainEvent"></param>
+	/// <param name="cancellationToken"></param>
+	/// <returns></returns>
+	public async Task HandleAsync(OrderPlaced @domainEvent,
         CancellationToken cancellationToken)
     {
         var processOrderCommand = ProcessOrder.Create(
@@ -24,7 +24,8 @@ public class OrderSaga(
             QuoteId.Of(@domainEvent.QuoteId)
         );
 
-        await _commandBus.SendAsync(processOrderCommand, cancellationToken);
+        await _commandBus
+			.SendAsync(processOrderCommand, cancellationToken);
     }
 
     /// <summary>
@@ -42,7 +43,8 @@ public class OrderSaga(
             Money.Of(@domainEvent.TotalPrice, @domainEvent.CurrencyCode),
             Currency.OfCode(@domainEvent.CurrencyCode));
 
-        await _commandBus.SendAsync(requestPaymentCommand, cancellationToken);
+        await _commandBus
+			.SendAsync(requestPaymentCommand, cancellationToken);
     }
 
     /// <summary>
@@ -60,12 +62,14 @@ public class OrderSaga(
             PaymentId.Of(@integrationEvent.PaymentId),
             Money.Of(@integrationEvent.TotalAmount,
                 @integrationEvent.CurrencyCode));
-        await _commandBus.SendAsync(recordPaymentCommand, cancellationToken);
+        await _commandBus
+			.SendAsync(recordPaymentCommand, cancellationToken);
 
         // requesting shipment        
         var requestShipmentCommand = RequestShipment.Create(
             OrderId.Of(@integrationEvent.OrderId));
-        await _commandBus.SendAsync(requestShipmentCommand, cancellationToken);
+        await _commandBus
+			.SendAsync(requestShipmentCommand, cancellationToken);
     }
 
     /// <summary>
@@ -81,12 +85,14 @@ public class OrderSaga(
         var recordShipmentCommand = RecordShipment.Create(
             OrderId.Of(@integrationEvent.OrderId),
             ShipmentId.Of(@integrationEvent.ShipmentId));
-        await _commandBus.SendAsync(recordShipmentCommand, cancellationToken);
+        await _commandBus
+			.SendAsync(recordShipmentCommand, cancellationToken);
 
         // completing order
         var completeOrderCommand = CompleteOrder.Create(
             OrderId.Of(@integrationEvent.OrderId),
             ShipmentId.Of(@integrationEvent.ShipmentId));
-        await _commandBus.SendAsync(completeOrderCommand, cancellationToken);
+        await _commandBus
+			.SendAsync(completeOrderCommand, cancellationToken);
     }
 }

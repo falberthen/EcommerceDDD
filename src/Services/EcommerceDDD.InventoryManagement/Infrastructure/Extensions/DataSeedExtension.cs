@@ -1,4 +1,6 @@
-﻿namespace EcommerceDDD.ProductCatalog.Infrastructure.Extensions;
+﻿using EcommerceDDD.ServiceClients.ApiGateway.Models;
+
+namespace EcommerceDDD.ProductCatalog.Infrastructure.Extensions;
 
 public static class DataSeedExtension
 {
@@ -11,36 +13,42 @@ public static class DataSeedExtension
 	/// <exception cref="RecordNotFoundException"></exception>
 	public static async Task<IApplicationBuilder> SeedInventoryCatalogAsync(
 		this IApplicationBuilder app, IConfiguration configuration)
+	{
+		using var serviceScope = app.ApplicationServices
+			.GetService<IServiceScopeFactory>()!
+			.CreateScope() ?? throw new NullReferenceException("Can't create scope factory.");
+
+		var apiGatewayClient = serviceScope.ServiceProvider
+			.GetRequiredService<ApiGatewayClient>();
+		var commandBus = serviceScope.ServiceProvider
+			.GetRequiredService<ICommandBus>();
+
+		var retryPolicy = Policy
+			.Handle<HttpRequestException>()
+			.WaitAndRetryAsync(
+				retryCount: 10, // Maximum 10 retries
+				sleepDurationProvider: attempt => TimeSpan.FromSeconds(Math.Pow(2, attempt)), // Exponential backoff
+				onRetry: (exception, timeSpan, retryCount, context) =>
+				{
+					Console.WriteLine($"Retry {retryCount} after {timeSpan.TotalSeconds} seconds due to: {exception.Message}");
+				});
+
+		var timeoutPolicy = Policy.TimeoutAsync(TimeSpan.FromHours(1));
+		var policyWrap = Policy.WrapAsync(timeoutPolicy, retryPolicy);
+
+		await policyWrap.ExecuteAsync(async () =>
 		{
-			using var serviceScope = app.ApplicationServices
-				.GetService<IServiceScopeFactory>()!
-				.CreateScope() ?? throw new NullReferenceException("Can't create scope factory.");
-
-			var integrationHttpService = serviceScope.ServiceProvider
-				.GetRequiredService<IIntegrationHttpService>();
-			var commandBus = serviceScope.ServiceProvider
-				.GetRequiredService<ICommandBus>();
-
-			var retryPolicy = Policy
-				.Handle<HttpRequestException>()
-				.WaitAndRetryForeverAsync(
-					attempt => TimeSpan.FromSeconds(5),
-					(exception, calculatedWaitDuration) =>
-					{
-						Console.WriteLine($"Retrying seeding inventory after {calculatedWaitDuration.TotalSeconds} " +
-							$"seconds due to exception: {exception.Message}");
-					});
-
-			var timeoutPolicy = Policy.TimeoutAsync(TimeSpan.FromHours(1));
-			var policyWrap = Policy.WrapAsync(timeoutPolicy, retryPolicy);
-
-			await policyWrap.ExecuteAsync(async () =>
+			// Bringing all products from the catalog
+			var request = new GetProductsRequest()
 			{
-				// Bringing all products from the catalog
-				var apiRoute = configuration["ApiRoutes:ProductCatalog"];
-				var response = await integrationHttpService.FilterAsync<List<ProductViewModel>>(
-					apiRoute!, new GetProductsRequest("USD", Array.Empty<Guid>())
-				);
+				CurrencyCode = "USD",
+				ProductIds = new List<Guid?>()
+			};
+
+			try
+			{
+				var response = await apiGatewayClient.Api.Products
+					.PostAsync(request);
 
 				if (response?.Success == false || response?.Data is null)
 					throw new HttpRequestException("An error occurred while retrieving products.");
@@ -48,27 +56,24 @@ public static class DataSeedExtension
 				List<Tuple<ProductId, int>> productQuantities = new();
 				foreach (var product in response.Data)
 				{
-					productQuantities.Add(new Tuple<ProductId, int>(
-						ProductId.Of(product.ProductId),
-						new Random().Next(0, 50)));
+					if (product.ProductId.HasValue)
+					{
+						productQuantities.Add(new Tuple<ProductId, int>(
+							ProductId.Of(product.ProductId.Value),
+							new Random().Next(0, 50))
+						);
+					}
 				}
 
 				var command = EnterProductInStock.Create(productQuantities);
 				await commandBus.SendAsync(command, CancellationToken.None);
-			});
+			}
+			catch (Microsoft.Kiota.Abstractions.ApiException ex)
+			{
+				throw new HttpRequestException("Products API not available.");
+			}
+		});
 
-			return app;
-		}
+		return app;
+	}
 }
-
-public record class GetProductsRequest(
-	string CurrencyCode, 
-	Guid[] ProductIds
-);
-
-public record class ProductViewModel(
-	Guid ProductId, 
-	string Name, 
-	decimal Price, 
-	string CurrencySymbol
-);

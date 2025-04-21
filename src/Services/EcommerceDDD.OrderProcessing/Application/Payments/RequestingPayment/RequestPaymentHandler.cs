@@ -1,35 +1,42 @@
-﻿namespace EcommerceDDD.OrderProcessing.Application.Payments.RequestingPayment;
+﻿using EcommerceDDD.ServiceClients.ApiGateway.Models;
+
+namespace EcommerceDDD.OrderProcessing.Application.Payments.RequestingPayment;
 
 public class RequestPaymentHandler(
-    IIntegrationHttpService integrationHttpService,
-    IOrderStatusBroadcaster orderStatusBroadcaster,
-    IEventStoreRepository<Order> orderWriteRepository,
-    IConfiguration configuration) : ICommandHandler<RequestPayment>
+	ApiGatewayClient apiGatewayClient,
+	IOrderStatusBroadcaster orderStatusBroadcaster,
+    IEventStoreRepository<Order> orderWriteRepository
+) : ICommandHandler<RequestPayment>
 {
-    private readonly IIntegrationHttpService _integrationHttpService = integrationHttpService;
-    private readonly IOrderStatusBroadcaster _orderStatusBroadcaster = orderStatusBroadcaster;
-    private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
-    private readonly IConfiguration _configuration = configuration;
+	private readonly ApiGatewayClient _apiGatewayClient = apiGatewayClient;
+	private readonly IOrderStatusBroadcaster _orderStatusBroadcaster = orderStatusBroadcaster;
+	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
 
-    public async Task HandleAsync(RequestPayment command, CancellationToken cancellationToken)
+	public async Task HandleAsync(RequestPayment command, CancellationToken cancellationToken)
     {
         var order = await _orderWriteRepository
-            .FetchStreamAsync(command.OrderId.Value)
+			.FetchStreamAsync(command.OrderId.Value, cancellationToken: cancellationToken)
             ?? throw new RecordNotFoundException($"Failed to find the order {command.OrderId}.");
 
-        var apiRoute = _configuration["ApiRoutes:PaymentProcessing"];
-        var response = await _integrationHttpService.PostAsync(
-            apiRoute,
-            new PaymentRequest(
-                command.CustomerId.Value,
-                command.OrderId.Value,
-                command.TotalPrice.Amount,
-                command.Currency.Code)
-            );
+		var paymentRequest = new PaymentRequest()
+		{
+			CurrencyCode = command.Currency.Code,
+			CustomerId = command.CustomerId.Value,
+			OrderId = command.OrderId.Value,
+			TotalAmount = Convert.ToDouble(command.TotalPrice.Amount)
+		};
 
-        if (response?.Success == false)
-            throw new ApplicationLogicException($"An error occurred requesting payment for order {command.OrderId}.");
-
+		try
+		{
+			var paymentsRequestBuilder = _apiGatewayClient.Api.Payments;
+			await paymentsRequestBuilder
+				.PostAsync(paymentRequest, cancellationToken: cancellationToken);
+		}
+		catch (Microsoft.Kiota.Abstractions.ApiException ex)
+		{
+			throw new ApplicationLogicException($"An error occurred requesting payment for order {command.OrderId}.");
+		}
+		
         // Updating order status on the UI with SignalR
         await _orderStatusBroadcaster.UpdateOrderStatus(
             new UpdateOrderStatusRequest(
@@ -39,9 +46,3 @@ public class RequestPaymentHandler(
                 (int)order.Status));
     }
 }
-
-public record class PaymentRequest(
-    Guid CustomerId,
-    Guid OrderId,
-    decimal TotalAmount,
-    string currencyCode);

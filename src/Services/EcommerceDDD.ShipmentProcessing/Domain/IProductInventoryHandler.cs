@@ -5,6 +5,6 @@
 /// </summary>
 public interface IProductInventoryHandler
 {
-    Task<bool> CheckProductsInStockAsync(IReadOnlyList<ProductItem> productItems);
-    Task DecreaseQuantityInStockAsync(IReadOnlyList<ProductItem> productItems);
+    Task<bool> CheckProductsInStockAsync(IReadOnlyList<ProductItem> productItems, CancellationToken cancellationToken);
+    Task DecreaseQuantityInStockAsync(IReadOnlyList<ProductItem> productItems, CancellationToken cancellationToken);
 }

@@ -1,78 +1,83 @@
-﻿namespace EcommerceDDD.ProductCatalog.Application.Products.GettingProducts;
+﻿using EcommerceDDD.ServiceClients.ApiGateway.Models;
 
-public class GetProductsHandler : IQueryHandler<GetProducts, IList<ProductViewModel>> 
+namespace EcommerceDDD.ProductCatalog.Application.Products.GettingProducts;
+
+public class GetProductsHandler(
+	ApiGatewayClient apiGatewayClient,
+	IProducts productsRepository,
+	ICurrencyConverter currencyConverter
+) : IQueryHandler<GetProducts, IList<ProductViewModel>> 
 {
-    private readonly IProducts _products;
-    private readonly IIntegrationHttpService _integrationHttpService;
-    private readonly ICurrencyConverter _currencyConverter;
-    private readonly IConfiguration _configuration;
+	private readonly ApiGatewayClient _apiGatewayClient = apiGatewayClient;
+	private readonly IProducts _productsRepository = productsRepository;
+	private readonly ICurrencyConverter _currencyConverter = currencyConverter;
 
-    public GetProductsHandler(
-        IProducts products,
-        IIntegrationHttpService integrationHttpService,
-        ICurrencyConverter currencyConverter,
-        IConfiguration configuration)
-    {
-        _products = products;
-        _integrationHttpService = integrationHttpService;
-        _currencyConverter = currencyConverter;
-        _configuration = configuration;
-    }
-
-    public async Task<IList<ProductViewModel>> HandleAsync(GetProducts query, 
-        CancellationToken cancellationToken)
+	public async Task<IList<ProductViewModel>> HandleAsync(GetProducts query, CancellationToken cancellationToken)
     {
         var productsViewModel = new List<ProductViewModel>();
         var products = query.ProductIds.Count == 0
-            ? await _products.ListAll(cancellationToken)
-            : await _products.GetByIds(query.ProductIds);
+            ? await _productsRepository.ListAll(cancellationToken)
+            : await _productsRepository.GetByIds(query.ProductIds);
 
         if (string.IsNullOrEmpty(query.CurrencyCode))
             throw new RecordNotFoundException("Currency code cannot be empty.");
 
         // Getting stock quantity
-        var productIds = products.Select(x => x.Id.Value).ToArray();
-        var apiRoute = _configuration["ApiRoutes:InventoryManagement"];
-        var inventoryResponse = await _integrationHttpService
-            .FilterAsync<IList<InventoryStockUnitViewModel>>(
-                $"{apiRoute}/check-stock-quantity", 
-                new CheckProductsInStockRequest(productIds));
+        var productIds = products.Select(x => 
+			new Guid?(x.Id.Value)).ToList();
 
-        var currency = Currency.OfCode(query.CurrencyCode);
+		var inventoryResponse = await GetProductsFromInventoryAsync(productIds, cancellationToken);
+		var currency = Currency.OfCode(query.CurrencyCode);
 
-        foreach (var product in products)
-        {
-            int quantityInStock = 0;
-            if (inventoryResponse?.Success == true)
-            {
-                var productInStock = inventoryResponse.Data
-                    ?.FirstOrDefault(p => p.ProductId == product.Id.Value);
-                quantityInStock = productInStock?.QuantityInStock ?? 0;
-            }
+		foreach (var product in products)
+		{
+			int quantityInStock = 0;
+			if (inventoryResponse?.Count > 0)
+			{
+				var productInStock = inventoryResponse
+					?.FirstOrDefault(p => p.ProductId == product.Id.Value);
+				quantityInStock = productInStock?.QuantityInStock ?? 0;
+			}
 
-            var convertedPrice = _currencyConverter
-                .Convert(product.UnitPrice.Amount, query.CurrencyCode);
+			var convertedPrice = _currencyConverter
+				.Convert(product.UnitPrice.Amount, query.CurrencyCode);
 
-            productsViewModel.Add(new ProductViewModel(
-                product.Id.Value,
-                product.Name,
-                product.Category,
-                product.Description,
-                product.ImageUrl,
-                Math.Round(convertedPrice, 2).ToString(),
-                currency.Symbol,
-                quantityInStock
-            ));
-        }
+			productsViewModel.Add(new ProductViewModel(
+				product.Id.Value,
+				product.Name,
+				product.Category,
+				product.Description,
+				product.ImageUrl,
+				Math.Round(convertedPrice, 2),
+				currency.Symbol,
+				quantityInStock
+			));
+		}
 
-        return productsViewModel;
+		return productsViewModel;
     }
+
+	private async Task<List<InventoryStockUnitViewModel>> GetProductsFromInventoryAsync(List<Guid?> productIds, 
+		CancellationToken cancellationToken)
+	{
+		try
+		{
+			var request = new CheckProductsInStockRequest()
+			{
+				ProductIds = productIds
+			};
+			var inventoryRequestBuilder = _apiGatewayClient.Api.Inventory;
+			var response = await inventoryRequestBuilder.CheckStockQuantity
+				.PostAsync(request, cancellationToken: cancellationToken);
+
+			if (response?.Data is null)
+				throw new ApplicationLogicException(response?.Message ?? string.Empty);
+
+			return response.Data;
+		}
+		catch (Exception ex)
+		{
+			return new List<InventoryStockUnitViewModel>();
+		}		
+	}
 }
-
-public record class CheckProductsInStockRequest(
-    Guid[] ProductIds);
-
-public record class InventoryStockUnitViewModel(
-    Guid InventoryStockUnitId,
-    Guid ProductId,
-    int QuantityInStock);

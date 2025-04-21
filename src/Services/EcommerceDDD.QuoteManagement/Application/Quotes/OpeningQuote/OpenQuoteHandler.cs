@@ -6,17 +6,17 @@ public class OpenQuoteHandler(
     ICustomerOpenQuoteChecker customerOpenQuoteChecker
 ) : ICommandHandler<OpenQuote>
 {
-    private readonly IEventStoreRepository<Quote> _quoteWriteRepository = quoteWriteRepository;
-    private readonly ICustomerOpenQuoteChecker _customerOpenQuoteChecker = customerOpenQuoteChecker;
+	private readonly IEventStoreRepository<Quote> _quoteWriteRepository = quoteWriteRepository;
+	private readonly ICustomerOpenQuoteChecker _customerOpenQuoteChecker = customerOpenQuoteChecker;
 	private IUserInfoRequester _userInfoRequester { get; set; } = userInfoRequester
 		?? throw new ArgumentNullException(nameof(userInfoRequester));
 
 	public async Task HandleAsync(OpenQuote command, CancellationToken cancellationToken)
     {
-		UserInfo? userInfo = await _userInfoRequester
+		UserInfo? userInfo = await userInfoRequester
 			.RequestUserInfoAsync();
-		CustomerId customerId = CustomerId.Of(userInfo.CustomerId);
 
+		CustomerId customerId = CustomerId.Of(userInfo.CustomerId);
 		QuoteDetails? openQuote = _customerOpenQuoteChecker
 			.CheckCustomerOpenQuote(customerId);
 
@@ -27,6 +27,6 @@ public class OpenQuoteHandler(
         var quote = Quote.OpenQuoteForCustomer(customerId, command.Currency);
 
         await _quoteWriteRepository
-            .AppendEventsAsync(quote);
+			.AppendEventsAsync(quote, cancellationToken);
     }
 }

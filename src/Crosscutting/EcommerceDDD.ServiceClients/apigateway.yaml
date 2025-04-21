@@ -1,0 +1,1505 @@
+openapi: 3.0.1
+info:
+  title: Ecommerce DDD API Gateway
+  version: v2
+servers:
+  - url: http://localhost:5000
+    description: ''
+paths:
+  /api/accounts/login:
+    post:
+      tags:
+        - Accounts
+      summary: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/LoginResult'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResult'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/LoginResult'
+  /api/accounts/register:
+    post:
+      tags:
+        - Accounts
+      summary: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterUserRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/RegisterUserRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/RegisterUserRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/UserRegisteredResult'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRegisteredResult'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/UserRegisteredResult'
+  /api/customers:
+    post:
+      tags:
+        - Customers
+      summary: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterCustomerRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/RegisterCustomerRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/RegisterCustomerRequest'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/customers/details:
+    get:
+      tags:
+        - Customers
+      summary: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CustomerDetailsApiResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerDetailsApiResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CustomerDetailsApiResponse'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/customers/history:
+    get:
+      tags:
+        - Customers
+      summary: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/IEventHistoryIListApiResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IEventHistoryIListApiResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/IEventHistoryIListApiResponse'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/customers/update:
+    put:
+      tags:
+        - Customers
+      summary: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCustomerRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCustomerRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/UpdateCustomerRequest'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/customers/{customerId}/details':
+    get:
+      tags:
+        - Customers
+      summary: ''
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CustomerDetailsApiResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerDetailsApiResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CustomerDetailsApiResponse'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/customers/{customerId}/credit':
+    get:
+      tags:
+        - Customers
+      summary: ''
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CreditLimitModelApiResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditLimitModelApiResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CreditLimitModelApiResponse'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/products:
+    post:
+      tags:
+        - Products
+      summary: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetProductsRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/GetProductsRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/GetProductsRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProductViewModelIListApiResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductViewModelIListApiResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProductViewModelIListApiResponse'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/inventory/check-stock-quantity:
+    post:
+      tags:
+        - Inventory
+      summary: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckProductsInStockRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CheckProductsInStockRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CheckProductsInStockRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/InventoryStockUnitViewModelIListApiResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryStockUnitViewModelIListApiResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/InventoryStockUnitViewModelIListApiResponse'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/inventory/decrease-stock-quantity/{productId}':
+    put:
+      tags:
+        - Inventory
+      summary: ''
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DecreaseQuantityInStockRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/DecreaseQuantityInStockRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/DecreaseQuantityInStockRequest'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/inventory/increase-stock-quantity/{productId}':
+    put:
+      tags:
+        - Inventory
+      summary: ''
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncreaseQuantityInStockRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/IncreaseQuantityInStockRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/IncreaseQuantityInStockRequest'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/inventory/{productId}/history':
+    get:
+      tags:
+        - Inventory
+      summary: ''
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/InventoryStockUnitEventHistoryIListApiResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryStockUnitEventHistoryIListApiResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/InventoryStockUnitEventHistoryIListApiResponse'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/quotes:
+    get:
+      tags:
+        - Quotes
+      summary: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/QuoteViewModelApiResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuoteViewModelApiResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/QuoteViewModelApiResponse'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    post:
+      tags:
+        - Quotes
+      summary: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenQuoteRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/OpenQuoteRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/OpenQuoteRequest'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/quotes/{quoteId}/history':
+    get:
+      tags:
+        - Quotes
+      summary: ''
+      parameters:
+        - name: quoteId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/IEventHistoryIListApiResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IEventHistoryIListApiResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/IEventHistoryIListApiResponse'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/quotes/{quoteId}/items':
+    put:
+      tags:
+        - Quotes
+      summary: ''
+      parameters:
+        - name: quoteId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddQuoteItemRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/AddQuoteItemRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/AddQuoteItemRequest'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/quotes/{quoteId}/items/{productId}':
+    delete:
+      tags:
+        - Quotes
+      summary: ''
+      parameters:
+        - name: quoteId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/quotes/{quoteId}':
+    delete:
+      tags:
+        - Quotes
+      summary: ''
+      parameters:
+        - name: quoteId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/quotes/{quoteId}/confirm':
+    put:
+      tags:
+        - Quotes
+      summary: ''
+      parameters:
+        - name: quoteId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/quotes/{quoteId}/details':
+    get:
+      tags:
+        - Quotes
+      summary: ''
+      parameters:
+        - name: quoteId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/QuoteViewModelApiResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuoteViewModelApiResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/QuoteViewModelApiResponse'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/orders:
+    get:
+      tags:
+        - Orders
+      summary: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/OrderViewModelIListApiResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderViewModelIListApiResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/OrderViewModelIListApiResponse'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/orders/{orderId}/history':
+    get:
+      tags:
+        - Orders
+      summary: ''
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/IEventHistoryIListApiResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IEventHistoryIListApiResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/IEventHistoryIListApiResponse'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/orders/quote/{quoteId}':
+    post:
+      tags:
+        - Orders
+      summary: ''
+      parameters:
+        - name: quoteId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/payments:
+    post:
+      tags:
+        - Payments
+      summary: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/PaymentRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/PaymentRequest'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/payments/{paymentId}':
+    delete:
+      tags:
+        - Payments
+      summary: ''
+      parameters:
+        - name: paymentId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelPaymentRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CancelPaymentRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CancelPaymentRequest'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/shipments:
+    post:
+      tags:
+        - Shipments
+      summary: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShipOrderRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ShipOrderRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ShipOrderRequest'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+components:
+  schemas:
+    LoginRequest:
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          minLength: 1
+          type: string
+        password:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    LoginResult:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          nullable: true
+        refreshToken:
+          type: string
+          nullable: true
+        identityToken:
+          type: string
+          nullable: true
+        errorDescription:
+          type: string
+          nullable: true
+      additionalProperties: false
+    RegisterUserRequest:
+      required:
+        - customerId
+        - email
+        - password
+        - passwordConfirm
+      type: object
+      properties:
+        customerId:
+          type: string
+          format: uuid
+        email:
+          minLength: 1
+          type: string
+        password:
+          minLength: 1
+          type: string
+        passwordConfirm:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    UserRegisteredResult:
+      type: object
+      properties:
+        userId:
+          type: string
+          nullable: true
+        succeeded:
+          type: boolean
+      additionalProperties: false
+    CreditLimitModel:
+      type: object
+      properties:
+        customerId:
+          type: string
+          format: uuid
+        creditLimit:
+          type: number
+          format: double
+      additionalProperties: false
+    CreditLimitModelApiResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/CreditLimitModel'
+        success:
+          type: boolean
+        message:
+          type: string
+          nullable: true
+      additionalProperties: false
+    CustomerDetails:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        shippingAddress:
+          type: string
+          nullable: true
+        creditLimit:
+          type: number
+          format: double
+      additionalProperties: false
+    CustomerDetailsApiResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/CustomerDetails'
+        success:
+          type: boolean
+        message:
+          type: string
+          nullable: true
+      additionalProperties: false
+    IEventHistory:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        aggregateId:
+          type: string
+          format: uuid
+        eventTypeName:
+          type: string
+          nullable: true
+        eventData:
+          type: string
+          nullable: true
+        timestamp:
+          type: string
+          format: date-time
+      additionalProperties: false
+    IEventHistoryIListApiResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/IEventHistory'
+          nullable: true
+        success:
+          type: boolean
+        message:
+          type: string
+          nullable: true
+      additionalProperties: false
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        status:
+          type: integer
+          format: int32
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        instance:
+          type: string
+          nullable: true
+      additionalProperties: { }
+    RegisterCustomerRequest:
+      required:
+        - creditLimit
+        - email
+        - name
+        - password
+      type: object
+      properties:
+        email:
+          minLength: 1
+          type: string
+          format: email
+        password:
+          maxLength: 100
+          minLength: 5
+          type: string
+        passwordConfirm:
+          type: string
+          nullable: true
+        name:
+          maxLength: 100
+          minLength: 2
+          type: string
+        shippingAddress:
+          maxLength: 100
+          minLength: 5
+          type: string
+          nullable: true
+        creditLimit:
+          type: number
+          format: double
+      additionalProperties: false
+    UpdateCustomerRequest:
+      required:
+        - creditLimit
+        - name
+        - shippingAddress
+      type: object
+      properties:
+        name:
+          maxLength: 100
+          minLength: 2
+          type: string
+        shippingAddress:
+          maxLength: 100
+          minLength: 5
+          type: string
+        creditLimit:
+          type: number
+          format: double
+      additionalProperties: false
+    GetProductsRequest:
+      required:
+        - currencyCode
+      type: object
+      properties:
+        productIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          nullable: true
+        currencyCode:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    ProductViewModel:
+      type: object
+      properties:
+        productId:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        category:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        imageUrl:
+          type: string
+          nullable: true
+        price:
+          type: number
+          format: double
+        currencySymbol:
+          type: string
+          nullable: true
+        quantityInStock:
+          type: integer
+          format: int32
+        quantityAddedToCart:
+          type: integer
+          format: int32
+      additionalProperties: false
+    ProductViewModelIListApiResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductViewModel'
+          nullable: true
+        success:
+          type: boolean
+        message:
+          type: string
+          nullable: true
+      additionalProperties: false
+    CheckProductsInStockRequest:
+      required:
+        - productIds
+      type: object
+      properties:
+        productIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+      additionalProperties: false
+    DecreaseQuantityInStockRequest:
+      type: object
+      properties:
+        decreasedQuantity:
+          maximum: 2147483647
+          minimum: 0
+          type: integer
+          format: int32
+      additionalProperties: false
+    IncreaseQuantityInStockRequest:
+      type: object
+      properties:
+        increasedQuantity:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+          format: int32
+      additionalProperties: false
+    InventoryStockUnitEventHistory:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        aggregateId:
+          type: string
+          format: uuid
+        eventTypeName:
+          type: string
+          nullable: true
+        eventData:
+          type: string
+          nullable: true
+        timestamp:
+          type: string
+          format: date-time
+      additionalProperties: false
+    InventoryStockUnitEventHistoryIListApiResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/InventoryStockUnitEventHistory'
+          nullable: true
+        success:
+          type: boolean
+        message:
+          type: string
+          nullable: true
+      additionalProperties: false
+    InventoryStockUnitViewModel:
+      type: object
+      properties:
+        inventoryStockUnitId:
+          type: string
+          format: uuid
+        productId:
+          type: string
+          format: uuid
+        quantityInStock:
+          type: integer
+          format: int32
+      additionalProperties: false
+    InventoryStockUnitViewModelIListApiResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/InventoryStockUnitViewModel'
+          nullable: true
+        success:
+          type: boolean
+        message:
+          type: string
+          nullable: true
+      additionalProperties: false
+    AddQuoteItemRequest:
+      required:
+        - productId
+        - quantity
+      type: object
+      properties:
+        productId:
+          type: string
+          format: uuid
+        quantity:
+          type: integer
+          format: int32
+      additionalProperties: false
+    OpenQuoteRequest:
+      required:
+        - currencyCode
+      type: object
+      properties:
+        currencyCode:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    QuoteItemViewModel:
+      type: object
+      properties:
+        productId:
+          type: string
+          format: uuid
+        productName:
+          type: string
+          nullable: true
+        unitPrice:
+          type: number
+          format: double
+        quantity:
+          type: integer
+          format: int32
+        currencySymbol:
+          type: string
+          nullable: true
+      additionalProperties: false
+    QuoteViewModel:
+      type: object
+      properties:
+        quoteId:
+          type: string
+          format: uuid
+        customerId:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        quoteStatus:
+          type: string
+          nullable: true
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuoteItemViewModel'
+          nullable: true
+        currencyCode:
+          type: string
+          nullable: true
+        currencySymbol:
+          type: string
+          nullable: true
+        totalPrice:
+          type: number
+          format: double
+          readOnly: true
+      additionalProperties: false
+    QuoteViewModelApiResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/QuoteViewModel'
+        success:
+          type: boolean
+        message:
+          type: string
+          nullable: true
+      additionalProperties: false
+    OrderLineViewModel:
+      type: object
+      properties:
+        productId:
+          type: string
+          format: uuid
+        productName:
+          type: string
+          nullable: true
+        unitPrice:
+          type: number
+          format: double
+        quantity:
+          type: integer
+          format: int32
+      additionalProperties: false
+    OrderViewModel:
+      type: object
+      properties:
+        orderId:
+          type: string
+          format: uuid
+        quoteId:
+          type: string
+          format: uuid
+        customerId:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        statusCode:
+          type: integer
+          format: int32
+        statusText:
+          type: string
+          nullable: true
+        orderLines:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderLineViewModel'
+          nullable: true
+        currencySymbol:
+          type: string
+          nullable: true
+        totalPrice:
+          type: number
+          format: double
+      additionalProperties: false
+    OrderViewModelIListApiResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderViewModel'
+          nullable: true
+        success:
+          type: boolean
+        message:
+          type: string
+          nullable: true
+      additionalProperties: false
+    CancelPaymentRequest:
+      required:
+        - paymentCancellationReason
+      type: object
+      properties:
+        paymentCancellationReason:
+          type: integer
+          format: int32
+      additionalProperties: false
+    PaymentRequest:
+      required:
+        - currencyCode
+        - customerId
+        - orderId
+        - totalAmount
+      type: object
+      properties:
+        customerId:
+          type: string
+          format: uuid
+        orderId:
+          type: string
+          format: uuid
+        totalAmount:
+          type: number
+          format: double
+        currencyCode:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    ProductItemRequest:
+      type: object
+      properties:
+        productId:
+          type: string
+          format: uuid
+        productName:
+          type: string
+          nullable: true
+        unitPrice:
+          type: number
+          format: double
+        quantity:
+          type: integer
+          format: int32
+      additionalProperties: false
+    ShipOrderRequest:
+      required:
+        - orderId
+        - productItems
+      type: object
+      properties:
+        orderId:
+          type: string
+          format: uuid
+        productItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductItemRequest'
+      additionalProperties: false
+  securitySchemes:
+    Bearer:
+      type: apiKey
+      description: 'JWT Authorization header using the Bearer scheme. Example: "Authorization: Bearer {token}"'
+      name: Authorization
+      in: header
+security:
+  - Bearer: [ ]
+  - Bearer: [ ]
+  - Bearer: [ ]
+  - Bearer: [ ]
+  - Bearer: [ ]
+  - Bearer: [ ]
+  - Bearer: [ ]
+  - Bearer: [ ]
+tags:
+  - name: Accounts
+  - name: Customers
+  - name: Products
+  - name: Inventory
+  - name: Quotes
+  - name: Orders
+  - name: Payments
+  - name: Shipments

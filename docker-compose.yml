@@ -103,7 +103,7 @@ services:
         condition: service_started
 
   connect:
-    image: debezium/connect:2.1
+    image: debezium/connect:2.5
     container_name: connect
     ports:
       - '8083:8083'
@@ -287,10 +287,10 @@ services:
       on-failure
     depends_on:
       postgres:
-        condition: service_healthy
-      ecommerceddd-identityserver:
-        condition: service_started      
+        condition: service_healthy      
       ecommerceddd-products:
+        condition: service_started
+      ecommerceddd-identityserver:
         condition: service_started
       
   ecommerceddd-quotes:
@@ -317,10 +317,10 @@ services:
       on-failure
     depends_on:
       postgres:
-        condition: service_healthy
-      ecommerceddd-identityserver:
-        condition: service_started    
+        condition: service_healthy      
       ecommerceddd-products:
+        condition: service_started
+      ecommerceddd-identityserver:
         condition: service_started
 
   ecommerceddd-orders:
@@ -350,12 +350,12 @@ services:
         condition: service_healthy      
       kafka:
         condition: service_healthy
+      ecommerceddd-products:
+        condition: service_started
       connect:
         condition: service_started
       ecommerceddd-identityserver:
-        condition: service_started  
-      ecommerceddd-products:
-        condition: service_started
+        condition: service_started        
 
   ecommerceddd-payments:
     image: ecommerceddd-payments
@@ -384,12 +384,12 @@ services:
         condition: service_healthy      
       kafka:
         condition: service_healthy
+      ecommerceddd-products:
+        condition: service_started
       connect:
         condition: service_started
       ecommerceddd-identityserver:
-        condition: service_started   
-      ecommerceddd-products:
-        condition: service_started
+        condition: service_started         
 
   ecommerceddd-shipments:
     image: ecommerceddd-shipments
@@ -418,12 +418,12 @@ services:
         condition: service_healthy      
       kafka:
         condition: service_healthy
+      ecommerceddd-products:
+        condition: service_started
       connect:
         condition: service_started
       ecommerceddd-identityserver:
-        condition: service_started
-      ecommerceddd-products:
-        condition: service_started
+        condition: service_started      
 
 networks:
   ecommercedddnet:

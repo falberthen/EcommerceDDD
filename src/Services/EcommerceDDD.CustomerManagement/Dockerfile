@@ -18,7 +18,8 @@ WORKDIR /src
 COPY ["src/Services/EcommerceDDD.CustomerManagement/EcommerceDDD.CustomerManagement.csproj", "src/Services/EcommerceDDD.CustomerManagement/"]
 COPY ["src/Core/EcommerceDDD.Core.Infrastructure/EcommerceDDD.Core.Infrastructure.csproj", "src/Core/EcommerceDDD.Core.Infrastructure/"]
 COPY ["src/Core/EcommerceDDD.Core/EcommerceDDD.Core.csproj", "src/Core/EcommerceDDD.Core/"]
-RUN dotnet restore "./src/Services/EcommerceDDD.CustomerManagement/./EcommerceDDD.CustomerManagement.csproj"
+COPY ["src/Crosscutting/EcommerceDDD.ServiceClients/EcommerceDDD.ServiceClients.csproj", "src/Crosscutting/EcommerceDDD.ServiceClients/"]
+RUN dotnet restore "./src/Services/EcommerceDDD.CustomerManagement/EcommerceDDD.CustomerManagement.csproj"
 COPY . .
 WORKDIR "/src/src/Services/EcommerceDDD.CustomerManagement"
 RUN dotnet build "./EcommerceDDD.CustomerManagement.csproj" -c $BUILD_CONFIGURATION -o /app/build

@@ -5,33 +5,34 @@ public class AddQuoteItemHandler(
     IProductMapper productMapper
 ) : ICommandHandler<AddQuoteItem>
 {
-    private readonly IEventStoreRepository<Quote> _quoteWriteRepository = quoteWriteRepository;
-    private readonly IProductMapper _productMapper = productMapper;
+	private readonly IEventStoreRepository<Quote> _quoteWriteRepository = quoteWriteRepository;
+	private readonly IProductMapper _productMapper = productMapper;
 
-    public async Task HandleAsync(AddQuoteItem command, CancellationToken cancellationToken)
+	public async Task HandleAsync(AddQuoteItem command, CancellationToken cancellationToken)
     {
         var quote = await _quoteWriteRepository
-            .FetchStreamAsync(command.QuoteId.Value)
+			.FetchStreamAsync(command.QuoteId.Value, cancellationToken: cancellationToken)
             ?? throw new RecordNotFoundException($"The quote {command.QuoteId} was not found.");
 
         // Getting product data from catalog
         var currency = Currency.OfCode(quote.Currency.Code);
         var productData = await _productMapper
-            .MapProductFromCatalogAsync([command.ProductId], currency)
+			.MapProductFromCatalogAsync([command.ProductId], currency, cancellationToken)
             ?? throw new ApplicationLogicException($"Product {command.ProductId} is invalid.");
         var product = productData.FirstOrDefault()
             ?? throw new ApplicationLogicException($"Product {command.ProductId} is invalid.");
 
-        var quotetemData = new QuoteItemData(
-            quote.Id,
-            command.ProductId,
-            product.Name,
-            Money.Of(product.Price, currency.Code),
-            command.Quantity);
+		decimal productPrice = Convert.ToDecimal(product.Price!.Value);
+		var quotetemData = new QuoteItemData(
+			quote.Id,
+			command.ProductId,
+			product.Name!,
+			Money.Of(productPrice, currency.Code),
+			command.Quantity);
 
-        quote.AddItem(quotetemData);
+		quote.AddItem(quotetemData);
 
-        await _quoteWriteRepository
-            .AppendEventsAsync(quote);
+		await _quoteWriteRepository
+			.AppendEventsAsync(quote, cancellationToken);
     }
 }

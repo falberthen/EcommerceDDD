@@ -19,12 +19,13 @@ public class DecreaseStockQuantityHandler(
 
 		Guid inventoryStockUnitId = query.Id;
 		var inventoryStockUnit = await _inventoryStockUnitWriteRepository
-			.FetchStreamAsync(inventoryStockUnitId) ?? 
+			.FetchStreamAsync(inventoryStockUnitId, cancellationToken: cancellationToken) ?? 
 				throw new RecordNotFoundException(
 					$"The inventory stock unit {inventoryStockUnitId} was not found.");
 
 		inventoryStockUnit.DecreaseStockQuantity(command.QuantityDecreased);
 
-		await _inventoryStockUnitWriteRepository.AppendEventsAsync(inventoryStockUnit);
+		await _inventoryStockUnitWriteRepository
+			.AppendEventsAsync(inventoryStockUnit);
 	}
 }

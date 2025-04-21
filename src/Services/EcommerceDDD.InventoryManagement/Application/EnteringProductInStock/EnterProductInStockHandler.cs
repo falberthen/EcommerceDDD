@@ -2,31 +2,32 @@
 
 public class EnterProductInStockHandler(
 	IQuerySessionWrapper querySession,
-    IEventStoreRepository<InventoryStockUnit> inventoryStockUnitWriteRepository
+	IEventStoreRepository<InventoryStockUnit> inventoryStockUnitWriteRepository
 ) : ICommandHandler<EnterProductInStock>
 {
-    private readonly IQuerySessionWrapper _querySession = querySession;
-    private readonly IEventStoreRepository<InventoryStockUnit> _inventoryStockUnitWriteRepository = inventoryStockUnitWriteRepository;
+	private readonly IQuerySessionWrapper _querySession = querySession;
+	private readonly IEventStoreRepository<InventoryStockUnit> _inventoryStockUnitWriteRepository = inventoryStockUnitWriteRepository;
 
-    public async Task HandleAsync(EnterProductInStock command, CancellationToken cancellationToken)
-    {
-        // Check if the product is already in stock
-        var productIds = command.ProductIdsQuantities
-            .Select(pid => pid.Item1.Value).ToList();
-
+	public async Task HandleAsync(EnterProductInStock command, CancellationToken cancellationToken)
+	{
+		// Extract product IDs from the command
+		var productIds = command.ProductIdsQuantities
+			.Select(pq => pq.Item1.Value)
+			.ToHashSet();
+		
 		var existingEntries = _querySession.Query<InventoryStockUnitDetails>()
 			.Where(x => productIds.Contains(x.ProductId));
 
-        if (!existingEntries.Any())
-        {
-            foreach (var productQuantity in command.ProductIdsQuantities)
-            {
-                var inventoryStockUnit = InventoryStockUnit.EnterStockUnit(
-                    productQuantity.Item1, productQuantity.Item2);
+		if (!existingEntries.Any())
+		{
+			foreach (var productQuantity in command.ProductIdsQuantities)
+			{
+				var inventoryStockUnit = InventoryStockUnit.EnterStockUnit(
+					productQuantity.Item1, productQuantity.Item2);
 
-                await _inventoryStockUnitWriteRepository
-                    .AppendEventsAsync(inventoryStockUnit);
-            }
-        }
-    }
+				await _inventoryStockUnitWriteRepository
+					.AppendEventsAsync(inventoryStockUnit);
+			}
+		}
+	}
 }

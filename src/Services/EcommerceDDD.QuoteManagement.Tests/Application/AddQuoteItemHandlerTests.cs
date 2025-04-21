@@ -1,3 +1,5 @@
+using EcommerceDDD.ServiceClients.ApiGateway.Models;
+
 namespace EcommerceDDD.QuoteManagement.Tests.Application;
 
 public class AddQuoteItemHandlerTests
@@ -11,12 +13,14 @@ public class AddQuoteItemHandlerTests
 			Success = true,
 			Data = new List<ProductViewModel>()
 			{
-				new ProductViewModel(
-					_productId.Value,
-					_productName,
-					_productQuantity,
-					_currency.Symbol
-				)
+				new ProductViewModel()
+				{
+					ProductId = _productId.Value,
+					Name = _productName,
+					Price = _productPrice,
+					QuantityAddedToCart = _productQuantity,
+					CurrencySymbol = _currency.Symbol
+				}	
 			}
 		};
 
@@ -25,11 +29,17 @@ public class AddQuoteItemHandlerTests
 			.Returns(Task.FromResult(response));
 
 		_productMapper
-			.MapProductFromCatalogAsync(Arg.Any<IEnumerable<ProductId>>(), Arg.Any<Currency>())
+			.MapProductFromCatalogAsync(Arg.Any<IEnumerable<ProductId>>(), Arg.Any<Currency>(), CancellationToken.None)
 			.Returns(new List<ProductViewModel>()
 			{
-				new ProductViewModel(_productId.Value,
-					_productName, 10, Currency.USDollar.Code)
+				new ProductViewModel()
+				{
+					ProductId = _productId.Value,
+					Name = _productName,
+					Price = _productPrice,
+					QuantityAddedToCart = 10,
+					CurrencySymbol = Currency.USDollar.Code
+				}
 			});
 
 		var quote = Quote.OpenQuoteForCustomer(_customerId, _currency);
@@ -57,23 +67,31 @@ public class AddQuoteItemHandlerTests
 			Success = true,
 			Data = new List<ProductViewModel>()
 			{
-				new ProductViewModel(
-					_productId.Value,
-					_productName,
-					_productQuantity,
-					_currency.Symbol
-				)
+				new ProductViewModel()
+				{
+					ProductId = _productId.Value,
+					Name = _productName,
+					Price = _productPrice,
+					QuantityAddedToCart = _productQuantity,
+					CurrencySymbol = _currency.Symbol
+				}
 			}
 		};
 		_integrationHttpService
 			.FilterAsync<List<ProductViewModel>>(Arg.Any<string>(), Arg.Any<object>())
 			.Returns(Task.FromResult(response));
 		_productMapper
-			.MapProductFromCatalogAsync(Arg.Any<IEnumerable<ProductId>>(), Arg.Any<Currency>())
+			.MapProductFromCatalogAsync(Arg.Any<IEnumerable<ProductId>>(), Arg.Any<Currency>(), CancellationToken.None)
 			.Returns(new List<ProductViewModel>()
 			{
-				new ProductViewModel(_productId.Value,
-					_productName, 10, Currency.USDollar.Code)
+				new ProductViewModel()
+				{
+					ProductId = _productId.Value,
+					Name = _productName,
+					QuantityAddedToCart = 10,
+					Price = _productPrice,
+					CurrencySymbol = Currency.USDollar.Code
+				}
 			});
 
 		var quote = Quote.OpenQuoteForCustomer(_customerId, _currency);
@@ -99,6 +117,7 @@ public class AddQuoteItemHandlerTests
 
 	private const int _productQuantity = 1;
 	private const string _productName = "Product XYZ";
+	private double _productPrice = 100;
 	private Currency _currency = Currency.OfCode(Currency.USDollar.Code);
 	private CustomerId _customerId = CustomerId.Of(Guid.NewGuid());
 	private ProductId _productId = ProductId.Of(Guid.NewGuid());

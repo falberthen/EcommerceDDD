@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Kiota.Abstractions" Version="1.17.2" />
+    <PackageReference Include="Microsoft.Kiota.Serialization.Form" Version="1.17.2" />
+    <PackageReference Include="Microsoft.Kiota.Serialization.Json" Version="1.17.2" />
+    <PackageReference Include="Microsoft.Kiota.Serialization.Multipart" Version="1.17.2" />
+    <PackageReference Include="Microsoft.Kiota.Serialization.Text" Version="1.17.2" />
+	<PackageReference Include="Microsoft.Kiota.Http.HttpClientLibrary" Version="1.17.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\EcommerceDDD.Core.Infrastructure\EcommerceDDD.Core.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="apigateway.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+	<!--# Generating API Gateway client with Kiota | Uncomment it to Generate the API Gateway client with Kiota again-->
+	<!--<Target Name="GenerateKiotaClient" BeforeTargets="Build">				
+		<Exec Command="kiota generate -d ../../../src/Crosscutting/EcommerceDDD.ServiceClients/apigateway.yaml -l CSharp -c ApiGatewayClient -n EcommerceDDD.ServiceClients.ApiGateway -o Kiota" />
+	</Target>-->
+</Project>
