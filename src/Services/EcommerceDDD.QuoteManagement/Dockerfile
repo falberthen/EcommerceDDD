@@ -19,6 +19,7 @@ COPY ["src/Services/EcommerceDDD.QuoteManagement/EcommerceDDD.QuoteManagement.cs
 COPY ["src/Core/EcommerceDDD.Core.Infrastructure/EcommerceDDD.Core.Infrastructure.csproj", "src/Core/EcommerceDDD.Core.Infrastructure/"]
 COPY ["src/Core/EcommerceDDD.Core/EcommerceDDD.Core.csproj", "src/Core/EcommerceDDD.Core/"]
 RUN dotnet restore "./src/Services/EcommerceDDD.QuoteManagement/./EcommerceDDD.QuoteManagement.csproj"
+COPY ["src/Crosscutting/EcommerceDDD.ServiceClients/EcommerceDDD.ServiceClients.csproj", "src/Crosscutting/EcommerceDDD.ServiceClients/"]
 COPY . .
 WORKDIR "/src/src/Services/EcommerceDDD.QuoteManagement"
 RUN dotnet build "./EcommerceDDD.QuoteManagement.csproj" -c $BUILD_CONFIGURATION -o /app/build

@@ -1,5 +1,3 @@
-using EcommerceDDD.OrderProcessing.Application;
-
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
@@ -8,6 +6,9 @@ services.AddEndpointsApiExplorer();
 services.AddCoreInfrastructure(builder.Configuration);
 services.AddHandlersFromType(typeof(OrderSaga));
 services.AddHealthChecks();
+
+// Kiota client
+services.AddApiGatewayClient(builder.Configuration);
 
 // Services
 services.AddScoped<IOrderStatusBroadcaster, OrderStatusBroadcaster>();

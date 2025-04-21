@@ -1,5 +1,3 @@
-using EcommerceDDD.Core.Infrastructure.Extensions;
-
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
@@ -9,6 +7,9 @@ services.AddEndpointsApiExplorer();
 services.AddCoreInfrastructure(builder.Configuration);
 services.AddHandlersFromType(typeof(OpenQuoteHandler));
 services.AddHealthChecks();
+
+// Kiota client
+services.AddApiGatewayClient(builder.Configuration);
 
 // Services
 services.AddScoped<ICustomerOpenQuoteChecker, CustomerOpenQuoteChecker>();
