@@ -31,7 +31,7 @@ public class InventoryController(
 	/// <returns></returns>
 	[HttpPut("decrease-stock-quantity/{productId}")]
 	[Authorize(Policy = Policies.M2MAccess)]
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<InventoryStockUnitViewModel>>))]
+	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<IActionResult> DecreaseQuantity([FromRoute] Guid productId,
 		[FromBody] DecreaseQuantityInStockRequest request, CancellationToken cancellationToken) =>
@@ -47,7 +47,7 @@ public class InventoryController(
 	/// <returns></returns>
 	[HttpPut("increase-stock-quantity/{productId}")]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanWrite)]
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<InventoryStockUnitViewModel>>))]
+	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<IActionResult> IncreaseQuantity([FromRoute] Guid productId,
 		[FromBody] IncreaseQuantityInStockRequest request, CancellationToken cancellationToken) =>
