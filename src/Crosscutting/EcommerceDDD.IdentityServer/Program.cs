@@ -1,5 +1,3 @@
-using EcommerceDDD.Core.Infrastructure.Extensions;
-
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 

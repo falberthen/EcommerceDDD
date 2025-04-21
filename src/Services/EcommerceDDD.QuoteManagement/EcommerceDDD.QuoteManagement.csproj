@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Core\EcommerceDDD.Core.Infrastructure\EcommerceDDD.Core.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Core\EcommerceDDD.Core\EcommerceDDD.Core.csproj" />
+    <ProjectReference Include="..\..\Crosscutting\EcommerceDDD.ServiceClients\EcommerceDDD.ServiceClients.csproj" />
   </ItemGroup>
 
 </Project>
