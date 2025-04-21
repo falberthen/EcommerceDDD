@@ -5,7 +5,7 @@ public class MartenRepository<TA>(
     ILogger<MartenRepository<TA>> logger
 ) : IEventStoreRepository<TA> where TA : class, IAggregateRoot<StronglyTypedId<Guid>>
 {
-    private readonly IDocumentSession _documentSession = documentSession
+	private readonly IDocumentSession _documentSession = documentSession
 		?? throw new ArgumentNullException(nameof(documentSession));
 	private readonly ILogger<MartenRepository<TA>> _logger = logger
 		?? throw new ArgumentNullException(nameof(logger));
@@ -22,9 +22,9 @@ public class MartenRepository<TA>(
         var nextVersion = aggregate.Version + events.Length;
 
         aggregate.ClearUncommittedEvents();
-        _documentSession.Events.Append(aggregate.Id.Value, nextVersion, events);
+		_documentSession.Events.Append(aggregate.Id.Value, nextVersion, events);
 
-        await _documentSession.SaveChangesAsync();
+        await _documentSession.SaveChangesAsync(cancellationToken);
 
         return nextVersion;
     }
@@ -39,8 +39,12 @@ public class MartenRepository<TA>(
     /// <exception cref="InvalidOperationException"></exception>
     public async Task<TA> FetchStreamAsync(Guid id, int? version = null, CancellationToken cancellationToken = default)
     {
-        var aggregate = await _documentSession.Events.AggregateStreamAsync<TA>(id, version ?? 0);
-        return aggregate ?? throw new InvalidOperationException($"No aggregate found with id {id}.");
+        var aggregate = await _documentSession.Events.AggregateStreamAsync<TA>(
+			id, version ?? 0, 
+			token: cancellationToken
+		);
+        return aggregate ?? 
+			throw new InvalidOperationException($"No aggregate found with id {id}.");
     }
 
     /// <summary>
@@ -57,7 +61,7 @@ public class MartenRepository<TA>(
         var integrationEvent = IntegrationEvent
             .FromNotification(@event!);
 
-        _logger.LogInformation($"Adding integration event {@event} to outbox...", @event);
+		_logger.LogInformation($"Adding integration event {@event} to outbox...", @event);
         _documentSession.Store(integrationEvent!);        
     }
 }

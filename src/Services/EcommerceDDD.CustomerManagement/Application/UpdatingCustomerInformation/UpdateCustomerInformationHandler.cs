@@ -6,7 +6,7 @@ public class UpdateCustomerInformationHandler(
 	IEventStoreRepository<Customer> customerWriteRepository
 ) : ICommandHandler<UpdateCustomerInformation>
 {
-    private readonly IEventStoreRepository<Customer> _customerWriteRepository = customerWriteRepository
+	private readonly IEventStoreRepository<Customer> _customerWriteRepository = customerWriteRepository
 		?? throw new ArgumentNullException(nameof(customerWriteRepository));
 	private IUserInfoRequester _userInfoRequester { get; set; } = userInfoRequester
 		?? throw new ArgumentNullException(nameof(userInfoRequester));
@@ -23,7 +23,7 @@ public class UpdateCustomerInformationHandler(
 			?? throw new RecordNotFoundException($"Customer not found.");
 
 		var customer = await _customerWriteRepository
-            .FetchStreamAsync(customerDetails.Id)
+			.FetchStreamAsync(customerDetails.Id, cancellationToken: cancellationToken)
             ?? throw new ArgumentNullException($"Customer {customerDetails.Id} not found.");
 
         var customerData = new CustomerData(
@@ -35,6 +35,6 @@ public class UpdateCustomerInformationHandler(
         customer.UpdateInformation(customerData);
 
         await _customerWriteRepository
-            .AppendEventsAsync(customer, cancellationToken);
+			.AppendEventsAsync(customer, cancellationToken);
     }
 }

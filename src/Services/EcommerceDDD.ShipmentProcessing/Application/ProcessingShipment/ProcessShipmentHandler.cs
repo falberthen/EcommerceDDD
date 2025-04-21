@@ -1,40 +1,31 @@
 ﻿namespace EcommerceDDD.ShipmentProcessing.Application.ProcessingPayment.IntegrationEvents;
 
-public class ProcessShipmentHandler : ICommandHandler<ProcessShipment>
+public class ProcessShipmentHandler(
+	IProductInventoryHandler productInventoryHandler,
+	IEventStoreRepository<Shipment> shipmentWriteRepository
+) : ICommandHandler<ProcessShipment>
 {
-	private readonly IProductInventoryHandler _productAvailabilityChecker;
-	private readonly IEventStoreRepository<Shipment> _shipmentWriteRepository;
-	private readonly IEventBus _eventPublisher;
-
-	public ProcessShipmentHandler(
-		IProductInventoryHandler productAvailabilityChecker,
-		IEventStoreRepository<Shipment> shipmentWriteRepository,
-		IEventBus eventPublisher)
-	{
-		_productAvailabilityChecker = productAvailabilityChecker;
-		_shipmentWriteRepository = shipmentWriteRepository;
-		_eventPublisher = eventPublisher;
-	}
+	private readonly IProductInventoryHandler _productInventoryHandler = productInventoryHandler;
+	private readonly IEventStoreRepository<Shipment> _shipmentWriteRepository = shipmentWriteRepository;
 
 	public async Task HandleAsync(ProcessShipment command, CancellationToken cancellationToken)
 	{
 		await Task.Delay(TimeSpan.FromSeconds(3)); // 3-second delay
-
 		var shipment = await _shipmentWriteRepository
-			.FetchStreamAsync(command.ShipmentId.Value)
+			.FetchStreamAsync(command.ShipmentId.Value, cancellationToken: cancellationToken)
 			?? throw new RecordNotFoundException($"The shipment {command.ShipmentId} was not found.");
 
 		try
 		{
 			// Checking if all items are in stock
-			var allProductsAreAvailable = await _productAvailabilityChecker
-				.CheckProductsInStockAsync(shipment.ProductItems);
+			var allProductsAreAvailable = await _productInventoryHandler
+				.CheckProductsInStockAsync(shipment.ProductItems, cancellationToken);
 			if (!allProductsAreAvailable)
 				throw new BusinessRuleException($"One of the items is out of stock.");
 
 			// Decreasing quantity in stock
-			await _productAvailabilityChecker
-				.DecreaseQuantityInStockAsync(shipment.ProductItems);
+			await _productInventoryHandler
+				.DecreaseQuantityInStockAsync(shipment.ProductItems, cancellationToken);
 
 			// Completing shipment
 			shipment.Complete();

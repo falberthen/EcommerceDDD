@@ -5,10 +5,10 @@ public class IncreaseQuantityInStockHandler(
     IEventStoreRepository<InventoryStockUnit> inventoryStockUnitWriteRepository
 ) : ICommandHandler<IncreaseStockQuantity>
 {
-    private readonly IQuerySessionWrapper _querySession = querySession;
-    private readonly IEventStoreRepository<InventoryStockUnit> _inventoryStockUnitWriteRepository = inventoryStockUnitWriteRepository;
+	private readonly IQuerySessionWrapper _querySession = querySession;
+	private readonly IEventStoreRepository<InventoryStockUnit> _inventoryStockUnitWriteRepository = inventoryStockUnitWriteRepository;
 
-    public async Task HandleAsync(IncreaseStockQuantity command, CancellationToken cancellationToken)
+	public async Task HandleAsync(IncreaseStockQuantity command, CancellationToken cancellationToken)
     {
         // Check if the product is already in stock
         var existingEntry = _querySession.Query<InventoryStockUnitDetails>()
@@ -18,14 +18,14 @@ public class IncreaseQuantityInStockHandler(
                 $"The product {command.ProductId.Value} was not found in the inventory.");
 
         Guid inventoryStockUnitId = existingEntry.Id;
-        var inventoryStockUnit = await _inventoryStockUnitWriteRepository
-            .FetchStreamAsync(inventoryStockUnitId)
-            ?? throw new RecordNotFoundException(
+		var inventoryStockUnit = await _inventoryStockUnitWriteRepository
+			.FetchStreamAsync(inventoryStockUnitId, cancellationToken: cancellationToken)
+			?? throw new RecordNotFoundException(
                 $"The inventory stock unit {inventoryStockUnitId} was not found.");
 
         inventoryStockUnit.IncreaseStockQuantity(command.QuantityIncreased);
 
         await _inventoryStockUnitWriteRepository
-            .AppendEventsAsync(inventoryStockUnit);
+			.AppendEventsAsync(inventoryStockUnit, cancellationToken: cancellationToken);
     }
 }

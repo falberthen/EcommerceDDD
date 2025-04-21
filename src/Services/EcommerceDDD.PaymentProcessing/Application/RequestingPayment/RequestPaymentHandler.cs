@@ -1,19 +1,14 @@
 ﻿namespace EcommerceDDD.PaymentProcessing.Application.RequestingPayment;
 
-public class RequestPaymentHandler : ICommandHandler<RequestPayment>
+public class RequestPaymentHandler(
+	ICommandBus commandBus, 
+	IEventStoreRepository<Payment> paymentWriteRepository
+) : ICommandHandler<RequestPayment>
 {
-    private readonly ICommandBus _commandBus;
-    private readonly IEventStoreRepository<Payment> _paymentWriteRepository;
+	private readonly ICommandBus _commandBus = commandBus;
+	private readonly IEventStoreRepository<Payment> _paymentWriteRepository = paymentWriteRepository;
 
-    public RequestPaymentHandler(
-        ICommandBus commandBus,
-        IEventStoreRepository<Payment> paymentWriteRepository)
-    {
-        _commandBus = commandBus;
-        _paymentWriteRepository = paymentWriteRepository;
-    }
-
-    public async Task HandleAsync(RequestPayment command, CancellationToken cancellationToken)
+	public async Task HandleAsync(RequestPayment command, CancellationToken cancellationToken)
     {
         var paymentData = new PaymentData(
             command.CustomerId, 
@@ -23,7 +18,7 @@ public class RequestPaymentHandler : ICommandHandler<RequestPayment>
         var payment = Payment.Create(paymentData);
 
         await _paymentWriteRepository
-            .AppendEventsAsync(payment);
+			.AppendEventsAsync(payment, cancellationToken);
 
         await _commandBus.SendAsync(
             ProcessPayment.Create(payment.Id), cancellationToken);

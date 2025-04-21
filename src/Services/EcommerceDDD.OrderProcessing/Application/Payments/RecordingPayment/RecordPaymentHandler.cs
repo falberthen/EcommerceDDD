@@ -2,15 +2,16 @@
 
 public class RecordPaymentHandler(
     IOrderStatusBroadcaster orderStatusBroadcaster,
-    IEventStoreRepository<Order> orderWriteRepository) : ICommandHandler<RecordPayment>
+    IEventStoreRepository<Order> orderWriteRepository
+) : ICommandHandler<RecordPayment>
 {
-    private readonly IOrderStatusBroadcaster _orderStatusBroadcaster = orderStatusBroadcaster;
-    private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
+	private readonly IOrderStatusBroadcaster _orderStatusBroadcaster = orderStatusBroadcaster;
+	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
 
-    public async Task HandleAsync(RecordPayment command, CancellationToken cancellationToken)
+	public async Task HandleAsync(RecordPayment command, CancellationToken cancellationToken)
     {
         var order = await _orderWriteRepository
-            .FetchStreamAsync(command.OrderId.Value)
+			.FetchStreamAsync(command.OrderId.Value, cancellationToken: cancellationToken)
             ?? throw new RecordNotFoundException($"Failed to find the order {command.OrderId}.");
 
         // Recording the payment
@@ -18,7 +19,7 @@ public class RecordPaymentHandler(
 
         // Persisting aggregate
         await _orderWriteRepository
-            .AppendEventsAsync(order);
+			.AppendEventsAsync(order, cancellationToken);
 
         // Updating order status on the UI with SignalR
         await _orderStatusBroadcaster.UpdateOrderStatus(

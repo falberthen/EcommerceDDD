@@ -2,5 +2,5 @@
 
 public interface ICustomerCreditChecker
 {
-    Task<bool> IsCreditEnough(CustomerId customerId, Money totalAmount);
+    Task<bool> CheckIfCreditIsEnoughAsync(CustomerId customerId, Money totalAmount, CancellationToken cancellationToken);
 }
