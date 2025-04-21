@@ -1,71 +1,86 @@
-using EcommerceDDD.Core.EventBus;
+using EcommerceDDD.ServiceClients.ApiGateway.Models;
 
 namespace EcommerceDDD.OrderProcessing.Tests.Application;
 
 public class ProcessOrderHandlerTests
 {
-    [Fact]
-    public async Task PlaceOrder_WithCommand_ShouldPlaceOrder()
-    {
-        // Given
-        var productId = ProductId.Of(Guid.NewGuid());
-        var productName = "Product XYZ";
-        var productPrice = Money.Of(10, Currency.USDollar.Code);
-        var customerId = CustomerId.Of(Guid.NewGuid());
-        var currency = Currency.OfCode(Currency.USDollar.Code);
-        var quoteId = QuoteId.Of(Guid.NewGuid());
+	[Fact]
+	public async Task PlaceOrder_WithCommand_ShouldPlaceOrder()
+	{
+		// Given
+		var productId = ProductId.Of(Guid.NewGuid());
+		var productName = "Product XYZ";
+		var productPrice = Money.Of(10, Currency.USDollar.Code);
+		var customerId = CustomerId.Of(Guid.NewGuid());
+		var currency = Currency.OfCode(Currency.USDollar.Code);
+		var quoteId = QuoteId.Of(Guid.NewGuid());
 
-        var quoteItems = new List<ProductItemData>() {
-            new ProductItemData() {
-                ProductId = productId,
-                ProductName = productName,
-                Quantity = 1,
-                UnitPrice = productPrice
-            }
-        };
+		var quoteItems = new List<ProductItemData>() {
+			new ProductItemData() {
+				ProductId = productId,
+				ProductName = productName,
+				Quantity = 1,
+				UnitPrice = productPrice
+			}
+		};
 
-        var orderData = new OrderData(customerId, quoteId, currency, quoteItems);
-        var order = Order.Place(orderData);
+		var orderData = new OrderData(customerId, quoteId, currency, quoteItems);
+		var order = Order.Place(orderData);
 
-        var orderWriteRepository = new DummyEventStoreRepository<Order>();
+		var orderWriteRepository = new DummyEventStoreRepository<Order>();
+		var adapter = Substitute.For<IRequestAdapter>();
+		var apiClient = new ApiGatewayClient(adapter);
 
-        var responseConfirmedQuote = new IntegrationHttpResponse<QuoteViewModelResponse>()
-        {
-            Success = true,
-            Data = new QuoteViewModelResponse(
-                quoteId.Value,
-                customerId.Value,
-                new List<QuoteItemViewModel>()
-                {
-                    new QuoteItemViewModel(productId.Value, "Product", 10, 200)
-                }, currency.Code, 200)
-        };
+		// return mocked view model
+		var viewModelResponse = new QuoteViewModel()
+		{
+			QuoteId = quoteId.Value,
+			CustomerId = customerId.Value,
+			CurrencySymbol = currency.Symbol,
+			CurrencyCode = currency.Code,
+			Items = new List<QuoteItemViewModel>()
+			{
+				new QuoteItemViewModel()
+				{
+					ProductId = productId.Value,
+					ProductName = "Product",
+					Quantity = 10,
+					UnitPrice = 200
+				}
+			}
+		};
 
-        _integrationHttpService.GetAsync<QuoteViewModelResponse>(Arg.Any<string>())
-            .Returns(Task.FromResult(responseConfirmedQuote));
-        _integrationHttpService.PutAsync(Arg.Any<string>())
-            .Returns(Task.FromResult(new IntegrationHttpResponse() { Success = true }));
+		var quoteApiResponse = new QuoteViewModelApiResponse()
+		{
+			Data = viewModelResponse,
+			Success = true
+		};
 
-        await orderWriteRepository
-            .AppendEventsAsync(order);
+		// mocked kiota request
+		adapter.SendAsync(
+			Arg.Is<RequestInformation>(req => req.PathParameters.Values.Contains(quoteId.Value)),
+			Arg.Any<ParsableFactory<QuoteViewModelApiResponse>>(),
+			Arg.Any<Dictionary<string, ParsableFactory<IParsable>>>(),
+			Arg.Any<CancellationToken>())
+		.Returns(quoteApiResponse);
 
-        var processOrder = ProcessOrder.Create(customerId, order.Id, quoteId);
-        var processOrderHandler = new ProcessOrderHandler(
-            _integrationHttpService, orderWriteRepository, _eventPublisher, _configuration);
+		await orderWriteRepository
+			.AppendEventsAsync(order);
 
-        // When
-        await processOrderHandler.HandleAsync(processOrder, CancellationToken.None);
+		var processOrder = ProcessOrder.Create(customerId, order.Id, quoteId);
+		var processOrderHandler = new ProcessOrderHandler(apiClient, orderWriteRepository, _eventPublisher);
 
-        // Then
-        var placedOrder = orderWriteRepository.AggregateStream.First().Aggregate;        
+		// When
+		await processOrderHandler.HandleAsync(processOrder, CancellationToken.None);
+
+		// Then
+		var placedOrder = orderWriteRepository.AggregateStream.First().Aggregate;
 		Assert.NotNull(placedOrder);
 		Assert.Equal(placedOrder.CustomerId, customerId);
 		Assert.Equal(placedOrder.QuoteId, quoteId);
 		Assert.Equal(OrderStatus.Processed, placedOrder.Status);
-
 	}
 
-    private IIntegrationHttpService _integrationHttpService = Substitute.For<IIntegrationHttpService>();
-    private IEventBus _eventPublisher = Substitute.For<IEventBus>();
-    private IConfiguration _configuration = Substitute.For<IConfiguration>();
+	private IEventBus _eventPublisher = Substitute.For<IEventBus>();
+
 }

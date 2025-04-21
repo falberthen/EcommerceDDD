@@ -1,98 +1,79 @@
-﻿namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
+﻿using EcommerceDDD.ServiceClients.ApiGateway.Models;
+
+namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
 
 public class PlaceOrderHandler(
-    IIntegrationHttpService integrationHttpService,
-    IEventStoreRepository<Order> orderWriteRepository,
-    IOrderStatusBroadcaster orderStatusBroadcaster,
-    IConfiguration configuration
+	ApiGatewayClient apiGatewayClient,
+	IEventStoreRepository<Order> orderWriteRepository,
+	IOrderStatusBroadcaster orderStatusBroadcaster
 ) : ICommandHandler<PlaceOrder>
 {
-    private readonly IIntegrationHttpService _integrationHttpService = integrationHttpService;
-    private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
-    private readonly IOrderStatusBroadcaster _orderStatusBroadcaster = orderStatusBroadcaster;
-    private readonly IConfiguration _configuration = configuration;
+	private readonly ApiGatewayClient _apiGatewayClient = apiGatewayClient;
+	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
+	private readonly IOrderStatusBroadcaster _orderStatusBroadcaster = orderStatusBroadcaster;
 
-    public async Task HandleAsync(PlaceOrder command, CancellationToken cancellationToken)
-    {
-        // Getting quote data
-        var quote = await GetQuoteAsync(command)
-            ?? throw new RecordNotFoundException($"No open quote found for customer.");
-        
-        // Confirming quote
-        await ConfirmQuoteAsync(quote.QuoteId);
+	public async Task HandleAsync(PlaceOrder command, CancellationToken cancellationToken)
+	{
+		// Getting quote data
+		QuoteViewModel quote = await GetQuoteAsync(command, cancellationToken)
+			?? throw new RecordNotFoundException($"No open quote found for customer.");
+		if (!quote.Items!.Any())
+			throw new RecordNotFoundException($"No quote items found for customer.");
+
+		// Confirming quote
+		await ConfirmQuoteAsync(quote.QuoteId!.Value, cancellationToken);
 
 		// Placing order
-		var oderItems = quote.Items.Select(qi => new ProductItemData()
+		var oderItems = quote.Items!.Select(qi => new ProductItemData()
 		{
-			ProductId = ProductId.Of(qi.ProductId),
-			ProductName = qi.ProductName,
-			Quantity = qi.Quantity,
-			UnitPrice = Money.Of(qi.UnitPrice, quote.CurrencyCode)
+			ProductId = ProductId.Of(qi.ProductId!.Value),
+			ProductName = qi.ProductName!,
+			Quantity = qi.Quantity!.Value,
+			UnitPrice = Money.Of(Convert.ToDecimal(qi.UnitPrice!.Value), quote.CurrencyCode!)
 		}).ToImmutableList();
 
 		var orderData = new OrderData(
-            CustomerId.Of(quote.CustomerId),
-            QuoteId.Of(quote.QuoteId),
-            Currency.OfCode(quote.CurrencyCode),
+			CustomerId.Of(quote.CustomerId!.Value),
+			QuoteId.Of(quote.QuoteId.Value),
+			Currency.OfCode(quote.CurrencyCode!),
 			oderItems);
 
-        var order = Order.Place(orderData);
+		var order = Order.Place(orderData);
 
-        // Appending to outbox for message broker
-        var orderPlacedEvent = order.GetUncommittedEvents()
-            .OfType<OrderPlaced>().FirstOrDefault();
-        _orderWriteRepository.AppendToOutbox(orderPlacedEvent!);
+		// Appending to outbox for message broker
+		var orderPlacedEvent = order.GetUncommittedEvents()
+			.OfType<OrderPlaced>().FirstOrDefault();
+		_orderWriteRepository.AppendToOutbox(orderPlacedEvent!);
 
-        // Persisting aggregate
-        await _orderWriteRepository
-            .AppendEventsAsync(order);
+		// Persisting aggregate
+		await _orderWriteRepository
+			.AppendEventsAsync(order, cancellationToken);
 
-        // Updating order status on the UI with SignalR
-        await _orderStatusBroadcaster.UpdateOrderStatus(
-            new UpdateOrderStatusRequest(
-                order.CustomerId.Value,
-                order.Id.Value,
-                order.Status.ToString(),
-                (int)order.Status));
-    }
+		// Updating order status on the UI with SignalR
+		await _orderStatusBroadcaster.UpdateOrderStatus(
+			new UpdateOrderStatusRequest(
+				order.CustomerId.Value,
+				order.Id.Value,
+				order.Status.ToString(),
+				(int)order.Status));
+	}
 
-    private async Task<QuoteViewModelResponse> GetQuoteAsync(PlaceOrder command)
-    {
-        var apiRoute = _configuration["ApiRoutes:QuoteManagement"];
-        var response = await _integrationHttpService.GetAsync<QuoteViewModelResponse>(
-            $"{apiRoute}/{command.QuoteId.Value}/details")
-            ?? throw new ApplicationLogicException(
-                $"An error occurred retrieving quote {command.QuoteId}.");
+	private async Task<QuoteViewModel> GetQuoteAsync(PlaceOrder command, CancellationToken cancellationToken)
+	{
+		var quoteRequestBuilder = _apiGatewayClient.Api.Quotes[command.QuoteId.Value];
+		var response = await quoteRequestBuilder.Details
+			.GetAsync(cancellationToken: cancellationToken);
 
-        if (!response.Success)
-            throw new ApplicationLogicException(response?.Message ?? string.Empty);
+		if (response?.Data is null)
+			throw new ApplicationLogicException(response?.Message ?? string.Empty);
 
-        var responseData = response.Data!;
-        return responseData;
-    }
+		return response.Data;
+	}
 
-    private async Task ConfirmQuoteAsync(Guid quoteId)
-    {
-        var apiRoute = _configuration["ApiRoutes:QuoteManagement"];
-        var response = await _integrationHttpService.PutAsync(
-            $"{apiRoute}/{quoteId}/confirm")
-            ?? throw new ApplicationLogicException(
-                $"An error occurred confirming quote {quoteId}.");
-
-        if (!response.Success)
-            throw new ApplicationLogicException(response?.Message ?? string.Empty);
-    }
+	private async Task ConfirmQuoteAsync(Guid quoteId, CancellationToken cancellationToken)
+	{
+		var quoteRequestBuilder = _apiGatewayClient.Api.Quotes[quoteId];
+		await quoteRequestBuilder.Confirm
+			.PutAsync(cancellationToken: cancellationToken);
+	}
 }
-
-public record QuoteViewModelResponse(
-    Guid QuoteId,
-    Guid CustomerId,
-    List<QuoteItemViewModel> Items,
-    string CurrencyCode,
-    decimal TotalPrice);
-
-public record class QuoteItemViewModel(
-    Guid ProductId,
-    string ProductName,
-    int Quantity,
-    decimal UnitPrice);

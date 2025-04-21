@@ -1,73 +1,73 @@
-﻿namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
+﻿using EcommerceDDD.ServiceClients.ApiGateway.Models;
+
+namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
 
 public class ProcessOrderHandler(
-    IIntegrationHttpService integrationHttpService,
-    IEventStoreRepository<Order> orderWriteRepository,
-    IEventBus eventPublisher,
-    IConfiguration configuration
+	ApiGatewayClient apiGatewayClient,
+	IEventStoreRepository<Order> orderWriteRepository,
+	IEventBus eventPublisher
 ) : ICommandHandler<ProcessOrder>
 {
-    private readonly IIntegrationHttpService _integrationHttpService = integrationHttpService;
-    private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
-    private readonly IEventBus _eventPublisher = eventPublisher;
-    private readonly IConfiguration _configuration = configuration;
+	private readonly ApiGatewayClient _apiGatewayClient = apiGatewayClient;
+	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
+	private readonly IEventBus _eventPublisher = eventPublisher;
 
-    public async Task HandleAsync(ProcessOrder command, CancellationToken cancellationToken)
-    {
-        // Getting open quote data
-        var quote = await GetQuoteAsync(command)
-            ?? throw new RecordNotFoundException($"No open quote found for customer {command.CustomerId}.");
-        var quoteId = QuoteId.Of(quote.QuoteId);
+	public async Task HandleAsync(ProcessOrder command, CancellationToken cancellationToken)
+	{
+		// Getting open quote data
+		QuoteViewModel quote = await GetQuoteAsync(command, cancellationToken)
+			?? throw new RecordNotFoundException($"No open quote found for customer {command.CustomerId}.");
+		var quoteId = QuoteId.Of(quote.QuoteId!.Value);
 
-        // Building Order data
-        var quoteItems = quote.Items.Select(qi =>
-            new ProductItemData()
-            {
-                ProductId = ProductId.Of(qi.ProductId),
-                Quantity = qi.Quantity,
-                ProductName = qi.ProductName,
-                UnitPrice = Money.Of(qi.UnitPrice, quote.CurrencyCode)
-            }).ToList();
+		if (!quote.Items!.Any())
+			throw new RecordNotFoundException($"No quote items found for customer.");
 
-        var orderData = new OrderData(            
-            CustomerId.Of(quote.CustomerId),
-            quoteId,            
-            Currency.OfCode(quote.CurrencyCode),
-            quoteItems);
+		// Building Order data
+		var quoteItems = quote.Items!.Select(qi =>
+			new ProductItemData()
+			{
+				ProductId = ProductId.Of(qi.ProductId!.Value),
+				Quantity = qi.Quantity!.Value,
+				ProductName = qi.ProductName!,
+				UnitPrice = Money.Of(Convert.ToDecimal(qi.UnitPrice), quote.CurrencyCode!)
+			}).ToList();
 
-        // Processing order
-        var order = await _orderWriteRepository
-            .FetchStreamAsync(command.OrderId.Value)
-            ?? throw new RecordNotFoundException($"Order {command.OrderId} not found.");
+		var orderData = new OrderData(
+			CustomerId.Of(quote.CustomerId!.Value),
+			quoteId,
+			Currency.OfCode(quote.CurrencyCode!),
+			quoteItems);
 
-        order.Process(orderData);
+		// Processing order
+		var order = await _orderWriteRepository
+			.FetchStreamAsync(command.OrderId.Value, cancellationToken: cancellationToken)
+			?? throw new RecordNotFoundException($"Order {command.OrderId} not found.");
 
-        // Keeping event for publishing
-        var orderProcessedEvent = order.GetUncommittedEvents()
-           .OfType<OrderProcessed>()
-           .FirstOrDefault();
+		order.Process(orderData);
 
-        // Persisting domain event
-        await _orderWriteRepository
-            .AppendEventsAsync(order);
+		// Keeping event for publishing
+		var orderProcessedEvent = order.GetUncommittedEvents()
+		   .OfType<OrderProcessed>()
+		   .FirstOrDefault();
 
-        // publishing event
-        await _eventPublisher
-            .PublishEventAsync(orderProcessedEvent!, cancellationToken);
-    }
+		// Persisting domain event
+		await _orderWriteRepository
+			.AppendEventsAsync(order, cancellationToken);
 
-    private async Task<QuoteViewModelResponse> GetQuoteAsync(ProcessOrder command)
-    {
-        var apiRoute = _configuration["ApiRoutes:QuoteManagement"];
-        var response = await _integrationHttpService.GetAsync<QuoteViewModelResponse>(
-            $"{apiRoute}/{command.QuoteId.Value}/details")
-            ?? throw new ApplicationLogicException(
-                $"An error occurred retrieving quote for customer {command.CustomerId.Value}.");
+		// publishing event
+		await _eventPublisher
+			.PublishEventAsync(orderProcessedEvent!, cancellationToken);
+	}
 
-        if (!response.Success)
-            throw new ApplicationLogicException(response?.Message ?? string.Empty);
+	private async Task<QuoteViewModel> GetQuoteAsync(ProcessOrder command, CancellationToken cancellationToken)
+	{
+		var quoteRequestBuilder = _apiGatewayClient.Api.Quotes[command.QuoteId.Value];
+		var response = await quoteRequestBuilder
+			.Details.GetAsync(cancellationToken: cancellationToken);
 
-        var responseData = response.Data!;
-        return responseData;
-    }
+		if (response?.Data is null)
+			throw new ApplicationLogicException(response?.Message ?? string.Empty);
+
+		return response.Data;
+	}
 }

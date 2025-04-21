@@ -1,63 +1,66 @@
-﻿namespace EcommerceDDD.ShipmentProcessing.Infrastructure.InventoryHandling;
+﻿using EcommerceDDD.ServiceClients.ApiGateway.Models;
 
-public class ProductInventoryHandler : IProductInventoryHandler
+namespace EcommerceDDD.ShipmentProcessing.Infrastructure.InventoryHandling;
+
+public class ProductInventoryHandler(ApiGatewayClient apiGatewayClient) : IProductInventoryHandler
 {
-    private readonly IIntegrationHttpService _integrationHttpService;
-    private readonly IConfiguration _configuration;
+	private readonly ApiGatewayClient _apiGatewayClient = apiGatewayClient;
 
-    public ProductInventoryHandler(
-        IIntegrationHttpService integrationHttpService,
-        IConfiguration configuration)
-    {
-        _integrationHttpService = integrationHttpService;
-        _configuration = configuration;
-    }
+	public async Task DecreaseQuantityInStockAsync(IReadOnlyList<ProductItem> productItems, CancellationToken cancellationToken)
+	{
+		var tasks = productItems.Select(async productItem =>
+		{
+			var request = new DecreaseQuantityInStockRequest
+			{
+				DecreasedQuantity = productItem.Quantity
+			};
 
-    public async Task DecreaseQuantityInStockAsync(IReadOnlyList<ProductItem> productItems)
-    {
-        var apiRoute = _configuration["ApiRoutes:InventoryManagement"];
-        foreach (var productItem in productItems)
-        {
-            var response = await _integrationHttpService
-                .PutAsync($"{apiRoute}/decrease-stock-quantity/{productItem.ProductId.Value}",
-                    new DecreaseQuantityInStockRequest(
-                        productItem.Quantity));
+			try
+			{
+				var inventoryRequestBuilder = _apiGatewayClient.Api.Inventory;
+				await inventoryRequestBuilder
+					.DecreaseStockQuantity[productItem.ProductId.Value]
+					.PutAsync(request, cancellationToken: cancellationToken);
+			}
+			catch (Microsoft.Kiota.Abstractions.ApiException ex)
+			{
+				throw new ApplicationLogicException(
+					$"An error occurred decreasing stock quantity for product {productItem.ProductId.Value}.");
+			}
+		});
 
-            if (response?.Success == false)
-                throw new ApplicationLogicException(
-                    $"An error occurred decreasing stock quantity for product {productItem.ProductId.Value}.");
-        }
+		await Task.WhenAll(tasks);
 	}
 
-    public async Task<bool> CheckProductsInStockAsync(IReadOnlyList<ProductItem> productItems)
-    {
-        var productIdFilter = productItems
-            .Select(pid => pid.ProductId.Value).ToArray();
+	public async Task<bool> CheckProductsInStockAsync(IReadOnlyList<ProductItem> productItems, CancellationToken cancellationToken)
+	{
+		var productIdFilter = productItems
+			.Select(p => new Guid?(p.ProductId.Value))
+			.ToList();
 
-        var apiRoute = _configuration["ApiRoutes:InventoryManagement"];
-        var response = await _integrationHttpService
-            .FilterAsync<List<ProductInStockViewModel>>(
-                $"{apiRoute}/check-stock-quantity",
-                new CheckProductsInStockRequest(productIdFilter));
+		var request = new CheckProductsInStockRequest()
+		{
+			ProductIds = productIdFilter
+		};
 
-        if (response?.Success == false)
-            throw new ApplicationLogicException("An error occurred checking products stock availability.");
-        var inventoryResponseData = response.Data
-            ?? throw new RecordNotFoundException("No data was provided for the filtered products.");
+		var inventoryRequestBuilder = _apiGatewayClient.Api.Inventory;
+		var response = await inventoryRequestBuilder
+			.CheckStockQuantity.PostAsync(request, cancellationToken: cancellationToken);
 
-        foreach (var productItem in productItems)
-        {
-            var productInStock = inventoryResponseData
-                .Single(p => p.ProductId == productItem.ProductId.Value);
+		if (response?.Success != true)
+			throw new ApplicationLogicException("An error occurred checking products stock availability.");
+		var inventoryData = response.Data
+			?? throw new RecordNotFoundException("No data was provided for the filtered products.");
 
-            if (productItem.Quantity > productInStock.QuantityInStock)
-                return false;
-        }
+		// Check if any product's requested quantity exceeds what's in stock
+		var hasOutOfStockItem = productItems.Any(item =>
+		{
+			var stock = inventoryData.SingleOrDefault(p => p.ProductId == item.ProductId.Value)
+				?? throw new RecordNotFoundException($"Product {item.ProductId.Value} not found in stock data.");
 
-        return true;
-    }
+			return item.Quantity > stock.QuantityInStock;
+		});
+
+		return !hasOutOfStockItem;
+	}
 }
-
-public record class ProductInStockViewModel(Guid ProductId, int QuantityInStock);
-public record class CheckProductsInStockRequest(Guid[] ProductIds);
-public record class DecreaseQuantityInStockRequest(int DecreasedQuantity);

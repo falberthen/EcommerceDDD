@@ -2,21 +2,17 @@
 
 public static class DataSeedExtension
 {
-    private static IIntegrationHttpService _integrationHttpService;
-
-    /// <summary>
-    /// Data dump from https://fakestoreapi.com/
-    /// </summary>
-    /// <param name="modelBuilder"></param>
-    public static async Task<IApplicationBuilder> SeedProductCatalogAsync(this IApplicationBuilder app)
+	/// <summary>
+	/// Data dump from https://fakestoreapi.com/
+	/// </summary>
+	/// <param name="app"></param>
+	public static async Task<IApplicationBuilder> SeedProductCatalogAsync(this IApplicationBuilder app)
     {
         using var serviceScope = app.ApplicationServices
             .GetService<IServiceScopeFactory>()!
             .CreateScope() ??
             throw new NullReferenceException("Can't create scope factory.");
 
-        _integrationHttpService = serviceScope.ServiceProvider
-                .GetRequiredService<IIntegrationHttpService>();
         var dbContext = serviceScope.ServiceProvider
             .GetRequiredService<ProductsDbContext>();
 

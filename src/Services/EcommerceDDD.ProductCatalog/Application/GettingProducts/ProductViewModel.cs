@@ -6,7 +6,7 @@ public record class ProductViewModel(
     string Category,
     string Description,
     string ImageUrl,
-    string Price, 
+    decimal Price, 
     string CurrencySymbol,
     int QuantityInStock,
 	int QuantityAddedToCart = 0);

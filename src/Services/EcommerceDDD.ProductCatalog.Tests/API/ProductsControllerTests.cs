@@ -17,14 +17,15 @@ public class ProductsControllerTests
 		var expectedData = new List<ProductViewModel>
 		{
 			new ProductViewModel(
-				productId,
-				"Product",
-				"Category",
-				"Description",
-				"ImageUrl",
-				"10",
-				Currency.USDollar.Symbol,
-				100)
+				Guid.NewGuid(),
+				_productName,
+				string.Empty,
+				string.Empty,
+				string.Empty,
+				_productPrice,
+				_currency.Symbol.ToString(),
+				100,
+				_productQuantity)			
 		};
 
 		_queryBus.SendAsync(Arg.Any<GetProducts>(), CancellationToken.None)
@@ -52,16 +53,17 @@ public class ProductsControllerTests
         var productId = Guid.NewGuid();
         var expectedData = new List<ProductViewModel>
         {
-            new ProductViewModel(
-                productId,
-                "Product",
-                "Category",
-                "Description",
-                "ImageUrl",
-                "10",
-                Currency.USDollar.Symbol,
-                100)
-        };
+			new ProductViewModel(
+				Guid.NewGuid(),
+				_productName,
+				string.Empty,
+				string.Empty,
+				string.Empty,
+				_productPrice,
+				_currency.Symbol.ToString(),
+				100,
+				_productQuantity)
+		};
 
         _queryBus.SendAsync(Arg.Any<GetProducts>(), CancellationToken.None)
             .Returns(expectedData);
@@ -81,7 +83,11 @@ public class ProductsControllerTests
 		Assert.IsAssignableFrom<IList<ProductViewModel>>(apiResponse.Data);
 	}
 
-    private ICommandBus _commandBus = Substitute.For<ICommandBus>();
+	private const int _productQuantity = 1;
+	private const string _productName = "Product XYZ";
+	private decimal _productPrice = 100;
+	private Currency _currency = Currency.OfCode(Currency.USDollar.Code);
+	private ICommandBus _commandBus = Substitute.For<ICommandBus>();
     private IQueryBus _queryBus = Substitute.For<IQueryBus>();
     private ProductsController _productsController;
 }

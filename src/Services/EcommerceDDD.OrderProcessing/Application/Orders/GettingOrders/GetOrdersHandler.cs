@@ -1,15 +1,15 @@
-﻿namespace EcommerceDDD.OrderProcessing.Application.Orders.GettingOrders;
+﻿using EcommerceDDD.ServiceClients.ApiGateway.Models;
+
+namespace EcommerceDDD.OrderProcessing.Application.Orders.GettingOrders;
 
 public class GetOrdersHandler(
+	ApiGatewayClient apiGatewayClient,
 	IQuerySession querySession,
-	IUserInfoRequester userInfoRequester,
-	IIntegrationHttpService integrationHttpService,
-	IConfiguration configuration
+	IUserInfoRequester userInfoRequester
 ) : IQueryHandler<GetOrders, IList<OrderViewModel>>
 {
-	private readonly IQuerySession _querySession = querySession;
-	private readonly IIntegrationHttpService _integrationHttpService = integrationHttpService;
-	private readonly IConfiguration _configuration = configuration;
+	private readonly ApiGatewayClient _apiGatewayClient = apiGatewayClient;
+	private readonly IQuerySession _querySession = querySession;	
 	private readonly IUserInfoRequester _userInfoRequester = userInfoRequester
 		?? throw new ArgumentNullException(nameof(userInfoRequester));
 
@@ -25,13 +25,15 @@ public class GetOrdersHandler(
 			return Array.Empty<OrderViewModel>();
 
 		var viewModels = await Task.WhenAll(
-			orders.Select(BuildOrderViewModel)
+				orders.Select(orderDetails => 
+					BuildOrderViewModel(orderDetails, cancellationToken)
+			)
 		);
 
 		return viewModels.ToList();
 	}
 
-	private async Task<OrderViewModel> BuildOrderViewModel(OrderDetails order)
+	private async Task<OrderViewModel> BuildOrderViewModel(OrderDetails order, CancellationToken cancellationToken)
 	{
 		List<OrderLineViewModel> orderLines;
 		string currencySymbol;
@@ -39,19 +41,23 @@ public class GetOrdersHandler(
 		if (order.OrderStatus == OrderStatus.Placed) // order was just placed
 		{
 			// retrieving quote details
-			var quote = await GetQuoteAsync(order);
-			orderLines = quote.Items.Select(item => 
+			var quote = await GetQuoteAsync(order, cancellationToken);
+
+			if (!quote.Items!.Any())
+				throw new RecordNotFoundException($"No quote items found for customer.");
+
+			orderLines = quote.Items!.Select(item => 
 				new OrderLineViewModel
 				{
-					ProductId = item.ProductId,
+					ProductId = item.ProductId!.Value,
 					ProductName = item.ProductName,
-					UnitPrice = item.UnitPrice,
-					Quantity = item.Quantity
+					UnitPrice = Convert.ToDecimal(item.UnitPrice),
+					Quantity = item.Quantity!.Value
 				}).ToList();
 
 			currencySymbol = Currency
-				.OfCode(quote.CurrencyCode).Symbol;
-			order.TotalPrice = quote.TotalPrice;
+				.OfCode(quote.CurrencyCode!).Symbol;
+			order.TotalPrice = Convert.ToDecimal(quote.TotalPrice);
 		}
 		else // Order has been processed and contains confirmed items
 		{
@@ -80,16 +86,15 @@ public class GetOrdersHandler(
 		};
 	}
 
-	private async Task<QuoteViewModelResponse> GetQuoteAsync(OrderDetails order)
+	private async Task<QuoteViewModel> GetQuoteAsync(OrderDetails orderDetails, CancellationToken cancellationToken)
 	{
-		var apiRoute = _configuration["ApiRoutes:QuoteManagement"];
-		var quoteResponse = await _integrationHttpService.GetAsync<QuoteViewModelResponse>(
-			$"{apiRoute}/{order.QuoteId}/details");
+		var quoteRequestBuilder = _apiGatewayClient.Api.Quotes[orderDetails.QuoteId];
+		var response = await quoteRequestBuilder.Details
+			.GetAsync(cancellationToken: cancellationToken);
 
-		if (quoteResponse == null || !quoteResponse.Success)
-			throw new ApplicationLogicException(quoteResponse?.Message
-				?? $"Failed to retrieve quote for customer {order.CustomerId}.");
+		if (response?.Data is null)
+			throw new ApplicationLogicException(response?.Message ?? string.Empty);
 
-		return quoteResponse.Data!;
+		return response.Data;
 	}
 }
