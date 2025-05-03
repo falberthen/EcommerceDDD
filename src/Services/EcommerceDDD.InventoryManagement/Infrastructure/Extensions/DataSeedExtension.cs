@@ -70,7 +70,7 @@ public static class DataSeedExtension
 			}
 			catch (Microsoft.Kiota.Abstractions.ApiException ex)
 			{
-				throw new HttpRequestException("Products API not available.");
+				throw new HttpRequestException("Products API not available.", ex);
 			}
 		});
 
