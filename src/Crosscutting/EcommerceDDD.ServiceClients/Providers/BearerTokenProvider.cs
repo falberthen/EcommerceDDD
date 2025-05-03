@@ -1,15 +1,8 @@
 ﻿using Duende.IdentityModel.Client;
-using EcommerceDDD.Core.Infrastructure.Identity;
-using Microsoft.Kiota.Abstractions.Authentication;
 
-public class BearerTokenProvider : IAccessTokenProvider
+public class BearerTokenProvider(ITokenRequester tokenRequester) : IAccessTokenProvider
 {
-	private readonly ITokenRequester _tokenRequester;
-
-	public BearerTokenProvider(ITokenRequester tokenRequester)
-	{
-		_tokenRequester = tokenRequester;
-	}
+	private readonly ITokenRequester _tokenRequester = tokenRequester;
 
 	public AllowedHostsValidator AllowedHostsValidator { get; }
 
@@ -18,5 +11,5 @@ public class BearerTokenProvider : IAccessTokenProvider
 		TokenResponse? tokenResponse = await _tokenRequester
 		   .GetApplicationTokenAsync();
 		return tokenResponse?.AccessToken ?? string.Empty;
-	}	
+	}
 }
