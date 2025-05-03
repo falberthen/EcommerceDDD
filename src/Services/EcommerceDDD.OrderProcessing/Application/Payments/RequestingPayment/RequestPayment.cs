@@ -36,5 +36,4 @@ public record class RequestPayment: ICommand
         TotalPrice = totalPrice;
         Currency = currency;
     }
-
 }

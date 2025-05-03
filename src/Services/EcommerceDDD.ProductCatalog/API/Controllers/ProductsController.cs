@@ -9,7 +9,7 @@ public class ProductsController(
 ) : CustomControllerBase(commandBus, queryBus)
 {
     [HttpPost]
-	[Authorize(Policy = Policies.CanRead)]
+	[Authorize(Roles = Roles.Customer + "," + Roles.M2MAccess, Policy = Policies.CanRead)]
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<ProductViewModel?>>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ListProducts([FromBody] GetProductsRequest request,

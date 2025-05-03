@@ -13,7 +13,7 @@ public class TokenRequester(
 	private readonly IMemoryCache _cache = cache;
 	private readonly IHttpContextAccessor _contextAccessor = httpContextAccessor;
 
-	private const string _applicationKey = "ApplicationToken";
+	private const string _applicationKey = "application_token";
 	private const string _userAccessTokenKey = "access_token";
 
 	// Caching application token

@@ -81,6 +81,8 @@ public class IdentityConfiguration
 				ClientId = "ecommerceddd.application_client",
 				AllowedGrantTypes = GrantTypes.ClientCredentials,
 				RequireClientSecret = true,
+				AlwaysSendClientClaims = true,
+				ClientClaimsPrefix = string.Empty,
 				ClientSecrets = new List<Secret>
 				{
 					new Secret("secret33587^&%&^%&^f3%%%".Sha256())
@@ -92,7 +94,11 @@ public class IdentityConfiguration
 					_writeScope,
 					_deleteScope
 				},
-				AccessTokenLifetime = 86400
+				AccessTokenLifetime = 86400,
+				Claims = new List<ClientClaim>
+				{
+					new ClientClaim(JwtClaimTypes.Role, Roles.M2MAccess)
+				}
 			}
 		};
 }

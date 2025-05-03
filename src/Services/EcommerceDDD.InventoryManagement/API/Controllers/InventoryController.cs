@@ -14,45 +14,13 @@ public class InventoryController(
 	/// <param name="request"></param>
 	/// <returns></returns>
 	[HttpPost("check-stock-quantity")]
-	[Authorize(Policy = Policies.CanRead)]
+	[Authorize(Roles = Roles.M2MAccess)]
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<InventoryStockUnitViewModel>>))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<IActionResult> CheckStockQuantity([FromBody] CheckProductsInStockRequest request,
 		CancellationToken cancellationToken) =>
 		await Response(CheckProductsInStock.Create(
 			ProductId.Of(request.ProductIds).ToList()),
-			cancellationToken
-		);
-
-	/// <summary>
-	/// Decreases the quantity of a given stock unit | M2M only
-	/// </summary>
-	/// <param name="request"></param>
-	/// <returns></returns>
-	[HttpPut("decrease-stock-quantity/{productId}")]
-	[Authorize(Policy = Policies.M2MAccess)]
-	[ProducesResponseType(StatusCodes.Status200OK)]
-	[ProducesResponseType(StatusCodes.Status400BadRequest)]
-	public async Task<IActionResult> DecreaseQuantity([FromRoute] Guid productId,
-		[FromBody] DecreaseQuantityInStockRequest request, CancellationToken cancellationToken) =>
-		await Response(DecreaseStockQuantity.Create(
-			ProductId.Of(productId), request.DecreasedQuantity),
-			cancellationToken
-		);
-
-	/// <summary>
-	/// Increases the quantity of a given stock unit
-	/// </summary>
-	/// <param name="request"></param>
-	/// <returns></returns>
-	[HttpPut("increase-stock-quantity/{productId}")]
-	[Authorize(Roles = Roles.Customer, Policy = Policies.CanWrite)]
-	[ProducesResponseType(StatusCodes.Status200OK)]
-	[ProducesResponseType(StatusCodes.Status400BadRequest)]
-	public async Task<IActionResult> IncreaseQuantity([FromRoute] Guid productId,
-		[FromBody] IncreaseQuantityInStockRequest request, CancellationToken cancellationToken) =>
-		await Response(IncreaseStockQuantity.Create(
-			ProductId.Of(productId), request.IncreasedQuantity),
 			cancellationToken
 		);
 
@@ -65,11 +33,27 @@ public class InventoryController(
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanRead)]
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<InventoryStockUnitEventHistory>>))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
-	public async Task<IActionResult> ListHistory([FromRoute] Guid productId,
-		CancellationToken cancellationToken) =>
+	public async Task<IActionResult> ListHistory([FromRoute] Guid productId, CancellationToken cancellationToken) =>
 		await Response(
 			GetInventoryStockUnitEventHistory
 				.Create(ProductId.Of(productId)),
+			cancellationToken
+		);
+
+	/// <summary>
+	/// Decreases the quantity of a given stock unit | M2M only
+	/// </summary>
+	/// <param name="productId"></param>
+	/// <param name="request"></param>
+	/// <returns></returns>
+	[HttpPut("{productId:guid}/decrease-stock-quantity")]
+	[Authorize(Roles = Roles.M2MAccess, Policy = Policies.CanWrite)]
+	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status400BadRequest)]
+	public async Task<IActionResult> DecreaseQuantity([FromRoute] Guid productId,
+		[FromBody] DecreaseQuantityInStockRequest request, CancellationToken cancellationToken) =>
+		await Response(DecreaseStockQuantity.Create(
+			ProductId.Of(productId), request.DecreasedQuantity),
 			cancellationToken
 		);
 }

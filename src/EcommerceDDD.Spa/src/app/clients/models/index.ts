@@ -723,7 +723,7 @@ export function deserializeIntoProductViewModel(productViewModel: Partial<Produc
         "description": n => { productViewModel.description = n.getStringValue(); },
         "imageUrl": n => { productViewModel.imageUrl = n.getStringValue(); },
         "name": n => { productViewModel.name = n.getStringValue(); },
-        "price": n => { productViewModel.price = n.getStringValue(); },
+        "price": n => { productViewModel.price = n.getNumberValue(); },
         "productId": n => { productViewModel.productId = n.getGuidValue(); },
         "quantityAddedToCart": n => { productViewModel.quantityAddedToCart = n.getNumberValue(); },
         "quantityInStock": n => { productViewModel.quantityInStock = n.getNumberValue(); },
@@ -1152,7 +1152,7 @@ export interface ProductViewModel extends Parsable {
     /**
      * The price property
      */
-    price?: string | null;
+    price?: number | null;
     /**
      * The productId property
      */
@@ -1611,7 +1611,7 @@ export function serializeProductViewModel(writer: SerializationWriter, productVi
         writer.writeStringValue("description", productViewModel.description);
         writer.writeStringValue("imageUrl", productViewModel.imageUrl);
         writer.writeStringValue("name", productViewModel.name);
-        writer.writeStringValue("price", productViewModel.price);
+        writer.writeNumberValue("price", productViewModel.price);
         writer.writeGuidValue("productId", productViewModel.productId);
         writer.writeNumberValue("quantityAddedToCart", productViewModel.quantityAddedToCart);
         writer.writeNumberValue("quantityInStock", productViewModel.quantityInStock);

@@ -29,26 +29,6 @@ public class InventoryControllerTests
     }
 
     [Fact]
-    public async Task IncreaseQuantity_WithIncreasedQuantity_ShouldIncreaseQuantity()
-    {
-        // Given
-        Guid productId = Guid.NewGuid();
-        var request = new IncreaseQuantityInStockRequest()
-        {
-            IncreasedQuantity = 3
-        };
-
-        await _commandBus.SendAsync(Arg.Any<IncreaseStockQuantity>(), CancellationToken.None);
-
-        // When
-        var response = await _inventoryController
-            .IncreaseQuantity(productId, request, CancellationToken.None);
-
-        // Then
-		Assert.IsType<OkObjectResult>(response);
-	}
-
-    [Fact]
     public async Task CheckStockQuantity_WithProductIds_ShouldReturnListOfInventoryStockUnitViewModel()
     {
         // Given        

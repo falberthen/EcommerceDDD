@@ -1,4 +1,5 @@
 ﻿using EcommerceDDD.ServiceClients.ApiGateway.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace EcommerceDDD.QuoteManagement.Infrastructure.ProductMapping;
 
@@ -25,13 +26,22 @@ public class ProductMapper(ApiGatewayClient apiGatewayClient) : IProductMapper
 			CurrencyCode = currency.Code,
 			ProductIds = productIdValues
 		};
-		var response = await apiGatewayClient.Api.Products
-			.PostAsync(request, cancellationToken: cancellationToken);
 
-		if (response?.Success == false || response?.Data is null)
-			throw new HttpRequestException("An error occurred while retrieving products.");
+		try
+		{
+			var response = await apiGatewayClient.Api.Products
+				.PostAsync(request, cancellationToken: cancellationToken);
 
-		var productViewModel = response?.Data!;
-		return productViewModel;
+			if (response?.Success == false || response?.Data is null)
+				throw new HttpRequestException("An error occurred while retrieving products.");
+
+			var productViewModel = response?.Data!;
+			return productViewModel;
+		}
+		catch (Microsoft.Kiota.Abstractions.ApiException ex)
+		{
+			throw new ApplicationLogicException(
+				$"An error occurred requesting products from catalog.", ex);
+		}		
 	}
 }

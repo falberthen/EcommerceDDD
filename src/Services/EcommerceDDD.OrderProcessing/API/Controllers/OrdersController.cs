@@ -1,5 +1,6 @@
 namespace EcommerceDDD.OrderProcessing.API.Controllers;
 
+[Authorize(Roles = Roles.Customer)]
 [Route("api/orders")]
 [ApiController]
 public class OrdersController(
@@ -12,7 +13,7 @@ public class OrdersController(
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-	[Authorize(Roles = Roles.Customer, Policy = Policies.CanRead)]
+	[Authorize(Policy = Policies.CanRead)]
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<OrderViewModel>>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ListCustomerOrders(CancellationToken cancellationToken) => 
@@ -26,7 +27,7 @@ public class OrdersController(
     /// <param name="orderId"></param>
     /// <returns></returns>
     [HttpGet, Route("{orderId:guid}/history")]
-	[Authorize(Roles = Roles.Customer, Policy = Policies.CanRead)]
+	[Authorize(Policy = Policies.CanRead)]
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<IEventHistory>>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ListHistory([FromRoute] Guid orderId, CancellationToken cancellationToken) =>  
@@ -35,14 +36,14 @@ public class OrdersController(
             cancellationToken
         );
 
-    /// <summary>
-    /// Places an order from a quote
-    /// </summary>
-    /// <param name="quoteId"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    [HttpPost, Route("quote/{quoteId:guid}")]
-	[Authorize(Roles = Roles.Customer, Policy = Policies.CanWrite)]
+	/// <summary>
+	/// Places an order from a quote
+	/// </summary>
+	/// <param name="quoteId"></param>
+	/// <param name="cancellationToken"></param>
+	/// <returns></returns>
+	[HttpPost, Route("quote/{quoteId:guid}")]
+	[Authorize(Policy = Policies.CanWrite)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> PlaceOrderFromQuote([FromRoute] Guid quoteId, CancellationToken cancellationToken) =>

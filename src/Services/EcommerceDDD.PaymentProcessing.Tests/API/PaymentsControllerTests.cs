@@ -15,16 +15,26 @@ public class PaymentsControllerTests
         // Given
         Guid customerId = Guid.NewGuid();
         Guid orderId = Guid.NewGuid();
+		Guid productId = Guid.NewGuid();
 
-        await _commandBus.SendAsync(Arg.Any<RequestPayment>(), CancellationToken.None);
+		await _commandBus.SendAsync(Arg.Any<RequestPayment>(), CancellationToken.None);
 
         var request = new PaymentRequest()
         {
             CurrencyCode = Currency.USDollar.Code,
             CustomerId = customerId,
             OrderId = orderId,
-            TotalAmount = 10m
-        };
+            TotalAmount = 10m,
+			ProductItems = new List<ProductItemRequest>
+			{
+				new ProductItemRequest(
+					productId,
+					"Product X",
+					10m,
+					1
+				)
+			}
+		};
 
         // When
         var response = await _paymentsController.RequestCreate(request, 

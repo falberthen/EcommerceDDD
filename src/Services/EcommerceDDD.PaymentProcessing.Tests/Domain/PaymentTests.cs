@@ -9,10 +9,16 @@ public class PaymentTests
         var customerId = CustomerId.Of(Guid.NewGuid());
         var orderId = OrderId.Of(Guid.NewGuid());
         var totalAmount = Money.Of(100, Currency.USDollar.Code);
-        var paymentData = new PaymentData(
+		var productItems = new List<ProductItem>() {
+			new ProductItem(ProductId.Of(Guid.NewGuid()), 5),
+			new ProductItem(ProductId.Of(Guid.NewGuid()), 1),
+			new ProductItem(ProductId.Of(Guid.NewGuid()), 1)
+		};
+		var paymentData = new PaymentData(
             customerId,
             orderId,
-            totalAmount);
+            totalAmount,
+			productItems);
 
         // When
         var payment = Payment.Create(paymentData);
@@ -32,10 +38,16 @@ public class PaymentTests
         var customerId = CustomerId.Of(Guid.NewGuid());
         var orderId = OrderId.Of(Guid.NewGuid());
         var totalAmount = Money.Of(100, Currency.USDollar.Code);
-        var paymentData = new PaymentData(
+		var productItems = new List<ProductItem>() {
+			new ProductItem(ProductId.Of(Guid.NewGuid()), 5),
+			new ProductItem(ProductId.Of(Guid.NewGuid()), 1),
+			new ProductItem(ProductId.Of(Guid.NewGuid()), 1)
+		};
+		var paymentData = new PaymentData(
             customerId,
             orderId,
-            totalAmount);
+            totalAmount,
+			productItems);
 
         var payment = Payment.Create(paymentData);
 

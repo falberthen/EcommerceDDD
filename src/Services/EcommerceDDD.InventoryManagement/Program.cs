@@ -18,7 +18,6 @@ services.AddApiGatewayClient(builder.Configuration);
 // Policies
 services.AddAuthorization(options =>
 {
-    options.AddPolicy(Policies.M2MAccess, AuthPolicyBuilder.M2MAccess);
     options.AddPolicy(Policies.CanRead, AuthPolicyBuilder.CanRead);
     options.AddPolicy(Policies.CanWrite, AuthPolicyBuilder.CanWrite);
 });

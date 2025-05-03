@@ -12,7 +12,6 @@ services.AddHealthChecks();
 services.AddApiGatewayClient(builder.Configuration);
 
 // Services
-services.AddTransient<IProductInventoryHandler, ProductInventoryHandler>();
 services.AddScoped<IEventStoreRepository<Shipment>, MartenRepository<Shipment>>();
 
 // Outbox with Debezium
@@ -25,7 +24,6 @@ services.AddMarten(builder.Configuration, options =>
 // Policies
 services.AddAuthorization(options =>
 {
-    options.AddPolicy(Policies.M2MAccess, AuthPolicyBuilder.M2MAccess);
     options.AddPolicy(Policies.CanRead, AuthPolicyBuilder.CanRead);
     options.AddPolicy(Policies.CanWrite, AuthPolicyBuilder.CanWrite);
 });

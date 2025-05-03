@@ -6,7 +6,8 @@ public class Payment : AggregateRoot<PaymentId>
 {
     public CustomerId CustomerId { get; private set; }
     public OrderId OrderId { get; private set; }
-    public PaymentStatus Status { get; private set; }
+	public IReadOnlyList<ProductItem> ProductItems { get; set; } = default!;
+	public PaymentStatus Status { get; private set; }
     public DateTime? CreatedAt { get; private set; }
     public DateTime? CompletedAt { get; private set; }
     public DateTime? CanceledAt { get; private set; }
@@ -14,7 +15,7 @@ public class Payment : AggregateRoot<PaymentId>
 
     public static Payment Create(PaymentData paymentData)
     {
-        var (CustomerId, OrderId, TotalAmount) = paymentData
+        var (CustomerId, OrderId, TotalAmount, ProductItems) = paymentData
             ?? throw new ArgumentNullException(nameof(paymentData));
 
         if (CustomerId is null)
@@ -26,7 +27,10 @@ public class Payment : AggregateRoot<PaymentId>
         if (TotalAmount is null)
             throw new BusinessRuleException("The total amount is required.");
 
-        return new Payment(paymentData);
+		if (ProductItems is null || paymentData.ProductItems.Count == 0)
+			throw new BusinessRuleException("There are no products to pay.");
+
+		return new Payment(paymentData);
     }
 
     public void Complete()
@@ -59,7 +63,11 @@ public class Payment : AggregateRoot<PaymentId>
         Id = PaymentId.Of(@event.PaymentId);
         CustomerId = CustomerId.Of(@event.CustomerId);
         OrderId = OrderId.Of(@event.OrderId);
-        TotalAmount = Money.Of(
+		ProductItems = @event.ProductItems.Select(p =>
+			new ProductItem(
+				ProductId.Of(p.ProductId),
+				p.Quantity)).ToList();
+		TotalAmount = Money.Of(
             @event.TotalAmount,
             @event.CurrencyCode);
         CreatedAt = @event.Timestamp;
@@ -84,7 +92,8 @@ public class Payment : AggregateRoot<PaymentId>
             paymentData.CustomerId.Value,
             paymentData.OrderId.Value,
             paymentData.TotalAmount.Amount,
-            paymentData.TotalAmount.Currency.Code);
+            paymentData.TotalAmount.Currency.Code,
+			paymentData.ProductItems);
 
         AppendEvent(@event);
         Apply(@event);

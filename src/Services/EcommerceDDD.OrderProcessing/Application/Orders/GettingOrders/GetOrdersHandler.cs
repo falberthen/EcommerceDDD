@@ -88,13 +88,21 @@ public class GetOrdersHandler(
 
 	private async Task<QuoteViewModel> GetQuoteAsync(OrderDetails orderDetails, CancellationToken cancellationToken)
 	{
-		var quoteRequestBuilder = _apiGatewayClient.Api.Quotes[orderDetails.QuoteId];
-		var response = await quoteRequestBuilder.Details
-			.GetAsync(cancellationToken: cancellationToken);
+		try
+		{
+			var quoteRequestBuilder = _apiGatewayClient.Api.Quotes[orderDetails.QuoteId];
+			var response = await quoteRequestBuilder.Details
+				.GetAsync(cancellationToken: cancellationToken);
 
-		if (response?.Data is null)
-			throw new ApplicationLogicException(response?.Message ?? string.Empty);
+			if (response?.Data is null)
+				throw new ApplicationLogicException(response?.Message ?? string.Empty);
 
-		return response.Data;
+			return response.Data;
+		}
+		catch (Microsoft.Kiota.Abstractions.ApiException ex)
+		{
+			throw new ApplicationLogicException(
+				$"An error occurred when getting quote {orderDetails.QuoteId} for order {orderDetails.Id}.", ex);
+		}
 	}
 }

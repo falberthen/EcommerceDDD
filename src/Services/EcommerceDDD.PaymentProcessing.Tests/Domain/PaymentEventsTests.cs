@@ -14,7 +14,8 @@ public class PaymentEventsTests
         var paymentData = new PaymentData(
             customerId,
             orderId,
-            totalAmount);
+            totalAmount,
+			_productItems);
 
         // When
         var payment = Payment.Create(paymentData);
@@ -35,7 +36,8 @@ public class PaymentEventsTests
         var paymentData = new PaymentData(
             customerId,
             orderId,
-            totalAmount);
+            totalAmount,
+			_productItems);
         var payment = Payment.Create(paymentData);
 
         // When
@@ -46,4 +48,10 @@ public class PaymentEventsTests
         Assert.NotNull(@event);
 		Assert.IsType<PaymentCompleted>(@event);
     }
+
+	List<ProductItem> _productItems = new List<ProductItem>() {
+		new ProductItem(ProductId.Of(Guid.NewGuid()), 5),
+		new ProductItem(ProductId.Of(Guid.NewGuid()), 1),
+		new ProductItem(ProductId.Of(Guid.NewGuid()), 1)
+	};
 }
