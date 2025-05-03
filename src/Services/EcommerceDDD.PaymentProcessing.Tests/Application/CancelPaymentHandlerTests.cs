@@ -10,7 +10,12 @@ public class CancelPaymentHandlerTests
         var customerId = CustomerId.Of(Guid.NewGuid());
         var currency = Currency.OfCode(Currency.USDollar.Code);
         var totalAmount = Money.Of(100, currency.Code);
-        var payment = Payment.Create(new PaymentData(customerId, orderId, totalAmount));
+		var productItems = new List<ProductItem>() {
+			new ProductItem(ProductId.Of(Guid.NewGuid()), 5),
+			new ProductItem(ProductId.Of(Guid.NewGuid()), 1),
+			new ProductItem(ProductId.Of(Guid.NewGuid()), 1)
+		};
+		var payment = Payment.Create(new PaymentData(customerId, orderId, totalAmount, productItems));
 
         var paymentWriteRepository = new DummyEventStoreRepository<Payment>();
         await paymentWriteRepository.AppendEventsAsync(payment);

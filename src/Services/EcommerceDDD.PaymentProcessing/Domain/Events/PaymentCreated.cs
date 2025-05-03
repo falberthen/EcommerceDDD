@@ -7,15 +7,17 @@ public record PaymentCreated : DomainEvent
     public Guid OrderId { get; private set; }
     public decimal TotalAmount { get; private set; }
     public string CurrencyCode { get; private set; }
+	public IReadOnlyList<ProductItemDetails> ProductItems { get; private set; }
 
-    public static PaymentCreated Create(
+	public static PaymentCreated Create(
         Guid paymentId,
         Guid customerId,
         Guid orderId,
         decimal totalAmount,
-        string currencyCode)
-    {        
-        if (paymentId == Guid.Empty)
+        string currencyCode,
+		IReadOnlyList<ProductItem> productItems)
+	{
+		if (paymentId == Guid.Empty)
             throw new ArgumentOutOfRangeException(nameof(paymentId));
         if (customerId == Guid.Empty)
             throw new ArgumentOutOfRangeException(nameof(customerId));
@@ -25,13 +27,18 @@ public record PaymentCreated : DomainEvent
             throw new ArgumentOutOfRangeException(nameof(totalAmount));
         if (string.IsNullOrEmpty(currencyCode))
             throw new ArgumentNullException(nameof(currencyCode));
- 
-        return new PaymentCreated(
+
+		var items = productItems.Select(ol => new ProductItemDetails(
+		   ol.ProductId.Value,
+		   ol.Quantity)).ToList();
+
+		return new PaymentCreated(
             paymentId,
             customerId,
             orderId, 
             totalAmount,
-            currencyCode);
+            currencyCode,
+			items);
     }
 
     private PaymentCreated(
@@ -39,12 +46,16 @@ public record PaymentCreated : DomainEvent
         Guid customerId,
         Guid orderId,
         decimal totalAmount,
-        string currencyCode)
-    {
-        PaymentId = paymentId;
+        string currencyCode,
+		IReadOnlyList<ProductItemDetails> productItems)
+	{
+		PaymentId = paymentId;
         CustomerId = customerId;
         OrderId = orderId;
         TotalAmount = totalAmount;
         CurrencyCode = currencyCode;
-    }
+		ProductItems = productItems;
+	}
 }
+
+public record ProductItemDetails(Guid ProductId, int Quantity);

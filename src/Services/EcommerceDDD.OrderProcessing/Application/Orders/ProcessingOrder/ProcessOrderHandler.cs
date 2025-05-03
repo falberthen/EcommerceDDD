@@ -61,13 +61,21 @@ public class ProcessOrderHandler(
 
 	private async Task<QuoteViewModel> GetQuoteAsync(ProcessOrder command, CancellationToken cancellationToken)
 	{
-		var quoteRequestBuilder = _apiGatewayClient.Api.Quotes[command.QuoteId.Value];
-		var response = await quoteRequestBuilder
-			.Details.GetAsync(cancellationToken: cancellationToken);
+		try
+		{
+			var quoteRequestBuilder = _apiGatewayClient.Api.Quotes[command.QuoteId.Value];
+			var response = await quoteRequestBuilder
+				.Details.GetAsync(cancellationToken: cancellationToken);
 
-		if (response?.Data is null)
-			throw new ApplicationLogicException(response?.Message ?? string.Empty);
+			if (response?.Data is null)
+				throw new ApplicationLogicException(response?.Message ?? string.Empty);
 
-		return response.Data;
+			return response.Data;
+		}
+		catch (Microsoft.Kiota.Abstractions.ApiException ex)
+		{
+			throw new ApplicationLogicException(
+				$"An error occurred processing order {command.OrderId}.", ex);
+		}		
 	}
 }

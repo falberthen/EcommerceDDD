@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.ShipmentProcessing.Application.ProcessingShipment.IntegrationEvents;
+﻿namespace EcommerceDDD.PaymentProcessing.Application.ProcessingPayment.IntegrationEvents;
 
 public class ProductWasOutOfStock : IntegrationEvent
 {

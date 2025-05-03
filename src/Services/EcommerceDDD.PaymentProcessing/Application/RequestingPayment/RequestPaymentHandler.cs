@@ -13,7 +13,8 @@ public class RequestPaymentHandler(
         var paymentData = new PaymentData(
             command.CustomerId, 
             command.OrderId, 
-            command.TotalAmount);
+            command.TotalAmount,
+			command.ProductItems);
  
         var payment = Payment.Create(paymentData);
 

@@ -1,4 +1,5 @@
-﻿using EcommerceDDD.ServiceClients.ApiGateway.Models;
+﻿using EcommerceDDD.OrderProcessing.Infrastructure.Projections;
+using EcommerceDDD.ServiceClients.ApiGateway.Models;
 
 namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
 
@@ -72,8 +73,16 @@ public class PlaceOrderHandler(
 
 	private async Task ConfirmQuoteAsync(Guid quoteId, CancellationToken cancellationToken)
 	{
-		var quoteRequestBuilder = _apiGatewayClient.Api.Quotes[quoteId];
-		await quoteRequestBuilder.Confirm
-			.PutAsync(cancellationToken: cancellationToken);
+		try
+		{
+			var quoteRequestBuilder = _apiGatewayClient.Api.Quotes[quoteId];
+			await quoteRequestBuilder.Confirm
+				.PutAsync(cancellationToken: cancellationToken);
+		}
+		catch (Microsoft.Kiota.Abstractions.ApiException ex)
+		{
+			throw new ApplicationLogicException(
+				$"An error occurred when confirming quote {quoteId}.", ex);
+		}
 	}
 }

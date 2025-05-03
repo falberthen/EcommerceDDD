@@ -30,15 +30,15 @@ public class RequestShipmentHandler(
 
 	public async Task RequestShipmentAsync(OrderId orderId, List<ProductItemRequest> productItemsRequest, CancellationToken cancellationToken)
 	{
-		// Requesting shippment	
-		var shipOrderRequest = new ShipOrderRequest()
-		{
-			OrderId = orderId.Value,
-			ProductItems = productItemsRequest
-		};
-
 		try
 		{
+			// Requesting shippment	
+			var shipOrderRequest = new ShipOrderRequest()
+			{
+				OrderId = orderId.Value,
+				ProductItems = productItemsRequest
+			};
+
 			var shipmentsRequestBuilder = _apiGatewayClient.Api.Shipments;
 			await shipmentsRequestBuilder
 				.PostAsync(shipOrderRequest, cancellationToken: cancellationToken);

@@ -10,10 +10,15 @@ public class RequestPaymentHandlerTests
         var customerId = CustomerId.Of(Guid.NewGuid());
         var currency = Currency.OfCode(Currency.USDollar.Code);
         var totalAmount = Money.Of(100, currency.Code);
+		var productItems = new List<ProductItem>() {
+			new ProductItem(ProductId.Of(Guid.NewGuid()), 5),
+			new ProductItem(ProductId.Of(Guid.NewGuid()), 1),
+			new ProductItem(ProductId.Of(Guid.NewGuid()), 1)
+		};
 
-        var paymentWriteRepository = new DummyEventStoreRepository<Payment>();
+		var paymentWriteRepository = new DummyEventStoreRepository<Payment>();
 
-        var requestPayment = RequestPayment.Create(customerId, orderId, totalAmount, currency);
+        var requestPayment = RequestPayment.Create(customerId, orderId, totalAmount, currency, productItems);
         var requestPaymentHandler = new RequestPaymentHandler(_commandBus, paymentWriteRepository);
 
         // When

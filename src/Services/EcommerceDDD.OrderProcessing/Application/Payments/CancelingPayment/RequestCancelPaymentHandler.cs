@@ -22,7 +22,7 @@ public class RequestCancelPaymentHandler(ApiGatewayClient apiGatewayClient) : IC
 		catch (Microsoft.Kiota.Abstractions.ApiException ex)
 		{
 			throw new ApplicationLogicException(
-				$"An error occurred requesting cancelling payment {command.PaymentId.Value}.");
+				$"An error occurred requesting cancelling payment {command.PaymentId.Value}.", ex);
 		}
 	}
 }

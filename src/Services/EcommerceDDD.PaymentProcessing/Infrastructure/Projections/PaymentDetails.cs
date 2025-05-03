@@ -12,18 +12,26 @@ public class PaymentDetails
     public DateTime? CanceledAt { get; set; }
     public decimal TotalAmount { get; set; }
     public string CurrencyCode { get; set; }
+	public IReadOnlyList<ProductItemDetails> ProductItems { get; set; } = default!;
 
-    internal void Apply(PaymentCreated requested)
+	internal void Apply(PaymentCreated @event)
     {
-        Id = requested.PaymentId;
-        CustomerId = requested.CustomerId;
-        OrderId = requested.OrderId;
-        TotalAmount = requested.TotalAmount;
-        CurrencyCode = requested.CurrencyCode;
+        Id = @event.PaymentId;
+        CustomerId = @event.CustomerId;
+        OrderId = @event.OrderId;
+        TotalAmount = @event.TotalAmount;
+        CurrencyCode = @event.CurrencyCode;
         Status = PaymentStatus.Pending;
-    }
 
-    internal void Apply(PaymentCompleted @event)
+		var productItems = @event.ProductItems.Select(c =>
+			new ProductItemDetails(
+				c.ProductId,
+				c.Quantity)
+			).ToList();
+		ProductItems = productItems;
+	}
+
+	internal void Apply(PaymentCompleted @event)
     {
         CompletedAt = @event.Timestamp;
         Status = PaymentStatus.Completed;

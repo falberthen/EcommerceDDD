@@ -3,4 +3,5 @@
 public record class PaymentData(
     CustomerId CustomerId,
     OrderId OrderId,
-    Money TotalAmount);
+    Money TotalAmount,
+	IReadOnlyList<ProductItem> ProductItems);

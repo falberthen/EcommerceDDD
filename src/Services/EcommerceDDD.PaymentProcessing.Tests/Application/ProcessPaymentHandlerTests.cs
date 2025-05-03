@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace EcommerceDDD.PaymentProcessing.Tests.Application;
 
 public class ProcessPaymentHandlerTests
@@ -10,18 +12,28 @@ public class ProcessPaymentHandlerTests
         var customerId = CustomerId.Of(Guid.NewGuid());
         var currency = Currency.OfCode(Currency.USDollar.Code);
         var totalAmount = Money.Of(100, currency.Code);
-        var payment = Payment.Create(new PaymentData(customerId, orderId, totalAmount));
+		var productItems = new List<ProductItem>() {
+			new ProductItem(ProductId.Of(Guid.NewGuid()), 5),
+			new ProductItem(ProductId.Of(Guid.NewGuid()), 1),
+			new ProductItem(ProductId.Of(Guid.NewGuid()), 1)
+		};
+		var payment = Payment.Create(new PaymentData(customerId, orderId, totalAmount, productItems));
 
         var paymentWriteRepository = new DummyEventStoreRepository<Payment>();
         await paymentWriteRepository.AppendEventsAsync(payment);
 
-        _customerCreditChecker.CheckIfCreditIsEnoughAsync(Arg.Any<CustomerId>(), Arg.Any<Money>(), CancellationToken.None)
+        _customerCreditChecker.
+			CheckIfCreditIsEnoughAsync(Arg.Any<CustomerId>(), Arg.Any<Money>(), CancellationToken.None)
            .Returns(Task.FromResult(true));
+		_productInventoryHandler
+			.CheckProductsInStockAsync(Arg.Any<IReadOnlyList<ProductItem>>(), CancellationToken.None)
+			.Returns(Task.FromResult(true));
 
-        // When
-        var processPayment = ProcessPayment.Create(payment.Id);
-        var processPaymentHandler = new ProcessPaymentHandler(_customerCreditChecker, paymentWriteRepository);
-        await processPaymentHandler.HandleAsync(processPayment, CancellationToken.None);
+		// When
+		var processPayment = ProcessPayment.Create(payment.Id);
+		var processPaymentHandler = new ProcessPaymentHandler(
+			_productInventoryHandler, _customerCreditChecker, paymentWriteRepository);
+		await processPaymentHandler.HandleAsync(processPayment, CancellationToken.None);
 
         // Then
         var completedPayment = paymentWriteRepository.AggregateStream.First().Aggregate;        
@@ -41,7 +53,12 @@ public class ProcessPaymentHandlerTests
         var customerId = CustomerId.Of(Guid.NewGuid());
         var currency = Currency.OfCode(Currency.USDollar.Code);
         var totalAmount = Money.Of(100, currency.Code);
-        var payment = Payment.Create(new PaymentData(customerId, orderId, totalAmount));
+		var productItems = new List<ProductItem>() {
+			new ProductItem(ProductId.Of(Guid.NewGuid()), 5),
+			new ProductItem(ProductId.Of(Guid.NewGuid()), 1),
+			new ProductItem(ProductId.Of(Guid.NewGuid()), 1)
+		};
+		var payment = Payment.Create(new PaymentData(customerId, orderId, totalAmount, productItems));
 
         var paymentWriteRepository = new DummyEventStoreRepository<Payment>();
         await paymentWriteRepository.AppendEventsAsync(payment);
@@ -49,9 +66,13 @@ public class ProcessPaymentHandlerTests
         _customerCreditChecker
             .CheckIfCreditIsEnoughAsync(Arg.Any<CustomerId>(), Arg.Any<Money>(), CancellationToken.None)
            .Returns(Task.FromResult(false));
+		_productInventoryHandler
+			.CheckProductsInStockAsync(Arg.Any<IReadOnlyList<ProductItem>>(), CancellationToken.None)
+			.Returns(Task.FromResult(true));
 
-        var processPayment = ProcessPayment.Create(payment.Id);
-        var processPaymentHandler = new ProcessPaymentHandler(_customerCreditChecker, paymentWriteRepository);
+		var processPayment = ProcessPayment.Create(payment.Id);
+        var processPaymentHandler = new ProcessPaymentHandler(
+			_productInventoryHandler, _customerCreditChecker, paymentWriteRepository);
 
         // When
         await processPaymentHandler.HandleAsync(processPayment, CancellationToken.None);
@@ -68,4 +89,5 @@ public class ProcessPaymentHandlerTests
 	}
 
     private ICustomerCreditChecker _customerCreditChecker = Substitute.For<ICustomerCreditChecker>();
+	private IProductInventoryHandler _productInventoryHandler = Substitute.For<IProductInventoryHandler>();
 }

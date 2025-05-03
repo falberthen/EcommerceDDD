@@ -10,10 +10,6 @@ public class RequestShipmentHandler(
 
 	public async Task HandleAsync(RequestShipment command, CancellationToken cancellationToken)
     {
-        var producIds = command.ProductItems
-            .Select(pid => pid.ProductId.Value)
-            .ToArray();
-
         var shipmentData = new ShipmentData(command.OrderId, command.ProductItems);
         var shipment = Shipment.Create(shipmentData);
 

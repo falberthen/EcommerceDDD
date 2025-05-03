@@ -15,9 +15,6 @@ public class ShipPackageHandlerTests
 
         var shipmentWriteRepository = new DummyEventStoreRepository<Shipment>();
 
-        _availabilityChecker.CheckProductsInStockAsync(Arg.Any<IReadOnlyList<ProductItem>>(), CancellationToken.None)
-            .Returns(Task.FromResult(true));
-
         var requestShipment = RequestShipment.Create(orderId, productItems);
         var requestShipmentHandler = new RequestShipmentHandler(_commandBus, shipmentWriteRepository);
         await requestShipmentHandler.HandleAsync(requestShipment, CancellationToken.None);
@@ -25,7 +22,7 @@ public class ShipPackageHandlerTests
         Assert.NotNull(shipment);
 
         var shipPackage = ProcessShipment.Create(shipment.Id);
-        var shipPackageHandler = new ProcessShipmentHandler(_availabilityChecker, shipmentWriteRepository);
+        var shipPackageHandler = new ProcessShipmentHandler(shipmentWriteRepository);
 
         // When
         await shipPackageHandler.HandleAsync(shipPackage, CancellationToken.None);
@@ -41,5 +38,4 @@ public class ShipPackageHandlerTests
 	}
 
 	private ICommandBus _commandBus = Substitute.For<ICommandBus>();    
-    private IProductInventoryHandler _availabilityChecker = Substitute.For<IProductInventoryHandler>();
 }

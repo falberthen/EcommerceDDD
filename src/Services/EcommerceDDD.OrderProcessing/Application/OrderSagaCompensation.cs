@@ -49,7 +49,7 @@ public class OrderSagaCompensation(
 	public async Task HandleAsync(ProductWasOutOfStock @integrationEvent,
 		CancellationToken cancellationToken)
 	{
-		// Product was out of stock when shipping 
+		// Product was out of stock when paying it
 		var command = CancelOrder.Create(
 			OrderId.Of(@integrationEvent.OrderId),
 			OrderCancellationReason.ProductWasOutOfStock);
