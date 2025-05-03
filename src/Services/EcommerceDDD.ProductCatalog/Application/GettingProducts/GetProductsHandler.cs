@@ -43,14 +43,14 @@ public class GetProductsHandler(
 				.Convert(product.UnitPrice.Amount, query.CurrencyCode);
 
 			productsViewModel.Add(new ProductViewModel(
-				product.Id.Value,
-				product.Name,
-				product.Category,
-				product.Description,
-				product.ImageUrl,
-				Math.Round(convertedPrice, 2),
-				currency.Symbol,
-				quantityInStock
+				ProductId: product.Id.Value,
+				Name: product.Name,
+				Category: product.Category,
+				Description: product.Description,
+				ImageUrl: product.ImageUrl,
+				Price: Math.Round(convertedPrice, 2),
+				CurrencySymbol: currency.Symbol,
+				QuantityInStock: quantityInStock
 			));
 		}
 

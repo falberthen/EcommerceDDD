@@ -13,7 +13,7 @@ public class QuotesController(
 	/// </summary>
 	/// <returns></returns>
 	[HttpGet]
-	[Authorize(Policy = Policies.CanRead)]
+	[Authorize(Roles = Roles.Customer, Policy = Policies.CanRead)]
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<QuoteViewModel?>))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<IActionResult> GetOpenQuote(CancellationToken cancellationToken) =>
@@ -107,12 +107,12 @@ public class QuotesController(
 		);
 
 	/// <summary>
-	/// Confirms a quote
+	/// Confirms a quote | M2M only
 	/// </summary>
 	/// <param name="quoteId"></param>
 	/// <returns></returns>
 	[HttpPut, Route("{quoteId:guid}/confirm")]
-	[Authorize(Policy = Policies.CanWrite)]
+	[Authorize(Roles = Roles.M2MAccess, Policy = Policies.CanWrite)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<IActionResult> Confirm([FromRoute] Guid quoteId,
@@ -128,7 +128,7 @@ public class QuotesController(
 	/// </summary>
 	/// <returns></returns>
 	[HttpGet, Route("{quoteId:guid?}/details")]
-	[Authorize(Policy = Policies.M2MAccess)]
+	[Authorize(Roles = Roles.M2MAccess, Policy = Policies.CanRead)]
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<QuoteViewModel?>))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<IActionResult> GetQuoteDetails([FromRoute] Guid quoteId,

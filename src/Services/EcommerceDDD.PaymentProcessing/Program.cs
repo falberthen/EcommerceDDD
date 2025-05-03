@@ -12,6 +12,7 @@ services.AddApiGatewayClient(builder.Configuration);
 
 // Services
 services.AddScoped<ICustomerCreditChecker, CustomerCreditChecker>();
+services.AddScoped<IProductInventoryHandler, ProductInventoryHandler>();
 services.AddScoped<IEventStoreRepository<Payment>, MartenRepository<Payment>>();
 
 // Outbox with Debezium
@@ -24,7 +25,6 @@ services.AddMarten(builder.Configuration, options =>
 // Policies
 services.AddAuthorization(options =>
 {
-    options.AddPolicy(Policies.M2MAccess, AuthPolicyBuilder.M2MAccess);
     options.AddPolicy(Policies.CanWrite, AuthPolicyBuilder.CanWrite);
     options.AddPolicy(Policies.CanDelete, AuthPolicyBuilder.CanDelete);
 });

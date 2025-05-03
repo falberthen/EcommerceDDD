@@ -78,7 +78,7 @@ public class CustomersController(
 	/// </summary>
 	/// <returns></returns>
 	[HttpGet, Route("{customerId:guid}/details")]
-	[Authorize(Policy = Policies.M2MAccess)]
+	[Authorize(Roles = Roles.M2MAccess)]
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<CustomerDetails>))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<IActionResult> GetDetailsByCustomerId([FromRoute] Guid customerId,
@@ -94,7 +94,7 @@ public class CustomersController(
 	/// <param name="customerId"></param>
 	/// <returns></returns>
 	[HttpGet, Route("{customerId:guid}/credit")]
-	[Authorize(Policy = Policies.M2MAccess)]
+	[Authorize(Roles = Roles.M2MAccess)]
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<CreditLimitModel>))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<IActionResult> GetCustomerCreditLimit([FromRoute] Guid customerId,

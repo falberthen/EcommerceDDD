@@ -2,7 +2,7 @@ namespace EcommerceDDD.PaymentProcessing.API.Controllers;
 
 [ApiController]
 [Route("api/payments")]
-[Authorize(Policy = Policies.M2MAccess)]
+[Authorize(Roles = Roles.M2MAccess)]
 public class PaymentsController(
 	ICommandBus commandBus,
 	IQueryBus queryBus
@@ -14,14 +14,19 @@ public class PaymentsController(
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> RequestCreate([FromBody] PaymentRequest request,
         CancellationToken cancellationToken) =>
-        await Response(
-            RequestPayment.Create(
-            CustomerId.Of(request.CustomerId),
-            OrderId.Of(request.OrderId),
-            Money.Of(request.TotalAmount, request.CurrencyCode),
-            Currency.OfCode(request.CurrencyCode)),
-            cancellationToken
-        );
+			await Response(
+				RequestPayment.Create(
+				CustomerId.Of(request.CustomerId),
+				OrderId.Of(request.OrderId),
+				Money.Of(request.TotalAmount, request.CurrencyCode),
+				Currency.OfCode(request.CurrencyCode),
+				request.ProductItems.Select(p =>
+					new ProductItem(
+						ProductId.Of(p.ProductId),
+						p.Quantity)
+					).ToList()),
+				cancellationToken
+			);
     
     [HttpDelete("{paymentId:guid}")]
     [Authorize(Policy = Policies.CanDelete)]
