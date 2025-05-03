@@ -24,6 +24,14 @@ namespace EcommerceDDD.ServiceClients.ApiGateway.Models
         public Guid? CustomerId { get; set; }
         /// <summary>The orderId property</summary>
         public Guid? OrderId { get; set; }
+        /// <summary>The productItems property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public List<global::EcommerceDDD.ServiceClients.ApiGateway.Models.ProductItemRequest>? ProductItems { get; set; }
+#nullable restore
+#else
+        public List<global::EcommerceDDD.ServiceClients.ApiGateway.Models.ProductItemRequest> ProductItems { get; set; }
+#endif
         /// <summary>The totalAmount property</summary>
         public double? TotalAmount { get; set; }
         /// <summary>
@@ -47,6 +55,7 @@ namespace EcommerceDDD.ServiceClients.ApiGateway.Models
                 { "currencyCode", n => { CurrencyCode = n.GetStringValue(); } },
                 { "customerId", n => { CustomerId = n.GetGuidValue(); } },
                 { "orderId", n => { OrderId = n.GetGuidValue(); } },
+                { "productItems", n => { ProductItems = n.GetCollectionOfObjectValues<global::EcommerceDDD.ServiceClients.ApiGateway.Models.ProductItemRequest>(global::EcommerceDDD.ServiceClients.ApiGateway.Models.ProductItemRequest.CreateFromDiscriminatorValue)?.AsList(); } },
                 { "totalAmount", n => { TotalAmount = n.GetDoubleValue(); } },
             };
         }
@@ -60,6 +69,7 @@ namespace EcommerceDDD.ServiceClients.ApiGateway.Models
             writer.WriteStringValue("currencyCode", CurrencyCode);
             writer.WriteGuidValue("customerId", CustomerId);
             writer.WriteGuidValue("orderId", OrderId);
+            writer.WriteCollectionOfObjectValues<global::EcommerceDDD.ServiceClients.ApiGateway.Models.ProductItemRequest>("productItems", ProductItems);
             writer.WriteDoubleValue("totalAmount", TotalAmount);
         }
     }
