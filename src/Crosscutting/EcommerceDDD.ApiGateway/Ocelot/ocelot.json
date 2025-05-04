@@ -22,7 +22,7 @@
       "DownstreamHttpMethod": null,
       "DownstreamHttpVersion": null,
       "DownstreamHttpVersionPolicy": null,
-      "DownstreamPathTemplate": "/api/accounts/login",
+      "DownstreamPathTemplate": "/api/v{version}/accounts/login",
       "DownstreamScheme": "http",
       "FileCacheOptions": {
         "TtlSeconds": null,
@@ -74,7 +74,7 @@
       "UpstreamHttpMethod": [
         "POST"
       ],
-      "UpstreamPathTemplate": "/api/accounts/login",
+      "UpstreamPathTemplate": "/api/v{version}/accounts/login",
       "UpstreamHeaderTemplates": {}
     },
     {
@@ -99,7 +99,7 @@
       "DownstreamHttpMethod": null,
       "DownstreamHttpVersion": null,
       "DownstreamHttpVersionPolicy": null,
-      "DownstreamPathTemplate": "/api/accounts/register",
+      "DownstreamPathTemplate": "/api/v{version}/accounts/register",
       "DownstreamScheme": "http",
       "FileCacheOptions": {
         "TtlSeconds": null,
@@ -151,7 +151,7 @@
       "UpstreamHttpMethod": [
         "POST"
       ],
-      "UpstreamPathTemplate": "/api/accounts/register",
+      "UpstreamPathTemplate": "/api/v{version}/accounts/register",
       "UpstreamHeaderTemplates": {}
     },
     {
@@ -176,7 +176,7 @@
       "DownstreamHttpMethod": null,
       "DownstreamHttpVersion": null,
       "DownstreamHttpVersionPolicy": null,
-      "DownstreamPathTemplate": "/api/customers",
+      "DownstreamPathTemplate": "/api/v{version}/customers",
       "DownstreamScheme": "http",
       "FileCacheOptions": {
         "TtlSeconds": null,
@@ -229,7 +229,7 @@
         "GET",
         "POST"
       ],
-      "UpstreamPathTemplate": "/api/customers",
+      "UpstreamPathTemplate": "/api/v{version}/customers",
       "UpstreamHeaderTemplates": {}
     },
     {
@@ -254,7 +254,7 @@
       "DownstreamHttpMethod": null,
       "DownstreamHttpVersion": null,
       "DownstreamHttpVersionPolicy": null,
-      "DownstreamPathTemplate": "/api/customers/{customerId}",
+      "DownstreamPathTemplate": "/api/v{version}/customers/{customerId}",
       "DownstreamScheme": "http",
       "FileCacheOptions": {
         "TtlSeconds": null,
@@ -307,7 +307,7 @@
         "GET",
         "PUT"
       ],
-      "UpstreamPathTemplate": "/api/customers/{customerId}",
+      "UpstreamPathTemplate": "/api/v{version}/customers/{customerId}",
       "UpstreamHeaderTemplates": {}
     },
     {
@@ -332,7 +332,7 @@
       "DownstreamHttpMethod": null,
       "DownstreamHttpVersion": null,
       "DownstreamHttpVersionPolicy": null,
-      "DownstreamPathTemplate": "/api/inventory",
+      "DownstreamPathTemplate": "/api/v{version}/inventory",
       "DownstreamScheme": "http",
       "FileCacheOptions": {
         "TtlSeconds": null,
@@ -385,7 +385,7 @@
         "GET",
         "POST"
       ],
-      "UpstreamPathTemplate": "/api/inventory",
+      "UpstreamPathTemplate": "/api/v{version}/inventory",
       "UpstreamHeaderTemplates": {}
     },
     {
@@ -410,7 +410,7 @@
       "DownstreamHttpMethod": null,
       "DownstreamHttpVersion": null,
       "DownstreamHttpVersionPolicy": null,
-      "DownstreamPathTemplate": "/api/inventory/{everything}",
+      "DownstreamPathTemplate": "/api/v{version}/inventory/{everything}",
       "DownstreamScheme": "http",
       "FileCacheOptions": {
         "TtlSeconds": null,
@@ -464,7 +464,7 @@
         "PUT",
         "POST"
       ],
-      "UpstreamPathTemplate": "/api/inventory/{everything}",
+      "UpstreamPathTemplate": "/api/v{version}/inventory/{everything}",
       "UpstreamHeaderTemplates": {}
     },
     {
@@ -489,7 +489,7 @@
       "DownstreamHttpMethod": null,
       "DownstreamHttpVersion": null,
       "DownstreamHttpVersionPolicy": null,
-      "DownstreamPathTemplate": "/api/orders/{everything}",
+      "DownstreamPathTemplate": "/api/v{version}/orders/{everything}",
       "DownstreamScheme": "http",
       "FileCacheOptions": {
         "TtlSeconds": null,
@@ -544,7 +544,7 @@
         "DELETE",
         "POST"
       ],
-      "UpstreamPathTemplate": "/api/orders/{everything}",
+      "UpstreamPathTemplate": "/api/v{version}/orders/{everything}",
       "UpstreamHeaderTemplates": {}
     },
     {
@@ -569,7 +569,7 @@
       "DownstreamHttpMethod": null,
       "DownstreamHttpVersion": null,
       "DownstreamHttpVersionPolicy": null,
-      "DownstreamPathTemplate": "/api/payments",
+      "DownstreamPathTemplate": "/api/v{version}/payments",
       "DownstreamScheme": "http",
       "FileCacheOptions": {
         "TtlSeconds": null,
@@ -621,7 +621,7 @@
       "UpstreamHttpMethod": [
         "POST"
       ],
-      "UpstreamPathTemplate": "/api/payments",
+      "UpstreamPathTemplate": "/api/v{version}/payments",
       "UpstreamHeaderTemplates": {}
     },
     {
@@ -646,7 +646,7 @@
       "DownstreamHttpMethod": null,
       "DownstreamHttpVersion": null,
       "DownstreamHttpVersionPolicy": null,
-      "DownstreamPathTemplate": "/api/payments/{id}",
+      "DownstreamPathTemplate": "/api/v{version}/payments/{id}",
       "DownstreamScheme": "http",
       "FileCacheOptions": {
         "TtlSeconds": null,
@@ -698,7 +698,7 @@
       "UpstreamHttpMethod": [
         "DELETE"
       ],
-      "UpstreamPathTemplate": "/api/payments/{id}",
+      "UpstreamPathTemplate": "/api/v{version}/payments/{id}",
       "UpstreamHeaderTemplates": {}
     },
     {
@@ -723,7 +723,7 @@
       "DownstreamHttpMethod": null,
       "DownstreamHttpVersion": null,
       "DownstreamHttpVersionPolicy": null,
-      "DownstreamPathTemplate": "/api/products",
+      "DownstreamPathTemplate": "/api/v{version}/products",
       "DownstreamScheme": "http",
       "FileCacheOptions": {
         "TtlSeconds": null,
@@ -776,7 +776,7 @@
         "POST",
         "GET"
       ],
-      "UpstreamPathTemplate": "/api/products",
+      "UpstreamPathTemplate": "/api/v{version}/products",
       "UpstreamHeaderTemplates": {}
     },
     {
@@ -801,7 +801,7 @@
       "DownstreamHttpMethod": null,
       "DownstreamHttpVersion": null,
       "DownstreamHttpVersionPolicy": null,
-      "DownstreamPathTemplate": "/api/quotes",
+      "DownstreamPathTemplate": "/api/v{version}/quotes",
       "DownstreamScheme": "http",
       "FileCacheOptions": {
         "TtlSeconds": null,
@@ -854,7 +854,7 @@
         "GET",
         "POST"
       ],
-      "UpstreamPathTemplate": "/api/quotes",
+      "UpstreamPathTemplate": "/api/v{version}/quotes",
       "UpstreamHeaderTemplates": {}
     },
     {
@@ -879,7 +879,7 @@
       "DownstreamHttpMethod": null,
       "DownstreamHttpVersion": null,
       "DownstreamHttpVersionPolicy": null,
-      "DownstreamPathTemplate": "/api/quotes/{everything}",
+      "DownstreamPathTemplate": "/api/v{version}/quotes/{everything}",
       "DownstreamScheme": "http",
       "FileCacheOptions": {
         "TtlSeconds": null,
@@ -933,7 +933,7 @@
         "PUT",
         "DELETE"
       ],
-      "UpstreamPathTemplate": "/api/quotes/{everything}",
+      "UpstreamPathTemplate": "/api/v{version}/quotes/{everything}",
       "UpstreamHeaderTemplates": {}
     },
     {
@@ -958,7 +958,7 @@
       "DownstreamHttpMethod": null,
       "DownstreamHttpVersion": null,
       "DownstreamHttpVersionPolicy": null,
-      "DownstreamPathTemplate": "/api/shipments",
+      "DownstreamPathTemplate": "/api/v{version}/shipments",
       "DownstreamScheme": "http",
       "FileCacheOptions": {
         "TtlSeconds": null,
@@ -1010,7 +1010,7 @@
       "UpstreamHttpMethod": [
         "POST"
       ],
-      "UpstreamPathTemplate": "/api/shipments",
+      "UpstreamPathTemplate": "/api/v{version}/shipments",
       "UpstreamHeaderTemplates": {}
     },
     {
@@ -1028,15 +1028,15 @@
       "DownstreamHeaderTransform": {},
       "DownstreamHostAndPorts": [
         {
-          "Host": "ecommerceddd-apigateway",
+          "Host": "ecommerceddd-signalr",
           "Port": 80
         }
       ],
       "DownstreamHttpMethod": null,
       "DownstreamHttpVersion": null,
       "DownstreamHttpVersionPolicy": null,
-      "DownstreamPathTemplate": "/api/signalr/{everything}",
-      "DownstreamScheme": "ws",
+      "DownstreamPathTemplate": "/api/v{version}/signalr",
+      "DownstreamScheme": "http",
       "FileCacheOptions": {
         "TtlSeconds": null,
         "Region": null,
@@ -1085,9 +1085,89 @@
       "UpstreamHeaderTransform": {},
       "UpstreamHost": null,
       "UpstreamHttpMethod": [
-        "POST"
+        "GET"
       ],
-      "UpstreamPathTemplate": "/api/signalr/{everything}",
+      "UpstreamPathTemplate": "/api/v{version}/signalr",
+      "UpstreamHeaderTemplates": {}
+    },
+    {
+      "AddClaimsToRequest": {},
+      "AddHeadersToRequest": {},
+      "AddQueriesToRequest": {},
+      "AuthenticationOptions": {
+        "AllowedScopes": [],
+        "AuthenticationProviderKey": null,
+        "AuthenticationProviderKeys": []
+      },
+      "ChangeDownstreamPathTemplate": {},
+      "DangerousAcceptAnyServerCertificateValidator": false,
+      "DelegatingHandlers": [],
+      "DownstreamHeaderTransform": {},
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-signalr",
+          "Port": 80
+        }
+      ],
+      "DownstreamHttpMethod": null,
+      "DownstreamHttpVersion": null,
+      "DownstreamHttpVersionPolicy": null,
+      "DownstreamPathTemplate": "/api/v{version}/signalr/{everything}",
+      "DownstreamScheme": "http",
+      "FileCacheOptions": {
+        "TtlSeconds": null,
+        "Region": null,
+        "Header": null,
+        "EnableContentHashing": null
+      },
+      "HttpHandlerOptions": {
+        "AllowAutoRedirect": false,
+        "MaxConnectionsPerServer": 2147483647,
+        "UseCookieContainer": false,
+        "UseProxy": true,
+        "UseTracing": false,
+        "PooledConnectionLifetimeSeconds": null
+      },
+      "Key": null,
+      "LoadBalancerOptions": {
+        "Expiry": 2147483647,
+        "Key": "",
+        "Type": ""
+      },
+      "Metadata": {},
+      "Priority": 1,
+      "QoSOptions": {
+        "DurationOfBreak": 1,
+        "ExceptionsAllowedBeforeBreaking": 0,
+        "TimeoutValue": 0
+      },
+      "RateLimitOptions": {
+        "ClientWhitelist": [],
+        "EnableRateLimiting": false,
+        "Period": null,
+        "PeriodTimespan": 0.0,
+        "Limit": 0
+      },
+      "RequestIdKey": null,
+      "RouteClaimsRequirement": {},
+      "RouteIsCaseSensitive": false,
+      "SecurityOptions": {
+        "IPAllowedList": [],
+        "IPBlockedList": [],
+        "ExcludeAllowedFromBlocked": false
+      },
+      "ServiceName": null,
+      "ServiceNamespace": null,
+      "Timeout": 0,
+      "UpstreamHeaderTransform": {},
+      "UpstreamHost": null,
+      "UpstreamHttpMethod": [
+        "POST",
+        "GET",
+        "PUT",
+        "DELETE"
+      ],
+      "UpstreamPathTemplate": "/api/v{version}/signalr/{everything}",
       "UpstreamHeaderTemplates": {}
     }
   ],

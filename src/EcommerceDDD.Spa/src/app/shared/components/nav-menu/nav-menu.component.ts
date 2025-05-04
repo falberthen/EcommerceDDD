@@ -93,7 +93,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
 
   private async loadCustomerDetails() {
     try {
-      await this.kiotaClientService.client.api.customers.details
+      await this.kiotaClientService.client.api.v2.customers.details
         .get()
         .then((result) => {
           if (result!.success) {

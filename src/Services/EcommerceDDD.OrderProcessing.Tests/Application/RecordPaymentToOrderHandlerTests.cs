@@ -1,3 +1,5 @@
+using EcommerceDDD.ServiceClients.ApiGateway.Models;
+
 namespace EcommerceDDD.OrderProcessing.Tests.Application;
 
 public class RecordPaymentToOrderHandlerTests
@@ -32,12 +34,21 @@ public class RecordPaymentToOrderHandlerTests
 		await orderWriteRepository
 			.AppendEventsAsync(order, CancellationToken.None);
 
+		// mocked kiota request
+		var apiClient = new ApiGatewayClient(_requestAdapter);
+		_requestAdapter.SendPrimitiveAsync<string>(
+			Arg.Any<RequestInformation>(),
+			Arg.Any<Dictionary<string, ParsableFactory<IParsable>>>(),
+			Arg.Any<CancellationToken>())
+			.Returns("Success");
+
 		var recordPaymentToOrder = RecordPayment.Create(order.Id, paymentId, totalPaid);
 		var recordPaymentToOrderHandler = new RecordPaymentHandler(
-			_orderStatusBroadcaster, orderWriteRepository);
+			apiClient, orderWriteRepository);
 
 		// When
-		await recordPaymentToOrderHandler.HandleAsync(recordPaymentToOrder, CancellationToken.None);
+		await recordPaymentToOrderHandler
+			.HandleAsync(recordPaymentToOrder, CancellationToken.None);
 
 		// Then
 		var paidOrder = orderWriteRepository.AggregateStream.First().Aggregate;
@@ -48,5 +59,5 @@ public class RecordPaymentToOrderHandlerTests
 		Assert.Equal(OrderStatus.Paid, paidOrder.Status);
 	}
 
-	private IOrderStatusBroadcaster _orderStatusBroadcaster = Substitute.For<IOrderStatusBroadcaster>();
+	private IRequestAdapter _requestAdapter = Substitute.For<IRequestAdapter>();
 }

@@ -60,7 +60,7 @@ export class OrdersComponent implements OnInit {
 
   async showOrderStoredEvents(orderId: string) {
     try {
-      await this.kiotaClientService.client.api.orders
+      await this.kiotaClientService.client.api.v2.orders
         .byOrderId(orderId)
         .history.get()
         .then((result) => {
@@ -78,7 +78,7 @@ export class OrdersComponent implements OnInit {
 
   async loadOrders() {
     try {
-      await this.kiotaClientService.client.api.orders.get().then((result) => {
+      await this.kiotaClientService.client.api.v2.orders.get().then((result) => {
         if (result!.success) {
           this.orders = result?.data!;
         }

@@ -47,7 +47,7 @@ public static class DataSeedExtension
 
 			try
 			{
-				var response = await apiGatewayClient.Api.Products
+				var response = await apiGatewayClient.Api.V2.Products
 					.PostAsync(request);
 
 				if (response?.Success == false || response?.Data is null)

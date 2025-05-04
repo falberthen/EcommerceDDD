@@ -50,7 +50,7 @@ export class AuthService {
     let isLogged = false;
     try {
       const result: LoginResult | undefined =
-        await this.kiotaClientService.anonymousClient.api.accounts.login.post({
+        await this.kiotaClientService.anonymousClient.api.v2.accounts.login.post({
           email,
           password,
         });

@@ -21,5 +21,6 @@ public record class RegisterCustomerRequest
     public string ShippingAddress { get; init; }
 
     [Required(ErrorMessage = "The {0} field is required.")]
-    public decimal CreditLimit { get; init; }
+	[Range(0.01, double.MaxValue, ErrorMessage = "The {0} must be greater than zero.")]
+	public decimal CreditLimit { get; init; }
 }

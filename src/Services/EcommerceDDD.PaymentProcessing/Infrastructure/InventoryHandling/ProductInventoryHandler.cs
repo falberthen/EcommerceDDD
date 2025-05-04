@@ -20,7 +20,7 @@ public class ProductInventoryHandler(ApiGatewayClient apiGatewayClient) : IProdu
 
 		try
 		{
-			var inventoryRequestBuilder = _apiGatewayClient.Api.Inventory;
+			var inventoryRequestBuilder = _apiGatewayClient.Api.V2.Inventory;
 			var response = await inventoryRequestBuilder
 				.CheckStockQuantity
 				.PostAsync(request, cancellationToken: cancellationToken);
@@ -40,7 +40,6 @@ public class ProductInventoryHandler(ApiGatewayClient apiGatewayClient) : IProdu
 
 				return item.Quantity > stock.QuantityInStock;
 			});
-
 		}
 		catch (Microsoft.Kiota.Abstractions.ApiException ex)
 		{
@@ -62,7 +61,7 @@ public class ProductInventoryHandler(ApiGatewayClient apiGatewayClient) : IProdu
 
 			try
 			{
-				var inventoryRequestBuilder = _apiGatewayClient.Api.Inventory[productItem.ProductId.Value];
+				var inventoryRequestBuilder = _apiGatewayClient.Api.V2.Inventory[productItem.ProductId.Value];
 				await inventoryRequestBuilder
 					.DecreaseStockQuantity
 					.PutAsync(request, cancellationToken: cancellationToken);

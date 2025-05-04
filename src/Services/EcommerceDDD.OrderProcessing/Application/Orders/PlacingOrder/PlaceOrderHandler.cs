@@ -1,17 +1,16 @@
-﻿using EcommerceDDD.OrderProcessing.Infrastructure.Projections;
-using EcommerceDDD.ServiceClients.ApiGateway.Models;
+﻿using EcommerceDDD.ServiceClients.ApiGateway.Models;
 
 namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
 
 public class PlaceOrderHandler(
 	ApiGatewayClient apiGatewayClient,
-	IEventStoreRepository<Order> orderWriteRepository,
-	IOrderStatusBroadcaster orderStatusBroadcaster
+	IEventStoreRepository<Order> orderWriteRepository
 ) : ICommandHandler<PlaceOrder>
 {
-	private readonly ApiGatewayClient _apiGatewayClient = apiGatewayClient;
-	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
-	private readonly IOrderStatusBroadcaster _orderStatusBroadcaster = orderStatusBroadcaster;
+	private readonly ApiGatewayClient _apiGatewayClient = apiGatewayClient
+		?? throw new ArgumentNullException(nameof(apiGatewayClient));
+	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository
+		?? throw new ArgumentNullException(nameof(orderWriteRepository));
 
 	public async Task HandleAsync(PlaceOrder command, CancellationToken cancellationToken)
 	{
@@ -50,32 +49,52 @@ public class PlaceOrderHandler(
 		await _orderWriteRepository
 			.AppendEventsAsync(order, cancellationToken);
 
-		// Updating order status on the UI with SignalR
-		await _orderStatusBroadcaster.UpdateOrderStatus(
-			new UpdateOrderStatusRequest(
-				order.CustomerId.Value,
-				order.Id.Value,
-				order.Status.ToString(),
-				(int)order.Status));
+		try
+		{
+			// Updating order status on the UI with SignalR
+			var request = new UpdateOrderStatusRequest()
+			{
+				CustomerId = order.CustomerId.Value,
+				OrderId = order.Id.Value,
+				OrderStatusText = order.Status.ToString(),
+				OrderStatusCode = (int)order.Status
+			};
+
+			await _apiGatewayClient.Api.V2.Signalr.Updateorderstatus
+				.PostAsync(request, cancellationToken: cancellationToken);
+		}
+		catch (Microsoft.Kiota.Abstractions.ApiException ex)
+		{
+			throw new ApplicationLogicException(
+				$"An error occurred when updating status for order {order.Id.Value}.", ex);
+		}
 	}
 
 	private async Task<QuoteViewModel> GetQuoteAsync(PlaceOrder command, CancellationToken cancellationToken)
 	{
-		var quoteRequestBuilder = _apiGatewayClient.Api.Quotes[command.QuoteId.Value];
-		var response = await quoteRequestBuilder.Details
-			.GetAsync(cancellationToken: cancellationToken);
+		try
+		{
+			var quoteRequestBuilder = _apiGatewayClient.Api.V2.Quotes[command.QuoteId.Value];
+			var response = await quoteRequestBuilder.Details
+				.GetAsync(cancellationToken: cancellationToken);
 
-		if (response?.Data is null)
-			throw new ApplicationLogicException(response?.Message ?? string.Empty);
+			if (response?.Data is null)
+				throw new ApplicationLogicException(response?.Message ?? string.Empty);
 
-		return response.Data;
+			return response.Data;
+		}
+		catch (Microsoft.Kiota.Abstractions.ApiException ex)
+		{
+			throw new ApplicationLogicException(
+				$"An error occurred when getting quote {command.QuoteId.Value}.", ex);
+		}
 	}
 
 	private async Task ConfirmQuoteAsync(Guid quoteId, CancellationToken cancellationToken)
 	{
 		try
 		{
-			var quoteRequestBuilder = _apiGatewayClient.Api.Quotes[quoteId];
+			var quoteRequestBuilder = _apiGatewayClient.Api.V2.Quotes[quoteId];
 			await quoteRequestBuilder.Confirm
 				.PutAsync(cancellationToken: cancellationToken);
 		}

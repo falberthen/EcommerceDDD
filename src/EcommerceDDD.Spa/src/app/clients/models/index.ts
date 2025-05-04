@@ -326,6 +326,15 @@ export function createUpdateCustomerRequestFromDiscriminatorValue(parseNode: Par
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {UpdateOrderStatusRequest}
+ */
+// @ts-ignore
+export function createUpdateOrderStatusRequestFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoUpdateOrderStatusRequest;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
  * @returns {UserRegisteredResult}
  */
 // @ts-ignore
@@ -815,6 +824,19 @@ export function deserializeIntoUpdateCustomerRequest(updateCustomerRequest: Part
         "creditLimit": n => { updateCustomerRequest.creditLimit = n.getNumberValue(); },
         "name": n => { updateCustomerRequest.name = n.getStringValue(); },
         "shippingAddress": n => { updateCustomerRequest.shippingAddress = n.getStringValue(); },
+    }
+}
+/**
+ * The deserialization information for the current model
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoUpdateOrderStatusRequest(updateOrderStatusRequest: Partial<UpdateOrderStatusRequest> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "customerId": n => { updateOrderStatusRequest.customerId = n.getGuidValue(); },
+        "orderId": n => { updateOrderStatusRequest.orderId = n.getGuidValue(); },
+        "orderStatusCode": n => { updateOrderStatusRequest.orderStatusCode = n.getNumberValue(); },
+        "orderStatusText": n => { updateOrderStatusRequest.orderStatusText = n.getStringValue(); },
     }
 }
 /**
@@ -1698,6 +1720,19 @@ export function serializeUpdateCustomerRequest(writer: SerializationWriter, upda
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
+export function serializeUpdateOrderStatusRequest(writer: SerializationWriter, updateOrderStatusRequest: Partial<UpdateOrderStatusRequest> | undefined | null = {}) : void {
+    if (updateOrderStatusRequest) {
+        writer.writeGuidValue("customerId", updateOrderStatusRequest.customerId);
+        writer.writeGuidValue("orderId", updateOrderStatusRequest.orderId);
+        writer.writeNumberValue("orderStatusCode", updateOrderStatusRequest.orderStatusCode);
+        writer.writeStringValue("orderStatusText", updateOrderStatusRequest.orderStatusText);
+    }
+}
+/**
+ * Serializes information the current object
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
 export function serializeUserRegisteredResult(writer: SerializationWriter, userRegisteredResult: Partial<UserRegisteredResult> | undefined | null = {}) : void {
     if (userRegisteredResult) {
         writer.writeBooleanValue("succeeded", userRegisteredResult.succeeded);
@@ -1727,6 +1762,24 @@ export interface UpdateCustomerRequest extends Parsable {
      * The shippingAddress property
      */
     shippingAddress?: string | null;
+}
+export interface UpdateOrderStatusRequest extends Parsable {
+    /**
+     * The customerId property
+     */
+    customerId?: Guid | null;
+    /**
+     * The orderId property
+     */
+    orderId?: Guid | null;
+    /**
+     * The orderStatusCode property
+     */
+    orderStatusCode?: number | null;
+    /**
+     * The orderStatusText property
+     */
+    orderStatusText?: string | null;
 }
 export interface UserRegisteredResult extends Parsable {
     /**

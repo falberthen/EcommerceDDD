@@ -3,7 +3,7 @@
 [Authorize]
 [ApiController]
 [ApiVersion(ApiVersions.V2)]
-[Route("api/customers")]
+[Route("api/v{version:apiVersion}/customers")]
 public class CustomersController(
 	ICommandBus commandBus,
 	IQueryBus queryBus

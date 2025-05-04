@@ -1,8 +1,8 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/quotes",
-      "UpstreamPathTemplate": "/api/quotes",
+      "DownstreamPathTemplate": "/api/v{version}/quotes",
+      "UpstreamPathTemplate": "/api/v{version}/quotes",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -13,8 +13,8 @@
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/quotes/{everything}",
-      "UpstreamPathTemplate": "/api/quotes/{everything}",
+      "DownstreamPathTemplate": "/api/v{version}/quotes/{everything}",
+      "UpstreamPathTemplate": "/api/v{version}/quotes/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {

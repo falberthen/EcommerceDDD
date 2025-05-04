@@ -63,7 +63,7 @@ export class CustomerDetailsComponent implements OnInit {
     }
 
     try {
-      await this.kiotaClientService.client.api.customers.update.put(
+      await this.kiotaClientService.client.api.v2.customers.update.put(
         customerUpdate
       );
 
@@ -76,7 +76,7 @@ export class CustomerDetailsComponent implements OnInit {
 
   async showCustomerStoredEvents() {
     try {
-      await this.kiotaClientService.client.api.customers.history
+      await this.kiotaClientService.client.api.v2.customers.history
         .get()
         .then((result) => {
           if (result!.success) {
@@ -101,7 +101,7 @@ export class CustomerDetailsComponent implements OnInit {
 
   private async loadCustomerDetails() {
     try {
-      await this.kiotaClientService.client.api.customers.details
+      await this.kiotaClientService.client.api.v2.customers.details
         .get()
         .then((result) => {
           if (result!.success) {

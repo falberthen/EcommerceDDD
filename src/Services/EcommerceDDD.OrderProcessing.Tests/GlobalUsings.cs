@@ -2,7 +2,6 @@ global using EcommerceDDD.Core.CQRS.CommandHandling;
 global using EcommerceDDD.Core.CQRS.QueryHandling;
 global using EcommerceDDD.Core.EventBus;
 global using EcommerceDDD.Core.Exceptions.Types;
-global using EcommerceDDD.Core.Infrastructure.SignalR;
 global using EcommerceDDD.Core.Infrastructure.WebApi;
 global using EcommerceDDD.Core.Testing;
 global using EcommerceDDD.OrderProcessing.API.Controllers;

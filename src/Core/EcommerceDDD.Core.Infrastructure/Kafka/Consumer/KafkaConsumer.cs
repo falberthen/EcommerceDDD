@@ -1,5 +1,4 @@
-﻿using Confluent.Kafka;
-using Confluent.Kafka.Admin;
+﻿using Confluent.Kafka.Admin;
 
 namespace EcommerceDDD.Core.Infrastructure.Kafka.Consumer;
 
@@ -11,6 +10,7 @@ public class KafkaConsumer : IEventConsumer
 	private readonly JsonEventSerializer<INotification> _serializer;
 	private IConsumer<string, INotification>? _consumer;
 	private bool _isInitialized = false;
+	private readonly SemaphoreSlim _initializationLock = new SemaphoreSlim(1, 1);
 
 	public KafkaConsumer(
 		IEventBus eventPublisher,
@@ -45,10 +45,31 @@ public class KafkaConsumer : IEventConsumer
 				{
 					_logger.LogWarning("Consumer not initialized. Attempting to reinitialize...");
 					await InitializeConsumerWithRetryAsync(cancellationToken);
-					continue;
+					
+					// Add delay to prevent tight loop if initialization keeps failing
+					if (!_isInitialized)
+					{
+						await Task.Delay(5000, cancellationToken);
+						continue;
+					}
 				}
 
-				await ConsumeNextMessage(_consumer!, cancellationToken);
+				try
+				{
+					await ConsumeNextMessage(_consumer!, cancellationToken);
+				}
+				catch (Exception ex) when (
+					ex is KafkaException ||
+					ex is ObjectDisposedException ||
+					ex is OperationCanceledException)
+				{
+					if (cancellationToken.IsCancellationRequested)
+						break;
+
+					_logger.LogWarning(ex, "Error during message consumption. Will attempt recovery.");
+					_isInitialized = false;
+					await Task.Delay(1000, cancellationToken);
+				}
 			}
 		}
 		catch (OperationCanceledException)
@@ -66,17 +87,34 @@ public class KafkaConsumer : IEventConsumer
 		}
 		finally
 		{
-			try
-			{
-				_consumer?.Close();
-			}
-			catch (ObjectDisposedException)
-			{
-				_logger.LogWarning("Kafka consumer already disposed before close.");
-			}
+			CloseConsumer();
+		}
+	}
 
-			_consumer?.Dispose();
-			_logger.LogInformation("Kafka consumer stopped.");
+	private void CloseConsumer()
+	{
+		try
+		{
+			if (_consumer != null)
+			{
+				_logger.LogInformation("Closing Kafka consumer...");
+				_consumer.Close();
+				_consumer.Dispose();
+				_consumer = null;
+				_logger.LogInformation("Kafka consumer closed and disposed.");
+			}
+		}
+		catch (ObjectDisposedException)
+		{
+			_logger.LogWarning("Kafka consumer already disposed before close.");
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError(ex, "Error during Kafka consumer disposal.");
+		}
+		finally
+		{
+			_isInitialized = false;
 		}
 	}
 
@@ -85,108 +123,157 @@ public class KafkaConsumer : IEventConsumer
 		if (_isInitialized)
 			return;
 
-		var retryPolicy = Policy
-			.Handle<KafkaException>()
-			.Or<InvalidOperationException>()
-			.WaitAndRetryAsync(
-				retryCount: 10,
-				sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Min(Math.Pow(2, retryAttempt), 30)),
-				onRetry: (exception, timeSpan, retryCount, context) =>
-				{
-					_logger.LogWarning("Retry {RetryCount} after Kafka init error: {Message}. Retrying in {Delay}s.",
-						retryCount, exception.Message, timeSpan.TotalSeconds);
-				});
+		// Use a lock to prevent multiple initialization attempts in parallel
+		await _initializationLock.WaitAsync(cancellationToken);
 
-		await retryPolicy.ExecuteAsync(async () =>
+		try
 		{
-			var consumerConfig = new ConsumerConfig
+			// Double-check after acquiring the lock
+			if (_isInitialized)
+				return;
+
+			var retryPolicy = Policy
+				.Handle<Exception>() // Handle any exception during initialization
+				.WaitAndRetryAsync(
+					retryCount: 10,
+					sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Min(Math.Pow(2, retryAttempt), 30)),
+					onRetry: (exception, timeSpan, retryCount, context) =>
+					{
+						_logger.LogWarning("Retry {RetryCount} after Kafka init error: {Message}. Retrying in {Delay}s.",
+							retryCount, exception.Message, timeSpan.TotalSeconds);
+					});
+
+			await retryPolicy.ExecuteAsync(async () =>
 			{
-				GroupId = _config.Group,
-				BootstrapServers = _config.ConnectionString,
-				AutoOffsetReset = AutoOffsetReset.Earliest,
-				EnableAutoCommit = false,
-				AllowAutoCreateTopics = false,
-				MaxPollIntervalMs = 300000,
-				SessionTimeoutMs = 10000,
-				EnablePartitionEof = true
-			};
+				// Close and dispose any existing consumer
+				CloseConsumer();
 
-			_consumer?.Dispose();
-			_consumer = new ConsumerBuilder<string, INotification>(consumerConfig)
-				.SetKeyDeserializer(Deserializers.Utf8)
-				.SetValueDeserializer(_serializer)
-				.SetErrorHandler((_, error) =>
-					_logger.LogError("Kafka error: {Reason} (Code: {Code})", error.Reason, error.Code))
-				.SetLogHandler((_, message) =>
-					_logger.LogDebug("Kafka: {Message} (Level: {Level})", message.Message, message.Level))
-				.Build();
-			
-			await EnsureTopicsExistAsync();
+				_logger.LogInformation("Creating new Kafka consumer with connection to {BootstrapServers}", _config.ConnectionString);
 
-			_logger.LogInformation("Subscribing to topics: {Topics}", string.Join(", ", _config.Topics!));
-			_consumer.Subscribe(_config.Topics);
-			_isInitialized = true;
+				var consumerConfig = new ConsumerConfig
+				{
+					GroupId = _config.Group,
+					BootstrapServers = _config.ConnectionString,
+					AutoOffsetReset = AutoOffsetReset.Earliest,
+					EnableAutoCommit = false,
+					AllowAutoCreateTopics = true, // Changed to true for better resilience
+					MaxPollIntervalMs = 300000,
+					SessionTimeoutMs = 30000, // Increased timeout
+					EnablePartitionEof = true,
+					// Explicitly configure security to use plaintext
+					SecurityProtocol = SecurityProtocol.Plaintext,
+					// Disable SSL certificate verification
+					SslEndpointIdentificationAlgorithm = SslEndpointIdentificationAlgorithm.None,
+					EnableSslCertificateVerification = false,
+					// Add reconnect settings
+					SocketTimeoutMs = 60000,
+					SocketKeepaliveEnable = true,
+					// Better error handling
+					Debug = "broker,topic,msg"
+				};
 
-			return Task.CompletedTask;
-		});
+				_consumer = new ConsumerBuilder<string, INotification>(consumerConfig)
+					.SetKeyDeserializer(Deserializers.Utf8)
+					.SetValueDeserializer(_serializer)
+					.SetErrorHandler((_, error) =>
+					{
+						_logger.LogError("Kafka error: {Reason} (Code: {Code})", error.Reason, error.Code);
+						if (error.IsFatal)
+						{
+							_logger.LogCritical("Fatal Kafka error occurred. Consumer will need to be reinitialized.");
+							_isInitialized = false;
+						}
+					})
+					.SetLogHandler((_, message) =>
+						_logger.LogDebug("Kafka: {Message} (Level: {Level})", message.Message, message.Level))
+					.Build();
+
+				await EnsureTopicsExistAsync();
+
+				_logger.LogInformation("Subscribing to topics: {Topics}", string.Join(", ", _config.Topics!));
+				try
+				{
+					_consumer.Subscribe(_config.Topics);
+					_isInitialized = true;
+					_logger.LogInformation("Successfully subscribed to Kafka topics");
+				}
+				catch (Exception ex)
+				{
+					_logger.LogError(ex, "Failed to subscribe to topics");
+					throw;
+				}
+			});
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError(ex, "Failed to initialize Kafka consumer after multiple retries");
+			_isInitialized = false;
+			throw;
+		}
+		finally
+		{
+			_initializationLock.Release();
+		}
 	}
 
 	private async Task ConsumeNextMessage(IConsumer<string, INotification> consumer,
 		CancellationToken cancellationToken)
 	{
-		const int retryCount = 3;
-		var retryPolicy = Policy
-			.Handle<KafkaException>()
-			.WaitAndRetryAsync(retryCount, attempt => TimeSpan.FromSeconds(5),
-				(exception, timeSpan, attempt, context) =>
-				{
-					_logger.LogWarning("Retry {RetryCount} after Kafka error: {Message}", attempt, exception.Message);
-				});
-
-		var timeoutPolicy = Policy.TimeoutAsync(TimeSpan.FromMinutes(5));
-		var policyWrap = Policy.WrapAsync(timeoutPolicy, retryPolicy);
-
 		try
 		{
-			await policyWrap.ExecuteAsync(async ct =>
+			// Use a smaller timeout for Consume to be more responsive to cancellation
+			var result = consumer.Consume(TimeSpan.FromMilliseconds(500));
+			if (result is null)
 			{
-				var stopwatch = Stopwatch.StartNew();
+				// No message available, just return
+				return;
+			}
 
-				var result = consumer.Consume(TimeSpan.FromSeconds(1));
-				if (result == null)
-				{
-					_logger.LogDebug("No new message received from Kafka.");
-					return;
-				}
+			if (result.IsPartitionEOF)
+			{
+				_logger.LogDebug("Reached end of partition for topic {Topic}, partition {Partition}, offset {Offset}",
+					result.Topic, result.Partition, result.Offset);
+				return;
+			}
 
-				if (result.Message?.Value == null)
-				{
-					_logger.LogWarning("Received a message with null value.");
-					return;
-				}
-
-				_logger.LogInformation("Dispatching event from topic: {Topic}", result.Topic);
-				await _eventPublisher.PublishEventAsync(result.Message.Value, ct);
-
+			if (result.Message?.Value == null)
+			{
+				_logger.LogWarning("Received a message with null value from topic {Topic}", result.Topic);
 				consumer.Commit(result);
-				stopwatch.Stop();
+				return;
+			}
 
-				_logger.LogInformation("Message processed in {ElapsedMilliseconds}ms", stopwatch.ElapsedMilliseconds);
-			}, cancellationToken);
+			var stopwatch = Stopwatch.StartNew();
+			_logger.LogInformation("Processing message from topic {Topic} at offset {Offset}", result.Topic, result.Offset);
+
+			// Process the message
+			await _eventPublisher
+				.PublishEventAsync(result.Message.Value, cancellationToken);
+
+			// Commit offset after successful processing
+			consumer.Commit(result);
+			stopwatch.Stop();
+
+			_logger.LogInformation("Successfully processed message from {Topic} in {ElapsedMilliseconds}ms",
+				result.Topic, stopwatch.ElapsedMilliseconds);
+		}
+		catch (ConsumeException ex)
+		{
+			_logger.LogError(ex, "Error consuming message");
+			if (ex.Error.IsFatal)
+			{
+				_logger.LogCritical("Fatal Kafka error. Forcing reinitialization.");
+				_isInitialized = false;
+			}
 		}
 		catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
 		{
-			_logger.LogDebug("Message consumption canceled.");
-		}
-		catch (ObjectDisposedException)
-		{
-			_logger.LogWarning("Attempted to consume from a disposed Kafka consumer.");
-			_isInitialized = false;
+			// Clean cancellation, just return
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError(ex, "Unhandled error while consuming Kafka message.");
-			if (ex is KafkaException)
+			_logger.LogError(ex, "Unexpected error during message consumption");
+			if (ex is KafkaException or ObjectDisposedException)
 			{
 				_isInitialized = false;
 			}
@@ -195,29 +282,46 @@ public class KafkaConsumer : IEventConsumer
 
 	private async Task EnsureTopicsExistAsync()
 	{
-		if(_config is null)
+		if (_config is null)
 			throw new InvalidOperationException(nameof(Config));
 
-		IEnumerable<string> topicNames = _config.Topics;
-		string bootstrapServers = _config.ConnectionString;
+		try
+		{
+			IEnumerable<string> topicNames = _config.Topics;
+			string bootstrapServers = _config.ConnectionString;
 
-		var config = new AdminClientConfig { BootstrapServers = bootstrapServers };
+			var adminConfig = new AdminClientConfig
+			{
+				BootstrapServers = bootstrapServers,
+				SecurityProtocol = SecurityProtocol.Plaintext,
+				SslEndpointIdentificationAlgorithm = SslEndpointIdentificationAlgorithm.None,
+				EnableSslCertificateVerification = false,
+			};
 
-		using var adminClient = new AdminClientBuilder(config).Build();
+			using var adminClient = new AdminClientBuilder(adminConfig).Build();
 
-		var metadata = adminClient.GetMetadata(TimeSpan.FromSeconds(10));
-		var existingTopics = metadata.Topics.Select(t => t.Topic).ToHashSet();
+			_logger.LogInformation("Retrieving Kafka metadata to check for topics existence");
+			var metadata = adminClient.GetMetadata(TimeSpan.FromSeconds(10));
+			var existingTopics = metadata.Topics.Select(t => t.Topic).ToHashSet();
 
-		var missingTopics = topicNames.Where(t => !existingTopics.Contains(t)).ToList();
-		if (!missingTopics.Any())
-			return;
+			var missingTopics = topicNames?.Where(t => !existingTopics.Contains(t)).ToList();
+			if (missingTopics is null || !missingTopics.Any())
+			{
+				_logger.LogInformation("All required Kafka topics already exist");
+				return;
+			}
 
-		_logger.LogWarning("Creating missing Kafka topics: {Missing}", string.Join(", ", missingTopics));
+			_logger.LogWarning("Creating missing Kafka topics: {Missing}", string.Join(", ", missingTopics));
 
-		var topicSpecs = missingTopics.Select(name =>
-			new TopicSpecification { Name = name, NumPartitions = 1, ReplicationFactor = 1 });
+			var topicSpecs = missingTopics.Select(name =>
+				new TopicSpecification { Name = name, NumPartitions = 1, ReplicationFactor = 1 });
 
-		await adminClient.CreateTopicsAsync(topicSpecs);
-		_logger.LogInformation("Successfully created missing Kafka topics.");
+			await adminClient.CreateTopicsAsync(topicSpecs);
+			_logger.LogInformation("Successfully created missing Kafka topics");
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError(ex, "Error ensuring Kafka topics exist. Will continue with initialization.");
+		}
 	}
 }

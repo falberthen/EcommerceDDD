@@ -6,7 +6,7 @@ servers:
   - url: http://localhost:5000
     description: ''
 paths:
-  /api/accounts/login:
+  /api/v2/accounts/login:
     post:
       tags:
         - Accounts
@@ -35,7 +35,7 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/LoginResult'
-  /api/accounts/register:
+  /api/v2/accounts/register:
     post:
       tags:
         - Accounts
@@ -64,7 +64,38 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/UserRegisteredResult'
-  /api/customers:
+  /api/v2/signalr/updateorderstatus:
+    post:
+      tags:
+        - Signalr
+      summary: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrderStatusRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrderStatusRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrderStatusRequest'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v2/customers:
     post:
       tags:
         - Customers
@@ -95,7 +126,7 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-  /api/customers/details:
+  /api/v2/customers/details:
     get:
       tags:
         - Customers
@@ -125,7 +156,7 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-  /api/customers/history:
+  /api/v2/customers/history:
     get:
       tags:
         - Customers
@@ -155,7 +186,7 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-  /api/customers/update:
+  /api/v2/customers/update:
     put:
       tags:
         - Customers
@@ -186,7 +217,7 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-  '/api/customers/{customerId}/details':
+  '/api/v2/customers/{customerId}/details':
     get:
       tags:
         - Customers
@@ -223,7 +254,7 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-  '/api/customers/{customerId}/credit':
+  '/api/v2/customers/{customerId}/credit':
     get:
       tags:
         - Customers
@@ -260,7 +291,7 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-  /api/products:
+  /api/v2/products:
     post:
       tags:
         - Products
@@ -301,7 +332,7 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-  /api/inventory/check-stock-quantity:
+  /api/v2/inventory/check-stock-quantity:
     post:
       tags:
         - Inventory
@@ -342,7 +373,7 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-  '/api/inventory/{productId}/history':
+  '/api/v2/inventory/{productId}/history':
     get:
       tags:
         - Inventory
@@ -379,7 +410,7 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-  '/api/inventory/{productId}/decrease-stock-quantity':
+  '/api/v2/inventory/{productId}/decrease-stock-quantity':
     put:
       tags:
         - Inventory
@@ -417,7 +448,7 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-  /api/quotes:
+  /api/v2/quotes:
     get:
       tags:
         - Quotes
@@ -477,7 +508,7 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-  '/api/quotes/{quoteId}/history':
+  '/api/v2/quotes/{quoteId}/history':
     get:
       tags:
         - Quotes
@@ -514,7 +545,7 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-  '/api/quotes/{quoteId}/items':
+  '/api/v2/quotes/{quoteId}/items':
     put:
       tags:
         - Quotes
@@ -552,7 +583,7 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-  '/api/quotes/{quoteId}/items/{productId}':
+  '/api/v2/quotes/{quoteId}/items/{productId}':
     delete:
       tags:
         - Quotes
@@ -585,7 +616,7 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-  '/api/quotes/{quoteId}':
+  '/api/v2/quotes/{quoteId}':
     delete:
       tags:
         - Quotes
@@ -612,7 +643,7 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-  '/api/quotes/{quoteId}/confirm':
+  '/api/v2/quotes/{quoteId}/confirm':
     put:
       tags:
         - Quotes
@@ -639,7 +670,7 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-  '/api/quotes/{quoteId}/details':
+  '/api/v2/quotes/{quoteId}/details':
     get:
       tags:
         - Quotes
@@ -676,7 +707,7 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-  /api/orders:
+  /api/v2/orders:
     get:
       tags:
         - Orders
@@ -706,7 +737,7 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-  '/api/orders/{orderId}/history':
+  '/api/v2/orders/{orderId}/history':
     get:
       tags:
         - Orders
@@ -743,7 +774,7 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-  '/api/orders/quote/{quoteId}':
+  '/api/v2/orders/quote/{quoteId}':
     post:
       tags:
         - Orders
@@ -770,7 +801,7 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-  /api/payments:
+  /api/v2/payments:
     post:
       tags:
         - Payments
@@ -801,7 +832,7 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-  '/api/payments/{paymentId}':
+  '/api/v2/payments/{paymentId}':
     delete:
       tags:
         - Payments
@@ -839,7 +870,7 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-  /api/shipments:
+  /api/v2/shipments:
     post:
       tags:
         - Shipments
@@ -931,6 +962,42 @@ components:
         succeeded:
           type: boolean
       additionalProperties: false
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        status:
+          type: integer
+          format: int32
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        instance:
+          type: string
+          nullable: true
+      additionalProperties: { }
+    UpdateOrderStatusRequest:
+      type: object
+      properties:
+        customerId:
+          type: string
+          format: uuid
+        orderId:
+          type: string
+          format: uuid
+        orderStatusText:
+          type: string
+          nullable: true
+        orderStatusCode:
+          type: integer
+          format: int32
+      additionalProperties: false
     CreditLimitModel:
       type: object
       properties:
@@ -1015,26 +1082,6 @@ components:
           type: string
           nullable: true
       additionalProperties: false
-    ProblemDetails:
-      type: object
-      properties:
-        type:
-          type: string
-          nullable: true
-        title:
-          type: string
-          nullable: true
-        status:
-          type: integer
-          format: int32
-          nullable: true
-        detail:
-          type: string
-          nullable: true
-        instance:
-          type: string
-          nullable: true
-      additionalProperties: { }
     RegisterCustomerRequest:
       required:
         - creditLimit
@@ -1064,6 +1111,7 @@ components:
           type: string
           nullable: true
         creditLimit:
+          minimum: 0.01
           type: number
           format: double
       additionalProperties: false
@@ -1452,8 +1500,10 @@ security:
   - Bearer: [ ]
   - Bearer: [ ]
   - Bearer: [ ]
+  - Bearer: [ ]
 tags:
   - name: Accounts
+  - name: Signalr
   - name: Customers
   - name: Products
   - name: Inventory

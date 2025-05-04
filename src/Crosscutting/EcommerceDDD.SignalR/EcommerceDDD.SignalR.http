@@ -1,0 +1,6 @@
+@EcommerceDDD.SignalR_HostAddress = http://localhost:5178
+
+GET {{EcommerceDDD.SignalR_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

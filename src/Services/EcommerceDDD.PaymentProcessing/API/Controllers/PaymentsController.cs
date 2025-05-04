@@ -3,7 +3,7 @@ namespace EcommerceDDD.PaymentProcessing.API.Controllers;
 [Authorize(Roles = Roles.M2MAccess)]
 [ApiController]
 [ApiVersion(ApiVersions.V2)]
-[Route("api/payments")]
+[Route("api/v{version:apiVersion}/payments")]
 public class PaymentsController(
 	ICommandBus commandBus,
 	IQueryBus queryBus

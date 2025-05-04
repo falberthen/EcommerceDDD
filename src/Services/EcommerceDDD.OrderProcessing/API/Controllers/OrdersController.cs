@@ -3,7 +3,7 @@ namespace EcommerceDDD.OrderProcessing.API.Controllers;
 [Authorize(Roles = Roles.Customer)]
 [ApiController]
 [ApiVersion(ApiVersions.V2)]
-[Route("api/orders")]
+[Route("api/v{version:apiVersion}/orders")]
 public class OrdersController(
     ICommandBus commandBus,
     IQueryBus queryBus

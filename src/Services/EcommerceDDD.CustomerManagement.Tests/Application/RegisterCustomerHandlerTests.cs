@@ -1,3 +1,5 @@
+using EcommerceDDD.ServiceClients.ApiGateway.Models;
+
 namespace EcommerceDDD.CustomerManagement.Tests.Application;
 
 public class RegisterCustomerHandlerTests
@@ -6,9 +8,6 @@ public class RegisterCustomerHandlerTests
 	{
 		_options.Value
 			.Returns(new TokenIssuerSettings() { Authority = "http://url" });
-
-		_htpRequester.PostAsync<IntegrationHttpResponse>(Arg.Any<string>(), Arg.Any<object>())!
-		   .Returns(Task.FromResult(new IntegrationHttpResponse() { Success = true }));
 	}
 
 	[Fact]
@@ -19,19 +18,27 @@ public class RegisterCustomerHandlerTests
 
 		_checker.IsUnique(Arg.Any<string>())
 			.Returns(true);
-		_htpRequester.PostAsync<IntegrationHttpResponse>(Arg.Any<string>(),
-			new RegisterUserRequest(customerId, _email, _password, _password))
-			.Returns(new IntegrationHttpResponse()
-			{
-				Data = JsonConvert.SerializeObject(new { userId = Guid.NewGuid() }),
-				Success = true
-			});
+
+		var userCreationResult = new UserRegisteredResult()
+		{
+			Succeeded = true,
+			UserId = Guid.NewGuid().ToString()
+		};
+
+		var apiClient = new ApiGatewayClient(_requestAdapter);
+		// mocked kiota request
+		_requestAdapter.SendAsync(
+			Arg.Any<RequestInformation>(),
+			Arg.Any<ParsableFactory<UserRegisteredResult>>(),
+			Arg.Any<Dictionary<string, ParsableFactory<IParsable>>>(),
+			Arg.Any<CancellationToken>())
+			.Returns(userCreationResult);
 
 		var confirmation = _password;
 		var registerCommand = RegisterCustomer
 			.Create(_email, _password, confirmation, _name, _streetAddress, _creditLimit);
 		var commandHandler = new RegisterCustomerHandler(
-			_htpRequester, _checker, _options, _dummyRepository);
+			apiClient, _checker, _options, _dummyRepository);
 
 		// When
 		await commandHandler.HandleAsync(registerCommand, CancellationToken.None);
@@ -49,11 +56,20 @@ public class RegisterCustomerHandlerTests
 		// Given       
 		_checker.IsUnique(Arg.Any<string>())
 			.Returns(false);
+
+		var apiClient = new ApiGatewayClient(_requestAdapter);
+		// mocked kiota request
+		_ = _requestAdapter.SendAsync(
+			Arg.Any<RequestInformation>(),
+			Arg.Any<ParsableFactory<UserRegisteredResult>>(),
+			Arg.Any<Dictionary<string, ParsableFactory<IParsable>>>(),
+			Arg.Any<CancellationToken>());
+
 		var confirmation = _password;
 		var registerCommand = RegisterCustomer
 			.Create(_email, _password, confirmation, _name, _streetAddress, _creditLimit);
 		var commandHandler = new RegisterCustomerHandler(
-			_htpRequester, _checker, _options, _dummyRepository);
+			apiClient, _checker, _options, _dummyRepository);
 
 		// When & Then
 		await Assert.ThrowsAsync<BusinessRuleException>(() =>
@@ -65,14 +81,8 @@ public class RegisterCustomerHandlerTests
 	public const string _password = "p4ssw0rd";
 	public const string _streetAddress = "Rue XYZ";
 	public const decimal _creditLimit = 1000;
-	private IHttpRequester _htpRequester = Substitute.For<IHttpRequester>();
 	private IEmailUniquenessChecker _checker = Substitute.For<IEmailUniquenessChecker>();
-	private IOptions<TokenIssuerSettings> _options = Substitute.For<IOptions<TokenIssuerSettings>>();
+	private IRequestAdapter _requestAdapter = Substitute.For<IRequestAdapter>();
 	private DummyEventStoreRepository<Customer> _dummyRepository = new DummyEventStoreRepository<Customer>();
+	private IOptions<TokenIssuerSettings> _options = Substitute.For<IOptions<TokenIssuerSettings>>();
 }
-
-public record RegisterUserRequest(
-	Guid CustomerId,
-	string Email,
-	string Password,
-	string PasswordConfirm);

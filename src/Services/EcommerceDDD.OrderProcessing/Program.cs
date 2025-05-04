@@ -1,6 +1,9 @@
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
+// API Versioning
+services.AddApiVersioning(ApiVersions.V2);
+
 services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddCoreInfrastructure(builder.Configuration);
@@ -11,7 +14,6 @@ services.AddHealthChecks();
 services.AddApiGatewayClient(builder.Configuration);
 
 // Services
-services.AddScoped<IOrderStatusBroadcaster, OrderStatusBroadcaster>();
 services.AddScoped<IEventStoreRepository<Order>, MartenRepository<Order>>();
 services.AddMarten(builder.Configuration, options =>
     options.ConfigureProjections());

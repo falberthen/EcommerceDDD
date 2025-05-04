@@ -49,7 +49,7 @@ public class PlaceOrderHandlerTests
 		.Returns(quoteApiResponse);
 
 		var placeOrder = PlaceOrder.Create(_quoteId);
-		var placeOrderHandler = new PlaceOrderHandler(apiClient, orderWriteRepository, _orderStatusBroadcaster);
+		var placeOrderHandler = new PlaceOrderHandler(apiClient, orderWriteRepository);
 
 		// When
 		await placeOrderHandler.HandleAsync(placeOrder, CancellationToken.None);
@@ -71,7 +71,7 @@ public class PlaceOrderHandlerTests
 		var apiClient = new ApiGatewayClient(_requestAdapter);
 
 		var placeOrder = PlaceOrder.Create(_quoteId);
-		var placeOrderHandler = new PlaceOrderHandler(apiClient, orderWriteRepository, _orderStatusBroadcaster);
+		var placeOrderHandler = new PlaceOrderHandler(apiClient, orderWriteRepository);
 
 		// When & Then
 		await Assert.ThrowsAsync<ApplicationLogicException>(() =>
@@ -79,6 +79,5 @@ public class PlaceOrderHandlerTests
 	}
 
 	private readonly QuoteId _quoteId = QuoteId.Of(Guid.NewGuid());	
-	private IOrderStatusBroadcaster _orderStatusBroadcaster = Substitute.For<IOrderStatusBroadcaster>();
 	private IRequestAdapter _requestAdapter = Substitute.For<IRequestAdapter>();
 }

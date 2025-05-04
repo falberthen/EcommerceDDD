@@ -15,7 +15,7 @@ public class RequestCancelPaymentHandler(ApiGatewayClient apiGatewayClient) : IC
 
 		try
 		{
-			var paymentsRequestBuilder = _apiGatewayClient.Api.Payments[command.PaymentId.Value];
+			var paymentsRequestBuilder = _apiGatewayClient.Api.V2.Payments[command.PaymentId.Value];
 			await paymentsRequestBuilder
 				.DeleteAsync(cancelRequest, cancellationToken: cancellationToken);
 		}

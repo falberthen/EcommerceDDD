@@ -3,7 +3,7 @@ namespace EcommerceDDD.ShipmentProcessing.API.Controllers;
 [Authorize(Roles = Roles.M2MAccess)]
 [ApiController]
 [ApiVersion(ApiVersions.V2)]
-[Route("api/shipments")]
+[Route("api/v{version:apiVersion}/shipments")]
 public class ShipmentsController(
 	ICommandBus commandBus,
 	IQueryBus queryBus

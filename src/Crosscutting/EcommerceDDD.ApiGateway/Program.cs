@@ -14,6 +14,9 @@ builder.Configuration
 	)
 	.AddEnvironmentVariables();
 
+// API Versioning
+services.AddApiVersioning(ApiVersions.V2);
+
 services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddJwtAuthentication(builder.Configuration);
@@ -22,10 +25,6 @@ services.AddSignalR();
 services.AddSwaggerGen();
 services.AddSwagger(builder.Configuration);
 services.AddOcelot(builder.Configuration);
-
-// Register Koalesce
-services.AddKoalesce(builder.Configuration)
-	.ForOpenAPI();
 
 // Register CORS
 const string corsPolicy = "CorsPolicy";
@@ -41,22 +40,20 @@ services.AddCors(o =>
 	})
 );
 
-// Add business services
-services.AddScoped<IOrderStatusUpdater, OrderStatusUpdater>();
+
+// Register Koalesce
+services.AddKoalesce(builder.Configuration)
+	.ForOpenAPI();
 
 // Build the app
 var app = builder.Build();
 
+app.UseCors(corsPolicy);
 app.UseWebSockets();
 app.UseRouting();
-app.UseCors(corsPolicy);
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseHealthChecks();
-
-// SignalR Hubs
-app.MapControllers();
-app.MapHub<OrderStatusHub>("/orderstatushub");
 
 // Enable Koalesce before Swagger Middleware
 app.UseKoalesce();
@@ -78,7 +75,6 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.UseOcelot().Wait();
-
 
 // Run the app
 app.Run();

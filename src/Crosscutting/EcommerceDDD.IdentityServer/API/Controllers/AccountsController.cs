@@ -2,13 +2,14 @@
 
 [AllowAnonymous]
 [ApiController]
-[Route("api/accounts")]
+[Route("api/v{version:apiVersion}/accounts")]
 public class AccountsController(IIdentityManager identityManager) : CustomControllerBase
 {
     private readonly IIdentityManager _identityManager = identityManager
 		?? throw new ArgumentNullException(nameof(identityManager));
 
 	[HttpPost, Route("login")]
+	[MapToApiVersion(ApiVersions.V2)]
 	[ProducesResponseType(typeof(LoginResult), StatusCodes.Status200OK)]
 	public async Task<IActionResult> UserLogin(LoginRequest request)
     {
@@ -26,6 +27,7 @@ public class AccountsController(IIdentityManager identityManager) : CustomContro
     }
 
     [HttpPost, Route("register")]
+	[MapToApiVersion(ApiVersions.V2)]
 	[ProducesResponseType(typeof(UserRegisteredResult), StatusCodes.Status200OK)]
 	public async Task<IActionResult> Register(RegisterUserRequest request)
     {

@@ -3,7 +3,7 @@
 [Authorize]
 [ApiController]
 [ApiVersion(ApiVersions.V2)]
-[Route("api/inventory")]
+[Route("api/v{version:apiVersion}/inventory")]
 public class InventoryController(
 	ICommandBus commandBus,
 	IQueryBus queryBus

@@ -1,8 +1,8 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/payments",
-      "UpstreamPathTemplate": "/api/payments",
+      "DownstreamPathTemplate": "/api/v{version}/payments",
+      "UpstreamPathTemplate": "/api/v{version}/payments",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -10,11 +10,11 @@
           "Port": 80
         }
       ],
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/payments/{id}",
-      "UpstreamPathTemplate": "/api/payments/{id}",
+      "DownstreamPathTemplate": "/api/v{version}/payments/{id}",
+      "UpstreamPathTemplate": "/api/v{version}/payments/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -22,7 +22,7 @@
           "Port": 80
         }
       ],
-      "UpstreamHttpMethod": [ "DELETE" ],
+      "UpstreamHttpMethod": [ "DELETE" ]
     }
   ]
 }

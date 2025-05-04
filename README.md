@@ -31,6 +31,7 @@ This project is an experimental full-stack application I use to combine several 
 ├── Crosscutting
 │   ├── ServiceClients
 │   ├── ApiGateway
+│   ├── SignalR
 │   └── IdentityServer
 │
 ├── Services

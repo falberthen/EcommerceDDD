@@ -82,7 +82,7 @@ export class CartComponent implements OnInit {
 
   async showQuoteStoredEvents() {
     try {
-      await this.kiotaClientService.client.api.quotes
+      await this.kiotaClientService.client.api.v2.quotes
         .byQuoteId(this.quote?.quoteId!)
         .history.get()
         .then((result) => {
@@ -107,7 +107,7 @@ export class CartComponent implements OnInit {
       .then(async (confirmed) => {
         if (confirmed) {
           try {
-            await this.kiotaClientService.client.api.quotes
+            await this.kiotaClientService.client.api.v2.quotes
               .byQuoteId(this.quote?.quoteId!)
               .delete()
               .then(async () => {
@@ -123,7 +123,7 @@ export class CartComponent implements OnInit {
 
   async getOpenQuote() {
     try {
-      await this.kiotaClientService.client.api.quotes.get().then((result) => {
+      await this.kiotaClientService.client.api.v2.quotes.get().then((result) => {
         if (result?.data?.quoteId) {
           this.setQuote(result.data!);
           this.emitQuote(result.data!);
@@ -142,7 +142,7 @@ export class CartComponent implements OnInit {
       currencyCode: this.currentCurrency
     }
 
-    await this.kiotaClientService.client.api.quotes
+    await this.kiotaClientService.client.api.v2.quotes
       .post(request)
       .then(async () => {
         await this.getOpenQuote();
@@ -163,7 +163,7 @@ export class CartComponent implements OnInit {
       quantity: product.quantityAddedToCart
     };
 
-    return await this.kiotaClientService.client.api.quotes
+    return await this.kiotaClientService.client.api.v2.quotes
       .byQuoteId(this.quote?.quoteId!)
       .items.put(request)
       .then(async () => {
@@ -180,7 +180,7 @@ export class CartComponent implements OnInit {
       .then(async (confirmed) => {
         if (confirmed) {
           try {
-            await this.kiotaClientService.client.api.quotes
+            await this.kiotaClientService.client.api.v2.quotes
               .byQuoteId(this.quote?.quoteId!)
               .items.byProductId(quoteItem.productId!)
               .delete()
@@ -200,7 +200,7 @@ export class CartComponent implements OnInit {
       .then(async (confirmed) => {
         if (this.quote && confirmed) {
           try {
-            this.kiotaClientService.client.api.orders.quote
+            this.kiotaClientService.client.api.v2.orders.quote
               .byQuoteId(this.quote.quoteId!)
               .post()
               .then(() => {

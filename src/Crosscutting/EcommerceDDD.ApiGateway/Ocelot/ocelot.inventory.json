@@ -1,8 +1,8 @@
 {
   "Routes": [
     {
-      "UpstreamPathTemplate": "/api/inventory",
-      "DownstreamPathTemplate": "/api/inventory",
+      "UpstreamPathTemplate": "/api/v{version}/inventory",
+      "DownstreamPathTemplate": "/api/v{version}/inventory",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -13,8 +13,8 @@
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
-      "UpstreamPathTemplate": "/api/inventory/{everything}",
-      "DownstreamPathTemplate": "/api/inventory/{everything}",
+      "UpstreamPathTemplate": "/api/v{version}/inventory/{everything}",
+      "DownstreamPathTemplate": "/api/v{version}/inventory/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {

@@ -1,5 +1,4 @@
 ﻿using EcommerceDDD.ServiceClients.ApiGateway.Models;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace EcommerceDDD.QuoteManagement.Infrastructure.ProductMapping;
 
@@ -13,7 +12,7 @@ public class ProductMapper(ApiGatewayClient apiGatewayClient) : IProductMapper
 	/// <param name="cancellationToken"></param>
 	/// <returns></returns>
 	/// <exception cref="RecordNotFoundException"></exception>
-	public async Task<IEnumerable<ProductViewModel>> MapProductFromCatalogAsync(IEnumerable<ProductId> productIds, 
+	public async Task<IEnumerable<ProductViewModel>> MapProductFromCatalogAsync(IEnumerable<ProductId> productIds,
 		Currency currency, CancellationToken cancellationToken)
 	{
 		var productIdValues = productIds
@@ -29,7 +28,7 @@ public class ProductMapper(ApiGatewayClient apiGatewayClient) : IProductMapper
 
 		try
 		{
-			var response = await apiGatewayClient.Api.Products
+			var response = await apiGatewayClient.Api.V2.Products
 				.PostAsync(request, cancellationToken: cancellationToken);
 
 			if (response?.Success == false || response?.Data is null)
@@ -42,6 +41,6 @@ public class ProductMapper(ApiGatewayClient apiGatewayClient) : IProductMapper
 		{
 			throw new ApplicationLogicException(
 				$"An error occurred requesting products from catalog.", ex);
-		}		
+		}
 	}
 }

@@ -63,7 +63,7 @@ public class ProcessOrderHandler(
 	{
 		try
 		{
-			var quoteRequestBuilder = _apiGatewayClient.Api.Quotes[command.QuoteId.Value];
+			var quoteRequestBuilder = _apiGatewayClient.Api.V2.Quotes[command.QuoteId.Value];
 			var response = await quoteRequestBuilder
 				.Details.GetAsync(cancellationToken: cancellationToken);
 

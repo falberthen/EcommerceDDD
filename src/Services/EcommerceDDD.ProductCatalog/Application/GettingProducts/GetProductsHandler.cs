@@ -66,7 +66,7 @@ public class GetProductsHandler(
 			{
 				ProductIds = productIds
 			};
-			var inventoryRequestBuilder = _apiGatewayClient.Api.Inventory;
+			var inventoryRequestBuilder = _apiGatewayClient.Api.V2.Inventory;
 			var response = await inventoryRequestBuilder.CheckStockQuantity
 				.PostAsync(request, cancellationToken: cancellationToken);
 

@@ -1,4 +1,6 @@
-﻿namespace EcommerceDDD.Core.Infrastructure.Outbox;
+﻿using System.Net;
+
+namespace EcommerceDDD.Core.Infrastructure.Outbox;
 
 public class DebeziumConnectorSetup : IDebeziumConnectorSetup
 {
@@ -74,7 +76,7 @@ public class DebeziumConnectorSetup : IDebeziumConnectorSetup
 			{ "transforms.outbox.table.field.event.id", "id" },
 			{ "transforms.outbox.table.field.event.key", "mt_dotnet_type" },
 			{ "transforms.outbox.table.field.event.payload", "data" },
-			{ "transforms.outbox.route.by.id", "Id" },
+			{ "transforms.outbox.route.by.id", "id" },
 			{ "transforms.outbox.route.by.field", "mt_dotnet_type" },
 			{ "transforms.outbox.table.fields.additional.placement", "mt_dotnet_type:header:eventType" },
 			{ "transforms.outbox.debezium.expand.json.payload", "true" },
@@ -84,7 +86,8 @@ public class DebeziumConnectorSetup : IDebeziumConnectorSetup
 			{ "internal.value.converter", "org.apache.kafka.connect.json.JsonConverter" },
 			{ "key.converter.schemas.enable", "false" },
 			{ "value.converter.schemas.enable", "false" },
-			{ "plugin.name", "pgoutput" }
+			{ "plugin.name", "pgoutput" },
+			{ "snapshot.mode", "never" }
 		};
 	}
 }

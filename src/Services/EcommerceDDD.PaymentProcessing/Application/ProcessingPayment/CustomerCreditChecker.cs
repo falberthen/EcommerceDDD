@@ -1,16 +1,14 @@
-﻿using EcommerceDDD.ServiceClients.ApiGateway;
-
-namespace EcommerceDDD.PaymentProcessing.Application.ProcessingPayment;
+﻿namespace EcommerceDDD.PaymentProcessing.Application.ProcessingPayment;
 
 public class CustomerCreditChecker(ApiGatewayClient apiGatewayClient) : ICustomerCreditChecker
 {
 	private readonly ApiGatewayClient _apiGatewayClient = apiGatewayClient;
 
-	public async Task<bool> CheckIfCreditIsEnoughAsync(CustomerId customerId, Money totalAmount, 
+	public async Task<bool> CheckIfCreditIsEnoughAsync(CustomerId customerId, Money totalAmount,
 		CancellationToken cancellationToken)
 	{
 		// Checking customer's credit
-		var customerRequestBuilder = _apiGatewayClient.Api.Customers[customerId.Value];
+		var customerRequestBuilder = _apiGatewayClient.Api.V2.Customers[customerId.Value];
 		var response = await customerRequestBuilder
 			.Credit.GetAsync(cancellationToken: cancellationToken);
 

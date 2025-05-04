@@ -4,13 +4,13 @@ namespace EcommerceDDD.OrderProcessing.Application.Payments.RequestingPayment;
 
 public class RequestPaymentHandler(
 	ApiGatewayClient apiGatewayClient,
-	IOrderStatusBroadcaster orderStatusBroadcaster,
 	IEventStoreRepository<Order> orderWriteRepository
 ) : ICommandHandler<RequestPayment>
 {
-	private readonly ApiGatewayClient _apiGatewayClient = apiGatewayClient;
-	private readonly IOrderStatusBroadcaster _orderStatusBroadcaster = orderStatusBroadcaster;
-	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
+	private readonly ApiGatewayClient _apiGatewayClient = apiGatewayClient
+		?? throw new ArgumentNullException(nameof(apiGatewayClient));
+	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository
+		?? throw new ArgumentNullException(nameof(orderWriteRepository));
 
 	public async Task HandleAsync(RequestPayment command, CancellationToken cancellationToken)
 	{
@@ -30,13 +30,27 @@ public class RequestPaymentHandler(
 		// Requesting payment
 		await RequestPaymentAsync(command, productItemsRequest, cancellationToken);
 
-		// Updating order status on the UI with SignalR
-		await _orderStatusBroadcaster.UpdateOrderStatus(
-			new UpdateOrderStatusRequest(
-				command.CustomerId.Value,
-				command.OrderId.Value,
-				order.Status.ToString(),
-				(int)order.Status));
+		try
+		{
+			await Task.Delay(TimeSpan.FromSeconds(5)); // 5-second delay
+
+			// Updating order status on the UI with SignalR
+			var request = new UpdateOrderStatusRequest()
+			{
+				CustomerId = order.CustomerId.Value,
+				OrderId = order.Id.Value,
+				OrderStatusText = order.Status.ToString(),
+				OrderStatusCode = (int)order.Status
+			};
+
+			await _apiGatewayClient.Api.V2.Signalr.Updateorderstatus
+				.PostAsync(request, cancellationToken: cancellationToken);
+		}
+		catch (Microsoft.Kiota.Abstractions.ApiException ex)
+		{
+			throw new ApplicationLogicException(
+				$"An error occurred when updating status for order {order.Id.Value}.", ex);
+		}
 	}
 
 	public async Task RequestPaymentAsync(RequestPayment command, List<ProductItemRequest> productItemsRequest,
@@ -53,7 +67,7 @@ public class RequestPaymentHandler(
 				ProductItems = productItemsRequest
 			};
 
-			var paymentsRequestBuilder = _apiGatewayClient.Api.Payments;
+			var paymentsRequestBuilder = _apiGatewayClient.Api.V2.Payments;
 			await paymentsRequestBuilder
 				.PostAsync(paymentRequest, cancellationToken: cancellationToken);
 		}

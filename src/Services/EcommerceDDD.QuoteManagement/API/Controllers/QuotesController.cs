@@ -3,7 +3,7 @@ namespace EcommerceDDD.QuoteManagement.API.Controllers;
 [Authorize]
 [ApiController]
 [ApiVersion(ApiVersions.V2)]
-[Route("api/quotes")]
+[Route("api/v{version:apiVersion}/quotes")]
 public class QuotesController(
 	ICommandBus commandBus,
 	IQueryBus queryBus

@@ -7,7 +7,7 @@ public static class ApiGatewayClientExtensions
 		// Configure HttpClient with Bearer Token Authentication
 		services.AddHttpClient<IRequestAdapter, HttpClientRequestAdapter>(client =>
 		{
-			var baseUrl = configuration["IntegrationHttpSettings:ApiGatewayBaseUrl"];
+			var baseUrl = configuration["ApiGatewayBaseUrl"];
 			if (string.IsNullOrEmpty(baseUrl))			
 				throw new InvalidOperationException("The ApiGatewayBaseUrl configuration setting is missing or empty.");
 			

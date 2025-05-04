@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Options;
-
 namespace EcommerceDDD.Core.Infrastructure.Tests.Http;
 
 public class TokenRequesterTests
@@ -8,10 +6,15 @@ public class TokenRequesterTests
 	public async Task GetApplicationToken_ShouldReturnStatusCodeOK()
 	{
 		// Given
-		var dummyResponse = JsonConvert
-			.SerializeObject(new IntegrationHttpResponse() { Success = true });
+		var responseMessage = new HttpResponseMessage(HttpStatusCode.OK)
+		{
+			Content = new StringContent(
+				"access_token=" + CreateTestToken() + "&expires_in=3600&token_type=Bearer",
+				Encoding.UTF8,
+				"application/x-www-form-urlencoded")
+		};
 
-		var messageHandler = new MockHttpMessageHandler(dummyResponse, HttpStatusCode.OK);
+		var messageHandler = new FakeHttpMessageHandler(responseMessage);
 		var httpClient = new HttpClient(messageHandler)
 		{
 			BaseAddress = _url
@@ -33,7 +36,7 @@ public class TokenRequesterTests
 			.GetApplicationTokenAsync();
 
 		// Then
-		Assert.NotNull(response);		
+		Assert.NotNull(response);
 		Assert.Equal(HttpStatusCode.OK, response.HttpStatusCode);
 	}
 
@@ -41,10 +44,15 @@ public class TokenRequesterTests
 	public async Task GetUserToken_ShouldReturnStatusCodeOK()
 	{
 		// Given
-		var dummyResponse = JsonConvert
-			.SerializeObject(new IntegrationHttpResponse() { Success = true });
+		var responseMessage = new HttpResponseMessage(HttpStatusCode.OK)
+		{
+			Content = new StringContent(
+				"access_token=" + CreateTestToken() + "&expires_in=3600&token_type=Bearer",
+				Encoding.UTF8,
+				"application/x-www-form-urlencoded")
+		};
 
-		var messageHandler = new MockHttpMessageHandler(dummyResponse, HttpStatusCode.OK);
+		var messageHandler = new FakeHttpMessageHandler(responseMessage);
 		var httpClient = new HttpClient(messageHandler)
 		{
 			BaseAddress = _url
@@ -70,5 +78,16 @@ public class TokenRequesterTests
 	private IMemoryCache _cache = Substitute.For<IMemoryCache>();
 	private IHttpContextAccessor _contextAccessor = Substitute.For<IHttpContextAccessor>();
 	private IOptions<TokenIssuerSettings> _options = Substitute.For<IOptions<TokenIssuerSettings>>();
-	
+
+	private static string CreateTestToken()
+	{
+		var tokenHandler = new JwtSecurityTokenHandler();
+		var token = new JwtSecurityToken(
+			issuer: "test",
+			audience: "test",
+			expires: DateTime.UtcNow.AddMinutes(30),
+			signingCredentials: null
+		);
+		return tokenHandler.WriteToken(token);
+	}
 }

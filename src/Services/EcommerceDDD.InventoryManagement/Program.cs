@@ -1,6 +1,9 @@
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
+// API Versioning
+services.AddApiVersioning(ApiVersions.V2);
+
 services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddCoreInfrastructure(builder.Configuration);

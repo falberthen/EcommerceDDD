@@ -17,8 +17,8 @@ public static class CoreInfrastructureExtensions
 			// Identity
 			.AddJwtAuthentication(configuration)
 			.AddScoped<IUserInfoRequester, UserInfoRequester>()
-			// Http integration
-			.ConfigureIntegrationHttpService(configuration)
+			// Token issuer
+			.ConfigureTokenRequester(configuration)
 			// Swagger extensions
 			.AddSwagger(configuration)
 			// Testing

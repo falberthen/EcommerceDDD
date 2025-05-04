@@ -1,8 +1,8 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/accounts/login",
-      "UpstreamPathTemplate": "/api/accounts/login",
+      "DownstreamPathTemplate": "/api/v{version}/accounts/login",
+      "UpstreamPathTemplate": "/api/v{version}/accounts/login",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -13,8 +13,8 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/accounts/register",
-      "UpstreamPathTemplate": "/api/accounts/register",
+      "DownstreamPathTemplate": "/api/v{version}/accounts/register",
+      "UpstreamPathTemplate": "/api/v{version}/accounts/register",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {

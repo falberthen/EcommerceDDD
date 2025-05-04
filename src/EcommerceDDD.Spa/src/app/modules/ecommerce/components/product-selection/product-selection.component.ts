@@ -64,7 +64,7 @@ export class ProductSelectionComponent implements OnInit {
         productIds: []
       };
 
-      await this.kiotaClientService.client.api.products
+      await this.kiotaClientService.client.api.v2.products
         .post(request)
         .then((result) => {
           if (result?.data) {

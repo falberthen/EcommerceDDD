@@ -59,7 +59,7 @@ export class CustomerAccountComponent implements OnInit {
     };
 
     try {
-      await this.kiotaClientService.anonymousClient.api.customers.post(
+      await this.kiotaClientService.anonymousClient.api.v2.customers.post(
         customerRegistration
       );
       this.notificationService.showSuccess('Account successfully created!');

@@ -1,11 +1,19 @@
+using EcommerceDDD.ServiceClients.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
+
+// API Versioning
+services.AddApiVersioning(ApiVersions.V2);
 
 services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddCoreInfrastructure(builder.Configuration);
 services.AddHandlersFromType(typeof(RegisterCustomerHandler));
 services.AddHealthChecks();
+
+// Kiota client
+services.AddApiGatewayClient(builder.Configuration);
 
 // Services
 services.AddScoped<IEmailUniquenessChecker, EmailUniquenessChecker>();
