@@ -46,7 +46,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 30s
+      start_period: 20s
     networks:
       - ecommercedddnet
     ports:
@@ -59,31 +59,13 @@ services:
       KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:29092,PLAINTEXT_HOST://kafka:9092'
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
     restart: 
       on-failure
     depends_on:      
       zookeeper:
         condition: service_started   
   
-  init-kafka:
-    image: confluentinc/cp-kafka:latest  
-    entrypoint: [ '/bin/sh', '-c' ]
-    networks:
-      - ecommercedddnet
-    environment:
-      KAFKA_CLUSTERS_0_NAME: local
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: 'kafka:29092'
-    command: >
-      /bin/sh -c "sleep 10 &&
-        kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic Orders --replication-factor 1 --partitions 1 &&
-        kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic Payments --replication-factor 1 --partitions 1 &&
-        kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic Shipments --replication-factor 1 --partitions 1"
-    restart: 
-      on-failure
-    depends_on:      
-      kafka:
-        condition: service_started
-
   kafka_topics_ui:
     image: provectuslabs/kafka-ui:latest
     hostname: kafka-ui
@@ -349,7 +331,7 @@ services:
       postgres:
         condition: service_healthy      
       kafka:
-        condition: service_healthy
+        condition: service_healthy      
       ecommerceddd-products:
         condition: service_started
       connect:

@@ -2,7 +2,6 @@
 #pragma warning disable CS0618
 using EcommerceDDD.ServiceClients.ApiGateway.Api.Inventory.Item.DecreaseStockQuantity;
 using EcommerceDDD.ServiceClients.ApiGateway.Api.Inventory.Item.History;
-using EcommerceDDD.ServiceClients.ApiGateway.Api.Inventory.Item.IncreaseStockQuantity;
 using Microsoft.Kiota.Abstractions.Extensions;
 using Microsoft.Kiota.Abstractions;
 using System.Collections.Generic;
@@ -26,11 +25,6 @@ namespace EcommerceDDD.ServiceClients.ApiGateway.Api.Inventory.Item
         public global::EcommerceDDD.ServiceClients.ApiGateway.Api.Inventory.Item.History.HistoryRequestBuilder History
         {
             get => new global::EcommerceDDD.ServiceClients.ApiGateway.Api.Inventory.Item.History.HistoryRequestBuilder(PathParameters, RequestAdapter);
-        }
-        /// <summary>The increaseStockQuantity property</summary>
-        public global::EcommerceDDD.ServiceClients.ApiGateway.Api.Inventory.Item.IncreaseStockQuantity.IncreaseStockQuantityRequestBuilder IncreaseStockQuantity
-        {
-            get => new global::EcommerceDDD.ServiceClients.ApiGateway.Api.Inventory.Item.IncreaseStockQuantity.IncreaseStockQuantityRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
         /// Instantiates a new <see cref="global::EcommerceDDD.ServiceClients.ApiGateway.Api.Inventory.Item.WithProductItemRequestBuilder"/> and sets the default values.
