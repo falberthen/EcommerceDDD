@@ -2,6 +2,7 @@ namespace EcommerceDDD.QuoteManagement.API.Controllers;
 
 [Authorize]
 [ApiController]
+[ApiVersion(ApiVersions.V2)]
 [Route("api/quotes")]
 public class QuotesController(
 	ICommandBus commandBus,
@@ -13,6 +14,7 @@ public class QuotesController(
 	/// </summary>
 	/// <returns></returns>
 	[HttpGet]
+	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanRead)]
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<QuoteViewModel?>))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -27,6 +29,7 @@ public class QuotesController(
 	/// <param name="request"></param>
 	/// <returns></returns>
 	[HttpPost]
+	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanWrite)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -43,6 +46,7 @@ public class QuotesController(
 	/// <param name="quoteId"></param>
 	/// <returns></returns>
 	[HttpGet, Route("{quoteId:guid}/history")]
+	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanRead)]
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<IEventHistory>>))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -60,6 +64,7 @@ public class QuotesController(
 	/// <param name="request"></param>
 	/// <returns></returns>
 	[HttpPut, Route("{quoteId:guid}/items")]
+	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanWrite)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -80,6 +85,7 @@ public class QuotesController(
 	/// <param name="productId"></param>
 	/// <returns></returns>
 	[HttpDelete, Route("{quoteId:guid}/items/{productId:guid}")]
+	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanDelete)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -96,6 +102,7 @@ public class QuotesController(
 	/// <param name="quoteId"></param>
 	/// <returns></returns>
 	[HttpDelete, Route("{quoteId:guid}")]
+	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanDelete)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -112,6 +119,7 @@ public class QuotesController(
 	/// <param name="quoteId"></param>
 	/// <returns></returns>
 	[HttpPut, Route("{quoteId:guid}/confirm")]
+	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.M2MAccess, Policy = Policies.CanWrite)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -128,6 +136,7 @@ public class QuotesController(
 	/// </summary>
 	/// <returns></returns>
 	[HttpGet, Route("{quoteId:guid?}/details")]
+	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.M2MAccess, Policy = Policies.CanRead)]
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<QuoteViewModel?>))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]

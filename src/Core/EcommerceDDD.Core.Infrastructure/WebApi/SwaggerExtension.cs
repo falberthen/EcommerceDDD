@@ -70,7 +70,7 @@ public static class SwaggerExtension
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
-            c.SwaggerEndpoint($"/swagger/{swaggerSettings.Version}/swagger.json", swaggerSettings.Title);
+            c.SwaggerEndpoint($"/swagger/{swaggerSettings.Version ?? ApiVersions.V2}/swagger.json", swaggerSettings.Title);
         });
 
         return app;

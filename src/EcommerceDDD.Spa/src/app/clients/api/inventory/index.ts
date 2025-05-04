@@ -4,10 +4,6 @@
 // @ts-ignore
 import { CheckStockQuantityRequestBuilderRequestsMetadata, type CheckStockQuantityRequestBuilder } from './checkStockQuantity/index';
 // @ts-ignore
-import { DecreaseStockQuantityRequestBuilderNavigationMetadata, type DecreaseStockQuantityRequestBuilder } from './decreaseStockQuantity/index';
-// @ts-ignore
-import { IncreaseStockQuantityRequestBuilderNavigationMetadata, type IncreaseStockQuantityRequestBuilder } from './increaseStockQuantity/index';
-// @ts-ignore
 import { type WithProductItemRequestBuilder, WithProductItemRequestBuilderNavigationMetadata } from './item/index';
 // @ts-ignore
 import { type BaseRequestBuilder, type Guid, type KeysToExcludeForNavigationMetadata, type NavigationMetadata } from '@microsoft/kiota-abstractions';
@@ -20,14 +16,6 @@ export interface InventoryRequestBuilder extends BaseRequestBuilder<InventoryReq
      * The checkStockQuantity property
      */
     get checkStockQuantity(): CheckStockQuantityRequestBuilder;
-    /**
-     * The decreaseStockQuantity property
-     */
-    get decreaseStockQuantity(): DecreaseStockQuantityRequestBuilder;
-    /**
-     * The increaseStockQuantity property
-     */
-    get increaseStockQuantity(): IncreaseStockQuantityRequestBuilder;
     /**
      * Gets an item from the ApiSdk.api.inventory.item collection
      * @param productId Unique identifier of the item
@@ -49,12 +37,6 @@ export const InventoryRequestBuilderNavigationMetadata: Record<Exclude<keyof Inv
     },
     checkStockQuantity: {
         requestsMetadata: CheckStockQuantityRequestBuilderRequestsMetadata,
-    },
-    decreaseStockQuantity: {
-        navigationMetadata: DecreaseStockQuantityRequestBuilderNavigationMetadata,
-    },
-    increaseStockQuantity: {
-        navigationMetadata: IncreaseStockQuantityRequestBuilderNavigationMetadata,
     },
 };
 /* tslint:enable */

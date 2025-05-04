@@ -7,12 +7,12 @@ public record class CancelPayment : ICommand
 
     public static CancelPayment Create(
         PaymentId paymentId,
-        PaymentCancellationReason paymentCancellationReason)
+        int paymentCancellationReason)
     {
         if (paymentId is null)
             throw new ArgumentNullException(nameof(paymentId));
 
-        return new CancelPayment(paymentId, paymentCancellationReason);
+		return new CancelPayment(paymentId, (PaymentCancellationReason)paymentCancellationReason);
     }
     private CancelPayment(
         PaymentId paymentId, 

@@ -7,12 +7,26 @@ public abstract class BackgroundWorker(
     private readonly ILogger<BackgroundWorker> _logger = logger;
     private readonly Func<CancellationToken, Task> _perform = perform;
 
-    protected override Task ExecuteAsync(CancellationToken stoppingToken) =>
-        Task.Run(async () =>
-        {
-            await Task.Yield();
-            _logger.LogInformation("Background worker started...");
-            await _perform(stoppingToken).ConfigureAwait(false);
-            _logger.LogInformation("Background worker stopped...");
-        }, stoppingToken);
+	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+	{
+		_logger.LogInformation("Background worker started...");
+
+		try
+		{
+			await _perform(stoppingToken).ConfigureAwait(false);
+		}
+		catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
+		{
+			_logger.LogInformation("Background worker cancellation requested.");
+		}
+		catch (Exception ex)
+		{
+			_logger.LogCritical(ex, "Unhandled exception in background worker.");
+			throw;
+		}
+		finally
+		{
+			_logger.LogInformation("Background worker stopped...");
+		}
+	}
 }

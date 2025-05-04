@@ -7,8 +7,11 @@ public sealed class ProductId : StronglyTypedId<Guid>
         return new ProductId(value);
     }
 
-    public static IEnumerable<ProductId> Of(IList<Guid> values)
+    public static IEnumerable<ProductId> Of(IList<Guid>? values)
     {
+		if (values is null)
+			throw new ArgumentNullException(nameof(values));
+
         foreach (var item in values)
             yield return Of(item);
     }
