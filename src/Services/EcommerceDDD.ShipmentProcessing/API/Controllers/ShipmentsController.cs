@@ -1,15 +1,17 @@
 namespace EcommerceDDD.ShipmentProcessing.API.Controllers;
 
-[ApiController]
-[Route("api/shipments")]
 [Authorize(Roles = Roles.M2MAccess)]
+[ApiController]
+[ApiVersion(ApiVersions.V2)]
+[Route("api/shipments")]
 public class ShipmentsController(
 	ICommandBus commandBus,
 	IQueryBus queryBus
 ) : CustomControllerBase(commandBus, queryBus)
 {
     [HttpPost]
-    [Authorize(Policy = Policies.CanWrite)]
+	[MapToApiVersion(ApiVersions.V2)]
+	[Authorize(Policy = Policies.CanWrite)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> RequestOrderShipment([FromBody] ShipOrderRequest request
