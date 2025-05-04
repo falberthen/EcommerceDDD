@@ -7,9 +7,9 @@ import { createProblemDetailsFromDiscriminatorValue, serializeDecreaseQuantityIn
 import { type BaseRequestBuilder, type Parsable, type ParsableFactory, type RequestConfiguration, type RequestInformation, type RequestsMetadata } from '@microsoft/kiota-abstractions';
 
 /**
- * Builds and executes requests for operations under /api/inventory/decrease-stock-quantity/{productId}
+ * Builds and executes requests for operations under /api/inventory/{productId}/decrease-stock-quantity
  */
-export interface WithProductItemRequestBuilder extends BaseRequestBuilder<WithProductItemRequestBuilder> {
+export interface DecreaseStockQuantityRequestBuilder extends BaseRequestBuilder<DecreaseStockQuantityRequestBuilder> {
     /**
      * @param body The request body
      * @param requestConfiguration Configuration for the request such as headers, query parameters, and middleware options.
@@ -27,13 +27,13 @@ export interface WithProductItemRequestBuilder extends BaseRequestBuilder<WithPr
 /**
  * Uri template for the request builder.
  */
-export const WithProductItemRequestBuilderUriTemplate = "{+baseurl}/api/inventory/decrease-stock-quantity/{productId}";
+export const DecreaseStockQuantityRequestBuilderUriTemplate = "{+baseurl}/api/inventory/{productId}/decrease-stock-quantity";
 /**
  * Metadata for all the requests in the request builder.
  */
-export const WithProductItemRequestBuilderRequestsMetadata: RequestsMetadata = {
+export const DecreaseStockQuantityRequestBuilderRequestsMetadata: RequestsMetadata = {
     put: {
-        uriTemplate: WithProductItemRequestBuilderUriTemplate,
+        uriTemplate: DecreaseStockQuantityRequestBuilderUriTemplate,
         responseBodyContentType: "application/json, text/plain;q=0.9",
         errorMappings: {
             400: createProblemDetailsFromDiscriminatorValue as ParsableFactory<Parsable>,

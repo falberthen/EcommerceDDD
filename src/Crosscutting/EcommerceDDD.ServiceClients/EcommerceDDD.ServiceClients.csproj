@@ -25,8 +25,8 @@
     </None>
   </ItemGroup>
 
-	<!--# Generating API Gateway client with Kiota | Uncomment it to Generate the API Gateway client with Kiota again-->
-	<!--<Target Name="GenerateKiotaClient" BeforeTargets="Build">				
+	<!-- Only generate Kiota client during Debug builds -->
+	<Target Name="GenerateKiotaClient" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'">
 		<Exec Command="kiota generate -d ../../../src/Crosscutting/EcommerceDDD.ServiceClients/apigateway.yaml -l CSharp -c ApiGatewayClient -n EcommerceDDD.ServiceClients.ApiGateway -o Kiota" />
-	</Target>-->
+	</Target>
 </Project>

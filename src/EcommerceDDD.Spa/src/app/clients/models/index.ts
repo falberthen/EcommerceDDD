@@ -128,15 +128,6 @@ export function createIEventHistoryIListApiResponseFromDiscriminatorValue(parseN
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {IncreaseQuantityInStockRequest}
- */
-// @ts-ignore
-export function createIncreaseQuantityInStockRequestFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoIncreaseQuantityInStockRequest;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
  * @returns {InventoryStockUnitEventHistory}
  */
 // @ts-ignore
@@ -539,16 +530,6 @@ export function deserializeIntoIEventHistoryIListApiResponse(iEventHistoryIListA
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
-export function deserializeIntoIncreaseQuantityInStockRequest(increaseQuantityInStockRequest: Partial<IncreaseQuantityInStockRequest> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "increasedQuantity": n => { increaseQuantityInStockRequest.increasedQuantity = n.getNumberValue(); },
-    }
-}
-/**
- * The deserialization information for the current model
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
 export function deserializeIntoInventoryStockUnitEventHistory(inventoryStockUnitEventHistory: Partial<InventoryStockUnitEventHistory> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
         "aggregateId": n => { inventoryStockUnitEventHistory.aggregateId = n.getGuidValue(); },
@@ -681,6 +662,7 @@ export function deserializeIntoPaymentRequest(paymentRequest: Partial<PaymentReq
         "currencyCode": n => { paymentRequest.currencyCode = n.getStringValue(); },
         "customerId": n => { paymentRequest.customerId = n.getGuidValue(); },
         "orderId": n => { paymentRequest.orderId = n.getGuidValue(); },
+        "productItems": n => { paymentRequest.productItems = n.getCollectionOfObjectValues<ProductItemRequest>(createProductItemRequestFromDiscriminatorValue); },
         "totalAmount": n => { paymentRequest.totalAmount = n.getNumberValue(); },
     }
 }
@@ -892,12 +874,6 @@ export interface IEventHistoryIListApiResponse extends Parsable {
      */
     success?: boolean | null;
 }
-export interface IncreaseQuantityInStockRequest extends Parsable {
-    /**
-     * The increasedQuantity property
-     */
-    increasedQuantity?: number | null;
-}
 export interface InventoryStockUnitEventHistory extends Parsable {
     /**
      * The aggregateId property
@@ -1079,6 +1055,10 @@ export interface PaymentRequest extends Parsable {
      * The orderId property
      */
     orderId?: Guid | null;
+    /**
+     * The productItems property
+     */
+    productItems?: ProductItemRequest[] | null;
     /**
      * The totalAmount property
      */
@@ -1426,16 +1406,6 @@ export function serializeIEventHistoryIListApiResponse(writer: SerializationWrit
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeIncreaseQuantityInStockRequest(writer: SerializationWriter, increaseQuantityInStockRequest: Partial<IncreaseQuantityInStockRequest> | undefined | null = {}) : void {
-    if (increaseQuantityInStockRequest) {
-        writer.writeNumberValue("increasedQuantity", increaseQuantityInStockRequest.increasedQuantity);
-    }
-}
-/**
- * Serializes information the current object
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
 export function serializeInventoryStockUnitEventHistory(writer: SerializationWriter, inventoryStockUnitEventHistory: Partial<InventoryStockUnitEventHistory> | undefined | null = {}) : void {
     if (inventoryStockUnitEventHistory) {
         writer.writeGuidValue("aggregateId", inventoryStockUnitEventHistory.aggregateId);
@@ -1568,6 +1538,7 @@ export function serializePaymentRequest(writer: SerializationWriter, paymentRequ
         writer.writeStringValue("currencyCode", paymentRequest.currencyCode);
         writer.writeGuidValue("customerId", paymentRequest.customerId);
         writer.writeGuidValue("orderId", paymentRequest.orderId);
+        writer.writeCollectionOfObjectValues<ProductItemRequest>("productItems", paymentRequest.productItems, serializeProductItemRequest);
         writer.writeNumberValue("totalAmount", paymentRequest.totalAmount);
     }
 }
