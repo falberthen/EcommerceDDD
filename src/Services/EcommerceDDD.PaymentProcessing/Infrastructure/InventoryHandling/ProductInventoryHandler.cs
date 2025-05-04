@@ -76,29 +76,4 @@ public class ProductInventoryHandler(ApiGatewayClient apiGatewayClient) : IProdu
 
 		await Task.WhenAll(tasks);
 	}
-
-	public async Task IncreaseQuantityInStockAsync(IReadOnlyList<ProductItem> productItems, CancellationToken cancellationToken)
-	{
-		// Create a collection of tasks to run in parallel
-		await Task.WhenAll(productItems.Select(async productItem =>
-		{
-			var request = new IncreaseQuantityInStockRequest()
-			{
-				IncreasedQuantity = productItem.Quantity
-			};
-
-			try
-			{
-				var inventoryRequestBuilder = _apiGatewayClient.Api.Inventory[productItem.ProductId.Value];
-				await inventoryRequestBuilder
-					.IncreaseStockQuantity
-					.PutAsync(request, cancellationToken: cancellationToken);
-			}
-			catch (Microsoft.Kiota.Abstractions.ApiException ex)
-			{
-				throw new ApplicationLogicException(
-					$"An error occurred decreasing stock quantity for product {productItem.ProductId.Value}.", ex);
-			}
-		}));
-	}
 }
