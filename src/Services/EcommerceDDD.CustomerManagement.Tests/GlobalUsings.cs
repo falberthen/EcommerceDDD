@@ -13,7 +13,6 @@ global using EcommerceDDD.CustomerManagement.Application.GettingCustomerEventHis
 global using EcommerceDDD.CustomerManagement.Application.RegisteringCustomer;
 global using EcommerceDDD.CustomerManagement.Application.UpdatingCustomerInformation;
 global using EcommerceDDD.CustomerManagement.Domain;
-global using EcommerceDDD.CustomerManagement.Domain.Commands;
 global using EcommerceDDD.CustomerManagement.Domain.Events;
 global using EcommerceDDD.CustomerManagement.Infrastructure.Projections;
 global using EcommerceDDD.ServiceClients.ApiGateway;

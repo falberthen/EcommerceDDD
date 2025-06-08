@@ -1,4 +1,6 @@
-﻿namespace EcommerceDDD.InventoryManagement.API.Controllers;
+﻿using EcommerceDDD.InventoryManagement.Application.DecreasingQuantityInStock;
+
+namespace EcommerceDDD.InventoryManagement.API.Controllers;
 
 [Authorize]
 [ApiController]

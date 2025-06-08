@@ -1,3 +1,4 @@
+using EcommerceDDD.OrderProcessing.Application.Orders.ProcessingOrder;
 using EcommerceDDD.ServiceClients.ApiGateway.Models;
 
 namespace EcommerceDDD.OrderProcessing.Tests.Application;

@@ -1,4 +1,5 @@
-﻿using EcommerceDDD.ServiceClients.ApiGateway.Models;
+﻿using EcommerceDDD.OrderProcessing.Application.Orders.ProcessingOrder;
+using EcommerceDDD.ServiceClients.ApiGateway.Models;
 
 namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
 

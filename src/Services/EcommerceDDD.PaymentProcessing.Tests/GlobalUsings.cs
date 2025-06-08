@@ -7,7 +7,6 @@ global using EcommerceDDD.PaymentProcessing.Application.CancelingPayment;
 global using EcommerceDDD.PaymentProcessing.Application.ProcessingPayment;
 global using EcommerceDDD.PaymentProcessing.Application.RequestingPayment;
 global using EcommerceDDD.PaymentProcessing.Domain;
-global using EcommerceDDD.PaymentProcessing.Domain.Commands;
 global using EcommerceDDD.PaymentProcessing.Domain.Events;
 global using Microsoft.AspNetCore.Mvc;
 global using NSubstitute;

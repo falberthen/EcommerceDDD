@@ -15,7 +15,6 @@ global using EcommerceDDD.CustomerManagement.Application.GettingCustomerDetailsB
 global using EcommerceDDD.CustomerManagement.Application.GettingCustomerEventHistory;
 global using EcommerceDDD.CustomerManagement.Application.RegisteringCustomer;
 global using EcommerceDDD.CustomerManagement.Domain;
-global using EcommerceDDD.CustomerManagement.Domain.Commands;
 global using EcommerceDDD.CustomerManagement.Domain.Events;
 global using EcommerceDDD.CustomerManagement.Infrastructure.Projections;
 global using Marten;

@@ -11,7 +11,6 @@ global using EcommerceDDD.InventoryManagement.API.Controllers.Requests;
 global using EcommerceDDD.InventoryManagement.Application.CheckingQuantityInStock;
 global using EcommerceDDD.InventoryManagement.Application.GettingInventoryStockUnitEventHistory;
 global using EcommerceDDD.InventoryManagement.Domain;
-global using EcommerceDDD.InventoryManagement.Domain.Commands;
 global using EcommerceDDD.InventoryManagement.Domain.Events;
 global using EcommerceDDD.InventoryManagement.Infrastructure.Projections;
 global using EcommerceDDD.ProductCatalog.Infrastructure.Extensions;

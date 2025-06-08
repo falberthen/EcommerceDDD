@@ -20,9 +20,18 @@ This project is an experimental full-stack application I use to combine several 
 ---
 
 ## Architecture
-<a href="images/diagram.jpg" target="_blank">
-<img src="images/diagram.jpg"/>
+
+### High-Level System Architecture
+<a href="images/EcommerceDDD-hl-architecture.png" target="_blank">
+<img src="images/EcommerceDDD-hl-architecture.png"/>
 </a>
+
+
+### Detailed Architecture
+<a href="images/EcommerceDDD-detailed-architecture.png" target="_blank">
+<img src="images/EcommerceDDD-detailed-architecture.png"/>
+</a>
+
 
 ```
 ├── Core

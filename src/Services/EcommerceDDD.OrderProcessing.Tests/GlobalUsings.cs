@@ -12,7 +12,6 @@ global using EcommerceDDD.OrderProcessing.Application.Orders.GettingOrders;
 global using EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
 global using EcommerceDDD.OrderProcessing.Application.Payments.RecordingPayment;
 global using EcommerceDDD.OrderProcessing.Domain;
-global using EcommerceDDD.OrderProcessing.Domain.Commands;
 global using EcommerceDDD.OrderProcessing.Domain.Events;
 global using EcommerceDDD.ServiceClients.ApiGateway;
 global using Microsoft.AspNetCore.Mvc;

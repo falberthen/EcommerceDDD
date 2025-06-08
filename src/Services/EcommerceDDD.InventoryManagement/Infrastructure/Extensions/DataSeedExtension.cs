@@ -1,4 +1,5 @@
-﻿using EcommerceDDD.ServiceClients.ApiGateway.Models;
+﻿using EcommerceDDD.InventoryManagement.Application.EnteringProductInStock;
+using EcommerceDDD.ServiceClients.ApiGateway.Models;
 
 namespace EcommerceDDD.ProductCatalog.Infrastructure.Extensions;
 

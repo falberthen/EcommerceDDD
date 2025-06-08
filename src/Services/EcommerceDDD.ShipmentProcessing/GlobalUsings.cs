@@ -14,7 +14,6 @@ global using EcommerceDDD.ShipmentProcessing.API.Controllers.Requests;
 global using EcommerceDDD.ShipmentProcessing.Application.ProcessingShipment.IntegrationEvents;
 global using EcommerceDDD.ShipmentProcessing.Application.RequestingShipment;
 global using EcommerceDDD.ShipmentProcessing.Domain;
-global using EcommerceDDD.ShipmentProcessing.Domain.Commands;
 global using EcommerceDDD.ShipmentProcessing.Domain.Events;
 global using EcommerceDDD.ShipmentProcessing.Infrastructure.Projections;
 global using Marten;
