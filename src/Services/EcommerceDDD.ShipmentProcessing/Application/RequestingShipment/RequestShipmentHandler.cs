@@ -1,4 +1,6 @@
-﻿namespace EcommerceDDD.ShipmentProcessing.Application.RequestingShipment;
+﻿using EcommerceDDD.ShipmentProcessing.Application.ProcessingShipment;
+
+namespace EcommerceDDD.ShipmentProcessing.Application.RequestingShipment;
 
 public class RequestShipmentHandler(
 	ICommandBus commandBus,

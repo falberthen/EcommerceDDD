@@ -11,7 +11,6 @@ global using EcommerceDDD.InventoryManagement.Application.DecreasingQuantityInSt
 global using EcommerceDDD.InventoryManagement.Application.EnteringProductInStock;
 global using EcommerceDDD.InventoryManagement.Application.GettingInventoryStockUnitEventHistory;
 global using EcommerceDDD.InventoryManagement.Domain;
-global using EcommerceDDD.InventoryManagement.Domain.Commands;
 global using EcommerceDDD.InventoryManagement.Domain.Events;
 global using EcommerceDDD.InventoryManagement.Infrastructure.Projections;
 global using Microsoft.AspNetCore.Mvc;

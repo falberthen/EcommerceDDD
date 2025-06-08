@@ -1,4 +1,6 @@
-﻿namespace EcommerceDDD.ShipmentProcessing.Application.ProcessingPayment.IntegrationEvents;
+﻿using EcommerceDDD.ShipmentProcessing.Application.ProcessingShipment;
+
+namespace EcommerceDDD.ShipmentProcessing.Application.ProcessingPayment.IntegrationEvents;
 
 public class ProcessShipmentHandler(
 	IEventStoreRepository<Shipment> shipmentWriteRepository

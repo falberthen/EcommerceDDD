@@ -1,4 +1,6 @@
-﻿namespace EcommerceDDD.InventoryManagement.Application.DecreasingQuantityInStock;
+﻿using EcommerceDDD.InventoryManagement.Application.IncreaseQuantityInStock;
+
+namespace EcommerceDDD.InventoryManagement.Application.DecreasingQuantityInStock;
 
 public class IncreaseQuantityInStockHandler(
 	IQuerySessionWrapper querySession,

@@ -1,4 +1,9 @@
-﻿namespace EcommerceDDD.OrderProcessing.Application;
+﻿using EcommerceDDD.OrderProcessing.Application.Orders.CompletingOrder;
+using EcommerceDDD.OrderProcessing.Application.Orders.ProcessingOrder;
+using EcommerceDDD.OrderProcessing.Application.Payments.RecordingPayment;
+using EcommerceDDD.OrderProcessing.Application.Shipments.RecordingShipment;
+
+namespace EcommerceDDD.OrderProcessing.Application;
 
 public class OrderSaga(
 	ICommandBus commandBus

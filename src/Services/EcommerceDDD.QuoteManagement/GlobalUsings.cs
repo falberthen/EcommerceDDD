@@ -14,7 +14,6 @@ global using EcommerceDDD.QuoteManagement.Application.Quotes.GettingQuoteById;
 global using EcommerceDDD.QuoteManagement.Application.Quotes.GettingQuoteHistory;
 global using EcommerceDDD.QuoteManagement.Application.Quotes.OpeningQuote;
 global using EcommerceDDD.QuoteManagement.Domain;
-global using EcommerceDDD.QuoteManagement.Domain.Commands;
 global using EcommerceDDD.QuoteManagement.Domain.Events;
 global using EcommerceDDD.QuoteManagement.Infrastructure.ProductMapping;
 global using EcommerceDDD.QuoteManagement.Infrastructure.Projections;

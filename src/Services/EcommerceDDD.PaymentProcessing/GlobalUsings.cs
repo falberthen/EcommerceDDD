@@ -14,7 +14,6 @@ global using EcommerceDDD.PaymentProcessing.Application.ProcessingPayment;
 global using EcommerceDDD.PaymentProcessing.Application.ProcessingPayment.IntegrationEvents;
 global using EcommerceDDD.PaymentProcessing.Application.RequestingPayment;
 global using EcommerceDDD.PaymentProcessing.Domain;
-global using EcommerceDDD.PaymentProcessing.Domain.Commands;
 global using EcommerceDDD.PaymentProcessing.Domain.Events;
 global using EcommerceDDD.PaymentProcessing.Infrastructure.InventoryHandling;
 global using EcommerceDDD.PaymentProcessing.Infrastructure.Projections;

@@ -1,3 +1,8 @@
+using EcommerceDDD.QuoteManagement.Application.Quotes.AddingQuoteItem;
+using EcommerceDDD.QuoteManagement.Application.Quotes.CancelingQuote;
+using EcommerceDDD.QuoteManagement.Application.Quotes.ConfirmingQuote;
+using EcommerceDDD.QuoteManagement.Application.Quotes.RemovingQuoteItem;
+
 namespace EcommerceDDD.QuoteManagement.API.Controllers;
 
 [Authorize]

@@ -18,7 +18,6 @@ global using EcommerceDDD.OrderProcessing.Application.Payments.RequestingPayment
 global using EcommerceDDD.OrderProcessing.Application.Shipments.ProcessingShipment.IntegrationEvents;
 global using EcommerceDDD.OrderProcessing.Application.Shipments.RequestingShipment;
 global using EcommerceDDD.OrderProcessing.Domain;
-global using EcommerceDDD.OrderProcessing.Domain.Commands;
 global using EcommerceDDD.OrderProcessing.Domain.Events;
 global using EcommerceDDD.OrderProcessing.Infrastructure.Projections;
 global using EcommerceDDD.ServiceClients.ApiGateway;
