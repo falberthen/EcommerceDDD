@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   postgres:
-    image: postgres:latest
+    image: postgres:18
     container_name: postgresql
     environment:
       POSTGRES_USER: postgres
@@ -20,7 +20,7 @@ services:
     networks:
       - ecommercedddnet
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql
       - './scripts/db_init.sql:/docker-entrypoint-initdb.d/db_init.sql'
     restart: 
       on-failure
