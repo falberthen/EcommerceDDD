@@ -63,6 +63,7 @@ export class CustomerDetailsComponent implements OnInit {
     }
 
     try {
+      this.loaderService.setLoading(true);
       await this.kiotaClientService.client.api.v2.customers.update.put(
         customerUpdate
       );
@@ -71,11 +72,14 @@ export class CustomerDetailsComponent implements OnInit {
       await this.loadCustomerDetails();
     } catch (error) {
       this.kiotaClientService.handleError(error);
+    } finally {
+      this.loaderService.setLoading(false);
     }
   }
 
   async showCustomerStoredEvents() {
     try {
+      this.loaderService.setLoading(true);
       await this.kiotaClientService.client.api.v2.customers.history
         .get()
         .then((result) => {
@@ -88,6 +92,8 @@ export class CustomerDetailsComponent implements OnInit {
         });
     } catch (error) {
       this.kiotaClientService.handleError(error);
+    } finally {
+      this.loaderService.setLoading(false);
     }
   }
 
@@ -101,6 +107,7 @@ export class CustomerDetailsComponent implements OnInit {
 
   private async loadCustomerDetails() {
     try {
+      this.loaderService.setLoading(true);
       await this.kiotaClientService.client.api.v2.customers.details
         .get()
         .then((result) => {
@@ -120,6 +127,8 @@ export class CustomerDetailsComponent implements OnInit {
         });
     } catch (error) {
       this.kiotaClientService.handleError(error);
+    } finally {
+      this.loaderService.setLoading(false);
     }
   }
 

@@ -49,6 +49,7 @@ export class CustomerAccountComponent implements OnInit {
   async onSubmit() {
     if (this.accountForm.invalid) return;
 
+    this.loaderService.setLoading(true);
     const customerRegistration: RegisterCustomerRequest = {
       email: this.f.email.value,
       name: this.f.name.value,
@@ -66,6 +67,8 @@ export class CustomerAccountComponent implements OnInit {
       this.router.navigate([this.returnUrl]);
     } catch (error) {
       this.kiotaClientService.handleError(error);
+    } finally {
+      this.loaderService.setLoading(false);
     }
   }
 
