@@ -1,6 +1,6 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Infrastructure.Projections;
 
-public class OrderDetailsProjection : SingleStreamProjection<OrderDetails>
+public class OrderDetailsProjection : SingleStreamProjection<OrderDetails, Guid>
 {
     public OrderDetailsProjection()
     {

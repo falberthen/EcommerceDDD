@@ -2,12 +2,12 @@
 
 public class InventoryStockUnitEventHistoryTransform : EventProjection
 {
-    public InventoryStockUnitEventHistory Transform(IEvent<UnitEnteredInStock> @event) =>
+    public InventoryStockUnitEventHistory Transform(JasperFx.Events.IEvent<UnitEnteredInStock> @event) =>
         InventoryStockUnitEventHistory.Create(@event, @event.Data.InventoryStockUnitId);
 
-    public InventoryStockUnitEventHistory Transform(IEvent<StockQuantityDecreased> @event) =>
+    public InventoryStockUnitEventHistory Transform(JasperFx.Events.IEvent<StockQuantityDecreased> @event) =>
         InventoryStockUnitEventHistory.Create(@event, @event.Data.InventoryStockUnitId);
 
-    public InventoryStockUnitEventHistory Transform(IEvent<StockQuantityIncreased> @event) =>
+    public InventoryStockUnitEventHistory Transform(JasperFx.Events.IEvent<StockQuantityIncreased> @event) =>
         InventoryStockUnitEventHistory.Create(@event, @event.Data.InventoryStockUnitId);
 }

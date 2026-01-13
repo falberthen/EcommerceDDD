@@ -2,9 +2,9 @@
 
 public class CustomerHistoryTransform : EventProjection
 {
-    public CustomerEventHistory Transform(IEvent<CustomerRegistered> @event) =>
+    public CustomerEventHistory Transform(JasperFx.Events.IEvent<CustomerRegistered> @event) =>
         CustomerEventHistory.Create(@event, @event.Data.CustomerId);
 
-    public CustomerEventHistory Transform(IEvent<CustomerUpdated> @event) =>
+    public CustomerEventHistory Transform(JasperFx.Events.IEvent<CustomerUpdated> @event) =>
         CustomerEventHistory.Create(@event, @event.Data.CustomerId);
 }

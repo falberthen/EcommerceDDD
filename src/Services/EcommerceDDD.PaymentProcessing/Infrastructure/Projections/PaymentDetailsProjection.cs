@@ -2,7 +2,7 @@
 
 namespace EcommerceDDD.PaymentProcessing.Infrastructure.Projections;
 
-public class PaymentDetailsProjection : SingleStreamProjection<PaymentDetails>
+public class PaymentDetailsProjection : SingleStreamProjection<PaymentDetails, Guid>
 {
     public PaymentDetailsProjection()
     {
