@@ -1,6 +1,6 @@
 ﻿namespace EcommerceDDD.CustomerManagement.Infrastructure.Projections;
 
-public class CustomerDetailsProjection : SingleStreamProjection<CustomerDetails>
+public class CustomerDetailsProjection : SingleStreamProjection<CustomerDetails, Guid>
 {
     public CustomerDetailsProjection()
     {

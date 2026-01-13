@@ -1,6 +1,6 @@
 ﻿namespace EcommerceDDD.QuoteManagement.Infrastructure.Projections;
 
-public class QuoteDetailsProjection : SingleStreamProjection<QuoteDetails>
+public class QuoteDetailsProjection : SingleStreamProjection<QuoteDetails, Guid>
 {
     public QuoteDetailsProjection()
     {

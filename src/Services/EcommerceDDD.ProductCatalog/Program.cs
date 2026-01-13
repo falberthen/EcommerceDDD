@@ -38,4 +38,4 @@ app.UseAuthorization();
 app.MapControllers();
 app.UseHealthChecks();
 
-app.Run();
+await app.RunAsync();

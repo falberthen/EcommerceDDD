@@ -2,18 +2,18 @@
 
 public class QuoteEventHistoryTransform : EventProjection
 {
-    public QuoteEventHistory Transform(IEvent<QuoteOpen> @event) =>
+    public QuoteEventHistory Transform(JasperFx.Events.IEvent<QuoteOpen> @event) =>
         QuoteEventHistory.Create(@event, @event.Data.QuoteId);
 
-    public QuoteEventHistory Transform(IEvent<QuoteItemAdded> @event) =>
+    public QuoteEventHistory Transform(JasperFx.Events.IEvent<QuoteItemAdded> @event) =>
         QuoteEventHistory.Create(@event, @event.Data.QuoteId);
 
-    public QuoteEventHistory Transform(IEvent<QuoteItemQuantityChanged> @event) =>
+    public QuoteEventHistory Transform(JasperFx.Events.IEvent<QuoteItemQuantityChanged> @event) =>
         QuoteEventHistory.Create(@event, @event.Data.QuoteId);
 
-    public QuoteEventHistory Transform(IEvent<QuoteItemRemoved> @event) =>
+    public QuoteEventHistory Transform(JasperFx.Events.IEvent<QuoteItemRemoved> @event) =>
         QuoteEventHistory.Create(@event, @event.Data.QuoteId);
 
-    public QuoteEventHistory Transform(IEvent<QuoteCanceled> @event) =>
+    public QuoteEventHistory Transform(JasperFx.Events.IEvent<QuoteCanceled> @event) =>
         QuoteEventHistory.Create(@event, @event.Data.QuoteId);
 }

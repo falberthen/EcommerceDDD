@@ -1,18 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Kiota.Abstractions" Version="1.17.2" />
-    <PackageReference Include="Microsoft.Kiota.Serialization.Form" Version="1.17.2" />
-    <PackageReference Include="Microsoft.Kiota.Serialization.Json" Version="1.17.2" />
-    <PackageReference Include="Microsoft.Kiota.Serialization.Multipart" Version="1.17.2" />
-    <PackageReference Include="Microsoft.Kiota.Serialization.Text" Version="1.17.2" />
-	<PackageReference Include="Microsoft.Kiota.Http.HttpClientLibrary" Version="1.17.2" />
+    <PackageReference Include="Microsoft.Kiota.Abstractions" Version="1.21.1" />
+    <PackageReference Include="Microsoft.Kiota.Serialization.Form" Version="1.21.1" />
+    <PackageReference Include="Microsoft.Kiota.Serialization.Json" Version="1.21.1" />
+    <PackageReference Include="Microsoft.Kiota.Serialization.Multipart" Version="1.21.1" />
+    <PackageReference Include="Microsoft.Kiota.Serialization.Text" Version="1.21.1" />
+	<PackageReference Include="Microsoft.Kiota.Http.HttpClientLibrary" Version="1.21.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +23,10 @@
     <None Update="apigateway.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Kiota\" />
   </ItemGroup>
 
 	<!-- Only generate Kiota client during Debug builds -->

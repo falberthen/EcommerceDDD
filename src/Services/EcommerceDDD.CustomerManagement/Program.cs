@@ -1,5 +1,3 @@
-using EcommerceDDD.ServiceClients.Extensions;
-
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
@@ -39,4 +37,4 @@ app.UseAuthorization();
 app.MapControllers();
 app.UseHealthChecks();
 
-app.Run();
+await app.RunAsync();

@@ -1,6 +1,6 @@
 ﻿namespace EcommerceDDD.InventoryManagement.Infrastructure.Projections;
 
-public class InventoryStockUnitDetailsProjection : SingleStreamProjection<InventoryStockUnitDetails>
+public class InventoryStockUnitDetailsProjection : SingleStreamProjection<InventoryStockUnitDetails, Guid>
 {
     public InventoryStockUnitDetailsProjection()
     {

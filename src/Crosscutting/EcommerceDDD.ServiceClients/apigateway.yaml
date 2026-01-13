@@ -4,7 +4,7 @@ info:
   version: v2
 servers:
   - url: http://localhost:5000
-    description: ''
+    description: API Gateway
 paths:
   /api/v2/accounts/login:
     post:
@@ -1486,21 +1486,13 @@ components:
             $ref: '#/components/schemas/ProductItemRequest'
       additionalProperties: false
   securitySchemes:
-    Bearer:
-      type: apiKey
-      description: 'JWT Authorization header using the Bearer scheme. Example: "Authorization: Bearer {token}"'
-      name: Authorization
-      in: header
+    GatewaySecurity:
+      type: http
+      description: JWT Authorization header using the Bearer scheme.
+      scheme: bearer
+      bearerFormat: JWT
 security:
-  - Bearer: [ ]
-  - Bearer: [ ]
-  - Bearer: [ ]
-  - Bearer: [ ]
-  - Bearer: [ ]
-  - Bearer: [ ]
-  - Bearer: [ ]
-  - Bearer: [ ]
-  - Bearer: [ ]
+  - GatewaySecurity: [ ]
 tags:
   - name: Accounts
   - name: Signalr

@@ -5,3 +5,5 @@ global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.SignalR;
 global using EcommerceDDD.SignalR.API.Requests;
 global using EcommerceDDD.SignalR.API.Services;
+global using EcommerceDDD.Core.Infrastructure.Extensions;
+global using EcommerceDDD.SignalR.Hubs;

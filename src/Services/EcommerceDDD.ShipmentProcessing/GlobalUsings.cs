@@ -18,7 +18,7 @@ global using EcommerceDDD.ShipmentProcessing.Domain.Events;
 global using EcommerceDDD.ShipmentProcessing.Infrastructure.Projections;
 global using Marten;
 global using Marten.Events.Aggregation;
-global using Marten.Events.Projections;
+global using JasperFx.Events.Projections;
 global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.AspNetCore.Mvc;
 global using Newtonsoft.Json;

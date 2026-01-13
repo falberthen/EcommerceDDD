@@ -23,7 +23,7 @@ public static class MartenConfigExtension
         {
             options.Connection(connectionString);
             options.AutoCreateSchemaObjects = AutoCreate.All;
-			options.UseDefaultSerialization(nonPublicMembersStorage: NonPublicMembersStorage.All);
+			options.UseNewtonsoftForSerialization(nonPublicMembersStorage: NonPublicMembersStorage.All);
 
 			options.Events.DatabaseSchemaName = martenConfig.WriteSchema;
             

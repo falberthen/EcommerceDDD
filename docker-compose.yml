@@ -1,8 +1,6 @@
-version: '3.8'
-
 services:
   postgres:
-    image: postgres:latest
+    image: postgres:18
     container_name: postgresql
     environment:
       POSTGRES_USER: postgres
@@ -20,7 +18,7 @@ services:
     networks:
       - ecommercedddnet
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql
       - './scripts/db_init.sql:/docker-entrypoint-initdb.d/db_init.sql'
     restart: 
       on-failure
@@ -92,7 +90,7 @@ services:
       postgres:
         condition: service_healthy
       connect:
-        condition: service_started
+        condition: service_healthy
       zookeeper:
         condition: service_started
 
@@ -418,7 +416,7 @@ services:
       ecommerceddd-products:
         condition: service_started
       connect:
-        condition: service_started
+        condition: service_healthy
       ecommerceddd-identityserver:
         condition: service_started         
 
@@ -452,7 +450,7 @@ services:
       ecommerceddd-products:
         condition: service_started
       connect:
-        condition: service_started
+        condition: service_healthy
       ecommerceddd-identityserver:
         condition: service_started      
 

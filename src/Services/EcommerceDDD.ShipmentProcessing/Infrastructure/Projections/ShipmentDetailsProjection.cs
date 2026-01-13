@@ -2,7 +2,7 @@
 
 namespace EcommerceDDD.ShipmentProcessing.Infrastructure.Projections;
 
-public class ShipmentDetailsProjection : SingleStreamProjection<ShipmentDetails>
+public class ShipmentDetailsProjection : SingleStreamProjection<ShipmentDetails, Guid>
 {
     public ShipmentDetailsProjection()
     {
