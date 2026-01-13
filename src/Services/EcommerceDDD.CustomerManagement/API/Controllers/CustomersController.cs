@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.CustomerManagement.Application.UpdatingCustomerInformation;
-
-namespace EcommerceDDD.CustomerManagement.API.Controllers;
+﻿namespace EcommerceDDD.CustomerManagement.API.Controllers;
 
 [Authorize]
 [ApiController]

@@ -1,5 +1,3 @@
-using EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
-
 namespace EcommerceDDD.OrderProcessing.API.Controllers;
 
 [Authorize(Roles = Roles.Customer)]

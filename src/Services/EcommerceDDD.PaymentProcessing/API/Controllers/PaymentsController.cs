@@ -1,4 +1,3 @@
-using EcommerceDDD.PaymentProcessing.Application.CancelingPayment;
 
 namespace EcommerceDDD.PaymentProcessing.API.Controllers;
 
