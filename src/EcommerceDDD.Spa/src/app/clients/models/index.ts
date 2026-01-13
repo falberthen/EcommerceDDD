@@ -409,6 +409,7 @@ export interface DecreaseQuantityInStockRequest extends Parsable {
 }
 /**
  * The deserialization information for the current model
+ * @param AddQuoteItemRequest The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -420,6 +421,7 @@ export function deserializeIntoAddQuoteItemRequest(addQuoteItemRequest: Partial<
 }
 /**
  * The deserialization information for the current model
+ * @param CancelPaymentRequest The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -430,6 +432,7 @@ export function deserializeIntoCancelPaymentRequest(cancelPaymentRequest: Partia
 }
 /**
  * The deserialization information for the current model
+ * @param CheckProductsInStockRequest The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -440,6 +443,7 @@ export function deserializeIntoCheckProductsInStockRequest(checkProductsInStockR
 }
 /**
  * The deserialization information for the current model
+ * @param CreditLimitModel The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -451,6 +455,7 @@ export function deserializeIntoCreditLimitModel(creditLimitModel: Partial<Credit
 }
 /**
  * The deserialization information for the current model
+ * @param CreditLimitModelApiResponse The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -463,6 +468,7 @@ export function deserializeIntoCreditLimitModelApiResponse(creditLimitModelApiRe
 }
 /**
  * The deserialization information for the current model
+ * @param CustomerDetails The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -477,6 +483,7 @@ export function deserializeIntoCustomerDetails(customerDetails: Partial<Customer
 }
 /**
  * The deserialization information for the current model
+ * @param CustomerDetailsApiResponse The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -489,6 +496,7 @@ export function deserializeIntoCustomerDetailsApiResponse(customerDetailsApiResp
 }
 /**
  * The deserialization information for the current model
+ * @param DecreaseQuantityInStockRequest The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -499,6 +507,7 @@ export function deserializeIntoDecreaseQuantityInStockRequest(decreaseQuantityIn
 }
 /**
  * The deserialization information for the current model
+ * @param GetProductsRequest The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -510,6 +519,7 @@ export function deserializeIntoGetProductsRequest(getProductsRequest: Partial<Ge
 }
 /**
  * The deserialization information for the current model
+ * @param IEventHistory The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -524,6 +534,7 @@ export function deserializeIntoIEventHistory(iEventHistory: Partial<IEventHistor
 }
 /**
  * The deserialization information for the current model
+ * @param IEventHistoryIListApiResponse The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -536,6 +547,7 @@ export function deserializeIntoIEventHistoryIListApiResponse(iEventHistoryIListA
 }
 /**
  * The deserialization information for the current model
+ * @param InventoryStockUnitEventHistory The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -550,6 +562,7 @@ export function deserializeIntoInventoryStockUnitEventHistory(inventoryStockUnit
 }
 /**
  * The deserialization information for the current model
+ * @param InventoryStockUnitEventHistoryIListApiResponse The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -562,6 +575,7 @@ export function deserializeIntoInventoryStockUnitEventHistoryIListApiResponse(in
 }
 /**
  * The deserialization information for the current model
+ * @param InventoryStockUnitViewModel The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -574,6 +588,7 @@ export function deserializeIntoInventoryStockUnitViewModel(inventoryStockUnitVie
 }
 /**
  * The deserialization information for the current model
+ * @param InventoryStockUnitViewModelIListApiResponse The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -586,6 +601,7 @@ export function deserializeIntoInventoryStockUnitViewModelIListApiResponse(inven
 }
 /**
  * The deserialization information for the current model
+ * @param LoginRequest The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -597,6 +613,7 @@ export function deserializeIntoLoginRequest(loginRequest: Partial<LoginRequest> 
 }
 /**
  * The deserialization information for the current model
+ * @param LoginResult The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -610,6 +627,7 @@ export function deserializeIntoLoginResult(loginResult: Partial<LoginResult> | u
 }
 /**
  * The deserialization information for the current model
+ * @param OpenQuoteRequest The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -620,6 +638,7 @@ export function deserializeIntoOpenQuoteRequest(openQuoteRequest: Partial<OpenQu
 }
 /**
  * The deserialization information for the current model
+ * @param OrderLineViewModel The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -633,6 +652,7 @@ export function deserializeIntoOrderLineViewModel(orderLineViewModel: Partial<Or
 }
 /**
  * The deserialization information for the current model
+ * @param OrderViewModel The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -651,6 +671,7 @@ export function deserializeIntoOrderViewModel(orderViewModel: Partial<OrderViewM
 }
 /**
  * The deserialization information for the current model
+ * @param OrderViewModelIListApiResponse The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -663,6 +684,7 @@ export function deserializeIntoOrderViewModelIListApiResponse(orderViewModelILis
 }
 /**
  * The deserialization information for the current model
+ * @param PaymentRequest The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -677,6 +699,7 @@ export function deserializeIntoPaymentRequest(paymentRequest: Partial<PaymentReq
 }
 /**
  * The deserialization information for the current model
+ * @param ProblemDetails The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -691,6 +714,7 @@ export function deserializeIntoProblemDetails(problemDetails: Partial<ProblemDet
 }
 /**
  * The deserialization information for the current model
+ * @param ProductItemRequest The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -704,6 +728,7 @@ export function deserializeIntoProductItemRequest(productItemRequest: Partial<Pr
 }
 /**
  * The deserialization information for the current model
+ * @param ProductViewModel The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -722,6 +747,7 @@ export function deserializeIntoProductViewModel(productViewModel: Partial<Produc
 }
 /**
  * The deserialization information for the current model
+ * @param ProductViewModelIListApiResponse The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -734,6 +760,7 @@ export function deserializeIntoProductViewModelIListApiResponse(productViewModel
 }
 /**
  * The deserialization information for the current model
+ * @param QuoteItemViewModel The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -748,6 +775,7 @@ export function deserializeIntoQuoteItemViewModel(quoteItemViewModel: Partial<Qu
 }
 /**
  * The deserialization information for the current model
+ * @param QuoteViewModel The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -765,6 +793,7 @@ export function deserializeIntoQuoteViewModel(quoteViewModel: Partial<QuoteViewM
 }
 /**
  * The deserialization information for the current model
+ * @param QuoteViewModelApiResponse The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -777,6 +806,7 @@ export function deserializeIntoQuoteViewModelApiResponse(quoteViewModelApiRespon
 }
 /**
  * The deserialization information for the current model
+ * @param RegisterCustomerRequest The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -792,6 +822,7 @@ export function deserializeIntoRegisterCustomerRequest(registerCustomerRequest: 
 }
 /**
  * The deserialization information for the current model
+ * @param RegisterUserRequest The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -805,6 +836,7 @@ export function deserializeIntoRegisterUserRequest(registerUserRequest: Partial<
 }
 /**
  * The deserialization information for the current model
+ * @param ShipOrderRequest The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -816,6 +848,7 @@ export function deserializeIntoShipOrderRequest(shipOrderRequest: Partial<ShipOr
 }
 /**
  * The deserialization information for the current model
+ * @param UpdateCustomerRequest The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -828,6 +861,7 @@ export function deserializeIntoUpdateCustomerRequest(updateCustomerRequest: Part
 }
 /**
  * The deserialization information for the current model
+ * @param UpdateOrderStatusRequest The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -841,6 +875,7 @@ export function deserializeIntoUpdateOrderStatusRequest(updateOrderStatusRequest
 }
 /**
  * The deserialization information for the current model
+ * @param UserRegisteredResult The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -1088,10 +1123,6 @@ export interface PaymentRequest extends Parsable {
 }
 export interface ProblemDetails extends AdditionalDataHolder, ApiError, Parsable {
     /**
-     * Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.
-     */
-    additionalData?: Record<string, unknown>;
-    /**
      * The detail property
      */
     detail?: string | null;
@@ -1298,446 +1329,481 @@ export interface RegisterUserRequest extends Parsable {
 }
 /**
  * Serializes information the current object
+ * @param AddQuoteItemRequest The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeAddQuoteItemRequest(writer: SerializationWriter, addQuoteItemRequest: Partial<AddQuoteItemRequest> | undefined | null = {}) : void {
-    if (addQuoteItemRequest) {
-        writer.writeGuidValue("productId", addQuoteItemRequest.productId);
-        writer.writeNumberValue("quantity", addQuoteItemRequest.quantity);
-    }
+export function serializeAddQuoteItemRequest(writer: SerializationWriter, addQuoteItemRequest: Partial<AddQuoteItemRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!addQuoteItemRequest || isSerializingDerivedType) { return; }
+    writer.writeGuidValue("productId", addQuoteItemRequest.productId);
+    writer.writeNumberValue("quantity", addQuoteItemRequest.quantity);
 }
 /**
  * Serializes information the current object
+ * @param CancelPaymentRequest The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeCancelPaymentRequest(writer: SerializationWriter, cancelPaymentRequest: Partial<CancelPaymentRequest> | undefined | null = {}) : void {
-    if (cancelPaymentRequest) {
-        writer.writeNumberValue("paymentCancellationReason", cancelPaymentRequest.paymentCancellationReason);
-    }
+export function serializeCancelPaymentRequest(writer: SerializationWriter, cancelPaymentRequest: Partial<CancelPaymentRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!cancelPaymentRequest || isSerializingDerivedType) { return; }
+    writer.writeNumberValue("paymentCancellationReason", cancelPaymentRequest.paymentCancellationReason);
 }
 /**
  * Serializes information the current object
+ * @param CheckProductsInStockRequest The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeCheckProductsInStockRequest(writer: SerializationWriter, checkProductsInStockRequest: Partial<CheckProductsInStockRequest> | undefined | null = {}) : void {
-    if (checkProductsInStockRequest) {
-        writer.writeCollectionOfPrimitiveValues<Guid>("productIds", checkProductsInStockRequest.productIds);
-    }
+export function serializeCheckProductsInStockRequest(writer: SerializationWriter, checkProductsInStockRequest: Partial<CheckProductsInStockRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!checkProductsInStockRequest || isSerializingDerivedType) { return; }
+    writer.writeCollectionOfPrimitiveValues<Guid>("productIds", checkProductsInStockRequest.productIds);
 }
 /**
  * Serializes information the current object
+ * @param CreditLimitModel The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeCreditLimitModel(writer: SerializationWriter, creditLimitModel: Partial<CreditLimitModel> | undefined | null = {}) : void {
-    if (creditLimitModel) {
-        writer.writeNumberValue("creditLimit", creditLimitModel.creditLimit);
-        writer.writeGuidValue("customerId", creditLimitModel.customerId);
-    }
+export function serializeCreditLimitModel(writer: SerializationWriter, creditLimitModel: Partial<CreditLimitModel> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!creditLimitModel || isSerializingDerivedType) { return; }
+    writer.writeNumberValue("creditLimit", creditLimitModel.creditLimit);
+    writer.writeGuidValue("customerId", creditLimitModel.customerId);
 }
 /**
  * Serializes information the current object
+ * @param CreditLimitModelApiResponse The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeCreditLimitModelApiResponse(writer: SerializationWriter, creditLimitModelApiResponse: Partial<CreditLimitModelApiResponse> | undefined | null = {}) : void {
-    if (creditLimitModelApiResponse) {
-        writer.writeObjectValue<CreditLimitModel>("data", creditLimitModelApiResponse.data, serializeCreditLimitModel);
-        writer.writeStringValue("message", creditLimitModelApiResponse.message);
-        writer.writeBooleanValue("success", creditLimitModelApiResponse.success);
-    }
+export function serializeCreditLimitModelApiResponse(writer: SerializationWriter, creditLimitModelApiResponse: Partial<CreditLimitModelApiResponse> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!creditLimitModelApiResponse || isSerializingDerivedType) { return; }
+    writer.writeObjectValue<CreditLimitModel>("data", creditLimitModelApiResponse.data, serializeCreditLimitModel);
+    writer.writeStringValue("message", creditLimitModelApiResponse.message);
+    writer.writeBooleanValue("success", creditLimitModelApiResponse.success);
 }
 /**
  * Serializes information the current object
+ * @param CustomerDetails The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeCustomerDetails(writer: SerializationWriter, customerDetails: Partial<CustomerDetails> | undefined | null = {}) : void {
-    if (customerDetails) {
-        writer.writeNumberValue("creditLimit", customerDetails.creditLimit);
-        writer.writeStringValue("email", customerDetails.email);
-        writer.writeGuidValue("id", customerDetails.id);
-        writer.writeStringValue("name", customerDetails.name);
-        writer.writeStringValue("shippingAddress", customerDetails.shippingAddress);
-    }
+export function serializeCustomerDetails(writer: SerializationWriter, customerDetails: Partial<CustomerDetails> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!customerDetails || isSerializingDerivedType) { return; }
+    writer.writeNumberValue("creditLimit", customerDetails.creditLimit);
+    writer.writeStringValue("email", customerDetails.email);
+    writer.writeGuidValue("id", customerDetails.id);
+    writer.writeStringValue("name", customerDetails.name);
+    writer.writeStringValue("shippingAddress", customerDetails.shippingAddress);
 }
 /**
  * Serializes information the current object
+ * @param CustomerDetailsApiResponse The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeCustomerDetailsApiResponse(writer: SerializationWriter, customerDetailsApiResponse: Partial<CustomerDetailsApiResponse> | undefined | null = {}) : void {
-    if (customerDetailsApiResponse) {
-        writer.writeObjectValue<CustomerDetails>("data", customerDetailsApiResponse.data, serializeCustomerDetails);
-        writer.writeStringValue("message", customerDetailsApiResponse.message);
-        writer.writeBooleanValue("success", customerDetailsApiResponse.success);
-    }
+export function serializeCustomerDetailsApiResponse(writer: SerializationWriter, customerDetailsApiResponse: Partial<CustomerDetailsApiResponse> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!customerDetailsApiResponse || isSerializingDerivedType) { return; }
+    writer.writeObjectValue<CustomerDetails>("data", customerDetailsApiResponse.data, serializeCustomerDetails);
+    writer.writeStringValue("message", customerDetailsApiResponse.message);
+    writer.writeBooleanValue("success", customerDetailsApiResponse.success);
 }
 /**
  * Serializes information the current object
+ * @param DecreaseQuantityInStockRequest The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeDecreaseQuantityInStockRequest(writer: SerializationWriter, decreaseQuantityInStockRequest: Partial<DecreaseQuantityInStockRequest> | undefined | null = {}) : void {
-    if (decreaseQuantityInStockRequest) {
-        writer.writeNumberValue("decreasedQuantity", decreaseQuantityInStockRequest.decreasedQuantity);
-    }
+export function serializeDecreaseQuantityInStockRequest(writer: SerializationWriter, decreaseQuantityInStockRequest: Partial<DecreaseQuantityInStockRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!decreaseQuantityInStockRequest || isSerializingDerivedType) { return; }
+    writer.writeNumberValue("decreasedQuantity", decreaseQuantityInStockRequest.decreasedQuantity);
 }
 /**
  * Serializes information the current object
+ * @param GetProductsRequest The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeGetProductsRequest(writer: SerializationWriter, getProductsRequest: Partial<GetProductsRequest> | undefined | null = {}) : void {
-    if (getProductsRequest) {
-        writer.writeStringValue("currencyCode", getProductsRequest.currencyCode);
-        writer.writeCollectionOfPrimitiveValues<Guid>("productIds", getProductsRequest.productIds);
-    }
+export function serializeGetProductsRequest(writer: SerializationWriter, getProductsRequest: Partial<GetProductsRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!getProductsRequest || isSerializingDerivedType) { return; }
+    writer.writeStringValue("currencyCode", getProductsRequest.currencyCode);
+    writer.writeCollectionOfPrimitiveValues<Guid>("productIds", getProductsRequest.productIds);
 }
 /**
  * Serializes information the current object
+ * @param IEventHistory The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeIEventHistory(writer: SerializationWriter, iEventHistory: Partial<IEventHistory> | undefined | null = {}) : void {
-    if (iEventHistory) {
-        writer.writeGuidValue("aggregateId", iEventHistory.aggregateId);
-        writer.writeStringValue("eventData", iEventHistory.eventData);
-        writer.writeStringValue("eventTypeName", iEventHistory.eventTypeName);
-        writer.writeGuidValue("id", iEventHistory.id);
-        writer.writeDateValue("timestamp", iEventHistory.timestamp);
-    }
+export function serializeIEventHistory(writer: SerializationWriter, iEventHistory: Partial<IEventHistory> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!iEventHistory || isSerializingDerivedType) { return; }
+    writer.writeGuidValue("aggregateId", iEventHistory.aggregateId);
+    writer.writeStringValue("eventData", iEventHistory.eventData);
+    writer.writeStringValue("eventTypeName", iEventHistory.eventTypeName);
+    writer.writeGuidValue("id", iEventHistory.id);
+    writer.writeDateValue("timestamp", iEventHistory.timestamp);
 }
 /**
  * Serializes information the current object
+ * @param IEventHistoryIListApiResponse The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeIEventHistoryIListApiResponse(writer: SerializationWriter, iEventHistoryIListApiResponse: Partial<IEventHistoryIListApiResponse> | undefined | null = {}) : void {
-    if (iEventHistoryIListApiResponse) {
-        writer.writeCollectionOfObjectValues<IEventHistory>("data", iEventHistoryIListApiResponse.data, serializeIEventHistory);
-        writer.writeStringValue("message", iEventHistoryIListApiResponse.message);
-        writer.writeBooleanValue("success", iEventHistoryIListApiResponse.success);
-    }
+export function serializeIEventHistoryIListApiResponse(writer: SerializationWriter, iEventHistoryIListApiResponse: Partial<IEventHistoryIListApiResponse> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!iEventHistoryIListApiResponse || isSerializingDerivedType) { return; }
+    writer.writeCollectionOfObjectValues<IEventHistory>("data", iEventHistoryIListApiResponse.data, serializeIEventHistory);
+    writer.writeStringValue("message", iEventHistoryIListApiResponse.message);
+    writer.writeBooleanValue("success", iEventHistoryIListApiResponse.success);
 }
 /**
  * Serializes information the current object
+ * @param InventoryStockUnitEventHistory The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeInventoryStockUnitEventHistory(writer: SerializationWriter, inventoryStockUnitEventHistory: Partial<InventoryStockUnitEventHistory> | undefined | null = {}) : void {
-    if (inventoryStockUnitEventHistory) {
-        writer.writeGuidValue("aggregateId", inventoryStockUnitEventHistory.aggregateId);
-        writer.writeStringValue("eventData", inventoryStockUnitEventHistory.eventData);
-        writer.writeStringValue("eventTypeName", inventoryStockUnitEventHistory.eventTypeName);
-        writer.writeGuidValue("id", inventoryStockUnitEventHistory.id);
-        writer.writeDateValue("timestamp", inventoryStockUnitEventHistory.timestamp);
-    }
+export function serializeInventoryStockUnitEventHistory(writer: SerializationWriter, inventoryStockUnitEventHistory: Partial<InventoryStockUnitEventHistory> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!inventoryStockUnitEventHistory || isSerializingDerivedType) { return; }
+    writer.writeGuidValue("aggregateId", inventoryStockUnitEventHistory.aggregateId);
+    writer.writeStringValue("eventData", inventoryStockUnitEventHistory.eventData);
+    writer.writeStringValue("eventTypeName", inventoryStockUnitEventHistory.eventTypeName);
+    writer.writeGuidValue("id", inventoryStockUnitEventHistory.id);
+    writer.writeDateValue("timestamp", inventoryStockUnitEventHistory.timestamp);
 }
 /**
  * Serializes information the current object
+ * @param InventoryStockUnitEventHistoryIListApiResponse The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeInventoryStockUnitEventHistoryIListApiResponse(writer: SerializationWriter, inventoryStockUnitEventHistoryIListApiResponse: Partial<InventoryStockUnitEventHistoryIListApiResponse> | undefined | null = {}) : void {
-    if (inventoryStockUnitEventHistoryIListApiResponse) {
-        writer.writeCollectionOfObjectValues<InventoryStockUnitEventHistory>("data", inventoryStockUnitEventHistoryIListApiResponse.data, serializeInventoryStockUnitEventHistory);
-        writer.writeStringValue("message", inventoryStockUnitEventHistoryIListApiResponse.message);
-        writer.writeBooleanValue("success", inventoryStockUnitEventHistoryIListApiResponse.success);
-    }
+export function serializeInventoryStockUnitEventHistoryIListApiResponse(writer: SerializationWriter, inventoryStockUnitEventHistoryIListApiResponse: Partial<InventoryStockUnitEventHistoryIListApiResponse> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!inventoryStockUnitEventHistoryIListApiResponse || isSerializingDerivedType) { return; }
+    writer.writeCollectionOfObjectValues<InventoryStockUnitEventHistory>("data", inventoryStockUnitEventHistoryIListApiResponse.data, serializeInventoryStockUnitEventHistory);
+    writer.writeStringValue("message", inventoryStockUnitEventHistoryIListApiResponse.message);
+    writer.writeBooleanValue("success", inventoryStockUnitEventHistoryIListApiResponse.success);
 }
 /**
  * Serializes information the current object
+ * @param InventoryStockUnitViewModel The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeInventoryStockUnitViewModel(writer: SerializationWriter, inventoryStockUnitViewModel: Partial<InventoryStockUnitViewModel> | undefined | null = {}) : void {
-    if (inventoryStockUnitViewModel) {
-        writer.writeGuidValue("inventoryStockUnitId", inventoryStockUnitViewModel.inventoryStockUnitId);
-        writer.writeGuidValue("productId", inventoryStockUnitViewModel.productId);
-        writer.writeNumberValue("quantityInStock", inventoryStockUnitViewModel.quantityInStock);
-    }
+export function serializeInventoryStockUnitViewModel(writer: SerializationWriter, inventoryStockUnitViewModel: Partial<InventoryStockUnitViewModel> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!inventoryStockUnitViewModel || isSerializingDerivedType) { return; }
+    writer.writeGuidValue("inventoryStockUnitId", inventoryStockUnitViewModel.inventoryStockUnitId);
+    writer.writeGuidValue("productId", inventoryStockUnitViewModel.productId);
+    writer.writeNumberValue("quantityInStock", inventoryStockUnitViewModel.quantityInStock);
 }
 /**
  * Serializes information the current object
+ * @param InventoryStockUnitViewModelIListApiResponse The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeInventoryStockUnitViewModelIListApiResponse(writer: SerializationWriter, inventoryStockUnitViewModelIListApiResponse: Partial<InventoryStockUnitViewModelIListApiResponse> | undefined | null = {}) : void {
-    if (inventoryStockUnitViewModelIListApiResponse) {
-        writer.writeCollectionOfObjectValues<InventoryStockUnitViewModel>("data", inventoryStockUnitViewModelIListApiResponse.data, serializeInventoryStockUnitViewModel);
-        writer.writeStringValue("message", inventoryStockUnitViewModelIListApiResponse.message);
-        writer.writeBooleanValue("success", inventoryStockUnitViewModelIListApiResponse.success);
-    }
+export function serializeInventoryStockUnitViewModelIListApiResponse(writer: SerializationWriter, inventoryStockUnitViewModelIListApiResponse: Partial<InventoryStockUnitViewModelIListApiResponse> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!inventoryStockUnitViewModelIListApiResponse || isSerializingDerivedType) { return; }
+    writer.writeCollectionOfObjectValues<InventoryStockUnitViewModel>("data", inventoryStockUnitViewModelIListApiResponse.data, serializeInventoryStockUnitViewModel);
+    writer.writeStringValue("message", inventoryStockUnitViewModelIListApiResponse.message);
+    writer.writeBooleanValue("success", inventoryStockUnitViewModelIListApiResponse.success);
 }
 /**
  * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param LoginRequest The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeLoginRequest(writer: SerializationWriter, loginRequest: Partial<LoginRequest> | undefined | null = {}) : void {
-    if (loginRequest) {
-        writer.writeStringValue("email", loginRequest.email);
-        writer.writeStringValue("password", loginRequest.password);
-    }
+export function serializeLoginRequest(writer: SerializationWriter, loginRequest: Partial<LoginRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!loginRequest || isSerializingDerivedType) { return; }
+    writer.writeStringValue("email", loginRequest.email);
+    writer.writeStringValue("password", loginRequest.password);
 }
 /**
  * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param LoginResult The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeLoginResult(writer: SerializationWriter, loginResult: Partial<LoginResult> | undefined | null = {}) : void {
-    if (loginResult) {
-        writer.writeStringValue("accessToken", loginResult.accessToken);
-        writer.writeStringValue("errorDescription", loginResult.errorDescription);
-        writer.writeStringValue("identityToken", loginResult.identityToken);
-        writer.writeStringValue("refreshToken", loginResult.refreshToken);
-    }
+export function serializeLoginResult(writer: SerializationWriter, loginResult: Partial<LoginResult> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!loginResult || isSerializingDerivedType) { return; }
+    writer.writeStringValue("accessToken", loginResult.accessToken);
+    writer.writeStringValue("errorDescription", loginResult.errorDescription);
+    writer.writeStringValue("identityToken", loginResult.identityToken);
+    writer.writeStringValue("refreshToken", loginResult.refreshToken);
 }
 /**
  * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param OpenQuoteRequest The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeOpenQuoteRequest(writer: SerializationWriter, openQuoteRequest: Partial<OpenQuoteRequest> | undefined | null = {}) : void {
-    if (openQuoteRequest) {
-        writer.writeStringValue("currencyCode", openQuoteRequest.currencyCode);
-    }
+export function serializeOpenQuoteRequest(writer: SerializationWriter, openQuoteRequest: Partial<OpenQuoteRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!openQuoteRequest || isSerializingDerivedType) { return; }
+    writer.writeStringValue("currencyCode", openQuoteRequest.currencyCode);
 }
 /**
  * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param OrderLineViewModel The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeOrderLineViewModel(writer: SerializationWriter, orderLineViewModel: Partial<OrderLineViewModel> | undefined | null = {}) : void {
-    if (orderLineViewModel) {
-        writer.writeGuidValue("productId", orderLineViewModel.productId);
-        writer.writeStringValue("productName", orderLineViewModel.productName);
-        writer.writeNumberValue("quantity", orderLineViewModel.quantity);
-        writer.writeNumberValue("unitPrice", orderLineViewModel.unitPrice);
-    }
+export function serializeOrderLineViewModel(writer: SerializationWriter, orderLineViewModel: Partial<OrderLineViewModel> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!orderLineViewModel || isSerializingDerivedType) { return; }
+    writer.writeGuidValue("productId", orderLineViewModel.productId);
+    writer.writeStringValue("productName", orderLineViewModel.productName);
+    writer.writeNumberValue("quantity", orderLineViewModel.quantity);
+    writer.writeNumberValue("unitPrice", orderLineViewModel.unitPrice);
 }
 /**
  * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param OrderViewModel The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeOrderViewModel(writer: SerializationWriter, orderViewModel: Partial<OrderViewModel> | undefined | null = {}) : void {
-    if (orderViewModel) {
-        writer.writeDateValue("createdAt", orderViewModel.createdAt);
-        writer.writeStringValue("currencySymbol", orderViewModel.currencySymbol);
-        writer.writeGuidValue("customerId", orderViewModel.customerId);
-        writer.writeGuidValue("orderId", orderViewModel.orderId);
-        writer.writeCollectionOfObjectValues<OrderLineViewModel>("orderLines", orderViewModel.orderLines, serializeOrderLineViewModel);
-        writer.writeGuidValue("quoteId", orderViewModel.quoteId);
-        writer.writeNumberValue("statusCode", orderViewModel.statusCode);
-        writer.writeStringValue("statusText", orderViewModel.statusText);
-        writer.writeNumberValue("totalPrice", orderViewModel.totalPrice);
-    }
+export function serializeOrderViewModel(writer: SerializationWriter, orderViewModel: Partial<OrderViewModel> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!orderViewModel || isSerializingDerivedType) { return; }
+    writer.writeDateValue("createdAt", orderViewModel.createdAt);
+    writer.writeStringValue("currencySymbol", orderViewModel.currencySymbol);
+    writer.writeGuidValue("customerId", orderViewModel.customerId);
+    writer.writeGuidValue("orderId", orderViewModel.orderId);
+    writer.writeCollectionOfObjectValues<OrderLineViewModel>("orderLines", orderViewModel.orderLines, serializeOrderLineViewModel);
+    writer.writeGuidValue("quoteId", orderViewModel.quoteId);
+    writer.writeNumberValue("statusCode", orderViewModel.statusCode);
+    writer.writeStringValue("statusText", orderViewModel.statusText);
+    writer.writeNumberValue("totalPrice", orderViewModel.totalPrice);
 }
 /**
  * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param OrderViewModelIListApiResponse The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeOrderViewModelIListApiResponse(writer: SerializationWriter, orderViewModelIListApiResponse: Partial<OrderViewModelIListApiResponse> | undefined | null = {}) : void {
-    if (orderViewModelIListApiResponse) {
-        writer.writeCollectionOfObjectValues<OrderViewModel>("data", orderViewModelIListApiResponse.data, serializeOrderViewModel);
-        writer.writeStringValue("message", orderViewModelIListApiResponse.message);
-        writer.writeBooleanValue("success", orderViewModelIListApiResponse.success);
-    }
+export function serializeOrderViewModelIListApiResponse(writer: SerializationWriter, orderViewModelIListApiResponse: Partial<OrderViewModelIListApiResponse> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!orderViewModelIListApiResponse || isSerializingDerivedType) { return; }
+    writer.writeCollectionOfObjectValues<OrderViewModel>("data", orderViewModelIListApiResponse.data, serializeOrderViewModel);
+    writer.writeStringValue("message", orderViewModelIListApiResponse.message);
+    writer.writeBooleanValue("success", orderViewModelIListApiResponse.success);
 }
 /**
  * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param PaymentRequest The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializePaymentRequest(writer: SerializationWriter, paymentRequest: Partial<PaymentRequest> | undefined | null = {}) : void {
-    if (paymentRequest) {
-        writer.writeStringValue("currencyCode", paymentRequest.currencyCode);
-        writer.writeGuidValue("customerId", paymentRequest.customerId);
-        writer.writeGuidValue("orderId", paymentRequest.orderId);
-        writer.writeCollectionOfObjectValues<ProductItemRequest>("productItems", paymentRequest.productItems, serializeProductItemRequest);
-        writer.writeNumberValue("totalAmount", paymentRequest.totalAmount);
-    }
+export function serializePaymentRequest(writer: SerializationWriter, paymentRequest: Partial<PaymentRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!paymentRequest || isSerializingDerivedType) { return; }
+    writer.writeStringValue("currencyCode", paymentRequest.currencyCode);
+    writer.writeGuidValue("customerId", paymentRequest.customerId);
+    writer.writeGuidValue("orderId", paymentRequest.orderId);
+    writer.writeCollectionOfObjectValues<ProductItemRequest>("productItems", paymentRequest.productItems, serializeProductItemRequest);
+    writer.writeNumberValue("totalAmount", paymentRequest.totalAmount);
 }
 /**
  * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param ProblemDetails The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeProblemDetails(writer: SerializationWriter, problemDetails: Partial<ProblemDetails> | undefined | null = {}) : void {
-    if (problemDetails) {
-        writer.writeStringValue("detail", problemDetails.detail);
-        writer.writeStringValue("instance", problemDetails.instance);
-        writer.writeNumberValue("status", problemDetails.status);
-        writer.writeStringValue("title", problemDetails.title);
-        writer.writeStringValue("type", problemDetails.type);
-        writer.writeAdditionalData(problemDetails.additionalData);
-    }
+export function serializeProblemDetails(writer: SerializationWriter, problemDetails: Partial<ProblemDetails> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!problemDetails || isSerializingDerivedType) { return; }
+    writer.writeStringValue("detail", problemDetails.detail);
+    writer.writeStringValue("instance", problemDetails.instance);
+    writer.writeNumberValue("status", problemDetails.status);
+    writer.writeStringValue("title", problemDetails.title);
+    writer.writeStringValue("type", problemDetails.type);
+    writer.writeAdditionalData(problemDetails.additionalData);
 }
 /**
  * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param ProductItemRequest The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeProductItemRequest(writer: SerializationWriter, productItemRequest: Partial<ProductItemRequest> | undefined | null = {}) : void {
-    if (productItemRequest) {
-        writer.writeGuidValue("productId", productItemRequest.productId);
-        writer.writeStringValue("productName", productItemRequest.productName);
-        writer.writeNumberValue("quantity", productItemRequest.quantity);
-        writer.writeNumberValue("unitPrice", productItemRequest.unitPrice);
-    }
+export function serializeProductItemRequest(writer: SerializationWriter, productItemRequest: Partial<ProductItemRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!productItemRequest || isSerializingDerivedType) { return; }
+    writer.writeGuidValue("productId", productItemRequest.productId);
+    writer.writeStringValue("productName", productItemRequest.productName);
+    writer.writeNumberValue("quantity", productItemRequest.quantity);
+    writer.writeNumberValue("unitPrice", productItemRequest.unitPrice);
 }
 /**
  * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param ProductViewModel The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeProductViewModel(writer: SerializationWriter, productViewModel: Partial<ProductViewModel> | undefined | null = {}) : void {
-    if (productViewModel) {
-        writer.writeStringValue("category", productViewModel.category);
-        writer.writeStringValue("currencySymbol", productViewModel.currencySymbol);
-        writer.writeStringValue("description", productViewModel.description);
-        writer.writeStringValue("imageUrl", productViewModel.imageUrl);
-        writer.writeStringValue("name", productViewModel.name);
-        writer.writeNumberValue("price", productViewModel.price);
-        writer.writeGuidValue("productId", productViewModel.productId);
-        writer.writeNumberValue("quantityAddedToCart", productViewModel.quantityAddedToCart);
-        writer.writeNumberValue("quantityInStock", productViewModel.quantityInStock);
-    }
+export function serializeProductViewModel(writer: SerializationWriter, productViewModel: Partial<ProductViewModel> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!productViewModel || isSerializingDerivedType) { return; }
+    writer.writeStringValue("category", productViewModel.category);
+    writer.writeStringValue("currencySymbol", productViewModel.currencySymbol);
+    writer.writeStringValue("description", productViewModel.description);
+    writer.writeStringValue("imageUrl", productViewModel.imageUrl);
+    writer.writeStringValue("name", productViewModel.name);
+    writer.writeNumberValue("price", productViewModel.price);
+    writer.writeGuidValue("productId", productViewModel.productId);
+    writer.writeNumberValue("quantityAddedToCart", productViewModel.quantityAddedToCart);
+    writer.writeNumberValue("quantityInStock", productViewModel.quantityInStock);
 }
 /**
  * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param ProductViewModelIListApiResponse The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeProductViewModelIListApiResponse(writer: SerializationWriter, productViewModelIListApiResponse: Partial<ProductViewModelIListApiResponse> | undefined | null = {}) : void {
-    if (productViewModelIListApiResponse) {
-        writer.writeCollectionOfObjectValues<ProductViewModel>("data", productViewModelIListApiResponse.data, serializeProductViewModel);
-        writer.writeStringValue("message", productViewModelIListApiResponse.message);
-        writer.writeBooleanValue("success", productViewModelIListApiResponse.success);
-    }
+export function serializeProductViewModelIListApiResponse(writer: SerializationWriter, productViewModelIListApiResponse: Partial<ProductViewModelIListApiResponse> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!productViewModelIListApiResponse || isSerializingDerivedType) { return; }
+    writer.writeCollectionOfObjectValues<ProductViewModel>("data", productViewModelIListApiResponse.data, serializeProductViewModel);
+    writer.writeStringValue("message", productViewModelIListApiResponse.message);
+    writer.writeBooleanValue("success", productViewModelIListApiResponse.success);
 }
 /**
  * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param QuoteItemViewModel The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeQuoteItemViewModel(writer: SerializationWriter, quoteItemViewModel: Partial<QuoteItemViewModel> | undefined | null = {}) : void {
-    if (quoteItemViewModel) {
-        writer.writeStringValue("currencySymbol", quoteItemViewModel.currencySymbol);
-        writer.writeGuidValue("productId", quoteItemViewModel.productId);
-        writer.writeStringValue("productName", quoteItemViewModel.productName);
-        writer.writeNumberValue("quantity", quoteItemViewModel.quantity);
-        writer.writeNumberValue("unitPrice", quoteItemViewModel.unitPrice);
-    }
+export function serializeQuoteItemViewModel(writer: SerializationWriter, quoteItemViewModel: Partial<QuoteItemViewModel> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!quoteItemViewModel || isSerializingDerivedType) { return; }
+    writer.writeStringValue("currencySymbol", quoteItemViewModel.currencySymbol);
+    writer.writeGuidValue("productId", quoteItemViewModel.productId);
+    writer.writeStringValue("productName", quoteItemViewModel.productName);
+    writer.writeNumberValue("quantity", quoteItemViewModel.quantity);
+    writer.writeNumberValue("unitPrice", quoteItemViewModel.unitPrice);
 }
 /**
  * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param QuoteViewModel The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeQuoteViewModel(writer: SerializationWriter, quoteViewModel: Partial<QuoteViewModel> | undefined | null = {}) : void {
-    if (quoteViewModel) {
-        writer.writeDateValue("createdAt", quoteViewModel.createdAt);
-        writer.writeStringValue("currencyCode", quoteViewModel.currencyCode);
-        writer.writeStringValue("currencySymbol", quoteViewModel.currencySymbol);
-        writer.writeGuidValue("customerId", quoteViewModel.customerId);
-        writer.writeCollectionOfObjectValues<QuoteItemViewModel>("items", quoteViewModel.items, serializeQuoteItemViewModel);
-        writer.writeGuidValue("quoteId", quoteViewModel.quoteId);
-        writer.writeStringValue("quoteStatus", quoteViewModel.quoteStatus);
-    }
+export function serializeQuoteViewModel(writer: SerializationWriter, quoteViewModel: Partial<QuoteViewModel> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!quoteViewModel || isSerializingDerivedType) { return; }
+    writer.writeDateValue("createdAt", quoteViewModel.createdAt);
+    writer.writeStringValue("currencyCode", quoteViewModel.currencyCode);
+    writer.writeStringValue("currencySymbol", quoteViewModel.currencySymbol);
+    writer.writeGuidValue("customerId", quoteViewModel.customerId);
+    writer.writeCollectionOfObjectValues<QuoteItemViewModel>("items", quoteViewModel.items, serializeQuoteItemViewModel);
+    writer.writeGuidValue("quoteId", quoteViewModel.quoteId);
+    writer.writeStringValue("quoteStatus", quoteViewModel.quoteStatus);
 }
 /**
  * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param QuoteViewModelApiResponse The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeQuoteViewModelApiResponse(writer: SerializationWriter, quoteViewModelApiResponse: Partial<QuoteViewModelApiResponse> | undefined | null = {}) : void {
-    if (quoteViewModelApiResponse) {
-        writer.writeObjectValue<QuoteViewModel>("data", quoteViewModelApiResponse.data, serializeQuoteViewModel);
-        writer.writeStringValue("message", quoteViewModelApiResponse.message);
-        writer.writeBooleanValue("success", quoteViewModelApiResponse.success);
-    }
+export function serializeQuoteViewModelApiResponse(writer: SerializationWriter, quoteViewModelApiResponse: Partial<QuoteViewModelApiResponse> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!quoteViewModelApiResponse || isSerializingDerivedType) { return; }
+    writer.writeObjectValue<QuoteViewModel>("data", quoteViewModelApiResponse.data, serializeQuoteViewModel);
+    writer.writeStringValue("message", quoteViewModelApiResponse.message);
+    writer.writeBooleanValue("success", quoteViewModelApiResponse.success);
 }
 /**
  * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param RegisterCustomerRequest The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeRegisterCustomerRequest(writer: SerializationWriter, registerCustomerRequest: Partial<RegisterCustomerRequest> | undefined | null = {}) : void {
-    if (registerCustomerRequest) {
-        writer.writeNumberValue("creditLimit", registerCustomerRequest.creditLimit);
-        writer.writeStringValue("email", registerCustomerRequest.email);
-        writer.writeStringValue("name", registerCustomerRequest.name);
-        writer.writeStringValue("password", registerCustomerRequest.password);
-        writer.writeStringValue("passwordConfirm", registerCustomerRequest.passwordConfirm);
-        writer.writeStringValue("shippingAddress", registerCustomerRequest.shippingAddress);
-    }
+export function serializeRegisterCustomerRequest(writer: SerializationWriter, registerCustomerRequest: Partial<RegisterCustomerRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!registerCustomerRequest || isSerializingDerivedType) { return; }
+    writer.writeNumberValue("creditLimit", registerCustomerRequest.creditLimit);
+    writer.writeStringValue("email", registerCustomerRequest.email);
+    writer.writeStringValue("name", registerCustomerRequest.name);
+    writer.writeStringValue("password", registerCustomerRequest.password);
+    writer.writeStringValue("passwordConfirm", registerCustomerRequest.passwordConfirm);
+    writer.writeStringValue("shippingAddress", registerCustomerRequest.shippingAddress);
 }
 /**
  * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param RegisterUserRequest The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeRegisterUserRequest(writer: SerializationWriter, registerUserRequest: Partial<RegisterUserRequest> | undefined | null = {}) : void {
-    if (registerUserRequest) {
-        writer.writeGuidValue("customerId", registerUserRequest.customerId);
-        writer.writeStringValue("email", registerUserRequest.email);
-        writer.writeStringValue("password", registerUserRequest.password);
-        writer.writeStringValue("passwordConfirm", registerUserRequest.passwordConfirm);
-    }
+export function serializeRegisterUserRequest(writer: SerializationWriter, registerUserRequest: Partial<RegisterUserRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!registerUserRequest || isSerializingDerivedType) { return; }
+    writer.writeGuidValue("customerId", registerUserRequest.customerId);
+    writer.writeStringValue("email", registerUserRequest.email);
+    writer.writeStringValue("password", registerUserRequest.password);
+    writer.writeStringValue("passwordConfirm", registerUserRequest.passwordConfirm);
 }
 /**
  * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param ShipOrderRequest The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeShipOrderRequest(writer: SerializationWriter, shipOrderRequest: Partial<ShipOrderRequest> | undefined | null = {}) : void {
-    if (shipOrderRequest) {
-        writer.writeGuidValue("orderId", shipOrderRequest.orderId);
-        writer.writeCollectionOfObjectValues<ProductItemRequest>("productItems", shipOrderRequest.productItems, serializeProductItemRequest);
-    }
+export function serializeShipOrderRequest(writer: SerializationWriter, shipOrderRequest: Partial<ShipOrderRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!shipOrderRequest || isSerializingDerivedType) { return; }
+    writer.writeGuidValue("orderId", shipOrderRequest.orderId);
+    writer.writeCollectionOfObjectValues<ProductItemRequest>("productItems", shipOrderRequest.productItems, serializeProductItemRequest);
 }
 /**
  * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param UpdateCustomerRequest The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeUpdateCustomerRequest(writer: SerializationWriter, updateCustomerRequest: Partial<UpdateCustomerRequest> | undefined | null = {}) : void {
-    if (updateCustomerRequest) {
-        writer.writeNumberValue("creditLimit", updateCustomerRequest.creditLimit);
-        writer.writeStringValue("name", updateCustomerRequest.name);
-        writer.writeStringValue("shippingAddress", updateCustomerRequest.shippingAddress);
-    }
+export function serializeUpdateCustomerRequest(writer: SerializationWriter, updateCustomerRequest: Partial<UpdateCustomerRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!updateCustomerRequest || isSerializingDerivedType) { return; }
+    writer.writeNumberValue("creditLimit", updateCustomerRequest.creditLimit);
+    writer.writeStringValue("name", updateCustomerRequest.name);
+    writer.writeStringValue("shippingAddress", updateCustomerRequest.shippingAddress);
 }
 /**
  * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param UpdateOrderStatusRequest The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeUpdateOrderStatusRequest(writer: SerializationWriter, updateOrderStatusRequest: Partial<UpdateOrderStatusRequest> | undefined | null = {}) : void {
-    if (updateOrderStatusRequest) {
-        writer.writeGuidValue("customerId", updateOrderStatusRequest.customerId);
-        writer.writeGuidValue("orderId", updateOrderStatusRequest.orderId);
-        writer.writeNumberValue("orderStatusCode", updateOrderStatusRequest.orderStatusCode);
-        writer.writeStringValue("orderStatusText", updateOrderStatusRequest.orderStatusText);
-    }
+export function serializeUpdateOrderStatusRequest(writer: SerializationWriter, updateOrderStatusRequest: Partial<UpdateOrderStatusRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!updateOrderStatusRequest || isSerializingDerivedType) { return; }
+    writer.writeGuidValue("customerId", updateOrderStatusRequest.customerId);
+    writer.writeGuidValue("orderId", updateOrderStatusRequest.orderId);
+    writer.writeNumberValue("orderStatusCode", updateOrderStatusRequest.orderStatusCode);
+    writer.writeStringValue("orderStatusText", updateOrderStatusRequest.orderStatusText);
 }
 /**
  * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param UserRegisteredResult The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeUserRegisteredResult(writer: SerializationWriter, userRegisteredResult: Partial<UserRegisteredResult> | undefined | null = {}) : void {
-    if (userRegisteredResult) {
-        writer.writeBooleanValue("succeeded", userRegisteredResult.succeeded);
-        writer.writeStringValue("userId", userRegisteredResult.userId);
-    }
+export function serializeUserRegisteredResult(writer: SerializationWriter, userRegisteredResult: Partial<UserRegisteredResult> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!userRegisteredResult || isSerializingDerivedType) { return; }
+    writer.writeBooleanValue("succeeded", userRegisteredResult.succeeded);
+    writer.writeStringValue("userId", userRegisteredResult.userId);
 }
 export interface ShipOrderRequest extends Parsable {
     /**

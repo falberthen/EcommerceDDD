@@ -1,8 +1,8 @@
 {
-  "descriptionHash": "255FB3CC16C78A4B9A44ACFE2BA075CB212FD8C7F753309D12C67A544D3E9B45827872DA5708A6E8AF2B47E07F1287467AD3AB444FEFB5600DB21B8E39D640F4",
+  "descriptionHash": "E1AEDCABEA9E5A9BC27E32DCD4F7492373588075E6C79482DE52BC51BBA9452F5040A51CA907E455DB5BA9BE5CA78E3148ADB44BD5C0B9238E0B85D2971E9BFA",
   "descriptionLocation": "http://localhost:5000/swagger/v2/apigateway.yaml",
   "lockFileVersion": "1.0.0",
-  "kiotaVersion": "1.26.1",
+  "kiotaVersion": "1.29.0",
   "clientClassName": "ApiClient",
   "typeAccessModifier": "Public",
   "clientNamespaceName": "ApiSdk",

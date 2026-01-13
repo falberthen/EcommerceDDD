@@ -51,13 +51,18 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    const success = await this.authenticationService.login(
-      this.f.email.value,
-      this.f.password.value
-    );
+    try {
+      this.loaderService.setLoading(true);
+      const success = await this.authenticationService.login(
+        this.f.email.value,
+        this.f.password.value
+      );
 
-    if (success) {
-      this.router.navigate([this.returnUrl]);
+      if (success) {
+        this.router.navigate([this.returnUrl]);
+      }
+    } finally {
+      this.loaderService.setLoading(false);
     }
   }
 

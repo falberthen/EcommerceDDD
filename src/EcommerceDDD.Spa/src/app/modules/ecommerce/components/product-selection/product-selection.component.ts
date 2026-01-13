@@ -20,7 +20,7 @@ import {
     standalone: false
 })
 export class ProductSelectionComponent implements OnInit {
-  loaderService = inject(LoaderService);
+  private loaderService = inject(LoaderService);
   private kiotaClientService = inject(KiotaClientService);
   private localStorageService = inject(LocalStorageService);
   private currencyNotificationService = inject(CurrencyNotificationService);
@@ -64,6 +64,7 @@ export class ProductSelectionComponent implements OnInit {
         productIds: []
       };
 
+      this.loaderService.setLoading(true);
       await this.kiotaClientService.client.api.v2.products
         .post(request)
         .then((result) => {
@@ -73,23 +74,42 @@ export class ProductSelectionComponent implements OnInit {
         });
     } catch (error) {
       this.kiotaClientService.handleError(error);
+    } finally {
+      this.loaderService.setLoading(false);
     }
   }
 
   async saveCart(product: ProductViewModel) {
-    if (!this.cart?.quote) {
-      await this.createQuote();
-    }
+    try {
+      if (!this.cart?.quote) {
+        this.loaderService.setLoading(true);
+        await this.createQuote();
+      }
 
-    await this.addQuoteItem(product);
+      await this.addQuoteItem(product);
+    } catch (error) {
+      this.kiotaClientService.handleError(error);
+    } finally {
+      this.loaderService.setLoading(false);
+    }
   }
 
   async createQuote() {
-    await this.cart.createQuote();
+    try {
+      this.loaderService.setLoading(true);
+      await this.cart.createQuote();
+    } finally {
+      this.loaderService.setLoading(false);
+    }
   }
 
   async addQuoteItem(product: ProductViewModel) {
-    await this.cart.addQuoteItem(product);
+    try {
+      this.loaderService.setLoading(true);
+      await this.cart.addQuoteItem(product);
+    } finally {
+      this.loaderService.setLoading(false);
+    }
   }
 
   syncronizeQuoteToProductList(quote: QuoteViewModel) {

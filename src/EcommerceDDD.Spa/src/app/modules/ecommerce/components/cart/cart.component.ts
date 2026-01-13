@@ -82,6 +82,7 @@ export class CartComponent implements OnInit {
 
   async showQuoteStoredEvents() {
     try {
+      this.loaderService.setLoading(true);
       await this.kiotaClientService.client.api.v2.quotes
         .byQuoteId(this.quote?.quoteId!)
         .history.get()
@@ -95,6 +96,8 @@ export class CartComponent implements OnInit {
         });
     } catch (error) {
       this.kiotaClientService.handleError(error);
+    } finally {
+      this.loaderService.setLoading(false);
     }
   }
 
@@ -107,6 +110,7 @@ export class CartComponent implements OnInit {
       .then(async (confirmed) => {
         if (confirmed) {
           try {
+            this.loaderService.setLoading(true);
             await this.kiotaClientService.client.api.v2.quotes
               .byQuoteId(this.quote?.quoteId!)
               .delete()
@@ -116,6 +120,8 @@ export class CartComponent implements OnInit {
               });
           } catch (error) {
             this.kiotaClientService.handleError(error);
+          } finally {
+            this.loaderService.setLoading(false);
           }
         }
       });
@@ -123,6 +129,7 @@ export class CartComponent implements OnInit {
 
   async getOpenQuote() {
     try {
+      this.loaderService.setLoading(true);
       await this.kiotaClientService.client.api.v2.quotes.get().then((result) => {
         if (result?.data?.quoteId) {
           this.setQuote(result.data!);
@@ -134,22 +141,27 @@ export class CartComponent implements OnInit {
       });
     } catch (error) {
       this.kiotaClientService.handleError(error);
+    } finally {
+      this.loaderService.setLoading(false);
     }
   }
 
   async createQuote() {
-    const request : OpenQuoteRequest = {
+    const request: OpenQuoteRequest = {
       currencyCode: this.currentCurrency
-    }
+    };
 
-    await this.kiotaClientService.client.api.v2.quotes
-      .post(request)
-      .then(async () => {
-        await this.getOpenQuote();
-      })
-      .catch((error) => {
-        this.kiotaClientService.handleError(error);
-      });
+    this.loaderService.setLoading(true);
+
+    try {
+      await this.kiotaClientService.client.api.v2.quotes.post(request);
+      await this.getOpenQuote();
+
+    } catch (error) {
+      this.kiotaClientService.handleError(error);
+    } finally {
+      this.loaderService.setLoading(false);
+    }
   }
 
   async addQuoteItem(product: ProductViewModel) {
@@ -158,20 +170,25 @@ export class CartComponent implements OnInit {
         ? 1
         : Number(product.quantityAddedToCart);
 
-    const request : AddQuoteItemRequest = {
+    const request: AddQuoteItemRequest = {
       productId: product.productId!,
       quantity: product.quantityAddedToCart
     };
 
-    return await this.kiotaClientService.client.api.v2.quotes
-      .byQuoteId(this.quote?.quoteId!)
-      .items.put(request)
-      .then(async () => {
-        await this.getOpenQuote();
-      })
-      .catch((error) => {
-        this.kiotaClientService.handleError(error);
-      });
+    this.loaderService.setLoading(true);
+
+    try {
+      await this.kiotaClientService.client.api.v2.quotes
+        .byQuoteId(this.quote?.quoteId!)
+        .items.put(request);
+
+      await this.getOpenQuote();
+
+    } catch (error) {
+      this.kiotaClientService.handleError(error);
+    } finally {
+      this.loaderService.setLoading(false);
+    }
   }
 
   async removeItem(quoteItem: QuoteItemViewModel) {
@@ -180,6 +197,7 @@ export class CartComponent implements OnInit {
       .then(async (confirmed) => {
         if (confirmed) {
           try {
+            this.loaderService.setLoading(true);
             await this.kiotaClientService.client.api.v2.quotes
               .byQuoteId(this.quote?.quoteId!)
               .items.byProductId(quoteItem.productId!)
@@ -189,6 +207,8 @@ export class CartComponent implements OnInit {
               });
           } catch (error) {
             this.kiotaClientService.handleError(error);
+          } finally {
+            this.loaderService.setLoading(false);
           }
         }
       });
@@ -200,6 +220,7 @@ export class CartComponent implements OnInit {
       .then(async (confirmed) => {
         if (this.quote && confirmed) {
           try {
+            this.loaderService.setLoading(true);
             this.kiotaClientService.client.api.v2.orders.quote
               .byQuoteId(this.quote.quoteId!)
               .post()
@@ -214,6 +235,8 @@ export class CartComponent implements OnInit {
               });
           } catch (error) {
             this.kiotaClientService.handleError(error);
+          } finally {
+            this.loaderService.setLoading(false);
           }
         }
       });
