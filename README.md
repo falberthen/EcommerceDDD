@@ -104,27 +104,26 @@ The microservices composing the backend are built to be as simple as possible, s
     <a href='https://get.asp.net' target="_blank">ASP.NET Core API</a> and <a href='https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-12' target="_blank">C# 12</a>
     for cross-platform backend with:
     <ul>
-      <li>.NET 8</li>
-      <li><b>Koalesce.OpenAPI 0.1.1-alpha.2</b></li>
-      <li>Ocelot 23.4.3</li>
-      <li>Marten 7.40.0</li>
-      <li>Confluent Kafka 2.10.0</li>
-      <li>Entity Framework Core 8.0.15</li>
-      <li>Npgsql.EntityFrameworkCore.PostgreSQL 8.0.11</li>
-      <li>ASP.NET Core Identity 8.0.15</li>
-      <li>ASP.NET Core Authentication JwtBearer 8.0.15</li>
-      <li>Duende IdentityServer 7.2.1</li>
-      <li>Polly 8.5.2</li>
+      <li>.NET 10</li>
+      <li><b>Koalesce.OpenAPI 1.0.0-alpha.3</b></li>
+      <li>Ocelot 24.1.0</li>
+      <li>Marten 8.17.0</li>
+      <li>Confluent Kafka 2.13.0</li>
+      <li>Entity Framework Core 10.0.1</li>
+      <li>Npgsql.EntityFrameworkCore.PostgreSQL 10.0.0</li>
+      <li>ASP.NET Core Authentication JwtBearer 10.0.1</li>
+      <li>Duende IdentityServer 7.4.4</li>
+      <li>Polly 8.6.5</li>
       <li>XUnit 2.9.3</li>
       <li>NSubstitute 5.3.0</li>
-      <li>SwaggerGen/SwaggerUI 8.1.1</li>
-      <li>Microsoft.Kiota.* 1.17.2</li>
+      <li>SwaggerGen/SwaggerUI 8.1.4</li>
+      <li>Microsoft.Kiota.* 1.21.1</li>
     </ul>
   </li>
   <li>
     <a href='https://angular.io/' target="_blank">Angular v19.2.7</a> and <a href='http://www.typescriptlang.org/' target="_blank">TypeScript 5.5.4</a> for the frontend with:
     <ul>
-      <li>Kiota 1.0.2</li>
+      <li>Microsoft Kiota Bundle library for TypeScript 1.0.0-preview.99</li>
       <li>Jest 29.7.0</li>
       <li>NgBootstrap 18.0.0/ Bootstrap 5.3.5</li>
       <li>Font Awesome 6.7.2</li>
