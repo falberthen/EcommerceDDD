@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace EcommerceDDD.Core.Infrastructure.Outbox;
+﻿namespace EcommerceDDD.Core.Infrastructure.Outbox;
 
 public class DebeziumConnectorSetup : IDebeziumConnectorSetup
 {

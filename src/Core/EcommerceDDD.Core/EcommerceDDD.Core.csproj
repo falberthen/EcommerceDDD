@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
 	<LangVersion>12</LangVersion>
 	<Platforms>AnyCPU;x64</Platforms>
 	<Nullable>enable</Nullable>
@@ -14,11 +14,11 @@
   </ItemGroup>
 
   <ItemGroup>	
-	<PackageReference Include="Marten" Version="7.40.0" />
-	<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	<PackageReference Include="Marten" Version="8.17.0" />
+	<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 	<PackageReference Include="NSubstitute" Version="5.3.0" />
-	<PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.11.0" />
-	<PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.11.0" />
+	<PackageReference Include="Microsoft.CodeAnalysis.Common" Version="5.0.0" />
+	<PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="5.0.0" />
   </ItemGroup>
 
 </Project>
