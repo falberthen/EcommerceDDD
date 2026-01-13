@@ -1,6 +1,3 @@
-using EcommerceDDD.Core.Infrastructure.Extensions;
-using EcommerceDDD.SignalR.Hubs;
-
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 IServiceCollection services = builder.Services;
 
@@ -37,4 +34,4 @@ app.UseAuthorization();
 app.MapControllers();
 app.UseHealthChecks();
 
-app.Run();
+await app.RunAsync();

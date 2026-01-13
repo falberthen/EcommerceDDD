@@ -72,4 +72,4 @@ app.UseAuthorization();
 app.MapControllers();
 app.UseHealthChecks();
 
-app.MigrateDatabase().Run();
+await app.MigrateDatabase().RunAsync();

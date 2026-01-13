@@ -70,11 +70,11 @@ using (var scope = app.Services.CreateScope())
 	// Enable Swagger UI
 	app.UseSwaggerUI(c =>
 	{
-		c.SwaggerEndpoint(koalesceOptions.MergedOpenApiPath, koalesceOptions.Title);
+		c.SwaggerEndpoint(koalesceOptions.MergedDocumentPath, koalesceOptions.Title);
 	});
 }
 
 app.UseOcelot().Wait();
 
 // Run the app
-app.Run();
+await app.RunAsync();
