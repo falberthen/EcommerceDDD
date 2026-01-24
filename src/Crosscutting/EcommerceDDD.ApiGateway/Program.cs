@@ -35,7 +35,6 @@ services.AddCors(o =>
 		.AllowAnyMethod()
 		.AllowAnyHeader()
 		.AllowCredentials()
-		.SetIsOriginAllowed(x => true)
 		.WithOrigins("http://localhost:4200");
 	})
 );

@@ -11,18 +11,6 @@
         }
       ],
       "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/v{version}/accounts/register",
-      "UpstreamPathTemplate": "/api/v{version}/accounts/register",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "ecommerceddd-identityserver",
-          "Port": 80
-        }
-      ],
-      "UpstreamHttpMethod": [ "POST" ]
     }
   ]
 }
