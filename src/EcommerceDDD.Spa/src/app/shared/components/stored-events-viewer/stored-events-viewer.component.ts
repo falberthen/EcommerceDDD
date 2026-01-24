@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { IEventHistory } from 'src/app/clients/models';
+import { IEventHistory } from '@shared/services/stored-event.service';
 
 @Component({
     selector: 'app-stored-event-viewer',

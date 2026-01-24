@@ -83,14 +83,14 @@ export class CartComponent implements OnInit {
   async showQuoteStoredEvents() {
     try {
       this.loaderService.setLoading(true);
-      await this.kiotaClientService.client.api.v2.quotes
+      await this.kiotaClientService.client.quoteManagement.api.v2.quotes
         .byQuoteId(this.quote?.quoteId!)
         .history.get()
         .then((result) => {
           if (result!.success) {
             this.storedEventService.showStoredEvents(
               this.storedEventViewerContainer,
-              result!.data!
+              result!.data ?? undefined
             );
           }
         });
@@ -111,7 +111,7 @@ export class CartComponent implements OnInit {
         if (confirmed) {
           try {
             this.loaderService.setLoading(true);
-            await this.kiotaClientService.client.api.v2.quotes
+            await this.kiotaClientService.client.quoteManagement.api.v2.quotes
               .byQuoteId(this.quote?.quoteId!)
               .delete()
               .then(async () => {
@@ -130,7 +130,7 @@ export class CartComponent implements OnInit {
   async getOpenQuote() {
     try {
       this.loaderService.setLoading(true);
-      await this.kiotaClientService.client.api.v2.quotes.get().then((result) => {
+      await this.kiotaClientService.client.quoteManagement.api.v2.quotes.get().then((result) => {
         if (result?.data?.quoteId) {
           this.setQuote(result.data!);
           this.emitQuote(result.data!);
@@ -154,7 +154,7 @@ export class CartComponent implements OnInit {
     this.loaderService.setLoading(true);
 
     try {
-      await this.kiotaClientService.client.api.v2.quotes.post(request);
+      await this.kiotaClientService.client.quoteManagement.api.v2.quotes.post(request);
       await this.getOpenQuote();
 
     } catch (error) {
@@ -178,7 +178,7 @@ export class CartComponent implements OnInit {
     this.loaderService.setLoading(true);
 
     try {
-      await this.kiotaClientService.client.api.v2.quotes
+      await this.kiotaClientService.client.quoteManagement.api.v2.quotes
         .byQuoteId(this.quote?.quoteId!)
         .items.put(request);
 
@@ -198,7 +198,7 @@ export class CartComponent implements OnInit {
         if (confirmed) {
           try {
             this.loaderService.setLoading(true);
-            await this.kiotaClientService.client.api.v2.quotes
+            await this.kiotaClientService.client.quoteManagement.api.v2.quotes
               .byQuoteId(this.quote?.quoteId!)
               .items.byProductId(quoteItem.productId!)
               .delete()
@@ -221,7 +221,7 @@ export class CartComponent implements OnInit {
         if (this.quote && confirmed) {
           try {
             this.loaderService.setLoading(true);
-            this.kiotaClientService.client.api.v2.orders.quote
+            this.kiotaClientService.client.orderProcessing.api.v2.orders.quote
               .byQuoteId(this.quote.quoteId!)
               .post()
               .then(() => {

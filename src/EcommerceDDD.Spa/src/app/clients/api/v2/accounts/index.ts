@@ -4,8 +4,6 @@
 // @ts-ignore
 import { LoginRequestBuilderRequestsMetadata, type LoginRequestBuilder } from './login/index.js';
 // @ts-ignore
-import { RegisterRequestBuilderRequestsMetadata, type RegisterRequestBuilder } from './register/index.js';
-// @ts-ignore
 import { type BaseRequestBuilder, type KeysToExcludeForNavigationMetadata, type NavigationMetadata } from '@microsoft/kiota-abstractions';
 
 /**
@@ -16,10 +14,6 @@ export interface AccountsRequestBuilder extends BaseRequestBuilder<AccountsReque
      * The login property
      */
     get login(): LoginRequestBuilder;
-    /**
-     * The register property
-     */
-    get register(): RegisterRequestBuilder;
 }
 /**
  * Uri template for the request builder.
@@ -31,9 +25,6 @@ export const AccountsRequestBuilderUriTemplate = "{+baseurl}/api/v2/accounts";
 export const AccountsRequestBuilderNavigationMetadata: Record<Exclude<keyof AccountsRequestBuilder, KeysToExcludeForNavigationMetadata>, NavigationMetadata> = {
     login: {
         requestsMetadata: LoginRequestBuilderRequestsMetadata,
-    },
-    register: {
-        requestsMetadata: RegisterRequestBuilderRequestsMetadata,
     },
 };
 /* tslint:enable */

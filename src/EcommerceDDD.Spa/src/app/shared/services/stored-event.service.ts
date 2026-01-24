@@ -1,6 +1,13 @@
 import { Injectable, ViewContainerRef } from '@angular/core';
 import { StoredEventsViewerComponent } from '@shared/components/stored-events-viewer/stored-events-viewer.component';
-import { IEventHistory } from 'src/app/clients/models';
+
+export interface IEventHistory {
+  id?: string | null;
+  aggregateId?: string | null;
+  eventTypeName?: string | null;
+  eventData?: string | null;
+  timestamp?: Date | string | null;
+}
 
 @Injectable({
   providedIn: 'root',
