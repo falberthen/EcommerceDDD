@@ -1,79 +1,40 @@
-﻿using EcommerceDDD.InventoryManagement.Application.EnteringProductInStock;
-using EcommerceDDD.ServiceClients.ApiGateway.Models;
-
-namespace EcommerceDDD.ProductCatalog.Infrastructure.Extensions;
+namespace EcommerceDDD.InventoryManagement.Infrastructure.Extensions;
 
 public static class DataSeedExtension
 {
 	/// <summary>
-	/// Adds products to inventory
+	/// Seeds inventory with deterministic product IDs matching ProductCatalog.
+	/// No longer depends on ProductCatalog service at startup.
 	/// </summary>
 	/// <param name="app"></param>
 	/// <returns></returns>
-	/// <exception cref="NullReferenceException"></exception>
-	/// <exception cref="RecordNotFoundException"></exception>
-	public static async Task<IApplicationBuilder> SeedInventoryCatalogAsync(
-		this IApplicationBuilder app, IConfiguration configuration)
+	public static async Task<IApplicationBuilder> SeedInventoryCatalogAsync(this IApplicationBuilder app)
 	{
 		using var serviceScope = app.ApplicationServices
 			.GetService<IServiceScopeFactory>()!
 			.CreateScope() ?? throw new NullReferenceException("Can't create scope factory.");
 
-		var apiGatewayClient = serviceScope.ServiceProvider
-			.GetRequiredService<ApiGatewayClient>();
 		var commandBus = serviceScope.ServiceProvider
 			.GetRequiredService<ICommandBus>();
 
-		var retryPolicy = Policy
-			.Handle<HttpRequestException>()
-			.WaitAndRetryAsync(
-				retryCount: 10, // Maximum 10 retries
-				sleepDurationProvider: attempt => TimeSpan.FromSeconds(Math.Pow(2, attempt)), // Exponential backoff
-				onRetry: (exception, timeSpan, retryCount, context) =>
-				{
-					Console.WriteLine($"Retry {retryCount} after {timeSpan.TotalSeconds} seconds due to: {exception.Message}");
-				});
-
-		var timeoutPolicy = Policy.TimeoutAsync(TimeSpan.FromHours(1));
-		var policyWrap = Policy.WrapAsync(timeoutPolicy, retryPolicy);
-
-		await policyWrap.ExecuteAsync(async () =>
+		try
 		{
-			// Bringing all products from the catalog
-			var request = new GetProductsRequest()
-			{
-				CurrencyCode = "USD",
-				ProductIds = new List<Guid?>()
-			};
+			// Get all products with their initial quantities
+			var productsWithQuantities = InventorySeedIds.GetAllProductsWithQuantities();
 
-			try
-			{
-				var response = await apiGatewayClient.Api.V2.Products
-					.PostAsync(request);
+			List<Tuple<ProductId, int>> productQuantities = productsWithQuantities
+				.Select(p => new Tuple<ProductId, int>(ProductId.Of(p.ProductId), p.InitialQuantity))
+				.ToList();
 
-				if (response?.Success == false || response?.Data is null)
-					throw new HttpRequestException("An error occurred while retrieving products.");
+			var command = EnterProductInStock.Create(productQuantities);
+			await commandBus.SendAsync(command, CancellationToken.None);
 
-				List<Tuple<ProductId, int>> productQuantities = new();
-				foreach (var product in response.Data)
-				{
-					if (product.ProductId.HasValue)
-					{
-						productQuantities.Add(new Tuple<ProductId, int>(
-							ProductId.Of(product.ProductId.Value),
-							new Random().Next(0, 50))
-						);
-					}
-				}
-
-				var command = EnterProductInStock.Create(productQuantities);
-				await commandBus.SendAsync(command, CancellationToken.None);
-			}
-			catch (Microsoft.Kiota.Abstractions.ApiException ex)
-			{
-				throw new HttpRequestException("Products API not available.", ex);
-			}
-		});
+			Console.WriteLine($"Inventory seeded successfully with {productQuantities.Count} products.");
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"An error occurred during inventory seeding: {ex.Message}");
+		}
 
 		return app;
 	}
