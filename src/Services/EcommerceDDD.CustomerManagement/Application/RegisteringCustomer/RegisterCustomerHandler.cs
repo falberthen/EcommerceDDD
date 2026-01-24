@@ -1,21 +1,15 @@
-﻿using EcommerceDDD.ServiceClients.ApiGateway;
-using EcommerceDDD.ServiceClients.ApiGateway.Models;
-
-namespace EcommerceDDD.CustomerManagement.Application.RegisteringCustomer;
+﻿namespace EcommerceDDD.CustomerManagement.Application.RegisteringCustomer;
 
 public class RegisterCustomerHandler(
-	ApiGatewayClient apiGatewayClient,
+	IdentityServerClient identityServerClient,
 	IEmailUniquenessChecker uniquenessChecker,
-	IOptions<TokenIssuerSettings> tokenIssuerSettings,
 	IEventStoreRepository<Customer> customerWriteRepository
 ) : ICommandHandler<RegisterCustomer>
 {
-	private readonly ApiGatewayClient _apiGatewayClient = apiGatewayClient
-		?? throw new ArgumentNullException(nameof(apiGatewayClient));
+	private readonly IdentityServerClient _identityServerClient = identityServerClient
+		?? throw new ArgumentNullException(nameof(_identityServerClient));
 	private readonly IEmailUniquenessChecker _uniquenessChecker = uniquenessChecker
 		?? throw new ArgumentNullException(nameof(uniquenessChecker));
-	private readonly TokenIssuerSettings _tokenIssuerSettings = tokenIssuerSettings.Value
-		?? throw new ArgumentNullException(nameof(tokenIssuerSettings));
 	private readonly IEventStoreRepository<Customer> _customerWriteRepository = customerWriteRepository
 		?? throw new ArgumentNullException(nameof(customerWriteRepository));
 
@@ -32,11 +26,7 @@ public class RegisterCustomerHandler(
 
 		var customer = Customer.Create(customerData);
 
-		var response = await CreateUserForCustomerAsync(command, customer.Id, cancellationToken)
-			?? throw new RecordNotFoundException($"An error occurred creating the customer's user.");
-
-		if (response.Succeeded == false)
-			throw new RecordNotFoundException($"An error occurred creating the customer's user.");
+		var response = await CreateUserForCustomerAsync(command, customer.Id, cancellationToken);
 
 		await _customerWriteRepository
 			.AppendEventsAsync(customer, cancellationToken);
@@ -55,15 +45,16 @@ public class RegisterCustomerHandler(
 				PasswordConfirm = command.PasswordConfirm,
 			};
 
-			var accountRequestBuilder = _apiGatewayClient.Api.V2.Accounts;
+			var accountRequestBuilder = _identityServerClient.Api.V2.Accounts;
 			var response = await accountRequestBuilder.Register
 				.PostAsync(request, cancellationToken: cancellationToken);
 
 			return response;
 		}
-		catch (Exception e)
+		catch (Microsoft.Kiota.Abstractions.ApiException ex)
 		{
-			throw new RecordNotFoundException(e.Message);
-		}
+			throw new ApplicationLogicException(
+				$"An error occurred while registering the customer.", ex);
+		}		
 	}
 }

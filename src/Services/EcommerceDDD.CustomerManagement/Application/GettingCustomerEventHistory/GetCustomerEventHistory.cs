@@ -1,6 +1,6 @@
 ﻿namespace EcommerceDDD.CustomerManagement.Application.GettingCustomerEventHistory;
 
-public record class GetCustomerEventHistory : IQuery<IList<CustomerEventHistory>>
+public record class GetCustomerEventHistory : IQuery<IReadOnlyList<CustomerEventHistory>>
 {
     public static GetCustomerEventHistory Create()
     {

@@ -1,27 +1,25 @@
-﻿using EcommerceDDD.ServiceClients.ApiGateway.Models;
-
-namespace EcommerceDDD.OrderProcessing.Application.Orders.CompletingOrder;
+﻿namespace EcommerceDDD.OrderProcessing.Application.Orders.CompletingOrder;
 
 public class CompleteOrderHandler(
-	ApiGatewayClient apiGatewayClient,
+	SignalRClient signalrClient,
 	IEventStoreRepository<Order> orderWriteRepository
 ) : ICommandHandler<CompleteOrder>
 {
-	private readonly ApiGatewayClient _apiGatewayClient = apiGatewayClient
-		?? throw new ArgumentNullException(nameof(apiGatewayClient));
+	private readonly SignalRClient _signalrClient = signalrClient
+		?? throw new ArgumentNullException(nameof(signalrClient));
 	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository
 		?? throw new ArgumentNullException(nameof(orderWriteRepository));
 
 	public async Task HandleAsync(CompleteOrder command, CancellationToken cancellationToken)
-    {
+	{
 		var order = await _orderWriteRepository
 			.FetchStreamAsync(command.OrderId.Value, cancellationToken: cancellationToken)
-            ?? throw new RecordNotFoundException($"Failed to find the order {command.OrderId}.");
+			?? throw new RecordNotFoundException($"Failed to find the order {command.OrderId}.");
 
-        // Completing order
-        order.Complete(command.ShipmentId);
+		// Completing order
+		order.Complete(command.ShipmentId);
 
-        await _orderWriteRepository
+		await _orderWriteRepository
 			.AppendEventsAsync(order, cancellationToken: cancellationToken);
 
 		try
@@ -35,7 +33,7 @@ public class CompleteOrderHandler(
 				OrderStatusCode = (int)order.Status
 			};
 
-			await _apiGatewayClient.Api.V2.Signalr.Updateorderstatus
+			await _signalrClient.Api.V2.Signalr.Updateorderstatus
 				.PostAsync(request, cancellationToken: cancellationToken);
 		}
 		catch (Microsoft.Kiota.Abstractions.ApiException ex)

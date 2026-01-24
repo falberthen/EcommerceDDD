@@ -1,26 +1,24 @@
-﻿using EcommerceDDD.ServiceClients.ApiGateway.Models;
-
-namespace EcommerceDDD.OrderProcessing.Application.Orders.CancelingOrder;
+﻿namespace EcommerceDDD.OrderProcessing.Application.Orders.CancelingOrder;
 
 public class CancelOrderHandler(
-	ApiGatewayClient apiGatewayClient,
+	SignalRClient signalrClient,
 	IEventStoreRepository<Order> orderWriteRepository
 ) : ICommandHandler<CancelOrder>
 {
-	private readonly ApiGatewayClient _apiGatewayClient = apiGatewayClient
-		?? throw new ArgumentNullException(nameof(apiGatewayClient)); 
+	private readonly SignalRClient _signalrClient = signalrClient
+		?? throw new ArgumentNullException(nameof(signalrClient));
 	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository
 		?? throw new ArgumentNullException(nameof(orderWriteRepository));
 
 	public async Task HandleAsync(CancelOrder command, CancellationToken cancellationToken)
-    {
-        var order = await _orderWriteRepository
-			.FetchStreamAsync(command.OrderId.Value, cancellationToken: cancellationToken) 
-            ?? throw new RecordNotFoundException($"Failed to find the order {command.OrderId}.");
+	{
+		var order = await _orderWriteRepository
+			.FetchStreamAsync(command.OrderId.Value, cancellationToken: cancellationToken)
+			?? throw new RecordNotFoundException($"Failed to find the order {command.OrderId}.");
 
-        // Canceling order
-        order.Cancel(command.CancellationReason);
-        await _orderWriteRepository
+		// Canceling order
+		order.Cancel(command.CancellationReason);
+		await _orderWriteRepository
 			.AppendEventsAsync(order, cancellationToken: cancellationToken);
 
 		try
@@ -34,7 +32,7 @@ public class CancelOrderHandler(
 				OrderStatusCode = (int)order.Status
 			};
 
-			var response = await _apiGatewayClient.Api.V2.Signalr.Updateorderstatus
+			var response = await _signalrClient.Api.V2.Signalr.Updateorderstatus
 				.PostAsync(request, cancellationToken: cancellationToken);
 		}
 		catch (Microsoft.Kiota.Abstractions.ApiException ex)

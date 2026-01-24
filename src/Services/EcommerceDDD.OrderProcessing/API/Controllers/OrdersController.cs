@@ -16,7 +16,7 @@ public class OrdersController(
     [HttpGet]
 	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Policy = Policies.CanRead)]
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<OrderViewModel>>))]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IReadOnlyList<OrderViewModel>>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ListCustomerOrders(CancellationToken cancellationToken) => 
         await Response(
@@ -32,7 +32,7 @@ public class OrdersController(
     [HttpGet, Route("{orderId:guid}/history")]
 	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Policy = Policies.CanRead)]
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<IEventHistory>>))]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IReadOnlyList<OrderEventHistory>>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ListHistory([FromRoute] Guid orderId, 
 		CancellationToken cancellationToken) =>  

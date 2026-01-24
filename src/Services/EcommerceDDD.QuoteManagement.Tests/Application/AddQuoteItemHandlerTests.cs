@@ -1,5 +1,3 @@
-using EcommerceDDD.ServiceClients.ApiGateway.Models;
-
 namespace EcommerceDDD.QuoteManagement.Tests.Application;
 
 public class AddQuoteItemHandlerTests

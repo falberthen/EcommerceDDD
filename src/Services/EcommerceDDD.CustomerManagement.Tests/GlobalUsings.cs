@@ -1,7 +1,6 @@
 global using EcommerceDDD.Core.CQRS.CommandHandling;
 global using EcommerceDDD.Core.CQRS.QueryHandling;
 global using EcommerceDDD.Core.Exceptions.Types;
-global using EcommerceDDD.Core.Infrastructure;
 global using EcommerceDDD.Core.Infrastructure.Identity;
 global using EcommerceDDD.Core.Infrastructure.WebApi;
 global using EcommerceDDD.Core.Testing;
@@ -15,11 +14,11 @@ global using EcommerceDDD.CustomerManagement.Application.UpdatingCustomerInforma
 global using EcommerceDDD.CustomerManagement.Domain;
 global using EcommerceDDD.CustomerManagement.Domain.Events;
 global using EcommerceDDD.CustomerManagement.Infrastructure.Projections;
-global using EcommerceDDD.ServiceClients.ApiGateway;
+global using EcommerceDDD.ServiceClients.IdentityServer;
+global using EcommerceDDD.ServiceClients.IdentityServer.Models;
 global using Marten;
 global using Marten.Linq;
 global using Microsoft.AspNetCore.Mvc;
-global using Microsoft.Extensions.Options;
 global using Microsoft.Kiota.Abstractions;
 global using Microsoft.Kiota.Abstractions.Serialization;
 global using NSubstitute;

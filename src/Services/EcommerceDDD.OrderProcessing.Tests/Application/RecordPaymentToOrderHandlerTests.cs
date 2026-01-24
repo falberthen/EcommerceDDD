@@ -1,5 +1,3 @@
-using EcommerceDDD.ServiceClients.ApiGateway.Models;
-
 namespace EcommerceDDD.OrderProcessing.Tests.Application;
 
 public class RecordPaymentToOrderHandlerTests
@@ -35,7 +33,7 @@ public class RecordPaymentToOrderHandlerTests
 			.AppendEventsAsync(order, CancellationToken.None);
 
 		// mocked kiota request
-		var apiClient = new ApiGatewayClient(_requestAdapter);
+		var signalRClient = new SignalRClient(_requestAdapter);
 		_requestAdapter.SendPrimitiveAsync<string>(
 			Arg.Any<RequestInformation>(),
 			Arg.Any<Dictionary<string, ParsableFactory<IParsable>>>(),
@@ -44,7 +42,7 @@ public class RecordPaymentToOrderHandlerTests
 
 		var recordPaymentToOrder = RecordPayment.Create(order.Id, paymentId, totalPaid);
 		var recordPaymentToOrderHandler = new RecordPaymentHandler(
-			apiClient, orderWriteRepository);
+			signalRClient, orderWriteRepository);
 
 		// When
 		await recordPaymentToOrderHandler

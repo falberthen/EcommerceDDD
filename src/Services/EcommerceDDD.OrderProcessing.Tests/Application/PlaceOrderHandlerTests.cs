@@ -1,5 +1,3 @@
-using EcommerceDDD.ServiceClients.ApiGateway.Models;
-
 namespace EcommerceDDD.OrderProcessing.Tests.Application;
 
 public class PlaceOrderHandlerTests
@@ -13,7 +11,8 @@ public class PlaceOrderHandlerTests
 		var currency = Currency.OfCode(Currency.USDollar.Code);
 
 		var orderWriteRepository = new DummyEventStoreRepository<Order>();
-		var apiClient = new ApiGatewayClient(_requestAdapter);
+		var signalRClient = new SignalRClient(_requestAdapter);
+		var quoteManagementClient = new QuoteManagementClient(_requestAdapter);
 
 		// return mocked view model
 		var viewModelResponse = new QuoteViewModel()
@@ -49,7 +48,7 @@ public class PlaceOrderHandlerTests
 		.Returns(quoteApiResponse);
 
 		var placeOrder = PlaceOrder.Create(_quoteId);
-		var placeOrderHandler = new PlaceOrderHandler(apiClient, orderWriteRepository);
+		var placeOrderHandler = new PlaceOrderHandler(signalRClient, quoteManagementClient, orderWriteRepository);
 
 		// When
 		await placeOrderHandler.HandleAsync(placeOrder, CancellationToken.None);
@@ -68,16 +67,17 @@ public class PlaceOrderHandlerTests
 		// Given
 		var currency = Currency.OfCode(Currency.USDollar.Code);
 		var orderWriteRepository = new DummyEventStoreRepository<Order>();
-		var apiClient = new ApiGatewayClient(_requestAdapter);
+		var signalRClient = new SignalRClient(_requestAdapter);
+		var quoteManagementClient = new QuoteManagementClient(_requestAdapter);
 
 		var placeOrder = PlaceOrder.Create(_quoteId);
-		var placeOrderHandler = new PlaceOrderHandler(apiClient, orderWriteRepository);
+		var placeOrderHandler = new PlaceOrderHandler(signalRClient, quoteManagementClient, orderWriteRepository);
 
 		// When & Then
 		await Assert.ThrowsAsync<ApplicationLogicException>(() =>
 			placeOrderHandler.HandleAsync(placeOrder, CancellationToken.None));
 	}
 
-	private readonly QuoteId _quoteId = QuoteId.Of(Guid.NewGuid());	
+	private readonly QuoteId _quoteId = QuoteId.Of(Guid.NewGuid());
 	private IRequestAdapter _requestAdapter = Substitute.For<IRequestAdapter>();
 }

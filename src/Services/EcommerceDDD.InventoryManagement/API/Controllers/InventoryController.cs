@@ -35,7 +35,7 @@ public class InventoryController(
 	[HttpGet, Route("{productId:guid}/history")]
 	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanRead)]
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<InventoryStockUnitEventHistory>>))]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IReadOnlyList<InventoryStockUnitEventHistory>>))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<IActionResult> ListHistory([FromRoute] Guid productId, 
 		CancellationToken cancellationToken) =>

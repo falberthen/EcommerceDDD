@@ -12,7 +12,9 @@ services.AddHandlersFromType(typeof(GetProductsHandler));
 services.AddHealthChecks();
 
 // Kiota client
-services.AddApiGatewayClient(builder.Configuration);
+services.AddKiotaClient<InventoryManagementClient>(
+	builder.Configuration["Services:InventoryManagement"]
+);
 
 // Services
 services.AddScoped<IProducts, ProductRepository>();
@@ -21,14 +23,14 @@ services.AddScoped<ICurrencyConverter, CurrencyConverter>();
 // Policies
 services.AddAuthorization(options =>
 {
-    options.AddPolicy(Policies.CanRead, AuthPolicyBuilder.CanRead);
+	options.AddPolicy(Policies.CanRead, AuthPolicyBuilder.CanRead);
 });
 
 // App
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
-    app.UseSwagger(builder.Configuration);
+	app.UseSwagger(builder.Configuration);
 
 // Seed products
 await app.SeedProductCatalogAsync();

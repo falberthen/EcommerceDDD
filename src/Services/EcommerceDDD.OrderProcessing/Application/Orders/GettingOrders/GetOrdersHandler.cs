@@ -1,19 +1,19 @@
-﻿using EcommerceDDD.ServiceClients.ApiGateway.Models;
-
-namespace EcommerceDDD.OrderProcessing.Application.Orders.GettingOrders;
+﻿namespace EcommerceDDD.OrderProcessing.Application.Orders.GettingOrders;
 
 public class GetOrdersHandler(
-	ApiGatewayClient apiGatewayClient,
+	QuoteManagementClient quoteManagementClient,
 	IQuerySession querySession,
 	IUserInfoRequester userInfoRequester
-) : IQueryHandler<GetOrders, IList<OrderViewModel>>
+) : IQueryHandler<GetOrders, IReadOnlyList<OrderViewModel>>
 {
-	private readonly ApiGatewayClient _apiGatewayClient = apiGatewayClient;
-	private readonly IQuerySession _querySession = querySession;	
+	private readonly QuoteManagementClient _quoteManagementClient = quoteManagementClient
+		?? throw new ArgumentNullException(nameof(quoteManagementClient));
+	private readonly IQuerySession _querySession = querySession
+		?? throw new ArgumentNullException(nameof(querySession));
 	private readonly IUserInfoRequester _userInfoRequester = userInfoRequester
 		?? throw new ArgumentNullException(nameof(userInfoRequester));
 
-	public async Task<IList<OrderViewModel>> HandleAsync(GetOrders query, CancellationToken cancellationToken)
+	public async Task<IReadOnlyList<OrderViewModel>> HandleAsync(GetOrders query, CancellationToken cancellationToken)
 	{
 		var userInfo = await _userInfoRequester.RequestUserInfoAsync();
 
@@ -25,7 +25,7 @@ public class GetOrdersHandler(
 			return Array.Empty<OrderViewModel>();
 
 		var viewModels = await Task.WhenAll(
-				orders.Select(orderDetails => 
+				orders.Select(orderDetails =>
 					BuildOrderViewModel(orderDetails, cancellationToken)
 			)
 		);
@@ -46,7 +46,7 @@ public class GetOrdersHandler(
 			if (!quote.Items!.Any())
 				throw new RecordNotFoundException($"No quote items found for customer.");
 
-			orderLines = quote.Items!.Select(item => 
+			orderLines = quote.Items!.Select(item =>
 				new OrderLineViewModel
 				{
 					ProductId = item.ProductId!.Value,
@@ -90,7 +90,7 @@ public class GetOrdersHandler(
 	{
 		try
 		{
-			var quoteRequestBuilder = _apiGatewayClient.Api.V2.Quotes[orderDetails.QuoteId];
+			var quoteRequestBuilder = _quoteManagementClient.Api.V2.Quotes[orderDetails.QuoteId];
 			var response = await quoteRequestBuilder.Details
 				.GetAsync(cancellationToken: cancellationToken);
 

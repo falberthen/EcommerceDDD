@@ -48,8 +48,8 @@ public class OrdersControllerTests
 
 		// Then
 		var okResult = Assert.IsType<OkObjectResult>(response);
-		var apiResponse = Assert.IsType<ApiResponse<IList<OrderViewModel>>>(okResult.Value);
-		Assert.IsAssignableFrom<IList<OrderViewModel>>(apiResponse.Data);
+		var apiResponse = Assert.IsType<ApiResponse<IReadOnlyList<OrderViewModel>>>(okResult.Value);
+		Assert.IsAssignableFrom<IReadOnlyList<OrderViewModel>>(apiResponse.Data);
 	}
 
     [Fact]
@@ -84,8 +84,8 @@ public class OrdersControllerTests
 
 		// Then		
 		var okResult = Assert.IsType<OkObjectResult>(response);
-		var apiResponse = Assert.IsType<ApiResponse<IList<OrderEventHistory>>>(okResult.Value);
-		Assert.IsAssignableFrom<IList<OrderEventHistory>>(apiResponse.Data);
+		var apiResponse = Assert.IsType<ApiResponse<IReadOnlyList<OrderEventHistory>>>(okResult.Value);
+		Assert.IsAssignableFrom<IReadOnlyList<OrderEventHistory>>(apiResponse.Data);
 	}
 
     [Fact]

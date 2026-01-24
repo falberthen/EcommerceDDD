@@ -1,6 +1,6 @@
 ﻿namespace EcommerceDDD.InventoryManagement.Application.GettingInventoryStockUnitEventHistory;
 
-public record class GetInventoryStockUnitEventHistory : IQuery<IList<InventoryStockUnitEventHistory>>
+public record class GetInventoryStockUnitEventHistory : IQuery<IReadOnlyList<InventoryStockUnitEventHistory>>
 {
     public ProductId ProductId { get; private set; }
 

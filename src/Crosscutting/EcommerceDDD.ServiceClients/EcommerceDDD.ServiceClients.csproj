@@ -12,7 +12,8 @@
     <PackageReference Include="Microsoft.Kiota.Serialization.Json" Version="1.21.1" />
     <PackageReference Include="Microsoft.Kiota.Serialization.Multipart" Version="1.21.1" />
     <PackageReference Include="Microsoft.Kiota.Serialization.Text" Version="1.21.1" />
-	<PackageReference Include="Microsoft.Kiota.Http.HttpClientLibrary" Version="1.21.1" />
+    <PackageReference Include="Microsoft.Kiota.Http.HttpClientLibrary" Version="1.21.1" />
+    <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="10.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,20 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="apigateway.yaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Folder Include="Extensions\" />
   </ItemGroup>
-
-	<!-- Only run during Debug builds -->
-	    <!-- Should generate merged definition if the microservices are up and running -->
-	    <Target Name="GenerateSingleGatewayDefinition" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'">
-		    <Exec Command="koalesce --config &quot;$(MSBuildProjectDirectory)/../../../src/Crosscutting/EcommerceDDD.ApiGateway/appsettings.json&quot; --output &quot;$(MSBuildProjectDirectory)/../../../src/Crosscutting/EcommerceDDD.ServiceClients/apigateway.yaml&quot;" />
-	    </Target>
-	
-	    <!-- Should generate Kiota client if having the apigateway.yaml in place from the previous step -->
-		<Target Name="GenerateKiotaClient" BeforeTargets="Build" AfterTargets="GenerateSingleGatewayDefinition" Condition="'$(Configuration)' == 'Debug' AND Exists('$(MSBuildProjectDirectory)/../../../src/Crosscutting/EcommerceDDD.ServiceClients/apigateway.yaml')">
-			
-			<Exec Command="kiota generate -d &quot;$(MSBuildProjectDirectory)/../../../src/Crosscutting/EcommerceDDD.ServiceClients/apigateway.yaml&quot; -l CSharp -c ApiGatewayClient -n EcommerceDDD.ServiceClients.ApiGateway -o Kiota" />
-		</Target>
 </Project>
