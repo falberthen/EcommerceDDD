@@ -58,60 +58,12 @@
       "DownstreamHeaderTransform": {},
       "DownstreamHostAndPorts": [
         {
-          "Host": "ecommerceddd-identityserver",
+          "Host": "ecommerceddd-customer-management",
           "Port": 80
         }
       ],
       "DownstreamHttpMethod": null,
-      "DownstreamPathTemplate": "/api/v{version}/accounts/register",
-      "FileCacheOptions": null,
-      "Priority": 1,
-      "RequestIdKey": null,
-      "RouteClaimsRequirement": {},
-      "RouteIsCaseSensitive": false,
-      "SecurityOptions": {
-        "IPAllowedList": [],
-        "IPBlockedList": [],
-        "ExcludeAllowedFromBlocked": false
-      },
-      "UpstreamHeaderTemplates": {},
-      "UpstreamHeaderTransform": {},
-      "UpstreamHost": null,
-      "UpstreamHttpMethod": [
-        "POST"
-      ],
-      "UpstreamPathTemplate": "/api/v{version}/accounts/register",
-      "AuthenticationOptions": null,
-      "CacheOptions": null,
-      "DownstreamHttpVersionPolicy": null,
-      "DownstreamHttpVersion": null,
-      "DownstreamScheme": "http",
-      "HttpHandlerOptions": null,
-      "Key": null,
-      "LoadBalancerOptions": null,
-      "Metadata": null,
-      "QoSOptions": null,
-      "RateLimitOptions": null,
-      "ServiceName": null,
-      "ServiceNamespace": null,
-      "Timeout": null
-    },
-    {
-      "AddClaimsToRequest": {},
-      "AddHeadersToRequest": {},
-      "AddQueriesToRequest": {},
-      "ChangeDownstreamPathTemplate": {},
-      "DangerousAcceptAnyServerCertificateValidator": false,
-      "DelegatingHandlers": [],
-      "DownstreamHeaderTransform": {},
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "ecommerceddd-customers",
-          "Port": 80
-        }
-      ],
-      "DownstreamHttpMethod": null,
-      "DownstreamPathTemplate": "/api/v{version}/customers",
+      "DownstreamPathTemplate": "/api/v{version}/customers/{everything}",
       "FileCacheOptions": null,
       "Priority": 1,
       "RequestIdKey": null,
@@ -127,9 +79,11 @@
       "UpstreamHost": null,
       "UpstreamHttpMethod": [
         "GET",
-        "POST"
+        "POST",
+        "PUT",
+        "DELETE"
       ],
-      "UpstreamPathTemplate": "/api/v{version}/customers",
+      "UpstreamPathTemplate": "/CustomerManagement/api/v{version}/customers/{everything}",
       "AuthenticationOptions": null,
       "CacheOptions": null,
       "DownstreamHttpVersionPolicy": null,
@@ -155,105 +109,7 @@
       "DownstreamHeaderTransform": {},
       "DownstreamHostAndPorts": [
         {
-          "Host": "ecommerceddd-customers",
-          "Port": 80
-        }
-      ],
-      "DownstreamHttpMethod": null,
-      "DownstreamPathTemplate": "/api/v{version}/customers/{customerId}",
-      "FileCacheOptions": null,
-      "Priority": 1,
-      "RequestIdKey": null,
-      "RouteClaimsRequirement": {},
-      "RouteIsCaseSensitive": false,
-      "SecurityOptions": {
-        "IPAllowedList": [],
-        "IPBlockedList": [],
-        "ExcludeAllowedFromBlocked": false
-      },
-      "UpstreamHeaderTemplates": {},
-      "UpstreamHeaderTransform": {},
-      "UpstreamHost": null,
-      "UpstreamHttpMethod": [
-        "GET",
-        "PUT"
-      ],
-      "UpstreamPathTemplate": "/api/v{version}/customers/{customerId}",
-      "AuthenticationOptions": null,
-      "CacheOptions": null,
-      "DownstreamHttpVersionPolicy": null,
-      "DownstreamHttpVersion": null,
-      "DownstreamScheme": "http",
-      "HttpHandlerOptions": null,
-      "Key": null,
-      "LoadBalancerOptions": null,
-      "Metadata": null,
-      "QoSOptions": null,
-      "RateLimitOptions": null,
-      "ServiceName": null,
-      "ServiceNamespace": null,
-      "Timeout": null
-    },
-    {
-      "AddClaimsToRequest": {},
-      "AddHeadersToRequest": {},
-      "AddQueriesToRequest": {},
-      "ChangeDownstreamPathTemplate": {},
-      "DangerousAcceptAnyServerCertificateValidator": false,
-      "DelegatingHandlers": [],
-      "DownstreamHeaderTransform": {},
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "ecommerceddd-inventory",
-          "Port": 80
-        }
-      ],
-      "DownstreamHttpMethod": null,
-      "DownstreamPathTemplate": "/api/v{version}/inventory",
-      "FileCacheOptions": null,
-      "Priority": 1,
-      "RequestIdKey": null,
-      "RouteClaimsRequirement": {},
-      "RouteIsCaseSensitive": false,
-      "SecurityOptions": {
-        "IPAllowedList": [],
-        "IPBlockedList": [],
-        "ExcludeAllowedFromBlocked": false
-      },
-      "UpstreamHeaderTemplates": {},
-      "UpstreamHeaderTransform": {},
-      "UpstreamHost": null,
-      "UpstreamHttpMethod": [
-        "GET",
-        "POST"
-      ],
-      "UpstreamPathTemplate": "/api/v{version}/inventory",
-      "AuthenticationOptions": null,
-      "CacheOptions": null,
-      "DownstreamHttpVersionPolicy": null,
-      "DownstreamHttpVersion": null,
-      "DownstreamScheme": "http",
-      "HttpHandlerOptions": null,
-      "Key": null,
-      "LoadBalancerOptions": null,
-      "Metadata": null,
-      "QoSOptions": null,
-      "RateLimitOptions": null,
-      "ServiceName": null,
-      "ServiceNamespace": null,
-      "Timeout": null
-    },
-    {
-      "AddClaimsToRequest": {},
-      "AddHeadersToRequest": {},
-      "AddQueriesToRequest": {},
-      "ChangeDownstreamPathTemplate": {},
-      "DangerousAcceptAnyServerCertificateValidator": false,
-      "DelegatingHandlers": [],
-      "DownstreamHeaderTransform": {},
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "ecommerceddd-inventory",
+          "Host": "ecommerceddd-inventory-management",
           "Port": 80
         }
       ],
@@ -274,11 +130,18 @@
       "UpstreamHost": null,
       "UpstreamHttpMethod": [
         "GET",
-        "PUT",
-        "POST"
+        "POST",
+        "PUT"
       ],
-      "UpstreamPathTemplate": "/api/v{version}/inventory/{everything}",
-      "AuthenticationOptions": null,
+      "UpstreamPathTemplate": "/InventoryManagement/api/v{version}/inventory/{everything}",
+      "AuthenticationOptions": {
+        "AllowedScopes": null,
+        "AllowAnonymous": null,
+        "AuthenticationProviderKey": "Bearer",
+        "AuthenticationProviderKeys": null,
+        "HasScheme": true,
+        "HasScope": false
+      },
       "CacheOptions": null,
       "DownstreamHttpVersionPolicy": null,
       "DownstreamHttpVersion": null,
@@ -303,7 +166,7 @@
       "DownstreamHeaderTransform": {},
       "DownstreamHostAndPorts": [
         {
-          "Host": "ecommerceddd-orders",
+          "Host": "ecommerceddd-order-processing",
           "Port": 80
         }
       ],
@@ -328,8 +191,15 @@
         "DELETE",
         "POST"
       ],
-      "UpstreamPathTemplate": "/api/v{version}/orders/{everything}",
-      "AuthenticationOptions": null,
+      "UpstreamPathTemplate": "/OrderProcessing/api/v{version}/orders/{everything}",
+      "AuthenticationOptions": {
+        "AllowedScopes": null,
+        "AllowAnonymous": null,
+        "AuthenticationProviderKey": "Bearer",
+        "AuthenticationProviderKeys": null,
+        "HasScheme": true,
+        "HasScope": false
+      },
       "CacheOptions": null,
       "DownstreamHttpVersionPolicy": null,
       "DownstreamHttpVersion": null,
@@ -354,12 +224,12 @@
       "DownstreamHeaderTransform": {},
       "DownstreamHostAndPorts": [
         {
-          "Host": "ecommerceddd-payments",
+          "Host": "ecommerceddd-payment-processing",
           "Port": 80
         }
       ],
       "DownstreamHttpMethod": null,
-      "DownstreamPathTemplate": "/api/v{version}/payments",
+      "DownstreamPathTemplate": "/api/v{version}/payments/{everything}",
       "FileCacheOptions": null,
       "Priority": 1,
       "RequestIdKey": null,
@@ -374,58 +244,18 @@
       "UpstreamHeaderTransform": {},
       "UpstreamHost": null,
       "UpstreamHttpMethod": [
-        "POST"
-      ],
-      "UpstreamPathTemplate": "/api/v{version}/payments",
-      "AuthenticationOptions": null,
-      "CacheOptions": null,
-      "DownstreamHttpVersionPolicy": null,
-      "DownstreamHttpVersion": null,
-      "DownstreamScheme": "http",
-      "HttpHandlerOptions": null,
-      "Key": null,
-      "LoadBalancerOptions": null,
-      "Metadata": null,
-      "QoSOptions": null,
-      "RateLimitOptions": null,
-      "ServiceName": null,
-      "ServiceNamespace": null,
-      "Timeout": null
-    },
-    {
-      "AddClaimsToRequest": {},
-      "AddHeadersToRequest": {},
-      "AddQueriesToRequest": {},
-      "ChangeDownstreamPathTemplate": {},
-      "DangerousAcceptAnyServerCertificateValidator": false,
-      "DelegatingHandlers": [],
-      "DownstreamHeaderTransform": {},
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "ecommerceddd-payments",
-          "Port": 80
-        }
-      ],
-      "DownstreamHttpMethod": null,
-      "DownstreamPathTemplate": "/api/v{version}/payments/{id}",
-      "FileCacheOptions": null,
-      "Priority": 1,
-      "RequestIdKey": null,
-      "RouteClaimsRequirement": {},
-      "RouteIsCaseSensitive": false,
-      "SecurityOptions": {
-        "IPAllowedList": [],
-        "IPBlockedList": [],
-        "ExcludeAllowedFromBlocked": false
-      },
-      "UpstreamHeaderTemplates": {},
-      "UpstreamHeaderTransform": {},
-      "UpstreamHost": null,
-      "UpstreamHttpMethod": [
+        "POST",
         "DELETE"
       ],
-      "UpstreamPathTemplate": "/api/v{version}/payments/{id}",
-      "AuthenticationOptions": null,
+      "UpstreamPathTemplate": "/PaymentProcessing/api/v{version}/payments/{everything}",
+      "AuthenticationOptions": {
+        "AllowedScopes": null,
+        "AllowAnonymous": null,
+        "AuthenticationProviderKey": "Bearer",
+        "AuthenticationProviderKeys": null,
+        "HasScheme": true,
+        "HasScope": false
+      },
       "CacheOptions": null,
       "DownstreamHttpVersionPolicy": null,
       "DownstreamHttpVersion": null,
@@ -450,7 +280,7 @@
       "DownstreamHeaderTransform": {},
       "DownstreamHostAndPorts": [
         {
-          "Host": "ecommerceddd-products",
+          "Host": "ecommerceddd-product-catalog",
           "Port": 80
         }
       ],
@@ -473,8 +303,15 @@
         "POST",
         "GET"
       ],
-      "UpstreamPathTemplate": "/api/v{version}/products",
-      "AuthenticationOptions": null,
+      "UpstreamPathTemplate": "/ProductCatalog/api/v{version}/products",
+      "AuthenticationOptions": {
+        "AllowedScopes": null,
+        "AllowAnonymous": null,
+        "AuthenticationProviderKey": "Bearer",
+        "AuthenticationProviderKeys": null,
+        "HasScheme": true,
+        "HasScope": false
+      },
       "CacheOptions": null,
       "DownstreamHttpVersionPolicy": null,
       "DownstreamHttpVersion": null,
@@ -499,12 +336,12 @@
       "DownstreamHeaderTransform": {},
       "DownstreamHostAndPorts": [
         {
-          "Host": "ecommerceddd-quotes",
+          "Host": "ecommerceddd-product-catalog",
           "Port": 80
         }
       ],
       "DownstreamHttpMethod": null,
-      "DownstreamPathTemplate": "/api/v{version}/quotes",
+      "DownstreamPathTemplate": "/api/v{version}/products/{everything}",
       "FileCacheOptions": null,
       "Priority": 1,
       "RequestIdKey": null,
@@ -520,10 +357,18 @@
       "UpstreamHost": null,
       "UpstreamHttpMethod": [
         "GET",
-        "POST"
+        "PUT",
+        "DELETE"
       ],
-      "UpstreamPathTemplate": "/api/v{version}/quotes",
-      "AuthenticationOptions": null,
+      "UpstreamPathTemplate": "/ProductCatalog/api/v{version}/products/{everything}",
+      "AuthenticationOptions": {
+        "AllowedScopes": null,
+        "AllowAnonymous": null,
+        "AuthenticationProviderKey": "Bearer",
+        "AuthenticationProviderKeys": null,
+        "HasScheme": true,
+        "HasScope": false
+      },
       "CacheOptions": null,
       "DownstreamHttpVersionPolicy": null,
       "DownstreamHttpVersion": null,
@@ -548,7 +393,7 @@
       "DownstreamHeaderTransform": {},
       "DownstreamHostAndPorts": [
         {
-          "Host": "ecommerceddd-quotes",
+          "Host": "ecommerceddd-quote-management",
           "Port": 80
         }
       ],
@@ -569,11 +414,19 @@
       "UpstreamHost": null,
       "UpstreamHttpMethod": [
         "GET",
+        "POST",
         "PUT",
         "DELETE"
       ],
-      "UpstreamPathTemplate": "/api/v{version}/quotes/{everything}",
-      "AuthenticationOptions": null,
+      "UpstreamPathTemplate": "/QuoteManagement/api/v{version}/quotes/{everything}",
+      "AuthenticationOptions": {
+        "AllowedScopes": null,
+        "AllowAnonymous": null,
+        "AuthenticationProviderKey": "Bearer",
+        "AuthenticationProviderKeys": null,
+        "HasScheme": true,
+        "HasScope": false
+      },
       "CacheOptions": null,
       "DownstreamHttpVersionPolicy": null,
       "DownstreamHttpVersion": null,
@@ -598,7 +451,7 @@
       "DownstreamHeaderTransform": {},
       "DownstreamHostAndPorts": [
         {
-          "Host": "ecommerceddd-shipments",
+          "Host": "ecommerceddd-shipment-processing",
           "Port": 80
         }
       ],
@@ -620,8 +473,72 @@
       "UpstreamHttpMethod": [
         "POST"
       ],
-      "UpstreamPathTemplate": "/api/v{version}/shipments",
-      "AuthenticationOptions": null,
+      "UpstreamPathTemplate": "/ShipmentProcessing/api/v{version}/shipments",
+      "AuthenticationOptions": {
+        "AllowedScopes": null,
+        "AllowAnonymous": null,
+        "AuthenticationProviderKey": "Bearer",
+        "AuthenticationProviderKeys": null,
+        "HasScheme": true,
+        "HasScope": false
+      },
+      "CacheOptions": null,
+      "DownstreamHttpVersionPolicy": null,
+      "DownstreamHttpVersion": null,
+      "DownstreamScheme": "http",
+      "HttpHandlerOptions": null,
+      "Key": null,
+      "LoadBalancerOptions": null,
+      "Metadata": null,
+      "QoSOptions": null,
+      "RateLimitOptions": null,
+      "ServiceName": null,
+      "ServiceNamespace": null,
+      "Timeout": null
+    },
+    {
+      "AddClaimsToRequest": {},
+      "AddHeadersToRequest": {},
+      "AddQueriesToRequest": {},
+      "ChangeDownstreamPathTemplate": {},
+      "DangerousAcceptAnyServerCertificateValidator": false,
+      "DelegatingHandlers": [],
+      "DownstreamHeaderTransform": {},
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-shipment-processing",
+          "Port": 80
+        }
+      ],
+      "DownstreamHttpMethod": null,
+      "DownstreamPathTemplate": "/api/v{version}/shipments/{everything}",
+      "FileCacheOptions": null,
+      "Priority": 1,
+      "RequestIdKey": null,
+      "RouteClaimsRequirement": {},
+      "RouteIsCaseSensitive": false,
+      "SecurityOptions": {
+        "IPAllowedList": [],
+        "IPBlockedList": [],
+        "ExcludeAllowedFromBlocked": false
+      },
+      "UpstreamHeaderTemplates": {},
+      "UpstreamHeaderTransform": {},
+      "UpstreamHost": null,
+      "UpstreamHttpMethod": [
+        "GET",
+        "PUT",
+        "DELETE"
+      ],
+      "UpstreamPathTemplate": "/ShipmentProcessing/api/v{version}/shipments/{everything}",
+      "AuthenticationOptions": {
+        "AllowedScopes": null,
+        "AllowAnonymous": null,
+        "AuthenticationProviderKey": "Bearer",
+        "AuthenticationProviderKeys": null,
+        "HasScheme": true,
+        "HasScope": false
+      },
       "CacheOptions": null,
       "DownstreamHttpVersionPolicy": null,
       "DownstreamHttpVersion": null,

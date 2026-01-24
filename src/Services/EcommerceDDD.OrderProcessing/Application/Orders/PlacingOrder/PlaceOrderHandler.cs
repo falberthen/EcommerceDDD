@@ -1,14 +1,15 @@
-﻿using EcommerceDDD.ServiceClients.ApiGateway.Models;
-
-namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
+﻿namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
 
 public class PlaceOrderHandler(
-	ApiGatewayClient apiGatewayClient,
+	SignalRClient signalrClient,
+	QuoteManagementClient quoteManagementClient,
 	IEventStoreRepository<Order> orderWriteRepository
 ) : ICommandHandler<PlaceOrder>
 {
-	private readonly ApiGatewayClient _apiGatewayClient = apiGatewayClient
-		?? throw new ArgumentNullException(nameof(apiGatewayClient));
+	private readonly SignalRClient _signalrClient = signalrClient
+		?? throw new ArgumentNullException(nameof(signalrClient));
+	private readonly QuoteManagementClient _quoteManagementClient = quoteManagementClient
+		?? throw new ArgumentNullException(nameof(quoteManagementClient));
 	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository
 		?? throw new ArgumentNullException(nameof(orderWriteRepository));
 
@@ -60,7 +61,7 @@ public class PlaceOrderHandler(
 				OrderStatusCode = (int)order.Status
 			};
 
-			await _apiGatewayClient.Api.V2.Signalr.Updateorderstatus
+			await _signalrClient.Api.V2.Signalr.Updateorderstatus
 				.PostAsync(request, cancellationToken: cancellationToken);
 		}
 		catch (Microsoft.Kiota.Abstractions.ApiException ex)
@@ -74,7 +75,7 @@ public class PlaceOrderHandler(
 	{
 		try
 		{
-			var quoteRequestBuilder = _apiGatewayClient.Api.V2.Quotes[command.QuoteId.Value];
+			var quoteRequestBuilder = _quoteManagementClient.Api.V2.Quotes[command.QuoteId.Value];
 			var response = await quoteRequestBuilder.Details
 				.GetAsync(cancellationToken: cancellationToken);
 
@@ -94,7 +95,7 @@ public class PlaceOrderHandler(
 	{
 		try
 		{
-			var quoteRequestBuilder = _apiGatewayClient.Api.V2.Quotes[quoteId];
+			var quoteRequestBuilder = _quoteManagementClient.Api.V2.Quotes[quoteId];
 			await quoteRequestBuilder.Confirm
 				.PutAsync(cancellationToken: cancellationToken);
 		}

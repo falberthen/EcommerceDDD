@@ -48,7 +48,7 @@ public class QuotesController(
 	[HttpGet, Route("{quoteId:guid}/history")]
 	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanRead)]
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<IEventHistory>>))]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IReadOnlyList<QuoteEventHistory>>))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<IActionResult> ListHistory([FromRoute] Guid quoteId,
 		CancellationToken cancellationToken) =>

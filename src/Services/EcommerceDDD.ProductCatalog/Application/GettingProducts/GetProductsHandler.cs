@@ -1,29 +1,27 @@
-﻿using EcommerceDDD.ServiceClients.ApiGateway.Models;
-
-namespace EcommerceDDD.ProductCatalog.Application.Products.GettingProducts;
+﻿namespace EcommerceDDD.ProductCatalog.Application.Products.GettingProducts;
 
 public class GetProductsHandler(
-	ApiGatewayClient apiGatewayClient,
+	InventoryManagementClient inventoryManagementClient,
 	IProducts productsRepository,
 	ICurrencyConverter currencyConverter
-) : IQueryHandler<GetProducts, IList<ProductViewModel>> 
+) : IQueryHandler<GetProducts, IList<ProductViewModel>>
 {
-	private readonly ApiGatewayClient _apiGatewayClient = apiGatewayClient;
+	private readonly InventoryManagementClient _inventoryManagementClient = inventoryManagementClient;
 	private readonly IProducts _productsRepository = productsRepository;
 	private readonly ICurrencyConverter _currencyConverter = currencyConverter;
 
 	public async Task<IList<ProductViewModel>> HandleAsync(GetProducts query, CancellationToken cancellationToken)
-    {
-        var productsViewModel = new List<ProductViewModel>();
-        var products = query.ProductIds.Count == 0
-            ? await _productsRepository.ListAll(cancellationToken)
-            : await _productsRepository.GetByIds(query.ProductIds);
+	{
+		var productsViewModel = new List<ProductViewModel>();
+		var products = query.ProductIds.Count == 0
+			? await _productsRepository.ListAll(cancellationToken)
+			: await _productsRepository.GetByIds(query.ProductIds);
 
-        if (string.IsNullOrEmpty(query.CurrencyCode))
-            throw new RecordNotFoundException("Currency code cannot be empty.");
+		if (string.IsNullOrEmpty(query.CurrencyCode))
+			throw new RecordNotFoundException("Currency code cannot be empty.");
 
-        // Getting stock quantity
-        var productIds = products.Select(x => 
+		// Getting stock quantity
+		var productIds = products.Select(x =>
 			new Guid?(x.Id.Value)).ToList();
 
 		var inventoryResponse = await GetProductsFromInventoryAsync(productIds, cancellationToken);
@@ -55,9 +53,9 @@ public class GetProductsHandler(
 		}
 
 		return productsViewModel;
-    }
+	}
 
-	private async Task<List<InventoryStockUnitViewModel>> GetProductsFromInventoryAsync(List<Guid?> productIds, 
+	private async Task<List<InventoryStockUnitViewModel>> GetProductsFromInventoryAsync(List<Guid?> productIds,
 		CancellationToken cancellationToken)
 	{
 		try
@@ -66,7 +64,7 @@ public class GetProductsHandler(
 			{
 				ProductIds = productIds
 			};
-			var inventoryRequestBuilder = _apiGatewayClient.Api.V2.Inventory;
+			var inventoryRequestBuilder = _inventoryManagementClient.Api.V2.Inventory;
 			var response = await inventoryRequestBuilder.CheckStockQuantity
 				.PostAsync(request, cancellationToken: cancellationToken);
 
@@ -78,6 +76,6 @@ public class GetProductsHandler(
 		catch (Exception ex)
 		{
 			return new List<InventoryStockUnitViewModel>();
-		}		
+		}
 	}
 }

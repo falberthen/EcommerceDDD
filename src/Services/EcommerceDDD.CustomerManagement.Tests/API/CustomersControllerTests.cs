@@ -89,8 +89,8 @@ public class CustomersControllerTests
 
 		// Then		
 		var okResult = Assert.IsType<OkObjectResult>(response);
-		var apiResponse = Assert.IsType<ApiResponse<IList<CustomerEventHistory>>>(okResult.Value);
-		Assert.IsAssignableFrom<IList<CustomerEventHistory>>(apiResponse.Data);
+		var apiResponse = Assert.IsType<ApiResponse<IReadOnlyList<CustomerEventHistory>>>(okResult.Value);
+		Assert.IsAssignableFrom<IReadOnlyList<CustomerEventHistory>>(apiResponse.Data);
 	}
 
 	[Fact]

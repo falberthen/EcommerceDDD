@@ -14,18 +14,6 @@ export interface AddQuoteItemRequest extends Parsable {
      */
     quantity?: number | null;
 }
-export interface CancelPaymentRequest extends Parsable {
-    /**
-     * The paymentCancellationReason property
-     */
-    paymentCancellationReason?: number | null;
-}
-export interface CheckProductsInStockRequest extends Parsable {
-    /**
-     * The productIds property
-     */
-    productIds?: Guid[] | null;
-}
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
@@ -34,42 +22,6 @@ export interface CheckProductsInStockRequest extends Parsable {
 // @ts-ignore
 export function createAddQuoteItemRequestFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
     return deserializeIntoAddQuoteItemRequest;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {CancelPaymentRequest}
- */
-// @ts-ignore
-export function createCancelPaymentRequestFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoCancelPaymentRequest;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {CheckProductsInStockRequest}
- */
-// @ts-ignore
-export function createCheckProductsInStockRequestFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoCheckProductsInStockRequest;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {CreditLimitModelApiResponse}
- */
-// @ts-ignore
-export function createCreditLimitModelApiResponseFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoCreditLimitModelApiResponse;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {CreditLimitModel}
- */
-// @ts-ignore
-export function createCreditLimitModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoCreditLimitModel;
 }
 /**
  * Creates a new instance of the appropriate class based on discriminator value
@@ -92,11 +44,29 @@ export function createCustomerDetailsFromDiscriminatorValue(parseNode: ParseNode
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {DecreaseQuantityInStockRequest}
+ * @returns {CustomerEventHistory}
  */
 // @ts-ignore
-export function createDecreaseQuantityInStockRequestFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoDecreaseQuantityInStockRequest;
+export function createCustomerEventHistoryFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoCustomerEventHistory;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {CustomerEventHistoryIReadOnlyListApiResponse}
+ */
+// @ts-ignore
+export function createCustomerEventHistoryIReadOnlyListApiResponseFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoCustomerEventHistoryIReadOnlyListApiResponse;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {CustomerManagementProblemDetails}
+ */
+// @ts-ignore
+export function createCustomerManagementProblemDetailsFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoCustomerManagementProblemDetails;
 }
 /**
  * Creates a new instance of the appropriate class based on discriminator value
@@ -110,20 +80,11 @@ export function createGetProductsRequestFromDiscriminatorValue(parseNode: ParseN
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {IEventHistory}
+ * @returns {InventoryManagementProblemDetails}
  */
 // @ts-ignore
-export function createIEventHistoryFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoIEventHistory;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {IEventHistoryIListApiResponse}
- */
-// @ts-ignore
-export function createIEventHistoryIListApiResponseFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoIEventHistoryIListApiResponse;
+export function createInventoryManagementProblemDetailsFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoInventoryManagementProblemDetails;
 }
 /**
  * Creates a new instance of the appropriate class based on discriminator value
@@ -137,29 +98,11 @@ export function createInventoryStockUnitEventHistoryFromDiscriminatorValue(parse
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {InventoryStockUnitEventHistoryIListApiResponse}
+ * @returns {InventoryStockUnitEventHistoryIReadOnlyListApiResponse}
  */
 // @ts-ignore
-export function createInventoryStockUnitEventHistoryIListApiResponseFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoInventoryStockUnitEventHistoryIListApiResponse;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {InventoryStockUnitViewModel}
- */
-// @ts-ignore
-export function createInventoryStockUnitViewModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoInventoryStockUnitViewModel;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {InventoryStockUnitViewModelIListApiResponse}
- */
-// @ts-ignore
-export function createInventoryStockUnitViewModelIListApiResponseFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoInventoryStockUnitViewModelIListApiResponse;
+export function createInventoryStockUnitEventHistoryIReadOnlyListApiResponseFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoInventoryStockUnitEventHistoryIReadOnlyListApiResponse;
 }
 /**
  * Creates a new instance of the appropriate class based on discriminator value
@@ -191,6 +134,24 @@ export function createOpenQuoteRequestFromDiscriminatorValue(parseNode: ParseNod
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {OrderEventHistory}
+ */
+// @ts-ignore
+export function createOrderEventHistoryFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoOrderEventHistory;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {OrderEventHistoryIReadOnlyListApiResponse}
+ */
+// @ts-ignore
+export function createOrderEventHistoryIReadOnlyListApiResponseFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoOrderEventHistoryIReadOnlyListApiResponse;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
  * @returns {OrderLineViewModel}
  */
 // @ts-ignore
@@ -209,20 +170,11 @@ export function createOrderViewModelFromDiscriminatorValue(parseNode: ParseNode 
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {OrderViewModelIListApiResponse}
+ * @returns {OrderViewModelIReadOnlyListApiResponse}
  */
 // @ts-ignore
-export function createOrderViewModelIListApiResponseFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoOrderViewModelIListApiResponse;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {PaymentRequest}
- */
-// @ts-ignore
-export function createPaymentRequestFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoPaymentRequest;
+export function createOrderViewModelIReadOnlyListApiResponseFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoOrderViewModelIReadOnlyListApiResponse;
 }
 /**
  * Creates a new instance of the appropriate class based on discriminator value
@@ -236,11 +188,11 @@ export function createProblemDetailsFromDiscriminatorValue(parseNode: ParseNode 
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {ProductItemRequest}
+ * @returns {ProductCatalogProblemDetails}
  */
 // @ts-ignore
-export function createProductItemRequestFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoProductItemRequest;
+export function createProductCatalogProblemDetailsFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoProductCatalogProblemDetails;
 }
 /**
  * Creates a new instance of the appropriate class based on discriminator value
@@ -263,11 +215,38 @@ export function createProductViewModelIListApiResponseFromDiscriminatorValue(par
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {QuoteEventHistory}
+ */
+// @ts-ignore
+export function createQuoteEventHistoryFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoQuoteEventHistory;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {QuoteEventHistoryIReadOnlyListApiResponse}
+ */
+// @ts-ignore
+export function createQuoteEventHistoryIReadOnlyListApiResponseFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoQuoteEventHistoryIReadOnlyListApiResponse;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
  * @returns {QuoteItemViewModel}
  */
 // @ts-ignore
 export function createQuoteItemViewModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
     return deserializeIntoQuoteItemViewModel;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {QuoteManagementProblemDetails}
+ */
+// @ts-ignore
+export function createQuoteManagementProblemDetailsFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoQuoteManagementProblemDetails;
 }
 /**
  * Creates a new instance of the appropriate class based on discriminator value
@@ -299,71 +278,11 @@ export function createRegisterCustomerRequestFromDiscriminatorValue(parseNode: P
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {RegisterUserRequest}
- */
-// @ts-ignore
-export function createRegisterUserRequestFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoRegisterUserRequest;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {ShipOrderRequest}
- */
-// @ts-ignore
-export function createShipOrderRequestFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoShipOrderRequest;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
  * @returns {UpdateCustomerRequest}
  */
 // @ts-ignore
 export function createUpdateCustomerRequestFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
     return deserializeIntoUpdateCustomerRequest;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {UpdateOrderStatusRequest}
- */
-// @ts-ignore
-export function createUpdateOrderStatusRequestFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoUpdateOrderStatusRequest;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {UserRegisteredResult}
- */
-// @ts-ignore
-export function createUserRegisteredResultFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoUserRegisteredResult;
-}
-export interface CreditLimitModel extends Parsable {
-    /**
-     * The creditLimit property
-     */
-    creditLimit?: number | null;
-    /**
-     * The customerId property
-     */
-    customerId?: Guid | null;
-}
-export interface CreditLimitModelApiResponse extends Parsable {
-    /**
-     * The data property
-     */
-    data?: CreditLimitModel | null;
-    /**
-     * The message property
-     */
-    message?: string | null;
-    /**
-     * The success property
-     */
-    success?: boolean | null;
 }
 export interface CustomerDetails extends Parsable {
     /**
@@ -401,11 +320,63 @@ export interface CustomerDetailsApiResponse extends Parsable {
      */
     success?: boolean | null;
 }
-export interface DecreaseQuantityInStockRequest extends Parsable {
+export interface CustomerEventHistory extends Parsable {
     /**
-     * The decreasedQuantity property
+     * The aggregateId property
      */
-    decreasedQuantity?: number | null;
+    aggregateId?: Guid | null;
+    /**
+     * The eventData property
+     */
+    eventData?: string | null;
+    /**
+     * The eventTypeName property
+     */
+    eventTypeName?: string | null;
+    /**
+     * The id property
+     */
+    id?: Guid | null;
+    /**
+     * The timestamp property
+     */
+    timestamp?: Date | null;
+}
+export interface CustomerEventHistoryIReadOnlyListApiResponse extends Parsable {
+    /**
+     * The data property
+     */
+    data?: CustomerEventHistory[] | null;
+    /**
+     * The message property
+     */
+    message?: string | null;
+    /**
+     * The success property
+     */
+    success?: boolean | null;
+}
+export interface CustomerManagementProblemDetails extends AdditionalDataHolder, ApiError, Parsable {
+    /**
+     * The detail property
+     */
+    detail?: string | null;
+    /**
+     * The instance property
+     */
+    instance?: string | null;
+    /**
+     * The status property
+     */
+    status?: number | null;
+    /**
+     * The title property
+     */
+    title?: string | null;
+    /**
+     * The type property
+     */
+    type?: string | null;
 }
 /**
  * The deserialization information for the current model
@@ -417,53 +388,6 @@ export function deserializeIntoAddQuoteItemRequest(addQuoteItemRequest: Partial<
     return {
         "productId": n => { addQuoteItemRequest.productId = n.getGuidValue(); },
         "quantity": n => { addQuoteItemRequest.quantity = n.getNumberValue(); },
-    }
-}
-/**
- * The deserialization information for the current model
- * @param CancelPaymentRequest The instance to deserialize into.
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoCancelPaymentRequest(cancelPaymentRequest: Partial<CancelPaymentRequest> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "paymentCancellationReason": n => { cancelPaymentRequest.paymentCancellationReason = n.getNumberValue(); },
-    }
-}
-/**
- * The deserialization information for the current model
- * @param CheckProductsInStockRequest The instance to deserialize into.
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoCheckProductsInStockRequest(checkProductsInStockRequest: Partial<CheckProductsInStockRequest> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "productIds": n => { checkProductsInStockRequest.productIds = n.getCollectionOfPrimitiveValues<Guid>(); },
-    }
-}
-/**
- * The deserialization information for the current model
- * @param CreditLimitModel The instance to deserialize into.
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoCreditLimitModel(creditLimitModel: Partial<CreditLimitModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "creditLimit": n => { creditLimitModel.creditLimit = n.getNumberValue(); },
-        "customerId": n => { creditLimitModel.customerId = n.getGuidValue(); },
-    }
-}
-/**
- * The deserialization information for the current model
- * @param CreditLimitModelApiResponse The instance to deserialize into.
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoCreditLimitModelApiResponse(creditLimitModelApiResponse: Partial<CreditLimitModelApiResponse> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "data": n => { creditLimitModelApiResponse.data = n.getObjectValue<CreditLimitModel>(createCreditLimitModelFromDiscriminatorValue); },
-        "message": n => { creditLimitModelApiResponse.message = n.getStringValue(); },
-        "success": n => { creditLimitModelApiResponse.success = n.getBooleanValue(); },
     }
 }
 /**
@@ -496,13 +420,45 @@ export function deserializeIntoCustomerDetailsApiResponse(customerDetailsApiResp
 }
 /**
  * The deserialization information for the current model
- * @param DecreaseQuantityInStockRequest The instance to deserialize into.
+ * @param CustomerEventHistory The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
-export function deserializeIntoDecreaseQuantityInStockRequest(decreaseQuantityInStockRequest: Partial<DecreaseQuantityInStockRequest> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+export function deserializeIntoCustomerEventHistory(customerEventHistory: Partial<CustomerEventHistory> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
-        "decreasedQuantity": n => { decreaseQuantityInStockRequest.decreasedQuantity = n.getNumberValue(); },
+        "aggregateId": n => { customerEventHistory.aggregateId = n.getGuidValue(); },
+        "eventData": n => { customerEventHistory.eventData = n.getStringValue(); },
+        "eventTypeName": n => { customerEventHistory.eventTypeName = n.getStringValue(); },
+        "id": n => { customerEventHistory.id = n.getGuidValue(); },
+        "timestamp": n => { customerEventHistory.timestamp = n.getDateValue(); },
+    }
+}
+/**
+ * The deserialization information for the current model
+ * @param CustomerEventHistoryIReadOnlyListApiResponse The instance to deserialize into.
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoCustomerEventHistoryIReadOnlyListApiResponse(customerEventHistoryIReadOnlyListApiResponse: Partial<CustomerEventHistoryIReadOnlyListApiResponse> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "data": n => { customerEventHistoryIReadOnlyListApiResponse.data = n.getCollectionOfObjectValues<CustomerEventHistory>(createCustomerEventHistoryFromDiscriminatorValue); },
+        "message": n => { customerEventHistoryIReadOnlyListApiResponse.message = n.getStringValue(); },
+        "success": n => { customerEventHistoryIReadOnlyListApiResponse.success = n.getBooleanValue(); },
+    }
+}
+/**
+ * The deserialization information for the current model
+ * @param CustomerManagementProblemDetails The instance to deserialize into.
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoCustomerManagementProblemDetails(customerManagementProblemDetails: Partial<CustomerManagementProblemDetails> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "detail": n => { customerManagementProblemDetails.detail = n.getStringValue(); },
+        "instance": n => { customerManagementProblemDetails.instance = n.getStringValue(); },
+        "status": n => { customerManagementProblemDetails.status = n.getNumberValue(); },
+        "title": n => { customerManagementProblemDetails.title = n.getStringValue(); },
+        "type": n => { customerManagementProblemDetails.type = n.getStringValue(); },
     }
 }
 /**
@@ -519,30 +475,17 @@ export function deserializeIntoGetProductsRequest(getProductsRequest: Partial<Ge
 }
 /**
  * The deserialization information for the current model
- * @param IEventHistory The instance to deserialize into.
+ * @param InventoryManagementProblemDetails The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
-export function deserializeIntoIEventHistory(iEventHistory: Partial<IEventHistory> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+export function deserializeIntoInventoryManagementProblemDetails(inventoryManagementProblemDetails: Partial<InventoryManagementProblemDetails> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
-        "aggregateId": n => { iEventHistory.aggregateId = n.getGuidValue(); },
-        "eventData": n => { iEventHistory.eventData = n.getStringValue(); },
-        "eventTypeName": n => { iEventHistory.eventTypeName = n.getStringValue(); },
-        "id": n => { iEventHistory.id = n.getGuidValue(); },
-        "timestamp": n => { iEventHistory.timestamp = n.getDateValue(); },
-    }
-}
-/**
- * The deserialization information for the current model
- * @param IEventHistoryIListApiResponse The instance to deserialize into.
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoIEventHistoryIListApiResponse(iEventHistoryIListApiResponse: Partial<IEventHistoryIListApiResponse> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "data": n => { iEventHistoryIListApiResponse.data = n.getCollectionOfObjectValues<IEventHistory>(createIEventHistoryFromDiscriminatorValue); },
-        "message": n => { iEventHistoryIListApiResponse.message = n.getStringValue(); },
-        "success": n => { iEventHistoryIListApiResponse.success = n.getBooleanValue(); },
+        "detail": n => { inventoryManagementProblemDetails.detail = n.getStringValue(); },
+        "instance": n => { inventoryManagementProblemDetails.instance = n.getStringValue(); },
+        "status": n => { inventoryManagementProblemDetails.status = n.getNumberValue(); },
+        "title": n => { inventoryManagementProblemDetails.title = n.getStringValue(); },
+        "type": n => { inventoryManagementProblemDetails.type = n.getStringValue(); },
     }
 }
 /**
@@ -562,41 +505,15 @@ export function deserializeIntoInventoryStockUnitEventHistory(inventoryStockUnit
 }
 /**
  * The deserialization information for the current model
- * @param InventoryStockUnitEventHistoryIListApiResponse The instance to deserialize into.
+ * @param InventoryStockUnitEventHistoryIReadOnlyListApiResponse The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
-export function deserializeIntoInventoryStockUnitEventHistoryIListApiResponse(inventoryStockUnitEventHistoryIListApiResponse: Partial<InventoryStockUnitEventHistoryIListApiResponse> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+export function deserializeIntoInventoryStockUnitEventHistoryIReadOnlyListApiResponse(inventoryStockUnitEventHistoryIReadOnlyListApiResponse: Partial<InventoryStockUnitEventHistoryIReadOnlyListApiResponse> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
-        "data": n => { inventoryStockUnitEventHistoryIListApiResponse.data = n.getCollectionOfObjectValues<InventoryStockUnitEventHistory>(createInventoryStockUnitEventHistoryFromDiscriminatorValue); },
-        "message": n => { inventoryStockUnitEventHistoryIListApiResponse.message = n.getStringValue(); },
-        "success": n => { inventoryStockUnitEventHistoryIListApiResponse.success = n.getBooleanValue(); },
-    }
-}
-/**
- * The deserialization information for the current model
- * @param InventoryStockUnitViewModel The instance to deserialize into.
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoInventoryStockUnitViewModel(inventoryStockUnitViewModel: Partial<InventoryStockUnitViewModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "inventoryStockUnitId": n => { inventoryStockUnitViewModel.inventoryStockUnitId = n.getGuidValue(); },
-        "productId": n => { inventoryStockUnitViewModel.productId = n.getGuidValue(); },
-        "quantityInStock": n => { inventoryStockUnitViewModel.quantityInStock = n.getNumberValue(); },
-    }
-}
-/**
- * The deserialization information for the current model
- * @param InventoryStockUnitViewModelIListApiResponse The instance to deserialize into.
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoInventoryStockUnitViewModelIListApiResponse(inventoryStockUnitViewModelIListApiResponse: Partial<InventoryStockUnitViewModelIListApiResponse> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "data": n => { inventoryStockUnitViewModelIListApiResponse.data = n.getCollectionOfObjectValues<InventoryStockUnitViewModel>(createInventoryStockUnitViewModelFromDiscriminatorValue); },
-        "message": n => { inventoryStockUnitViewModelIListApiResponse.message = n.getStringValue(); },
-        "success": n => { inventoryStockUnitViewModelIListApiResponse.success = n.getBooleanValue(); },
+        "data": n => { inventoryStockUnitEventHistoryIReadOnlyListApiResponse.data = n.getCollectionOfObjectValues<InventoryStockUnitEventHistory>(createInventoryStockUnitEventHistoryFromDiscriminatorValue); },
+        "message": n => { inventoryStockUnitEventHistoryIReadOnlyListApiResponse.message = n.getStringValue(); },
+        "success": n => { inventoryStockUnitEventHistoryIReadOnlyListApiResponse.success = n.getBooleanValue(); },
     }
 }
 /**
@@ -638,6 +555,34 @@ export function deserializeIntoOpenQuoteRequest(openQuoteRequest: Partial<OpenQu
 }
 /**
  * The deserialization information for the current model
+ * @param OrderEventHistory The instance to deserialize into.
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoOrderEventHistory(orderEventHistory: Partial<OrderEventHistory> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "aggregateId": n => { orderEventHistory.aggregateId = n.getGuidValue(); },
+        "eventData": n => { orderEventHistory.eventData = n.getStringValue(); },
+        "eventTypeName": n => { orderEventHistory.eventTypeName = n.getStringValue(); },
+        "id": n => { orderEventHistory.id = n.getGuidValue(); },
+        "timestamp": n => { orderEventHistory.timestamp = n.getDateValue(); },
+    }
+}
+/**
+ * The deserialization information for the current model
+ * @param OrderEventHistoryIReadOnlyListApiResponse The instance to deserialize into.
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoOrderEventHistoryIReadOnlyListApiResponse(orderEventHistoryIReadOnlyListApiResponse: Partial<OrderEventHistoryIReadOnlyListApiResponse> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "data": n => { orderEventHistoryIReadOnlyListApiResponse.data = n.getCollectionOfObjectValues<OrderEventHistory>(createOrderEventHistoryFromDiscriminatorValue); },
+        "message": n => { orderEventHistoryIReadOnlyListApiResponse.message = n.getStringValue(); },
+        "success": n => { orderEventHistoryIReadOnlyListApiResponse.success = n.getBooleanValue(); },
+    }
+}
+/**
+ * The deserialization information for the current model
  * @param OrderLineViewModel The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
@@ -671,30 +616,15 @@ export function deserializeIntoOrderViewModel(orderViewModel: Partial<OrderViewM
 }
 /**
  * The deserialization information for the current model
- * @param OrderViewModelIListApiResponse The instance to deserialize into.
+ * @param OrderViewModelIReadOnlyListApiResponse The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
-export function deserializeIntoOrderViewModelIListApiResponse(orderViewModelIListApiResponse: Partial<OrderViewModelIListApiResponse> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+export function deserializeIntoOrderViewModelIReadOnlyListApiResponse(orderViewModelIReadOnlyListApiResponse: Partial<OrderViewModelIReadOnlyListApiResponse> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
-        "data": n => { orderViewModelIListApiResponse.data = n.getCollectionOfObjectValues<OrderViewModel>(createOrderViewModelFromDiscriminatorValue); },
-        "message": n => { orderViewModelIListApiResponse.message = n.getStringValue(); },
-        "success": n => { orderViewModelIListApiResponse.success = n.getBooleanValue(); },
-    }
-}
-/**
- * The deserialization information for the current model
- * @param PaymentRequest The instance to deserialize into.
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoPaymentRequest(paymentRequest: Partial<PaymentRequest> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "currencyCode": n => { paymentRequest.currencyCode = n.getStringValue(); },
-        "customerId": n => { paymentRequest.customerId = n.getGuidValue(); },
-        "orderId": n => { paymentRequest.orderId = n.getGuidValue(); },
-        "productItems": n => { paymentRequest.productItems = n.getCollectionOfObjectValues<ProductItemRequest>(createProductItemRequestFromDiscriminatorValue); },
-        "totalAmount": n => { paymentRequest.totalAmount = n.getNumberValue(); },
+        "data": n => { orderViewModelIReadOnlyListApiResponse.data = n.getCollectionOfObjectValues<OrderViewModel>(createOrderViewModelFromDiscriminatorValue); },
+        "message": n => { orderViewModelIReadOnlyListApiResponse.message = n.getStringValue(); },
+        "success": n => { orderViewModelIReadOnlyListApiResponse.success = n.getBooleanValue(); },
     }
 }
 /**
@@ -714,16 +644,17 @@ export function deserializeIntoProblemDetails(problemDetails: Partial<ProblemDet
 }
 /**
  * The deserialization information for the current model
- * @param ProductItemRequest The instance to deserialize into.
+ * @param ProductCatalogProblemDetails The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
-export function deserializeIntoProductItemRequest(productItemRequest: Partial<ProductItemRequest> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+export function deserializeIntoProductCatalogProblemDetails(productCatalogProblemDetails: Partial<ProductCatalogProblemDetails> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
-        "productId": n => { productItemRequest.productId = n.getGuidValue(); },
-        "productName": n => { productItemRequest.productName = n.getStringValue(); },
-        "quantity": n => { productItemRequest.quantity = n.getNumberValue(); },
-        "unitPrice": n => { productItemRequest.unitPrice = n.getNumberValue(); },
+        "detail": n => { productCatalogProblemDetails.detail = n.getStringValue(); },
+        "instance": n => { productCatalogProblemDetails.instance = n.getStringValue(); },
+        "status": n => { productCatalogProblemDetails.status = n.getNumberValue(); },
+        "title": n => { productCatalogProblemDetails.title = n.getStringValue(); },
+        "type": n => { productCatalogProblemDetails.type = n.getStringValue(); },
     }
 }
 /**
@@ -760,6 +691,34 @@ export function deserializeIntoProductViewModelIListApiResponse(productViewModel
 }
 /**
  * The deserialization information for the current model
+ * @param QuoteEventHistory The instance to deserialize into.
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoQuoteEventHistory(quoteEventHistory: Partial<QuoteEventHistory> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "aggregateId": n => { quoteEventHistory.aggregateId = n.getGuidValue(); },
+        "eventData": n => { quoteEventHistory.eventData = n.getStringValue(); },
+        "eventTypeName": n => { quoteEventHistory.eventTypeName = n.getStringValue(); },
+        "id": n => { quoteEventHistory.id = n.getGuidValue(); },
+        "timestamp": n => { quoteEventHistory.timestamp = n.getDateValue(); },
+    }
+}
+/**
+ * The deserialization information for the current model
+ * @param QuoteEventHistoryIReadOnlyListApiResponse The instance to deserialize into.
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoQuoteEventHistoryIReadOnlyListApiResponse(quoteEventHistoryIReadOnlyListApiResponse: Partial<QuoteEventHistoryIReadOnlyListApiResponse> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "data": n => { quoteEventHistoryIReadOnlyListApiResponse.data = n.getCollectionOfObjectValues<QuoteEventHistory>(createQuoteEventHistoryFromDiscriminatorValue); },
+        "message": n => { quoteEventHistoryIReadOnlyListApiResponse.message = n.getStringValue(); },
+        "success": n => { quoteEventHistoryIReadOnlyListApiResponse.success = n.getBooleanValue(); },
+    }
+}
+/**
+ * The deserialization information for the current model
  * @param QuoteItemViewModel The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
@@ -771,6 +730,21 @@ export function deserializeIntoQuoteItemViewModel(quoteItemViewModel: Partial<Qu
         "productName": n => { quoteItemViewModel.productName = n.getStringValue(); },
         "quantity": n => { quoteItemViewModel.quantity = n.getNumberValue(); },
         "unitPrice": n => { quoteItemViewModel.unitPrice = n.getNumberValue(); },
+    }
+}
+/**
+ * The deserialization information for the current model
+ * @param QuoteManagementProblemDetails The instance to deserialize into.
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoQuoteManagementProblemDetails(quoteManagementProblemDetails: Partial<QuoteManagementProblemDetails> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "detail": n => { quoteManagementProblemDetails.detail = n.getStringValue(); },
+        "instance": n => { quoteManagementProblemDetails.instance = n.getStringValue(); },
+        "status": n => { quoteManagementProblemDetails.status = n.getNumberValue(); },
+        "title": n => { quoteManagementProblemDetails.title = n.getStringValue(); },
+        "type": n => { quoteManagementProblemDetails.type = n.getStringValue(); },
     }
 }
 /**
@@ -822,32 +796,6 @@ export function deserializeIntoRegisterCustomerRequest(registerCustomerRequest: 
 }
 /**
  * The deserialization information for the current model
- * @param RegisterUserRequest The instance to deserialize into.
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoRegisterUserRequest(registerUserRequest: Partial<RegisterUserRequest> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "customerId": n => { registerUserRequest.customerId = n.getGuidValue(); },
-        "email": n => { registerUserRequest.email = n.getStringValue(); },
-        "password": n => { registerUserRequest.password = n.getStringValue(); },
-        "passwordConfirm": n => { registerUserRequest.passwordConfirm = n.getStringValue(); },
-    }
-}
-/**
- * The deserialization information for the current model
- * @param ShipOrderRequest The instance to deserialize into.
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoShipOrderRequest(shipOrderRequest: Partial<ShipOrderRequest> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "orderId": n => { shipOrderRequest.orderId = n.getGuidValue(); },
-        "productItems": n => { shipOrderRequest.productItems = n.getCollectionOfObjectValues<ProductItemRequest>(createProductItemRequestFromDiscriminatorValue); },
-    }
-}
-/**
- * The deserialization information for the current model
  * @param UpdateCustomerRequest The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
@@ -857,32 +805,6 @@ export function deserializeIntoUpdateCustomerRequest(updateCustomerRequest: Part
         "creditLimit": n => { updateCustomerRequest.creditLimit = n.getNumberValue(); },
         "name": n => { updateCustomerRequest.name = n.getStringValue(); },
         "shippingAddress": n => { updateCustomerRequest.shippingAddress = n.getStringValue(); },
-    }
-}
-/**
- * The deserialization information for the current model
- * @param UpdateOrderStatusRequest The instance to deserialize into.
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoUpdateOrderStatusRequest(updateOrderStatusRequest: Partial<UpdateOrderStatusRequest> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "customerId": n => { updateOrderStatusRequest.customerId = n.getGuidValue(); },
-        "orderId": n => { updateOrderStatusRequest.orderId = n.getGuidValue(); },
-        "orderStatusCode": n => { updateOrderStatusRequest.orderStatusCode = n.getNumberValue(); },
-        "orderStatusText": n => { updateOrderStatusRequest.orderStatusText = n.getStringValue(); },
-    }
-}
-/**
- * The deserialization information for the current model
- * @param UserRegisteredResult The instance to deserialize into.
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoUserRegisteredResult(userRegisteredResult: Partial<UserRegisteredResult> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "succeeded": n => { userRegisteredResult.succeeded = n.getBooleanValue(); },
-        "userId": n => { userRegisteredResult.userId = n.getStringValue(); },
     }
 }
 export interface GetProductsRequest extends Parsable {
@@ -895,41 +817,27 @@ export interface GetProductsRequest extends Parsable {
      */
     productIds?: Guid[] | null;
 }
-export interface IEventHistory extends Parsable {
+export interface InventoryManagementProblemDetails extends AdditionalDataHolder, ApiError, Parsable {
     /**
-     * The aggregateId property
+     * The detail property
      */
-    aggregateId?: Guid | null;
+    detail?: string | null;
     /**
-     * The eventData property
+     * The instance property
      */
-    eventData?: string | null;
+    instance?: string | null;
     /**
-     * The eventTypeName property
+     * The status property
      */
-    eventTypeName?: string | null;
+    status?: number | null;
     /**
-     * The id property
+     * The title property
      */
-    id?: Guid | null;
+    title?: string | null;
     /**
-     * The timestamp property
+     * The type property
      */
-    timestamp?: Date | null;
-}
-export interface IEventHistoryIListApiResponse extends Parsable {
-    /**
-     * The data property
-     */
-    data?: IEventHistory[] | null;
-    /**
-     * The message property
-     */
-    message?: string | null;
-    /**
-     * The success property
-     */
-    success?: boolean | null;
+    type?: string | null;
 }
 export interface InventoryStockUnitEventHistory extends Parsable {
     /**
@@ -953,39 +861,11 @@ export interface InventoryStockUnitEventHistory extends Parsable {
      */
     timestamp?: Date | null;
 }
-export interface InventoryStockUnitEventHistoryIListApiResponse extends Parsable {
+export interface InventoryStockUnitEventHistoryIReadOnlyListApiResponse extends Parsable {
     /**
      * The data property
      */
     data?: InventoryStockUnitEventHistory[] | null;
-    /**
-     * The message property
-     */
-    message?: string | null;
-    /**
-     * The success property
-     */
-    success?: boolean | null;
-}
-export interface InventoryStockUnitViewModel extends Parsable {
-    /**
-     * The inventoryStockUnitId property
-     */
-    inventoryStockUnitId?: Guid | null;
-    /**
-     * The productId property
-     */
-    productId?: Guid | null;
-    /**
-     * The quantityInStock property
-     */
-    quantityInStock?: number | null;
-}
-export interface InventoryStockUnitViewModelIListApiResponse extends Parsable {
-    /**
-     * The data property
-     */
-    data?: InventoryStockUnitViewModel[] | null;
     /**
      * The message property
      */
@@ -1028,6 +908,42 @@ export interface OpenQuoteRequest extends Parsable {
      * The currencyCode property
      */
     currencyCode?: string | null;
+}
+export interface OrderEventHistory extends Parsable {
+    /**
+     * The aggregateId property
+     */
+    aggregateId?: Guid | null;
+    /**
+     * The eventData property
+     */
+    eventData?: string | null;
+    /**
+     * The eventTypeName property
+     */
+    eventTypeName?: string | null;
+    /**
+     * The id property
+     */
+    id?: Guid | null;
+    /**
+     * The timestamp property
+     */
+    timestamp?: Date | null;
+}
+export interface OrderEventHistoryIReadOnlyListApiResponse extends Parsable {
+    /**
+     * The data property
+     */
+    data?: OrderEventHistory[] | null;
+    /**
+     * The message property
+     */
+    message?: string | null;
+    /**
+     * The success property
+     */
+    success?: boolean | null;
 }
 export interface OrderLineViewModel extends Parsable {
     /**
@@ -1085,7 +1001,7 @@ export interface OrderViewModel extends Parsable {
      */
     totalPrice?: number | null;
 }
-export interface OrderViewModelIListApiResponse extends Parsable {
+export interface OrderViewModelIReadOnlyListApiResponse extends Parsable {
     /**
      * The data property
      */
@@ -1098,28 +1014,6 @@ export interface OrderViewModelIListApiResponse extends Parsable {
      * The success property
      */
     success?: boolean | null;
-}
-export interface PaymentRequest extends Parsable {
-    /**
-     * The currencyCode property
-     */
-    currencyCode?: string | null;
-    /**
-     * The customerId property
-     */
-    customerId?: Guid | null;
-    /**
-     * The orderId property
-     */
-    orderId?: Guid | null;
-    /**
-     * The productItems property
-     */
-    productItems?: ProductItemRequest[] | null;
-    /**
-     * The totalAmount property
-     */
-    totalAmount?: number | null;
 }
 export interface ProblemDetails extends AdditionalDataHolder, ApiError, Parsable {
     /**
@@ -1143,23 +1037,27 @@ export interface ProblemDetails extends AdditionalDataHolder, ApiError, Parsable
      */
     type?: string | null;
 }
-export interface ProductItemRequest extends Parsable {
+export interface ProductCatalogProblemDetails extends AdditionalDataHolder, ApiError, Parsable {
     /**
-     * The productId property
+     * The detail property
      */
-    productId?: Guid | null;
+    detail?: string | null;
     /**
-     * The productName property
+     * The instance property
      */
-    productName?: string | null;
+    instance?: string | null;
     /**
-     * The quantity property
+     * The status property
      */
-    quantity?: number | null;
+    status?: number | null;
     /**
-     * The unitPrice property
+     * The title property
      */
-    unitPrice?: number | null;
+    title?: string | null;
+    /**
+     * The type property
+     */
+    type?: string | null;
 }
 export interface ProductViewModel extends Parsable {
     /**
@@ -1213,6 +1111,42 @@ export interface ProductViewModelIListApiResponse extends Parsable {
      */
     success?: boolean | null;
 }
+export interface QuoteEventHistory extends Parsable {
+    /**
+     * The aggregateId property
+     */
+    aggregateId?: Guid | null;
+    /**
+     * The eventData property
+     */
+    eventData?: string | null;
+    /**
+     * The eventTypeName property
+     */
+    eventTypeName?: string | null;
+    /**
+     * The id property
+     */
+    id?: Guid | null;
+    /**
+     * The timestamp property
+     */
+    timestamp?: Date | null;
+}
+export interface QuoteEventHistoryIReadOnlyListApiResponse extends Parsable {
+    /**
+     * The data property
+     */
+    data?: QuoteEventHistory[] | null;
+    /**
+     * The message property
+     */
+    message?: string | null;
+    /**
+     * The success property
+     */
+    success?: boolean | null;
+}
 export interface QuoteItemViewModel extends Parsable {
     /**
      * The currencySymbol property
@@ -1234,6 +1168,28 @@ export interface QuoteItemViewModel extends Parsable {
      * The unitPrice property
      */
     unitPrice?: number | null;
+}
+export interface QuoteManagementProblemDetails extends AdditionalDataHolder, ApiError, Parsable {
+    /**
+     * The detail property
+     */
+    detail?: string | null;
+    /**
+     * The instance property
+     */
+    instance?: string | null;
+    /**
+     * The status property
+     */
+    status?: number | null;
+    /**
+     * The title property
+     */
+    title?: string | null;
+    /**
+     * The type property
+     */
+    type?: string | null;
 }
 export interface QuoteViewModel extends Parsable {
     /**
@@ -1309,24 +1265,6 @@ export interface RegisterCustomerRequest extends Parsable {
      */
     shippingAddress?: string | null;
 }
-export interface RegisterUserRequest extends Parsable {
-    /**
-     * The customerId property
-     */
-    customerId?: Guid | null;
-    /**
-     * The email property
-     */
-    email?: string | null;
-    /**
-     * The password property
-     */
-    password?: string | null;
-    /**
-     * The passwordConfirm property
-     */
-    passwordConfirm?: string | null;
-}
 /**
  * Serializes information the current object
  * @param AddQuoteItemRequest The instance to serialize from.
@@ -1338,53 +1276,6 @@ export function serializeAddQuoteItemRequest(writer: SerializationWriter, addQuo
     if (!addQuoteItemRequest || isSerializingDerivedType) { return; }
     writer.writeGuidValue("productId", addQuoteItemRequest.productId);
     writer.writeNumberValue("quantity", addQuoteItemRequest.quantity);
-}
-/**
- * Serializes information the current object
- * @param CancelPaymentRequest The instance to serialize from.
- * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
-export function serializeCancelPaymentRequest(writer: SerializationWriter, cancelPaymentRequest: Partial<CancelPaymentRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
-    if (!cancelPaymentRequest || isSerializingDerivedType) { return; }
-    writer.writeNumberValue("paymentCancellationReason", cancelPaymentRequest.paymentCancellationReason);
-}
-/**
- * Serializes information the current object
- * @param CheckProductsInStockRequest The instance to serialize from.
- * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
-export function serializeCheckProductsInStockRequest(writer: SerializationWriter, checkProductsInStockRequest: Partial<CheckProductsInStockRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
-    if (!checkProductsInStockRequest || isSerializingDerivedType) { return; }
-    writer.writeCollectionOfPrimitiveValues<Guid>("productIds", checkProductsInStockRequest.productIds);
-}
-/**
- * Serializes information the current object
- * @param CreditLimitModel The instance to serialize from.
- * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
-export function serializeCreditLimitModel(writer: SerializationWriter, creditLimitModel: Partial<CreditLimitModel> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
-    if (!creditLimitModel || isSerializingDerivedType) { return; }
-    writer.writeNumberValue("creditLimit", creditLimitModel.creditLimit);
-    writer.writeGuidValue("customerId", creditLimitModel.customerId);
-}
-/**
- * Serializes information the current object
- * @param CreditLimitModelApiResponse The instance to serialize from.
- * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
-export function serializeCreditLimitModelApiResponse(writer: SerializationWriter, creditLimitModelApiResponse: Partial<CreditLimitModelApiResponse> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
-    if (!creditLimitModelApiResponse || isSerializingDerivedType) { return; }
-    writer.writeObjectValue<CreditLimitModel>("data", creditLimitModelApiResponse.data, serializeCreditLimitModel);
-    writer.writeStringValue("message", creditLimitModelApiResponse.message);
-    writer.writeBooleanValue("success", creditLimitModelApiResponse.success);
 }
 /**
  * Serializes information the current object
@@ -1416,14 +1307,47 @@ export function serializeCustomerDetailsApiResponse(writer: SerializationWriter,
 }
 /**
  * Serializes information the current object
- * @param DecreaseQuantityInStockRequest The instance to serialize from.
+ * @param CustomerEventHistory The instance to serialize from.
  * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeDecreaseQuantityInStockRequest(writer: SerializationWriter, decreaseQuantityInStockRequest: Partial<DecreaseQuantityInStockRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
-    if (!decreaseQuantityInStockRequest || isSerializingDerivedType) { return; }
-    writer.writeNumberValue("decreasedQuantity", decreaseQuantityInStockRequest.decreasedQuantity);
+export function serializeCustomerEventHistory(writer: SerializationWriter, customerEventHistory: Partial<CustomerEventHistory> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!customerEventHistory || isSerializingDerivedType) { return; }
+    writer.writeGuidValue("aggregateId", customerEventHistory.aggregateId);
+    writer.writeStringValue("eventData", customerEventHistory.eventData);
+    writer.writeStringValue("eventTypeName", customerEventHistory.eventTypeName);
+    writer.writeGuidValue("id", customerEventHistory.id);
+    writer.writeDateValue("timestamp", customerEventHistory.timestamp);
+}
+/**
+ * Serializes information the current object
+ * @param CustomerEventHistoryIReadOnlyListApiResponse The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeCustomerEventHistoryIReadOnlyListApiResponse(writer: SerializationWriter, customerEventHistoryIReadOnlyListApiResponse: Partial<CustomerEventHistoryIReadOnlyListApiResponse> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!customerEventHistoryIReadOnlyListApiResponse || isSerializingDerivedType) { return; }
+    writer.writeCollectionOfObjectValues<CustomerEventHistory>("data", customerEventHistoryIReadOnlyListApiResponse.data, serializeCustomerEventHistory);
+    writer.writeStringValue("message", customerEventHistoryIReadOnlyListApiResponse.message);
+    writer.writeBooleanValue("success", customerEventHistoryIReadOnlyListApiResponse.success);
+}
+/**
+ * Serializes information the current object
+ * @param CustomerManagementProblemDetails The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeCustomerManagementProblemDetails(writer: SerializationWriter, customerManagementProblemDetails: Partial<CustomerManagementProblemDetails> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!customerManagementProblemDetails || isSerializingDerivedType) { return; }
+    writer.writeStringValue("detail", customerManagementProblemDetails.detail);
+    writer.writeStringValue("instance", customerManagementProblemDetails.instance);
+    writer.writeNumberValue("status", customerManagementProblemDetails.status);
+    writer.writeStringValue("title", customerManagementProblemDetails.title);
+    writer.writeStringValue("type", customerManagementProblemDetails.type);
+    writer.writeAdditionalData(customerManagementProblemDetails.additionalData);
 }
 /**
  * Serializes information the current object
@@ -1439,31 +1363,19 @@ export function serializeGetProductsRequest(writer: SerializationWriter, getProd
 }
 /**
  * Serializes information the current object
- * @param IEventHistory The instance to serialize from.
+ * @param InventoryManagementProblemDetails The instance to serialize from.
  * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeIEventHistory(writer: SerializationWriter, iEventHistory: Partial<IEventHistory> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
-    if (!iEventHistory || isSerializingDerivedType) { return; }
-    writer.writeGuidValue("aggregateId", iEventHistory.aggregateId);
-    writer.writeStringValue("eventData", iEventHistory.eventData);
-    writer.writeStringValue("eventTypeName", iEventHistory.eventTypeName);
-    writer.writeGuidValue("id", iEventHistory.id);
-    writer.writeDateValue("timestamp", iEventHistory.timestamp);
-}
-/**
- * Serializes information the current object
- * @param IEventHistoryIListApiResponse The instance to serialize from.
- * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
-export function serializeIEventHistoryIListApiResponse(writer: SerializationWriter, iEventHistoryIListApiResponse: Partial<IEventHistoryIListApiResponse> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
-    if (!iEventHistoryIListApiResponse || isSerializingDerivedType) { return; }
-    writer.writeCollectionOfObjectValues<IEventHistory>("data", iEventHistoryIListApiResponse.data, serializeIEventHistory);
-    writer.writeStringValue("message", iEventHistoryIListApiResponse.message);
-    writer.writeBooleanValue("success", iEventHistoryIListApiResponse.success);
+export function serializeInventoryManagementProblemDetails(writer: SerializationWriter, inventoryManagementProblemDetails: Partial<InventoryManagementProblemDetails> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!inventoryManagementProblemDetails || isSerializingDerivedType) { return; }
+    writer.writeStringValue("detail", inventoryManagementProblemDetails.detail);
+    writer.writeStringValue("instance", inventoryManagementProblemDetails.instance);
+    writer.writeNumberValue("status", inventoryManagementProblemDetails.status);
+    writer.writeStringValue("title", inventoryManagementProblemDetails.title);
+    writer.writeStringValue("type", inventoryManagementProblemDetails.type);
+    writer.writeAdditionalData(inventoryManagementProblemDetails.additionalData);
 }
 /**
  * Serializes information the current object
@@ -1482,42 +1394,16 @@ export function serializeInventoryStockUnitEventHistory(writer: SerializationWri
 }
 /**
  * Serializes information the current object
- * @param InventoryStockUnitEventHistoryIListApiResponse The instance to serialize from.
+ * @param InventoryStockUnitEventHistoryIReadOnlyListApiResponse The instance to serialize from.
  * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeInventoryStockUnitEventHistoryIListApiResponse(writer: SerializationWriter, inventoryStockUnitEventHistoryIListApiResponse: Partial<InventoryStockUnitEventHistoryIListApiResponse> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
-    if (!inventoryStockUnitEventHistoryIListApiResponse || isSerializingDerivedType) { return; }
-    writer.writeCollectionOfObjectValues<InventoryStockUnitEventHistory>("data", inventoryStockUnitEventHistoryIListApiResponse.data, serializeInventoryStockUnitEventHistory);
-    writer.writeStringValue("message", inventoryStockUnitEventHistoryIListApiResponse.message);
-    writer.writeBooleanValue("success", inventoryStockUnitEventHistoryIListApiResponse.success);
-}
-/**
- * Serializes information the current object
- * @param InventoryStockUnitViewModel The instance to serialize from.
- * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
-export function serializeInventoryStockUnitViewModel(writer: SerializationWriter, inventoryStockUnitViewModel: Partial<InventoryStockUnitViewModel> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
-    if (!inventoryStockUnitViewModel || isSerializingDerivedType) { return; }
-    writer.writeGuidValue("inventoryStockUnitId", inventoryStockUnitViewModel.inventoryStockUnitId);
-    writer.writeGuidValue("productId", inventoryStockUnitViewModel.productId);
-    writer.writeNumberValue("quantityInStock", inventoryStockUnitViewModel.quantityInStock);
-}
-/**
- * Serializes information the current object
- * @param InventoryStockUnitViewModelIListApiResponse The instance to serialize from.
- * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
-export function serializeInventoryStockUnitViewModelIListApiResponse(writer: SerializationWriter, inventoryStockUnitViewModelIListApiResponse: Partial<InventoryStockUnitViewModelIListApiResponse> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
-    if (!inventoryStockUnitViewModelIListApiResponse || isSerializingDerivedType) { return; }
-    writer.writeCollectionOfObjectValues<InventoryStockUnitViewModel>("data", inventoryStockUnitViewModelIListApiResponse.data, serializeInventoryStockUnitViewModel);
-    writer.writeStringValue("message", inventoryStockUnitViewModelIListApiResponse.message);
-    writer.writeBooleanValue("success", inventoryStockUnitViewModelIListApiResponse.success);
+export function serializeInventoryStockUnitEventHistoryIReadOnlyListApiResponse(writer: SerializationWriter, inventoryStockUnitEventHistoryIReadOnlyListApiResponse: Partial<InventoryStockUnitEventHistoryIReadOnlyListApiResponse> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!inventoryStockUnitEventHistoryIReadOnlyListApiResponse || isSerializingDerivedType) { return; }
+    writer.writeCollectionOfObjectValues<InventoryStockUnitEventHistory>("data", inventoryStockUnitEventHistoryIReadOnlyListApiResponse.data, serializeInventoryStockUnitEventHistory);
+    writer.writeStringValue("message", inventoryStockUnitEventHistoryIReadOnlyListApiResponse.message);
+    writer.writeBooleanValue("success", inventoryStockUnitEventHistoryIReadOnlyListApiResponse.success);
 }
 /**
  * Serializes information the current object
@@ -1559,6 +1445,34 @@ export function serializeOpenQuoteRequest(writer: SerializationWriter, openQuote
 /**
  * Serializes information the current object
  * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param OrderEventHistory The instance to serialize from.
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeOrderEventHistory(writer: SerializationWriter, orderEventHistory: Partial<OrderEventHistory> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!orderEventHistory || isSerializingDerivedType) { return; }
+    writer.writeGuidValue("aggregateId", orderEventHistory.aggregateId);
+    writer.writeStringValue("eventData", orderEventHistory.eventData);
+    writer.writeStringValue("eventTypeName", orderEventHistory.eventTypeName);
+    writer.writeGuidValue("id", orderEventHistory.id);
+    writer.writeDateValue("timestamp", orderEventHistory.timestamp);
+}
+/**
+ * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param OrderEventHistoryIReadOnlyListApiResponse The instance to serialize from.
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeOrderEventHistoryIReadOnlyListApiResponse(writer: SerializationWriter, orderEventHistoryIReadOnlyListApiResponse: Partial<OrderEventHistoryIReadOnlyListApiResponse> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!orderEventHistoryIReadOnlyListApiResponse || isSerializingDerivedType) { return; }
+    writer.writeCollectionOfObjectValues<OrderEventHistory>("data", orderEventHistoryIReadOnlyListApiResponse.data, serializeOrderEventHistory);
+    writer.writeStringValue("message", orderEventHistoryIReadOnlyListApiResponse.message);
+    writer.writeBooleanValue("success", orderEventHistoryIReadOnlyListApiResponse.success);
+}
+/**
+ * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
  * @param OrderLineViewModel The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
@@ -1592,30 +1506,15 @@ export function serializeOrderViewModel(writer: SerializationWriter, orderViewMo
 /**
  * Serializes information the current object
  * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
- * @param OrderViewModelIListApiResponse The instance to serialize from.
+ * @param OrderViewModelIReadOnlyListApiResponse The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeOrderViewModelIListApiResponse(writer: SerializationWriter, orderViewModelIListApiResponse: Partial<OrderViewModelIListApiResponse> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
-    if (!orderViewModelIListApiResponse || isSerializingDerivedType) { return; }
-    writer.writeCollectionOfObjectValues<OrderViewModel>("data", orderViewModelIListApiResponse.data, serializeOrderViewModel);
-    writer.writeStringValue("message", orderViewModelIListApiResponse.message);
-    writer.writeBooleanValue("success", orderViewModelIListApiResponse.success);
-}
-/**
- * Serializes information the current object
- * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
- * @param PaymentRequest The instance to serialize from.
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
-export function serializePaymentRequest(writer: SerializationWriter, paymentRequest: Partial<PaymentRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
-    if (!paymentRequest || isSerializingDerivedType) { return; }
-    writer.writeStringValue("currencyCode", paymentRequest.currencyCode);
-    writer.writeGuidValue("customerId", paymentRequest.customerId);
-    writer.writeGuidValue("orderId", paymentRequest.orderId);
-    writer.writeCollectionOfObjectValues<ProductItemRequest>("productItems", paymentRequest.productItems, serializeProductItemRequest);
-    writer.writeNumberValue("totalAmount", paymentRequest.totalAmount);
+export function serializeOrderViewModelIReadOnlyListApiResponse(writer: SerializationWriter, orderViewModelIReadOnlyListApiResponse: Partial<OrderViewModelIReadOnlyListApiResponse> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!orderViewModelIReadOnlyListApiResponse || isSerializingDerivedType) { return; }
+    writer.writeCollectionOfObjectValues<OrderViewModel>("data", orderViewModelIReadOnlyListApiResponse.data, serializeOrderViewModel);
+    writer.writeStringValue("message", orderViewModelIReadOnlyListApiResponse.message);
+    writer.writeBooleanValue("success", orderViewModelIReadOnlyListApiResponse.success);
 }
 /**
  * Serializes information the current object
@@ -1636,16 +1535,18 @@ export function serializeProblemDetails(writer: SerializationWriter, problemDeta
 /**
  * Serializes information the current object
  * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
- * @param ProductItemRequest The instance to serialize from.
+ * @param ProductCatalogProblemDetails The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeProductItemRequest(writer: SerializationWriter, productItemRequest: Partial<ProductItemRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
-    if (!productItemRequest || isSerializingDerivedType) { return; }
-    writer.writeGuidValue("productId", productItemRequest.productId);
-    writer.writeStringValue("productName", productItemRequest.productName);
-    writer.writeNumberValue("quantity", productItemRequest.quantity);
-    writer.writeNumberValue("unitPrice", productItemRequest.unitPrice);
+export function serializeProductCatalogProblemDetails(writer: SerializationWriter, productCatalogProblemDetails: Partial<ProductCatalogProblemDetails> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!productCatalogProblemDetails || isSerializingDerivedType) { return; }
+    writer.writeStringValue("detail", productCatalogProblemDetails.detail);
+    writer.writeStringValue("instance", productCatalogProblemDetails.instance);
+    writer.writeNumberValue("status", productCatalogProblemDetails.status);
+    writer.writeStringValue("title", productCatalogProblemDetails.title);
+    writer.writeStringValue("type", productCatalogProblemDetails.type);
+    writer.writeAdditionalData(productCatalogProblemDetails.additionalData);
 }
 /**
  * Serializes information the current object
@@ -1682,6 +1583,34 @@ export function serializeProductViewModelIListApiResponse(writer: SerializationW
 /**
  * Serializes information the current object
  * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param QuoteEventHistory The instance to serialize from.
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeQuoteEventHistory(writer: SerializationWriter, quoteEventHistory: Partial<QuoteEventHistory> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!quoteEventHistory || isSerializingDerivedType) { return; }
+    writer.writeGuidValue("aggregateId", quoteEventHistory.aggregateId);
+    writer.writeStringValue("eventData", quoteEventHistory.eventData);
+    writer.writeStringValue("eventTypeName", quoteEventHistory.eventTypeName);
+    writer.writeGuidValue("id", quoteEventHistory.id);
+    writer.writeDateValue("timestamp", quoteEventHistory.timestamp);
+}
+/**
+ * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param QuoteEventHistoryIReadOnlyListApiResponse The instance to serialize from.
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeQuoteEventHistoryIReadOnlyListApiResponse(writer: SerializationWriter, quoteEventHistoryIReadOnlyListApiResponse: Partial<QuoteEventHistoryIReadOnlyListApiResponse> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!quoteEventHistoryIReadOnlyListApiResponse || isSerializingDerivedType) { return; }
+    writer.writeCollectionOfObjectValues<QuoteEventHistory>("data", quoteEventHistoryIReadOnlyListApiResponse.data, serializeQuoteEventHistory);
+    writer.writeStringValue("message", quoteEventHistoryIReadOnlyListApiResponse.message);
+    writer.writeBooleanValue("success", quoteEventHistoryIReadOnlyListApiResponse.success);
+}
+/**
+ * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
  * @param QuoteItemViewModel The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
@@ -1693,6 +1622,22 @@ export function serializeQuoteItemViewModel(writer: SerializationWriter, quoteIt
     writer.writeStringValue("productName", quoteItemViewModel.productName);
     writer.writeNumberValue("quantity", quoteItemViewModel.quantity);
     writer.writeNumberValue("unitPrice", quoteItemViewModel.unitPrice);
+}
+/**
+ * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param QuoteManagementProblemDetails The instance to serialize from.
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeQuoteManagementProblemDetails(writer: SerializationWriter, quoteManagementProblemDetails: Partial<QuoteManagementProblemDetails> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!quoteManagementProblemDetails || isSerializingDerivedType) { return; }
+    writer.writeStringValue("detail", quoteManagementProblemDetails.detail);
+    writer.writeStringValue("instance", quoteManagementProblemDetails.instance);
+    writer.writeNumberValue("status", quoteManagementProblemDetails.status);
+    writer.writeStringValue("title", quoteManagementProblemDetails.title);
+    writer.writeStringValue("type", quoteManagementProblemDetails.type);
+    writer.writeAdditionalData(quoteManagementProblemDetails.additionalData);
 }
 /**
  * Serializes information the current object
@@ -1743,32 +1688,6 @@ export function serializeRegisterCustomerRequest(writer: SerializationWriter, re
 /**
  * Serializes information the current object
  * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
- * @param RegisterUserRequest The instance to serialize from.
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
-export function serializeRegisterUserRequest(writer: SerializationWriter, registerUserRequest: Partial<RegisterUserRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
-    if (!registerUserRequest || isSerializingDerivedType) { return; }
-    writer.writeGuidValue("customerId", registerUserRequest.customerId);
-    writer.writeStringValue("email", registerUserRequest.email);
-    writer.writeStringValue("password", registerUserRequest.password);
-    writer.writeStringValue("passwordConfirm", registerUserRequest.passwordConfirm);
-}
-/**
- * Serializes information the current object
- * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
- * @param ShipOrderRequest The instance to serialize from.
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
-export function serializeShipOrderRequest(writer: SerializationWriter, shipOrderRequest: Partial<ShipOrderRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
-    if (!shipOrderRequest || isSerializingDerivedType) { return; }
-    writer.writeGuidValue("orderId", shipOrderRequest.orderId);
-    writer.writeCollectionOfObjectValues<ProductItemRequest>("productItems", shipOrderRequest.productItems, serializeProductItemRequest);
-}
-/**
- * Serializes information the current object
- * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
  * @param UpdateCustomerRequest The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
@@ -1778,42 +1697,6 @@ export function serializeUpdateCustomerRequest(writer: SerializationWriter, upda
     writer.writeNumberValue("creditLimit", updateCustomerRequest.creditLimit);
     writer.writeStringValue("name", updateCustomerRequest.name);
     writer.writeStringValue("shippingAddress", updateCustomerRequest.shippingAddress);
-}
-/**
- * Serializes information the current object
- * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
- * @param UpdateOrderStatusRequest The instance to serialize from.
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
-export function serializeUpdateOrderStatusRequest(writer: SerializationWriter, updateOrderStatusRequest: Partial<UpdateOrderStatusRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
-    if (!updateOrderStatusRequest || isSerializingDerivedType) { return; }
-    writer.writeGuidValue("customerId", updateOrderStatusRequest.customerId);
-    writer.writeGuidValue("orderId", updateOrderStatusRequest.orderId);
-    writer.writeNumberValue("orderStatusCode", updateOrderStatusRequest.orderStatusCode);
-    writer.writeStringValue("orderStatusText", updateOrderStatusRequest.orderStatusText);
-}
-/**
- * Serializes information the current object
- * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
- * @param UserRegisteredResult The instance to serialize from.
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
-export function serializeUserRegisteredResult(writer: SerializationWriter, userRegisteredResult: Partial<UserRegisteredResult> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
-    if (!userRegisteredResult || isSerializingDerivedType) { return; }
-    writer.writeBooleanValue("succeeded", userRegisteredResult.succeeded);
-    writer.writeStringValue("userId", userRegisteredResult.userId);
-}
-export interface ShipOrderRequest extends Parsable {
-    /**
-     * The orderId property
-     */
-    orderId?: Guid | null;
-    /**
-     * The productItems property
-     */
-    productItems?: ProductItemRequest[] | null;
 }
 export interface UpdateCustomerRequest extends Parsable {
     /**
@@ -1828,34 +1711,6 @@ export interface UpdateCustomerRequest extends Parsable {
      * The shippingAddress property
      */
     shippingAddress?: string | null;
-}
-export interface UpdateOrderStatusRequest extends Parsable {
-    /**
-     * The customerId property
-     */
-    customerId?: Guid | null;
-    /**
-     * The orderId property
-     */
-    orderId?: Guid | null;
-    /**
-     * The orderStatusCode property
-     */
-    orderStatusCode?: number | null;
-    /**
-     * The orderStatusText property
-     */
-    orderStatusText?: string | null;
-}
-export interface UserRegisteredResult extends Parsable {
-    /**
-     * The succeeded property
-     */
-    succeeded?: boolean | null;
-    /**
-     * The userId property
-     */
-    userId?: string | null;
 }
 /* tslint:enable */
 /* eslint-enable */

@@ -1,14 +1,17 @@
-﻿using EcommerceDDD.ServiceClients.ApiGateway.Models;
+﻿using ProductItemRequest = EcommerceDDD.ServiceClients.PaymentProcessing.Models.ProductItemRequest;
 
 namespace EcommerceDDD.OrderProcessing.Application.Payments.RequestingPayment;
 
 public class RequestPaymentHandler(
-	ApiGatewayClient apiGatewayClient,
+	SignalRClient signalrClient,
+	PaymentProcessingClient paymentProcessingClient,
 	IEventStoreRepository<Order> orderWriteRepository
 ) : ICommandHandler<RequestPayment>
 {
-	private readonly ApiGatewayClient _apiGatewayClient = apiGatewayClient
-		?? throw new ArgumentNullException(nameof(apiGatewayClient));
+	private readonly SignalRClient _signalrClient = signalrClient
+		?? throw new ArgumentNullException(nameof(signalrClient));
+	private readonly PaymentProcessingClient _paymentProcessingClient = paymentProcessingClient
+		?? throw new ArgumentNullException(nameof(paymentProcessingClient));
 	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository
 		?? throw new ArgumentNullException(nameof(orderWriteRepository));
 
@@ -43,7 +46,7 @@ public class RequestPaymentHandler(
 				OrderStatusCode = (int)order.Status
 			};
 
-			await _apiGatewayClient.Api.V2.Signalr.Updateorderstatus
+			await _signalrClient.Api.V2.Signalr.Updateorderstatus
 				.PostAsync(request, cancellationToken: cancellationToken);
 		}
 		catch (Microsoft.Kiota.Abstractions.ApiException ex)
@@ -67,7 +70,7 @@ public class RequestPaymentHandler(
 				ProductItems = productItemsRequest
 			};
 
-			var paymentsRequestBuilder = _apiGatewayClient.Api.V2.Payments;
+			var paymentsRequestBuilder = _paymentProcessingClient.Api.V2.Payments;
 			await paymentsRequestBuilder
 				.PostAsync(paymentRequest, cancellationToken: cancellationToken);
 		}

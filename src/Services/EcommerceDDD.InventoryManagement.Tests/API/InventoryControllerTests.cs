@@ -89,8 +89,8 @@ public class InventoryControllerTests
 
 		// Then
 		var okResult = Assert.IsType<OkObjectResult>(response);
-		var apiResponse = Assert.IsType<ApiResponse<IList<InventoryStockUnitEventHistory>>>(okResult.Value);
-		Assert.IsAssignableFrom<IList<InventoryStockUnitEventHistory>>(apiResponse.Data);
+		var apiResponse = Assert.IsType<ApiResponse<IReadOnlyList<InventoryStockUnitEventHistory>>>(okResult.Value);
+		Assert.IsAssignableFrom<IReadOnlyList<InventoryStockUnitEventHistory>>(apiResponse.Data);
 	}
 
     private ICommandBus _commandBus = Substitute.For<ICommandBus>();

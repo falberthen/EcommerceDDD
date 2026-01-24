@@ -1,28 +1,19 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/v{version}/payments",
-      "UpstreamPathTemplate": "/api/v{version}/payments",
+      "UpstreamPathTemplate": "/PaymentProcessing/api/v{version}/payments/{everything}",
+      "DownstreamPathTemplate": "/api/v{version}/payments/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "ecommerceddd-payments",
+          "Host": "ecommerceddd-payment-processing",
           "Port": 80
         }
       ],
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/v{version}/payments/{id}",
-      "UpstreamPathTemplate": "/api/v{version}/payments/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "ecommerceddd-payments",
-          "Port": 80
-        }
-      ],
-      "UpstreamHttpMethod": [ "DELETE" ]
+      "UpstreamHttpMethod": [ "POST", "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
     }
   ]
 }

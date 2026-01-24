@@ -8,7 +8,7 @@ public class Product : AggregateRoot<ProductId>
     public string ImageUrl { get; private set; }
     public Money UnitPrice { get; private set; }
 
-    public static Product Create(ProductData productData)
+    public static Product Create(ProductData productData, Guid? productId = null)
     {
         var (Name, Category, Description, ImageUrl, UnitPrice) = productData
             ?? throw new ArgumentNullException(nameof(productData));
@@ -18,19 +18,19 @@ public class Product : AggregateRoot<ProductId>
         if (string.IsNullOrWhiteSpace(Category))
             throw new BusinessRuleException("Product category cannot be null or whitespace.");
         if (string.IsNullOrWhiteSpace(Description))
-            throw new BusinessRuleException("Product description cannot be null or whitespace.");        
+            throw new BusinessRuleException("Product description cannot be null or whitespace.");
         if (string.IsNullOrWhiteSpace(ImageUrl))
             throw new BusinessRuleException("ImageUrl cannot be null.");
         if (UnitPrice is null)
             throw new BusinessRuleException("Product unit price cannot be null.");
-        
-        return new Product(productData);
+
+        return new Product(productData, productId);
     }
 
-    private Product(ProductData productData)
+    private Product(ProductData productData, Guid? productId = null)
     {
-        Id = ProductId.Of(Guid.NewGuid());
-        Name = productData.Name;        
+        Id = ProductId.Of(productId ?? Guid.NewGuid());
+        Name = productData.Name;
         Category = productData.Category;
         Description = productData.Description;
         ImageUrl = productData.ImageUrl;

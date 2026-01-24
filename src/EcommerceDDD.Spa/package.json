@@ -6,8 +6,7 @@
     "build": "ng build",
     "build-watch": "ng build --watch --configuration development",
     "test": "jest --coverage",
-    "test-watch": "jest --watchAll",
-    "generate:kiota": "kiota generate --openapi http://localhost:5000/swagger/v2/apigateway.yaml --language TypeScript --output ./src/app/clients --clean-output"
+    "test-watch": "jest --watchAll"
   },
   "private": true,
   "dependencies": {
@@ -22,7 +21,6 @@
     "@angular/router": "~19.2.6",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
-    "@microsoft/kiota-bundle": "^1.0.0-preview.99",
     "@microsoft/signalr": "^7.0.5",
     "@ng-bootstrap/ng-bootstrap": "^18.0.0",
     "@popperjs/core": "^2.11.8",

@@ -1,17 +1,17 @@
-﻿using EcommerceDDD.OrderProcessing.Application.Orders.ProcessingOrder;
-using EcommerceDDD.ServiceClients.ApiGateway.Models;
-
-namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
+﻿namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
 
 public class ProcessOrderHandler(
-	ApiGatewayClient apiGatewayClient,
+	QuoteManagementClient quoteManagementClient,
 	IEventStoreRepository<Order> orderWriteRepository,
 	IEventBus eventPublisher
 ) : ICommandHandler<ProcessOrder>
 {
-	private readonly ApiGatewayClient _apiGatewayClient = apiGatewayClient;
-	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
-	private readonly IEventBus _eventPublisher = eventPublisher;
+	private readonly QuoteManagementClient _quoteManagementClient = quoteManagementClient
+		?? throw new ArgumentNullException(nameof(quoteManagementClient));
+	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository
+		?? throw new ArgumentNullException(nameof(orderWriteRepository));
+	private readonly IEventBus _eventPublisher = eventPublisher
+		?? throw new ArgumentNullException(nameof(eventPublisher));
 
 	public async Task HandleAsync(ProcessOrder command, CancellationToken cancellationToken)
 	{
@@ -64,7 +64,7 @@ public class ProcessOrderHandler(
 	{
 		try
 		{
-			var quoteRequestBuilder = _apiGatewayClient.Api.V2.Quotes[command.QuoteId.Value];
+			var quoteRequestBuilder = _quoteManagementClient.Api.V2.Quotes[command.QuoteId.Value];
 			var response = await quoteRequestBuilder
 				.Details.GetAsync(cancellationToken: cancellationToken);
 

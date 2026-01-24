@@ -1,8 +1,6 @@
-﻿using EcommerceDDD.ServiceClients.ApiGateway.Models;
+﻿namespace EcommerceDDD.QuoteManagement.Infrastructure.ProductMapping;
 
-namespace EcommerceDDD.QuoteManagement.Infrastructure.ProductMapping;
-
-public class ProductMapper(ApiGatewayClient apiGatewayClient) : IProductMapper
+public class ProductMapper(ProductCatalogClient productCatalogClient) : IProductMapper
 {
 	/// <summary>
 	/// Maps product from catalog
@@ -28,7 +26,7 @@ public class ProductMapper(ApiGatewayClient apiGatewayClient) : IProductMapper
 
 		try
 		{
-			var response = await apiGatewayClient.Api.V2.Products
+			var response = await productCatalogClient.Api.V2.Products
 				.PostAsync(request, cancellationToken: cancellationToken);
 
 			if (response?.Success == false || response?.Data is null)

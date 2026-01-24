@@ -1,16 +1,34 @@
 {
   "Routes": [
     {
+      "UpstreamPathTemplate": "/ShipmentProcessing/api/v{version}/shipments",
       "DownstreamPathTemplate": "/api/v{version}/shipments",
-      "UpstreamPathTemplate": "/api/v{version}/shipments",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "ecommerceddd-shipments",
+          "Host": "ecommerceddd-shipment-processing",
           "Port": 80
         }
       ],
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/ShipmentProcessing/api/v{version}/shipments/{everything}",
+      "DownstreamPathTemplate": "/api/v{version}/shipments/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-shipment-processing",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
     }
   ]
 }

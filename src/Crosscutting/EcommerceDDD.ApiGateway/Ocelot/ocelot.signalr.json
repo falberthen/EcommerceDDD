@@ -1,7 +1,6 @@
 {
   "Routes": [
     {
-      // SignalR hub (WebSocket)
       "DownstreamPathTemplate": "/api/v{version}/signalr",
       "UpstreamPathTemplate": "/api/v{version}/signalr",
       "DownstreamScheme": "http",
@@ -15,7 +14,6 @@
       "UseWebSockets": true
     },
     {
-      // SignalR controller endpoint (used by Kiota or services)
       "DownstreamPathTemplate": "/api/v{version}/signalr/{everything}",
       "UpstreamPathTemplate": "/api/v{version}/signalr/{everything}",
       "DownstreamScheme": "http",

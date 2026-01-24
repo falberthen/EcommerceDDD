@@ -2,11 +2,12 @@
 
 public class GetInventoryStockUnitEventHistoryHandler(
     IQuerySession querySession
-) : IQueryHandler<GetInventoryStockUnitEventHistory, IList<InventoryStockUnitEventHistory>> 
+) : IQueryHandler<GetInventoryStockUnitEventHistory, IReadOnlyList<InventoryStockUnitEventHistory>> 
 {
-    private readonly IQuerySession _querySession = querySession;
+    private readonly IQuerySession _querySession = querySession
+		?? throw new ArgumentNullException(nameof(querySession));
 
-    public async Task<IList<InventoryStockUnitEventHistory>> HandleAsync(GetInventoryStockUnitEventHistory query,
+	public async Task<IReadOnlyList<InventoryStockUnitEventHistory>> HandleAsync(GetInventoryStockUnitEventHistory query,
         CancellationToken cancellationToken)
     {
         var stockUnitEventStory = await _querySession.Query<InventoryStockUnitEventHistory>()
@@ -14,6 +15,6 @@ public class GetInventoryStockUnitEventHistoryHandler(
            .OrderBy(c => c.Timestamp)
            .ToListAsync(cancellationToken);
 
-        return stockUnitEventStory.ToList();
+        return stockUnitEventStory;
     }
 }

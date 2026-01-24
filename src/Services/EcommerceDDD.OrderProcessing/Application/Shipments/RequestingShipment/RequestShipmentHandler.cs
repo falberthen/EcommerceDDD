@@ -1,14 +1,16 @@
-﻿using EcommerceDDD.ServiceClients.ApiGateway.Models;
+﻿using ProductItemRequest = EcommerceDDD.ServiceClients.ShipmentProcessing.Models.ProductItemRequest;
 
 namespace EcommerceDDD.OrderProcessing.Application.Shipments.RequestingShipment;
 
 public class RequestShipmentHandler(
-	ApiGatewayClient apiGatewayClient,
+	ShipmentProcessingClient shipmentProcessingClient,
 	IEventStoreRepository<Order> orderWriteRepository
 ) : ICommandHandler<RequestShipment>
 {
-	private readonly ApiGatewayClient _apiGatewayClient = apiGatewayClient;
-	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository;
+	private readonly ShipmentProcessingClient _shipmentProcessingClient = shipmentProcessingClient
+		?? throw new ArgumentNullException(nameof(shipmentProcessingClient));
+	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository
+		?? throw new ArgumentNullException(nameof(orderWriteRepository));
 
 	public async Task HandleAsync(RequestShipment command, CancellationToken cancellationToken)
 	{
@@ -39,11 +41,11 @@ public class RequestShipmentHandler(
 				ProductItems = productItemsRequest
 			};
 
-			var shipmentsRequestBuilder = _apiGatewayClient.Api.V2.Shipments;
+			var shipmentsRequestBuilder = _shipmentProcessingClient.Api.V2.Shipments;
 			await shipmentsRequestBuilder
 				.PostAsync(shipOrderRequest, cancellationToken: cancellationToken);
 		}
-		catch (Microsoft.Kiota.Abstractions.ApiException ex)
+		catch (Microsoft.Kiota.Abstractions.ApiException)
 		{
 			throw new ApplicationLogicException(
 				$"An error occurred requesting shipping order.");

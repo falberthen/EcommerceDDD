@@ -4,6 +4,16 @@
 // @ts-ignore
 import { ApiRequestBuilderNavigationMetadata, type ApiRequestBuilder } from './api/index.js';
 // @ts-ignore
+import { CustomerManagementRequestBuilderNavigationMetadata, type CustomerManagementRequestBuilder } from './customerManagement/index.js';
+// @ts-ignore
+import { InventoryManagementRequestBuilderNavigationMetadata, type InventoryManagementRequestBuilder } from './inventoryManagement/index.js';
+// @ts-ignore
+import { OrderProcessingRequestBuilderNavigationMetadata, type OrderProcessingRequestBuilder } from './orderProcessing/index.js';
+// @ts-ignore
+import { ProductCatalogRequestBuilderNavigationMetadata, type ProductCatalogRequestBuilder } from './productCatalog/index.js';
+// @ts-ignore
+import { QuoteManagementRequestBuilderNavigationMetadata, type QuoteManagementRequestBuilder } from './quoteManagement/index.js';
+// @ts-ignore
 import { apiClientProxifier, ParseNodeFactoryRegistry, SerializationWriterFactoryRegistry, type BaseRequestBuilder, type KeysToExcludeForNavigationMetadata, type NavigationMetadata, type RequestAdapter } from '@microsoft/kiota-abstractions';
 // @ts-ignore
 import { FormParseNodeFactory, FormSerializationWriterFactory } from '@microsoft/kiota-serialization-form';
@@ -22,6 +32,26 @@ export interface ApiClient extends BaseRequestBuilder<ApiClient> {
      * The api property
      */
     get api(): ApiRequestBuilder;
+    /**
+     * The customerManagement property
+     */
+    get customerManagement(): CustomerManagementRequestBuilder;
+    /**
+     * The inventoryManagement property
+     */
+    get inventoryManagement(): InventoryManagementRequestBuilder;
+    /**
+     * The orderProcessing property
+     */
+    get orderProcessing(): OrderProcessingRequestBuilder;
+    /**
+     * The productCatalog property
+     */
+    get productCatalog(): ProductCatalogRequestBuilder;
+    /**
+     * The quoteManagement property
+     */
+    get quoteManagement(): QuoteManagementRequestBuilder;
 }
 /**
  * Instantiates a new {@link ApiClient} and sets the default values.
@@ -67,6 +97,21 @@ export const ApiClientUriTemplate = "{+baseurl}";
 export const ApiClientNavigationMetadata: Record<Exclude<keyof ApiClient, KeysToExcludeForNavigationMetadata>, NavigationMetadata> = {
     api: {
         navigationMetadata: ApiRequestBuilderNavigationMetadata,
+    },
+    customerManagement: {
+        navigationMetadata: CustomerManagementRequestBuilderNavigationMetadata,
+    },
+    inventoryManagement: {
+        navigationMetadata: InventoryManagementRequestBuilderNavigationMetadata,
+    },
+    orderProcessing: {
+        navigationMetadata: OrderProcessingRequestBuilderNavigationMetadata,
+    },
+    productCatalog: {
+        navigationMetadata: ProductCatalogRequestBuilderNavigationMetadata,
+    },
+    quoteManagement: {
+        navigationMetadata: QuoteManagementRequestBuilderNavigationMetadata,
     },
 };
 /* tslint:enable */

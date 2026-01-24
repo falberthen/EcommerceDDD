@@ -1,6 +1,3 @@
-using EcommerceDDD.OrderProcessing.Application.Orders.ProcessingOrder;
-using EcommerceDDD.ServiceClients.ApiGateway.Models;
-
 namespace EcommerceDDD.OrderProcessing.Tests.Application;
 
 public class ProcessOrderHandlerTests
@@ -30,7 +27,7 @@ public class ProcessOrderHandlerTests
 
 		var orderWriteRepository = new DummyEventStoreRepository<Order>();
 		var adapter = Substitute.For<IRequestAdapter>();
-		var apiClient = new ApiGatewayClient(adapter);
+		var quoteManagementClient = new QuoteManagementClient(adapter);
 
 		// return mocked view model
 		var viewModelResponse = new QuoteViewModel()
@@ -69,7 +66,7 @@ public class ProcessOrderHandlerTests
 			.AppendEventsAsync(order);
 
 		var processOrder = ProcessOrder.Create(customerId, order.Id, quoteId);
-		var processOrderHandler = new ProcessOrderHandler(apiClient, orderWriteRepository, _eventPublisher);
+		var processOrderHandler = new ProcessOrderHandler(quoteManagementClient, orderWriteRepository, _eventPublisher);
 
 		// When
 		await processOrderHandler.HandleAsync(processOrder, CancellationToken.None);

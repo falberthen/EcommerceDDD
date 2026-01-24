@@ -195,17 +195,17 @@ services:
     depends_on:      
       ecommerceddd-identityserver:
         condition: service_started
-      ecommerceddd-products:
+      ecommerceddd-product-catalog:
         condition: service_started
-      ecommerceddd-inventory:
+      ecommerceddd-inventory-management:
         condition: service_started
-      ecommerceddd-customers:
+      ecommerceddd-customer-management:
         condition: service_started
-      ecommerceddd-orders:
+      ecommerceddd-order-processing:
         condition: service_started
-      ecommerceddd-payments:
+      ecommerceddd-payment-processing:
         condition: service_started
-      ecommerceddd-shipments:
+      ecommerceddd-shipment-processing:
         condition: service_started
   
   ecommerceddd-signalr:
@@ -233,13 +233,13 @@ services:
     depends_on:      
       ecommerceddd-identityserver:
         condition: service_started
-      ecommerceddd-orders:
+      ecommerceddd-order-processing:
         condition: service_started
 
   # Services  
-  ecommerceddd-customers:
-    image: ecommerceddd-customers
-    container_name: ecommerceddd-customers
+  ecommerceddd-customer-management:
+    image: ecommerceddd-customer-management
+    container_name: ecommerceddd-customer-management
     build:
       context: .
       dockerfile: src/Services/EcommerceDDD.CustomerManagement/Dockerfile
@@ -247,7 +247,7 @@ services:
       ASPNETCORE_ENVIRONMENT: '${ASPNETCORE_ENVIRONMENT:-Development}'
       ASPNETCORE_URLS: 'http://+:80'   
     healthcheck:      
-      test: curl --fail http://ecommerceddd-customers:80/health || exit 1
+      test: curl --fail http://ecommerceddd-customer-management:80/health || exit 1
       interval: 10s
       timeout: 30s
       retries: 5
@@ -265,9 +265,9 @@ services:
       ecommerceddd-identityserver:
         condition: service_started      
 
-  ecommerceddd-products:
-    image: ecommerceddd-products
-    container_name: ecommerceddd-products
+  ecommerceddd-product-catalog:
+    image: ecommerceddd-product-catalog
+    container_name: ecommerceddd-product-catalog
     build:
       context: .
       dockerfile: src/Services/EcommerceDDD.ProductCatalog/Dockerfile
@@ -275,7 +275,7 @@ services:
       ASPNETCORE_ENVIRONMENT: '${ASPNETCORE_ENVIRONMENT:-Development}'
       ASPNETCORE_URLS: 'http://+:80'    
     healthcheck:
-      test: curl --fail http://ecommerceddd-products:80/health || exit 1
+      test: curl --fail http://ecommerceddd-product-catalog:80/health || exit 1
       interval: 40s
       timeout: 30s
       retries: 3
@@ -293,9 +293,9 @@ services:
       ecommerceddd-identityserver:
         condition: service_started      
 
-  ecommerceddd-inventory:
-    image: ecommerceddd-inventory
-    container_name: ecommerceddd-inventory
+  ecommerceddd-inventory-management:
+    image: ecommerceddd-inventory-management
+    container_name: ecommerceddd-inventory-management
     build:
       context: .
       dockerfile: src/Services/EcommerceDDD.InventoryManagement/Dockerfile
@@ -305,7 +305,7 @@ services:
     ports:
       - '8003:80'    
     healthcheck:      
-      test: curl --fail http://ecommerceddd-inventory:80/health || exit 1
+      test: curl --fail http://ecommerceddd-inventory-management:80/health || exit 1
       interval: 40s
       timeout: 30s
       retries: 3
@@ -317,14 +317,14 @@ services:
     depends_on:
       postgres:
         condition: service_healthy      
-      ecommerceddd-products:
+      ecommerceddd-product-catalog:
         condition: service_started
       ecommerceddd-identityserver:
         condition: service_started
       
-  ecommerceddd-quotes:
-    image: ecommerceddd-quotes
-    container_name: ecommerceddd-quotes
+  ecommerceddd-quote-management:
+    image: ecommerceddd-quote-management
+    container_name: ecommerceddd-quote-management
     build:
       context: .
       dockerfile: src/Services/EcommerceDDD.QuoteManagement/Dockerfile
@@ -332,7 +332,7 @@ services:
       ASPNETCORE_ENVIRONMENT: '${ASPNETCORE_ENVIRONMENT:-Development}'
       ASPNETCORE_URLS: 'http://+:80'    
     healthcheck:      
-      test: curl --fail http://ecommerceddd-quotes:80/health || exit 1
+      test: curl --fail http://ecommerceddd-quote-management:80/health || exit 1
       interval: 10s
       timeout: 30s
       retries: 5
@@ -347,14 +347,14 @@ services:
     depends_on:
       postgres:
         condition: service_healthy      
-      ecommerceddd-products:
+      ecommerceddd-product-catalog:
         condition: service_started
       ecommerceddd-identityserver:
         condition: service_started
 
-  ecommerceddd-orders:
-    image: ecommerceddd-orders
-    container_name: ecommerceddd-orders
+  ecommerceddd-order-processing:
+    image: ecommerceddd-order-processing
+    container_name: ecommerceddd-order-processing
     build:
       context: .
       dockerfile: src/Services/EcommerceDDD.OrderProcessing/Dockerfile
@@ -362,7 +362,7 @@ services:
       ASPNETCORE_ENVIRONMENT: '${ASPNETCORE_ENVIRONMENT:-Development}'
       ASPNETCORE_URLS: 'http://+:80'      
     healthcheck:      
-      test: curl --fail http://ecommerceddd-orders:80/health || exit 1
+      test: curl --fail http://ecommerceddd-order-processing:80/health || exit 1
       interval: 10s
       timeout: 30s
       retries: 5
@@ -381,14 +381,14 @@ services:
         condition: service_healthy
       connect:
         condition: service_healthy
-      ecommerceddd-products:
+      ecommerceddd-product-catalog:
         condition: service_started
       ecommerceddd-identityserver:
         condition: service_started   
 
-  ecommerceddd-payments:
-    image: ecommerceddd-payments
-    container_name: ecommerceddd-payments
+  ecommerceddd-payment-processing:
+    image: ecommerceddd-payment-processing
+    container_name: ecommerceddd-payment-processing
     build:
       context: .
       dockerfile: src/Services/EcommerceDDD.PaymentProcessing/Dockerfile
@@ -396,7 +396,7 @@ services:
       ASPNETCORE_ENVIRONMENT: '${ASPNETCORE_ENVIRONMENT:-Development}'
       ASPNETCORE_URLS: 'http://+:80'    
     healthcheck:      
-      test: curl --fail http://ecommerceddd-payments:80/health || exit 1
+      test: curl --fail http://ecommerceddd-payment-processing:80/health || exit 1
       interval: 10s
       timeout: 30s
       retries: 5
@@ -413,16 +413,16 @@ services:
         condition: service_healthy      
       kafka:
         condition: service_healthy
-      ecommerceddd-products:
+      ecommerceddd-product-catalog:
         condition: service_started
       connect:
         condition: service_healthy
       ecommerceddd-identityserver:
         condition: service_started         
 
-  ecommerceddd-shipments:
-    image: ecommerceddd-shipments
-    container_name: ecommerceddd-shipments
+  ecommerceddd-shipment-processing:
+    image: ecommerceddd-shipment-processing
+    container_name: ecommerceddd-shipment-processing
     build:
       context: .
       dockerfile: src/Services/EcommerceDDD.ShipmentProcessing/Dockerfile
@@ -430,7 +430,7 @@ services:
       ASPNETCORE_ENVIRONMENT: '${ASPNETCORE_ENVIRONMENT:-Development}'
       ASPNETCORE_URLS: 'http://+:80'    
     healthcheck:      
-      test: curl --fail http://ecommerceddd-shipments:80/health || exit 1
+      test: curl --fail http://ecommerceddd-shipment-processing:80/health || exit 1
       interval: 10s
       timeout: 30s
       retries: 5
@@ -447,12 +447,34 @@ services:
         condition: service_healthy      
       kafka:
         condition: service_healthy
-      ecommerceddd-products:
+      ecommerceddd-product-catalog:
         condition: service_started
       connect:
         condition: service_healthy
       ecommerceddd-identityserver:
         condition: service_started      
+
+  # Tool for regenerating Kiota API clients (Backend & Frontend)
+  # Usage: docker-compose --profile tools run regenerate-clients
+  regenerate-clients:
+    image: mcr.microsoft.com/dotnet/sdk:10.0
+    profiles: ["tools"]
+    working_dir: /src
+    volumes:
+      - ./src:/src
+      - ./scripts:/scripts
+    environment:
+      - DOTNET_NOLOGO=1
+    networks:
+      - ecommercedddnet
+    depends_on:
+      ecommerceddd-apigateway:
+        condition: service_healthy
+    entrypoint: >
+      bash -c "
+        dotnet tool install -g Microsoft.OpenApi.Kiota 2>/dev/null || true &&
+        export PATH=\"$$PATH:/root/.dotnet/tools\" &&
+        tr -d '\\015' < /scripts/regenerate-clients.sh | bash"
 
 networks:
   ecommercedddnet:

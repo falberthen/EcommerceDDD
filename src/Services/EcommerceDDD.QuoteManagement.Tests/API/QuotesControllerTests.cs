@@ -42,8 +42,8 @@ public class QuotesControllerTests
 		Assert.IsType<OkObjectResult>(response);
 		var okResult = (OkObjectResult)response;
 
-		Assert.IsType<ApiResponse<IList<QuoteEventHistory>>>(okResult.Value);
-		var apiResponse = (ApiResponse<IList<QuoteEventHistory>>)okResult.Value;
+		Assert.IsType<ApiResponse<IReadOnlyList<QuoteEventHistory>>>(okResult.Value);
+		var apiResponse = (ApiResponse<IReadOnlyList<QuoteEventHistory>>)okResult.Value;
 
 		Assert.Equal(expectedData.Count, apiResponse.Data!.Count);
 	}

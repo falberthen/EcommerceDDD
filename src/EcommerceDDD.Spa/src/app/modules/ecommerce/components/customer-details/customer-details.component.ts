@@ -64,7 +64,7 @@ export class CustomerDetailsComponent implements OnInit {
 
     try {
       this.loaderService.setLoading(true);
-      await this.kiotaClientService.client.api.v2.customers.update.put(
+      await this.kiotaClientService.client.customerManagement.api.v2.customers.update.put(
         customerUpdate
       );
 
@@ -80,13 +80,13 @@ export class CustomerDetailsComponent implements OnInit {
   async showCustomerStoredEvents() {
     try {
       this.loaderService.setLoading(true);
-      await this.kiotaClientService.client.api.v2.customers.history
+      await this.kiotaClientService.client.customerManagement.api.v2.customers.history
         .get()
         .then((result) => {
           if (result!.success) {
             this.storedEventService.showStoredEvents(
               this.storedEventViewerContainer,
-              result!.data!
+              result!.data ?? undefined
             );
           }
         });
@@ -108,7 +108,7 @@ export class CustomerDetailsComponent implements OnInit {
   private async loadCustomerDetails() {
     try {
       this.loaderService.setLoading(true);
-      await this.kiotaClientService.client.api.v2.customers.details
+      await this.kiotaClientService.client.customerManagement.api.v2.customers.details
         .get()
         .then((result) => {
           if (result!.success) {

@@ -55,7 +55,7 @@ public class CustomersController(
 	[HttpGet, Route("history")]
 	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanRead)]
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<IEventHistory>>))]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IReadOnlyList<CustomerEventHistory>>))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<IActionResult> ListHistory(CancellationToken cancellationToken) =>
 		await Response(

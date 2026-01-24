@@ -1,10 +1,8 @@
-﻿using EcommerceDDD.ServiceClients.ApiGateway.Models;
+﻿namespace EcommerceDDD.PaymentProcessing.Infrastructure.InventoryHandling;
 
-namespace EcommerceDDD.PaymentProcessing.Infrastructure.InventoryHandling;
-
-public class ProductInventoryHandler(ApiGatewayClient apiGatewayClient) : IProductInventoryHandler
+public class ProductInventoryHandler(InventoryManagementClient inventoryManagementClient) : IProductInventoryHandler
 {
-	private readonly ApiGatewayClient _apiGatewayClient = apiGatewayClient;
+	private readonly InventoryManagementClient _inventoryManagementClient = inventoryManagementClient;
 
 	public async Task<bool> CheckProductsInStockAsync(IReadOnlyList<ProductItem> productItems, CancellationToken cancellationToken)
 	{
@@ -20,7 +18,7 @@ public class ProductInventoryHandler(ApiGatewayClient apiGatewayClient) : IProdu
 
 		try
 		{
-			var inventoryRequestBuilder = _apiGatewayClient.Api.V2.Inventory;
+			var inventoryRequestBuilder = _inventoryManagementClient.Api.V2.Inventory;
 			var response = await inventoryRequestBuilder
 				.CheckStockQuantity
 				.PostAsync(request, cancellationToken: cancellationToken);
@@ -61,7 +59,7 @@ public class ProductInventoryHandler(ApiGatewayClient apiGatewayClient) : IProdu
 
 			try
 			{
-				var inventoryRequestBuilder = _apiGatewayClient.Api.V2.Inventory[productItem.ProductId.Value];
+				var inventoryRequestBuilder = _inventoryManagementClient.Api.V2.Inventory[productItem.ProductId.Value];
 				await inventoryRequestBuilder
 					.DecreaseStockQuantity
 					.PutAsync(request, cancellationToken: cancellationToken);

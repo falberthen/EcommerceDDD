@@ -1,14 +1,12 @@
-﻿using EcommerceDDD.ServiceClients.ApiGateway.Models;
-
-namespace EcommerceDDD.OrderProcessing.Application.Shipments.RecordingShipment;
+﻿namespace EcommerceDDD.OrderProcessing.Application.Shipments.RecordingShipment;
 
 public class RecordShipmentHandler(
-	ApiGatewayClient apiGatewayClient,
+	SignalRClient signalrClient,
 	IEventStoreRepository<Order> orderWriteRepository
 ) : ICommandHandler<RecordShipment>
 {
-	private readonly ApiGatewayClient _apiGatewayClient = apiGatewayClient
-		?? throw new ArgumentNullException(nameof(apiGatewayClient));
+	private readonly SignalRClient _signalrClient = signalrClient
+		?? throw new ArgumentNullException(nameof(signalrClient));
 	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository
 		?? throw new ArgumentNullException(nameof(orderWriteRepository));
 
@@ -36,7 +34,7 @@ public class RecordShipmentHandler(
 				OrderStatusCode = (int)order.Status
 			};
 
-			await _apiGatewayClient.Api.V2.Signalr.Updateorderstatus
+			await _signalrClient.Api.V2.Signalr.Updateorderstatus
 				.PostAsync(request, cancellationToken: cancellationToken);
 		}
 		catch (Microsoft.Kiota.Abstractions.ApiException ex)

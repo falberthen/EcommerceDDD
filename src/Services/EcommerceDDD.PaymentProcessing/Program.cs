@@ -10,8 +10,9 @@ services.AddCoreInfrastructure(builder.Configuration);
 services.AddHandlersFromType(typeof(RequestPaymentHandler));
 services.AddHealthChecks();
 
-// Kiota client
-services.AddApiGatewayClient(builder.Configuration);
+// Kiota clients
+services.AddKiotaClient<InventoryManagementClient>(builder.Configuration["Services:InventoryManagement"]);
+services.AddKiotaClient<CustomerManagementClient>(builder.Configuration["Services:CustomerManagement"]);
 
 // Services
 services.AddScoped<ICustomerCreditChecker, CustomerCreditChecker>();

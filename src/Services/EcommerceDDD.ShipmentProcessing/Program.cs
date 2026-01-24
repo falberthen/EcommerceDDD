@@ -11,9 +11,6 @@ services.AddCoreInfrastructure(builder.Configuration);
 services.AddHandlersFromType(typeof(RequestShipmentHandler));
 services.AddHealthChecks();
 
-// Kiota client
-services.AddApiGatewayClient(builder.Configuration);
-
 // Services
 services.AddScoped<IEventStoreRepository<Shipment>, MartenRepository<Shipment>>();
 

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ViewContainerRef, inject } from '@angular
 import { faList } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '@core/services/auth.service';
 import { SignalrService } from '@core/services/signalr.service';
-import { StoredEventService } from '@shared/services/stored-event.service';
+import { IEventHistory, StoredEventService } from '@shared/services/stored-event.service';
 import { ORDER_STATUS_CODES, SIGNALR } from '@ecommerce/constants/appConstants';
 import { LoaderService } from '@core/services/loader.service';
 import { KiotaClientService } from '@core/services/kiota-client.service';
@@ -29,6 +29,7 @@ export class OrdersComponent implements OnInit {
   orders: OrderViewModel[] = [];
   storedEventsViewerComponentRef: any;
   hubHelloMessage!: string;
+  eventHistory: IEventHistory[] = [];
 
   async ngOnInit() {
     if (this.authService.currentCustomer) {
@@ -60,14 +61,14 @@ export class OrdersComponent implements OnInit {
 
   async showOrderStoredEvents(orderId: string) {
     try {
-      await this.kiotaClientService.client.api.v2.orders
+      await this.kiotaClientService.client.orderProcessing.api.v2.orders
         .byOrderId(orderId)
         .history.get()
         .then((result) => {
           if (result!.success) {
             this.storedEventService.showStoredEvents(
               this.storedEventViewerContainer,
-              result?.data!
+              result?.data ?? undefined
             );
           }
         });
@@ -78,7 +79,7 @@ export class OrdersComponent implements OnInit {
 
   async loadOrders() {
     try {
-      await this.kiotaClientService.client.api.v2.orders.get().then((result) => {
+      await this.kiotaClientService.client.orderProcessing.api.v2.orders.get().then((result) => {
         if (result!.success) {
           this.orders = result?.data!;
         }

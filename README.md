@@ -68,7 +68,7 @@ It defines the building blocks and abstractions used on all underlying projects.
 It holds some abstractions and implementation for infrastructure to be used by all microservices and underlying dependencies.
 
 - **Crosscutting** <br/>
-It contains project implementations that cross-cut all microservices, such as `IdentityServer` and `API gateway`.
+It contains project implementations that cross-cut all microservices, such as `IdentityServer`, `API gateway`, and `ServiceClients`. The `ServiceClients` project provides typed Kiota-generated HTTP clients for direct service-to-service communication.
 
 - **Services** <br/>
 The microservices composing the backend are built to be as simple as possible, structured as a vertically sliced structure with  `API`, `Application`, `Domain,` and `Infrastructure.`
@@ -98,6 +98,16 @@ The microservices composing the backend are built to be as simple as possible, s
 
 ---
 
+## Service Communication
+
+### External Communication (SPA → Backend)
+The Angular SPA communicates with microservices through the **API Gateway**. The gateway uses [Koalesce.OpenAPI](https://github.com/falberthen/Koalesce) to aggregate all service OpenAPI specifications into a unified spec. **Kiota** then generates typed TypeScript clients from this unified specification for frontend consumption.
+
+### Internal Communication (Service-to-Service)
+Microservices communicate directly with each other using **Kiota-generated typed HTTP clients**, bypassing the API Gateway for internal operations. Each service has its own dedicated client.
+
+---
+
 ## Technologies used
 <ul>
   <li>
@@ -105,7 +115,7 @@ The microservices composing the backend are built to be as simple as possible, s
     for cross-platform backend with:
     <ul>
       <li>.NET 10</li>
-      <li><b>Koalesce.OpenAPI 1.0.0-alpha.3</b></li>
+      <li><b>Koalesce.OpenAPI 1.0.0-alpha.10</b></li>
       <li>Ocelot 24.1.0</li>
       <li>Marten 8.17.0</li>
       <li>Confluent Kafka 2.13.0</li>
@@ -123,7 +133,6 @@ The microservices composing the backend are built to be as simple as possible, s
   <li>
     <a href='https://angular.io/' target="_blank">Angular v19.2.7</a> and <a href='http://www.typescriptlang.org/' target="_blank">TypeScript 5.5.4</a> for the frontend with:
     <ul>
-      <li>Microsoft Kiota Bundle library for TypeScript 1.0.0-preview.99</li>
       <li>Jest 29.7.0</li>
       <li>NgBootstrap 18.0.0/ Bootstrap 5.3.5</li>
       <li>Font Awesome 6.7.2</li>
@@ -151,7 +160,19 @@ Using a terminal, run:
  $ docker-compose up
 ``` 
 
-You can also set the `docker-compose.dcproj` as a Startup project on Visual Studio if you want to run it while debugging. 
+You can also set the `docker-compose.dcproj` as a Startup project on Visual Studio if you want to run it while debugging.
+
+#### Regenerating Kiota Clients
+
+After the containers are running, you can regenerate all Kiota HTTP clients (both backend and frontend) by executing:
+
+```console
+ $ docker-compose --profile tools run regenerate-clients
+```
+
+This generates:
+- **Backend clients** (C#): Service-to-service typed clients in `ServiceClients/Kiota/`
+- **Frontend client** (TypeScript): Unified client for the SPA in `EcommerceDDD.Spa/src/app/clients/`
 
 ---
 

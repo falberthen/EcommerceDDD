@@ -1,10 +1,9 @@
-﻿using EcommerceDDD.ServiceClients.ApiGateway.Models;
+﻿namespace EcommerceDDD.OrderProcessing.Application.Payments.CancelingPayment;
 
-namespace EcommerceDDD.OrderProcessing.Application.Payments.CancelingPayment;
-
-public class RequestCancelPaymentHandler(ApiGatewayClient apiGatewayClient) : ICommandHandler<RequestCancelPayment>
+public class RequestCancelPaymentHandler(PaymentProcessingClient paymentProcessingClient) : ICommandHandler<RequestCancelPayment>
 {
-	private readonly ApiGatewayClient _apiGatewayClient = apiGatewayClient;
+	private readonly PaymentProcessingClient _paymentProcessingClient = paymentProcessingClient
+		?? throw new ArgumentNullException(nameof(paymentProcessingClient));
 
 	public async Task HandleAsync(RequestCancelPayment command, CancellationToken cancellationToken)
 	{
@@ -15,7 +14,7 @@ public class RequestCancelPaymentHandler(ApiGatewayClient apiGatewayClient) : IC
 
 		try
 		{
-			var paymentsRequestBuilder = _apiGatewayClient.Api.V2.Payments[command.PaymentId.Value];
+			var paymentsRequestBuilder = _paymentProcessingClient.Api.V2.Payments[command.PaymentId.Value];
 			await paymentsRequestBuilder
 				.DeleteAsync(cancelRequest, cancellationToken: cancellationToken);
 		}

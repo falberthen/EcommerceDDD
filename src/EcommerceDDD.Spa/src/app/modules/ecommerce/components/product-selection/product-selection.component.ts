@@ -65,7 +65,7 @@ export class ProductSelectionComponent implements OnInit {
       };
 
       this.loaderService.setLoading(true);
-      await this.kiotaClientService.client.api.v2.products
+      await this.kiotaClientService.client.productCatalog.api.v2.products
         .post(request)
         .then((result) => {
           if (result?.data) {

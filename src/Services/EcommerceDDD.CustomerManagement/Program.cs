@@ -11,7 +11,9 @@ services.AddHandlersFromType(typeof(RegisterCustomerHandler));
 services.AddHealthChecks();
 
 // Kiota client
-services.AddApiGatewayClient(builder.Configuration);
+services.AddKiotaClient<IdentityServerClient>(
+	builder.Configuration["Services:IdentityServer"]
+);
 
 // Services
 services.AddScoped<IEmailUniquenessChecker, EmailUniquenessChecker>();

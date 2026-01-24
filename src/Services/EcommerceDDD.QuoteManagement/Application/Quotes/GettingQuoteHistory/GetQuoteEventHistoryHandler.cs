@@ -2,16 +2,17 @@
 
 public class GetQuoteEventHistoryHandler(
 	IQuerySession querySession
-) : IQueryHandler<GetQuoteEventHistory, IList<QuoteEventHistory>> 
+) : IQueryHandler<GetQuoteEventHistory, IReadOnlyList<QuoteEventHistory>> 
 {
     private readonly IQuerySession _querySession = querySession;
 
-    public Task<IList<QuoteEventHistory>> HandleAsync(GetQuoteEventHistory query, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<QuoteEventHistory>> HandleAsync(GetQuoteEventHistory query, CancellationToken cancellationToken)
     {
-        var quoteHistory = _querySession.Query<QuoteEventHistory>()
-           .OrderBy(c => c.Timestamp)
-           .Where(c => c.AggregateId == query.QuoteId.Value);
+		var quoteHistory = await _querySession.Query<QuoteEventHistory>()
+		   .Where(c => c.AggregateId == query.QuoteId.Value)
+		   .OrderBy(c => c.Timestamp)
+			.ToListAsync(cancellationToken);
 
-        return Task.FromResult<IList<QuoteEventHistory>>(quoteHistory.ToList());
+		return quoteHistory;
     }
 }

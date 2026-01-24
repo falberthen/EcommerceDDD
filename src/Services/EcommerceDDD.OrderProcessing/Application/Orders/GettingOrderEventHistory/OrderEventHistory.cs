@@ -5,7 +5,7 @@ public record OrderEventHistory(
     Guid AggregateId,
     string EventTypeName,
     string EventData,
-    DateTime Timestamp) : IEventHistory
+    DateTime Timestamp) : Core.Infrastructure.Marten.IEventHistory
 {
     public static OrderEventHistory Create(JasperFx.Events.IEvent @event, Guid aggregateId)
     {

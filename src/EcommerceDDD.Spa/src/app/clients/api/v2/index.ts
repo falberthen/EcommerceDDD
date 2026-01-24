@@ -4,22 +4,6 @@
 // @ts-ignore
 import { AccountsRequestBuilderNavigationMetadata, type AccountsRequestBuilder } from './accounts/index.js';
 // @ts-ignore
-import { CustomersRequestBuilderNavigationMetadata, CustomersRequestBuilderRequestsMetadata, type CustomersRequestBuilder } from './customers/index.js';
-// @ts-ignore
-import { InventoryRequestBuilderNavigationMetadata, type InventoryRequestBuilder } from './inventory/index.js';
-// @ts-ignore
-import { OrdersRequestBuilderNavigationMetadata, OrdersRequestBuilderRequestsMetadata, type OrdersRequestBuilder } from './orders/index.js';
-// @ts-ignore
-import { PaymentsRequestBuilderNavigationMetadata, PaymentsRequestBuilderRequestsMetadata, type PaymentsRequestBuilder } from './payments/index.js';
-// @ts-ignore
-import { ProductsRequestBuilderRequestsMetadata, type ProductsRequestBuilder } from './products/index.js';
-// @ts-ignore
-import { QuotesRequestBuilderNavigationMetadata, QuotesRequestBuilderRequestsMetadata, type QuotesRequestBuilder } from './quotes/index.js';
-// @ts-ignore
-import { ShipmentsRequestBuilderRequestsMetadata, type ShipmentsRequestBuilder } from './shipments/index.js';
-// @ts-ignore
-import { SignalrRequestBuilderNavigationMetadata, type SignalrRequestBuilder } from './signalr/index.js';
-// @ts-ignore
 import { type BaseRequestBuilder, type KeysToExcludeForNavigationMetadata, type NavigationMetadata } from '@microsoft/kiota-abstractions';
 
 /**
@@ -30,38 +14,6 @@ export interface V2RequestBuilder extends BaseRequestBuilder<V2RequestBuilder> {
      * The accounts property
      */
     get accounts(): AccountsRequestBuilder;
-    /**
-     * The customers property
-     */
-    get customers(): CustomersRequestBuilder;
-    /**
-     * The inventory property
-     */
-    get inventory(): InventoryRequestBuilder;
-    /**
-     * The orders property
-     */
-    get orders(): OrdersRequestBuilder;
-    /**
-     * The payments property
-     */
-    get payments(): PaymentsRequestBuilder;
-    /**
-     * The products property
-     */
-    get products(): ProductsRequestBuilder;
-    /**
-     * The quotes property
-     */
-    get quotes(): QuotesRequestBuilder;
-    /**
-     * The shipments property
-     */
-    get shipments(): ShipmentsRequestBuilder;
-    /**
-     * The signalr property
-     */
-    get signalr(): SignalrRequestBuilder;
 }
 /**
  * Uri template for the request builder.
@@ -73,34 +25,6 @@ export const V2RequestBuilderUriTemplate = "{+baseurl}/api/v2";
 export const V2RequestBuilderNavigationMetadata: Record<Exclude<keyof V2RequestBuilder, KeysToExcludeForNavigationMetadata>, NavigationMetadata> = {
     accounts: {
         navigationMetadata: AccountsRequestBuilderNavigationMetadata,
-    },
-    customers: {
-        requestsMetadata: CustomersRequestBuilderRequestsMetadata,
-        navigationMetadata: CustomersRequestBuilderNavigationMetadata,
-    },
-    inventory: {
-        navigationMetadata: InventoryRequestBuilderNavigationMetadata,
-    },
-    orders: {
-        requestsMetadata: OrdersRequestBuilderRequestsMetadata,
-        navigationMetadata: OrdersRequestBuilderNavigationMetadata,
-    },
-    payments: {
-        requestsMetadata: PaymentsRequestBuilderRequestsMetadata,
-        navigationMetadata: PaymentsRequestBuilderNavigationMetadata,
-    },
-    products: {
-        requestsMetadata: ProductsRequestBuilderRequestsMetadata,
-    },
-    quotes: {
-        requestsMetadata: QuotesRequestBuilderRequestsMetadata,
-        navigationMetadata: QuotesRequestBuilderNavigationMetadata,
-    },
-    shipments: {
-        requestsMetadata: ShipmentsRequestBuilderRequestsMetadata,
-    },
-    signalr: {
-        navigationMetadata: SignalrRequestBuilderNavigationMetadata,
     },
 };
 /* tslint:enable */
