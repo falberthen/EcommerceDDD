@@ -13,9 +13,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Koalesce.OpenAPI" Version="1.0.0-alpha.10" />
-		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
-		<PackageReference Include="Ocelot" Version="24.1.0" />
+		<PackageReference Include="Koalesce.OpenAPI" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
+		<PackageReference Include="Ocelot" />
 	</ItemGroup>
 
 	<ItemGroup>
