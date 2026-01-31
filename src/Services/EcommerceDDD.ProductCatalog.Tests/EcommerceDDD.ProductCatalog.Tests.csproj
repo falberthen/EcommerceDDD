@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
@@ -9,7 +9,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" />
 		<ProjectReference Include="..\..\Core\EcommerceDDD.Core.Infrastructure.Tests\EcommerceDDD.Core.Infrastructure.Tests.csproj" />
 		<ProjectReference Include="..\EcommerceDDD.ProductCatalog\EcommerceDDD.ProductCatalog.csproj" />
 	</ItemGroup>

@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "UpstreamPathTemplate": "/InventoryManagement/api/v{version}/inventory/{everything}",
+      "UpstreamPathTemplate": "/inventoryManagement/api/v{version}/inventory/{everything}",
       "DownstreamPathTemplate": "/api/v{version}/inventory/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

@@ -1,186 +1,190 @@
+# 🛒 EcommerceDDD
+
+An experimental full-stack application showcasing cutting-edge technologies and architectural patterns for building scalable e-commerce systems.
+
+⭐ **If you find this project useful, please consider giving it a star!** It helps others discover the project.
+
+![GitHub Stars](https://img.shields.io/github/stars/falberthen/ecommerceddd?style=social&logo=github)
+
+![.NET](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet) ![Angular](https://img.shields.io/badge/Angular-19-DD0031?logo=angular) ![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker)
 ![Build](https://github.com/falberthen/ecommerceddd/actions/workflows/ecommerceddd-build.yml/badge.svg)
 [![License](https://img.shields.io/github/license/falberthen/ecommerceddd.svg)](LICENSE)
-
-## Welcome to Ecommerce DDD
-This project is an experimental full-stack application I use to combine several cutting-edge technologies and architectural patterns. Thanks for getting here! please <b>give a ⭐</b> if you liked the project. It motivates me to keep improving it.
-<br><br>
-
-<a href="images/ecommerceddd-1.gif" target="_blank">
-<img src="images/ecommerceddd-1.gif" width="600px"/>
-</a>
-
-<a href="images/ecommerceddd-2.gif" target="_blank">
-<img src="images/ecommerceddd-2.gif" width="600px"/>
-</a>
-
-<a href="images/ecommerceddd-3.gif" target="_blank">
-<img src="images/ecommerceddd-3.gif" width="600px"/>
-</a>
-
----
-
-## Architecture
-
-### High-Level System Architecture
-<a href="images/EcommerceDDD-hl-architecture.png" target="_blank">
-<img src="images/EcommerceDDD-hl-architecture.png"/>
-</a>
-
-
-### Detailed Architecture
-<a href="images/EcommerceDDD-detailed-architecture.png" target="_blank">
-<img src="images/EcommerceDDD-detailed-architecture.png"/>
-</a>
-
-
-```
-├── Core
-├── Core.Infrastructure
-│
-├── Crosscutting
-│   ├── ServiceClients
-│   ├── ApiGateway
-│   ├── SignalR
-│   └── IdentityServer
-│
-├── Services
-│   ├── CustomerManagement
-│   ├── InventoryManagement
-│   ├── OrderProcessing
-│   ├── PaymentProcessing
-│   ├── ProductCatalog
-|   |   └─ EcommerceDDD.ProductCatalog
-│   │      ├── API
-│   │      ├── Application
-│   │      ├── Domain
-│   │      └── Infrastructure
-│   ├── QuoteManagement
-│   └── ShipmentProcessing
-│
-├── SPA
-└── docker-compose
-```
-
-- **Core** <br/>
-It defines the building blocks and abstractions used on all underlying projects. Its nature is very abstract, with no implementations.
-
-- **Core.Infrastructure** <br/>
-It holds some abstractions and implementation for infrastructure to be used by all microservices and underlying dependencies.
-
-- **Crosscutting** <br/>
-It contains project implementations that cross-cut all microservices, such as `IdentityServer`, `API gateway`, and `ServiceClients`. The `ServiceClients` project provides typed Kiota-generated HTTP clients for direct service-to-service communication.
-
-- **Services** <br/>
-The microservices composing the backend are built to be as simple as possible, structured as a vertically sliced structure with  `API`, `Application`, `Domain,` and `Infrastructure.`
-
-    ```
-      ├── EcommerceDDD.ProductCatalog
-      │   ├── API
-      │   ├── Application
-      │   ├── Domain
-      │   └── Infrastructure
-    ```
-
-  - **API** <br/>
-  RESTful API for enabling communication between client and server.
-
-  - **Application** <br/> 
-  It orchestrates the interactions between the external world and the domain to perform application tasks through use cases by `handling commands and queries`. 
-
-  - **Domain** <br/>
-  A structured implementation of the domain through aggregates, commands, value objects, domain services, repository definitions, and domain events.
-
-  - **Infrastructure** <br/>
-  It is a supporting library for upper layers, handling infrastructural matters such as data persistence with *implementing repositories*, database mapping, and external integrations.
-
-  - **SPA (Single Page Application)** <br/>
-  A lightweight Angular-based `SPA` providing a functional and user-friendly UI.
-
----
-
-## Service Communication
-
-### External Communication (SPA → Backend)
-The Angular SPA communicates with microservices through the **API Gateway**. The gateway uses [Koalesce.OpenAPI](https://github.com/falberthen/Koalesce) to aggregate all service OpenAPI specifications into a unified spec. **Kiota** then generates typed TypeScript clients from this unified specification for frontend consumption.
-
-### Internal Communication (Service-to-Service)
-Microservices communicate directly with each other using **Kiota-generated typed HTTP clients**, bypassing the API Gateway for internal operations. Each service has its own dedicated client.
-
----
-
-## Technologies used
-<ul>
-  <li>
-    <a href='https://get.asp.net' target="_blank">ASP.NET Core API</a> and <a href='https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-12' target="_blank">C# 12</a>
-    for cross-platform backend with:
-    <ul>
-      <li>.NET 10</li>
-      <li><b>Koalesce.OpenAPI 1.0.0-alpha.10</b></li>
-      <li>Ocelot 24.1.0</li>
-      <li>Marten 8.17.0</li>
-      <li>Confluent Kafka 2.13.0</li>
-      <li>Entity Framework Core 10.0.1</li>
-      <li>Npgsql.EntityFrameworkCore.PostgreSQL 10.0.0</li>
-      <li>ASP.NET Core Authentication JwtBearer 10.0.1</li>
-      <li>Duende IdentityServer 7.4.4</li>
-      <li>Polly 8.6.5</li>
-      <li>XUnit 2.9.3</li>
-      <li>NSubstitute 5.3.0</li>
-      <li>SwaggerGen/SwaggerUI 8.1.4</li>
-      <li>Microsoft.Kiota.* 1.21.1</li>
-    </ul>
-  </li>
-  <li>
-    <a href='https://angular.io/' target="_blank">Angular v19.2.7</a> and <a href='http://www.typescriptlang.org/' target="_blank">TypeScript 5.5.4</a> for the frontend with:
-    <ul>
-      <li>Jest 29.7.0</li>
-      <li>NgBootstrap 18.0.0/ Bootstrap 5.3.5</li>
-      <li>Font Awesome 6.7.2</li>
-      <li>Toastr 19.0.0</li>
-    </ul>
-  </li>
-</ul>
-
----
-
-## What do you need to run it 
-
-#### Running the microservices using Docker
-
-The project was designed to be easily run within docker containers, hence all you need is 1 command line to up everything. Make sure you have `Docker` installed and have fun!
-
-
-- Download Docker: <a href="https://docs.docker.com/docker-for-windows/wsl/" target="_blank">Docker Desktop with support for WLS 2</a>
-    
 <br/>
 
-Using a terminal, run:
+<p align="center">
+  <img src="images/ecommerceddd-1.gif" width="600" alt="Demo 1"/>
+</p>
 
-```console
- $ docker-compose up
-``` 
+<p align="center">
+  <img src="images/ecommerceddd-2.gif" width="600" alt="Demo 2"/>
+</p>
 
-You can also set the `docker-compose.dcproj` as a Startup project on Visual Studio if you want to run it while debugging.
+<p align="center">
+  <img src="images/ecommerceddd-3.gif" width="600" alt="Demo 3"/>
+</p>
 
-#### Regenerating Kiota Clients
+---
 
-After the containers are running, you can regenerate all Kiota HTTP clients (both backend and frontend) by executing:
+## 🏗️ Architecture
 
-```console
- $ docker-compose --profile tools run regenerate-clients
+### High-Level Overview
+
+<p align="center">
+  <img src="images/EcommerceDDD-hl-architecture.png" alt="High-Level Architecture"/>
+</p>
+
+### Detailed Architecture
+
+<p align="center">
+  <img src="images/EcommerceDDD-detailed-architecture.png" alt="Detailed Architecture"/>
+</p>
+
+---
+
+## 📁 Project Structure
+
+```
+├── Core                    # Building blocks and abstractions
+├── Core.Infrastructure     # Shared infrastructure implementations
+│
+├── Crosscutting
+│   ├── ServiceClients      # Kiota-generated HTTP clients
+│   ├── ApiGateway          # Ocelot API Gateway
+│   ├── SignalR             # Real-time communication
+│   └── IdentityServer      # Authentication & authorization
+│
+├── Services
+│   ├── CustomerManagement
+│   ├── InventoryManagement
+│   ├── OrderProcessing
+│   ├── PaymentProcessing
+│   ├── ProductCatalog
+│   ├── QuoteManagement
+│   └── ShipmentProcessing
+│
+├── SPA                     # Angular frontend
+└── docker-compose          # Container orchestration
+```
+
+
+| Layer | |
+|-------|-------------|
+| **Core** | Defines building blocks and abstractions used across all projects. Highly abstract with no implementations. |
+| **Core.Infrastructure** | Shared infrastructure abstractions and implementations for all microservices. |
+| **Crosscutting** | Projects that cross-cut all microservices: `IdentityServer`, `API Gateway`, and `ServiceClients` with Kiota-generated HTTP clients. |
+| **Services** | Backend microservices built with a vertically sliced structure. |
+| **SPA** | Lightweight Angular-based Single Page Application. |
+
+<br/>
+
+### Microservice Structure
+
+Each microservice follows a clean vertical slice architecture.
+
+```
+├── EcommerceDDD.ProductCatalog
+│   ├── API              # RESTful endpoints
+│   ├── Application      # Use cases, commands & queries
+│   ├── Domain           # Aggregates, entities, domain events
+│   └── Infrastructure   # Data persistence & external integrations
+```
+
+---
+
+## 🔗 Service Communication
+
+#### External Communication (SPA → Backend)
+
+- [Koalesce.OpenAPI](https://github.com/falberthen/Koalesce) aggregates all OpenAPI definitions exposed in the **API Gateway**.
+- **Kiota** generates typed TypeScript clients from this unified spec.
+- The Angular SPA communicates through the **API Gateway** using the clients.
+
+#### Internal Communication (Service-to-Service)
+
+Microservices communicate directly using **Kiota-generated typed HTTP clients**.
+
+---
+
+## 🛠️ Tech Stack
+
+### Backend
+
+| Technology | Version |
+|------------|---------|
+| .NET | 10 |
+| C# | 12 |
+| Koalesce.OpenAPI | 1.0.0-alpha.12 |
+| Ocelot | 24.1.0 |
+| Marten | 8.19.0 |
+| Confluent Kafka | 2.13.0 |
+| Entity Framework Core | 10.0.2 |
+| Npgsql (PostgreSQL) | 10.0.0 |
+| Duende IdentityServer | 7.4.5 |
+| Polly | 8.6.5 |
+| Microsoft Kiota | 1.21.2 |
+| xUnit | 2.9.3 |
+| NSubstitute | 5.3.0 |
+
+### Frontend
+
+| Technology | Version |
+|------------|---------|
+| Angular | 19.2.7 |
+| TypeScript | 5.5.4 |
+| Jest | 29.7.0 |
+| NgBootstrap | 18.0.0 |
+| Bootstrap | 5.3.5 |
+| Font Awesome | 6.7.2 |
+| Toastr | 19.0.0 |
+
+---
+
+## 🔌 Getting Started
+
+### Running with Docker
+
+```bash
+# Start all services
+docker-compose up
+```
+
+> 💡 **Tip:** You can also set `docker-compose.dcproj` as the startup project in Visual Studio for debugging.
+
+<br/>
+
+
+### Running the Angular SPA
+
+```bash
+cd EcommerceDDD.Spa
+npm install
+ng serve
+```
+
+Open your browser at `http://localhost:4200`
+
+<br/>
+
+### Regenerating Kiota Clients
+
+If you want to regenerate all typed HTTP clients, after containers are running:
+
+```bash
+docker-compose --profile tools run regenerate-clients
 ```
 
 This generates:
-- **Backend clients** (C#): Service-to-service typed clients in `ServiceClients/Kiota/`
-- **Frontend client** (TypeScript): Unified client for the SPA in `EcommerceDDD.Spa/src/app/clients/`
+- **Backend clients (C#):** `ServiceClients/Kiota/`
+- **Single Frontend client (TypeScript):** `EcommerceDDD.Spa/src/app/clients/`
 
 ---
 
-### Running the Angular SPA
-    
-Using a terminal, navigate to `EcommerceDDD.Spa` and run for the following commands the node packages and serving the SPA on `http://localhost:4200` respectively:
+## 📄 License
 
-```console
- $ npm install
- $ ng serve
-```
+This project is licensed under the terms of the [LICENSE](LICENSE) file.
+
+---
+
+<p align="center">
+  Made with ❤️ by <a href="https://github.com/falberthen">Felipe Henrique</a>
+</p>

@@ -9,6 +9,7 @@
     <DockerServiceName>ecommerceddd.orders</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="Directory.Packages.props" />
     <None Include="docker-compose.yml" />
   </ItemGroup>
 </Project>

@@ -83,7 +83,7 @@
         "PUT",
         "DELETE"
       ],
-      "UpstreamPathTemplate": "/CustomerManagement/api/v{version}/customers/{everything}",
+      "UpstreamPathTemplate": "/customerManagement/api/v{version}/customers/{everything}",
       "AuthenticationOptions": null,
       "CacheOptions": null,
       "DownstreamHttpVersionPolicy": null,
@@ -133,7 +133,7 @@
         "POST",
         "PUT"
       ],
-      "UpstreamPathTemplate": "/InventoryManagement/api/v{version}/inventory/{everything}",
+      "UpstreamPathTemplate": "/inventoryManagement/api/v{version}/inventory/{everything}",
       "AuthenticationOptions": {
         "AllowedScopes": null,
         "AllowAnonymous": null,
@@ -191,7 +191,7 @@
         "DELETE",
         "POST"
       ],
-      "UpstreamPathTemplate": "/OrderProcessing/api/v{version}/orders/{everything}",
+      "UpstreamPathTemplate": "/orderProcessing/api/v{version}/orders/{everything}",
       "AuthenticationOptions": {
         "AllowedScopes": null,
         "AllowAnonymous": null,
@@ -247,7 +247,7 @@
         "POST",
         "DELETE"
       ],
-      "UpstreamPathTemplate": "/PaymentProcessing/api/v{version}/payments/{everything}",
+      "UpstreamPathTemplate": "/paymentProcessing/api/v{version}/payments/{everything}",
       "AuthenticationOptions": {
         "AllowedScopes": null,
         "AllowAnonymous": null,
@@ -303,7 +303,7 @@
         "POST",
         "GET"
       ],
-      "UpstreamPathTemplate": "/ProductCatalog/api/v{version}/products",
+      "UpstreamPathTemplate": "/productCatalog/api/v{version}/products",
       "AuthenticationOptions": {
         "AllowedScopes": null,
         "AllowAnonymous": null,
@@ -418,7 +418,7 @@
         "PUT",
         "DELETE"
       ],
-      "UpstreamPathTemplate": "/QuoteManagement/api/v{version}/quotes/{everything}",
+      "UpstreamPathTemplate": "/quoteManagement/api/v{version}/quotes/{everything}",
       "AuthenticationOptions": {
         "AllowedScopes": null,
         "AllowAnonymous": null,
@@ -473,7 +473,7 @@
       "UpstreamHttpMethod": [
         "POST"
       ],
-      "UpstreamPathTemplate": "/ShipmentProcessing/api/v{version}/shipments",
+      "UpstreamPathTemplate": "/shipmentProcessing/api/v{version}/shipments",
       "AuthenticationOptions": {
         "AllowedScopes": null,
         "AllowAnonymous": null,
