@@ -1,6 +1,4 @@
-﻿using Swashbuckle.AspNetCore.SwaggerGen;
-
-namespace EcommerceDDD.Core.Infrastructure.WebApi;
+﻿namespace EcommerceDDD.Core.Infrastructure.WebApi;
 
 public static class SwaggerExtension
 {
@@ -14,9 +12,9 @@ public static class SwaggerExtension
 		if (swaggerSettings is null)
 			return services;
 
-		services.AddSwaggerGen(s =>
+		services.AddSwaggerGen(options =>
 		{
-			s.SwaggerDoc(swaggerSettings.Version, new OpenApiInfo
+			options.SwaggerDoc(swaggerSettings.Version, new OpenApiInfo
 			{
 				Version = swaggerSettings.Version,
 				Title = swaggerSettings.Title,
@@ -25,16 +23,17 @@ public static class SwaggerExtension
 				License = new OpenApiLicense() { Name = "MIT", Url = new Uri("https://github.com/falberthen/EcommerceDDD/blob/master/LICENSE") }
 			});
 
-			s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+			options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
 			{
-				Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-				Name = "Authorization",
-				In = ParameterLocation.Header,
 				Type = SecuritySchemeType.Http,
-				Scheme = "Bearer"
+				Scheme = "bearer",
+				BearerFormat = "JWT",
+				In = ParameterLocation.Header,
+				Name = "Authorization",
+				Description = "JWT Authorization header using the Bearer scheme."
 			});
-
-			s.OperationFilter<AuthorizeCheckOperationFilter>();
+			
+			options.OperationFilter<SecurityRequirementsOperationFilter>();
 		});
 
 		return services;
@@ -58,41 +57,5 @@ public static class SwaggerExtension
 		});
 
 		return app;
-	}
-}
-
-public class AuthorizeCheckOperationFilter : IOperationFilter
-{
-	public void Apply(OpenApiOperation operation, OperationFilterContext context)
-	{
-		var hasAuthorize = context.MethodInfo.DeclaringType.GetCustomAttributes(true).OfType<AuthorizeAttribute>().Any()
-			|| context.MethodInfo.GetCustomAttributes(true).OfType<AuthorizeAttribute>().Any();
-
-		var allowAnonymous = context.MethodInfo.DeclaringType.GetCustomAttributes(true).OfType<AllowAnonymousAttribute>().Any()
-			|| context.MethodInfo.GetCustomAttributes(true).OfType<AllowAnonymousAttribute>().Any();
-
-		if (hasAuthorize && !allowAnonymous)
-		{
-			operation.Security = new List<OpenApiSecurityRequirement>
-			{
-				new OpenApiSecurityRequirement
-				{
-					{
-						new OpenApiSecurityScheme
-						{
-							Reference = new OpenApiReference
-							{
-								Type = ReferenceType.SecurityScheme,
-								Id = "Bearer"
-							}
-						},
-						new string[] {}
-					}
-				}
-			};
-
-			operation.Responses.TryAdd("401", new OpenApiResponse { Description = "Unauthorized" });
-			operation.Responses.TryAdd("403", new OpenApiResponse { Description = "Forbidden" });
-		}
 	}
 }
