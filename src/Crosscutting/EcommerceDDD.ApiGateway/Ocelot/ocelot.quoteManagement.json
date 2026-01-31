@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "UpstreamPathTemplate": "/QuoteManagement/api/v{version}/quotes/{everything}",
+      "UpstreamPathTemplate": "/quoteManagement/api/v{version}/quotes/{everything}",
       "DownstreamPathTemplate": "/api/v{version}/quotes/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

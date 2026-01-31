@@ -1,27 +1,27 @@
 {
   "Routes": [
     {
-      "UpstreamPathTemplate": "/ProductCatalog/api/v{version}/products",
-      "DownstreamPathTemplate": "/api/v{version}/products",
+      "UpstreamPathTemplate": "/shipmentProcessing/api/v{version}/shipments",
+      "DownstreamPathTemplate": "/api/v{version}/shipments",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "ecommerceddd-product-catalog",
+          "Host": "ecommerceddd-shipment-processing",
           "Port": 80
         }
       ],
-      "UpstreamHttpMethod": [ "POST", "GET" ],
+      "UpstreamHttpMethod": [ "POST" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
       }
     },
     {
-      "UpstreamPathTemplate": "/ProductCatalog/api/v{version}/products/{everything}",
-      "DownstreamPathTemplate": "/api/v{version}/products/{everything}",
+      "UpstreamPathTemplate": "/ShipmentProcessing/api/v{version}/shipments/{everything}",
+      "DownstreamPathTemplate": "/api/v{version}/shipments/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "ecommerceddd-product-catalog",
+          "Host": "ecommerceddd-shipment-processing",
           "Port": 80
         }
       ],

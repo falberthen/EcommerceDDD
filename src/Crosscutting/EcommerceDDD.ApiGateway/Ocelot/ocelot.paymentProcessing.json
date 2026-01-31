@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "UpstreamPathTemplate": "/PaymentProcessing/api/v{version}/payments/{everything}",
+      "UpstreamPathTemplate": "/paymentProcessing/api/v{version}/payments/{everything}",
       "DownstreamPathTemplate": "/api/v{version}/payments/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

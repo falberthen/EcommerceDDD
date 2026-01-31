@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "UpstreamPathTemplate": "/OrderProcessing/api/v{version}/orders/{everything}",
+      "UpstreamPathTemplate": "/orderProcessing/api/v{version}/orders/{everything}",
       "DownstreamPathTemplate": "/api/v{version}/orders/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
