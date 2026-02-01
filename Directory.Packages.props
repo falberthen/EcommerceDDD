@@ -33,7 +33,7 @@
 
   <ItemGroup Label="API Gateway">
     <PackageVersion Include="Ocelot" Version="24.1.0" />
-    <PackageVersion Include="Koalesce.OpenAPI" Version="1.0.0-alpha.12" />
+    <PackageVersion Include="Koalesce" Version="1.0.0-beta.1" />
   </ItemGroup>
 
   <ItemGroup Label="Event Sourcing and Messaging">

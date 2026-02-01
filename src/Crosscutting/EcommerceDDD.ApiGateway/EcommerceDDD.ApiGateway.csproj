@@ -13,7 +13,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Koalesce.OpenAPI" />
+		<PackageReference Include="Koalesce" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
 		<PackageReference Include="Ocelot" />
 	</ItemGroup>

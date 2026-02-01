@@ -41,8 +41,7 @@ services.AddCors(o =>
 
 
 // Register Koalesce
-services.AddKoalesce(builder.Configuration)
-	.ForOpenAPI();
+services.AddKoalesce(builder.Configuration);
 
 // Build the app
 var app = builder.Build();
@@ -69,7 +68,7 @@ using (var scope = app.Services.CreateScope())
 	// Enable Swagger UI
 	app.UseSwaggerUI(c =>
 	{
-		c.SwaggerEndpoint(koalesceOptions.MergedDocumentPath, koalesceOptions.Title);
+		c.SwaggerEndpoint(koalesceOptions.MergedEndpoint, koalesceOptions.Title);
 	});
 }
 
