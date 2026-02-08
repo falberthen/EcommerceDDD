@@ -1,3 +1,15 @@
+x-dotnet-service: &dotnet-service
+  environment:
+    ASPNETCORE_ENVIRONMENT: '${ASPNETCORE_ENVIRONMENT:-Development}'
+    ASPNETCORE_URLS: 'http://+:80'
+  healthcheck:
+    test: curl --fail http://localhost:80/health || exit 1
+    interval: 30s
+    timeout: 10s
+    retries: 3
+    start_period: 30s
+  restart: on-failure
+
 services:
   postgres:
     image: postgres:18
@@ -15,17 +27,13 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
-    networks:
-      - ecommercedddnet
     volumes:
       - postgres:/var/lib/postgresql
       - './scripts/db_init.sql:/docker-entrypoint-initdb.d/db_init.sql'
-    restart: 
-      on-failure
+    restart: on-failure
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.6.1
-    container_name: zookeeper
     ports:
       - '2181:2181'
     environment:
@@ -34,13 +42,10 @@ services:
     volumes:
       - zookeeper-data:/var/lib/zookeeper/data
       - zookeeper-log:/var/lib/zookeeper/log
-    networks:
-      - ecommercedddnet
     restart: always
 
   kafka:
     image: confluentinc/cp-kafka:7.6.1
-    container_name: kafka
     ports:
       - '29092:29092'
       - '9092:9092'
@@ -53,8 +58,8 @@ services:
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       KAFKA_LOG_DIRS: /var/lib/kafka/data
       KAFKA_LOG_RETENTION_HOURS: 168
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'      
-      KAFKA_LOG_CLEANUP_POLICY: delete    
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      KAFKA_LOG_CLEANUP_POLICY: delete
       KAFKA_REPLICA_FETCH_MAX_BYTES: 104857600
       KAFKA_REPLICA_SOCKET_TIMEOUT_MS: 300000
     healthcheck:
@@ -65,40 +70,27 @@ services:
       start_period: 40s
     volumes:
       - kafka-data:/var/lib/kafka/data
-    networks:
-      - ecommercedddnet
     restart: always
     depends_on:
       zookeeper:
         condition: service_started
-  
-  kafka_topics_ui:
+
+  kafka-ui:
     image: provectuslabs/kafka-ui:latest
-    container_name: kafka-ui
     ports:
       - '8080:8080'
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: 'kafka:29092'
-    networks:
-      - ecommercedddnet
-    restart: 
-      on-failure
-    depends_on:      
+    restart: on-failure
+    depends_on:
       kafka:
         condition: service_healthy
-      postgres:
-        condition: service_healthy
-      connect:
-        condition: service_healthy
-      zookeeper:
-        condition: service_started
 
   connect:
     image: debezium/connect:2.5
-    container_name: connect
     ports:
-      - '8083:8083'    
+      - '8083:8083'
     environment:
       BOOTSTRAP_SERVERS: 'kafka:29092'
       GROUP_ID: 1
@@ -113,86 +105,62 @@ services:
       start_period: 40s
     volumes:
       - debezium-data:/kafka/data
-    networks:
-      - ecommercedddnet
     restart: always
     depends_on:
       postgres:
         condition: service_healthy
       kafka:
         condition: service_healthy
-      zookeeper:
-        condition: service_started
 
   pgadmin:
     image: dpage/pgadmin4:latest
-    container_name: pgadmin_container
     environment:
       PGADMIN_DEFAULT_EMAIL: '${PGADMIN_DEFAULT_EMAIL:-pgadmintest@pgadmin.org}'
       PGADMIN_DEFAULT_PASSWORD: '${PGADMIN_DEFAULT_PASSWORD:-@dm1n}'
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     volumes:
-      - 'pgadmin:/var/lib/pgadmin'
+      - pgadmin:/var/lib/pgadmin
     ports:
       - '8081:80'
-    networks:
-      - ecommercedddnet
-    restart: 
-      on-failure
+    restart: on-failure
     depends_on:
       postgres:
         condition: service_started
 
+  # Crosscutting
   ecommerceddd-identityserver:
-    image: ecommerceddd-identityserver
-    container_name: ecommerceddd-identityserver
+    <<: *dotnet-service
     build:
       context: .
       dockerfile: src/Crosscutting/EcommerceDDD.IdentityServer/Dockerfile
-    environment:
-      ASPNETCORE_ENVIRONMENT: '${ASPNETCORE_ENVIRONMENT:-Development}'
-      ASPNETCORE_URLS: 'http://+:80'    
-    healthcheck:      
-      test: curl --fail http://ecommerceddd-identityserver:80/health || exit 1      
-      interval: 40s
-      timeout: 30s
+    healthcheck:
+      test: curl --fail http://localhost:80/health || exit 1
+      interval: 30s
+      timeout: 10s
       retries: 3
       start_period: 60s
-      start_interval: 30s
     ports:
       - '5001:80'
-    networks:
-      - ecommercedddnet
-    restart: 
-      always
+    restart: always
     depends_on:
       postgres:
-        condition: 
-            service_healthy
-  
+        condition: service_healthy
+
   ecommerceddd-apigateway:
-    image: ecommerceddd-apigateway
-    container_name: ecommerceddd-apigateway
+    <<: *dotnet-service
     build:
       context: .
       dockerfile: src/Crosscutting/EcommerceDDD.ApiGateway/Dockerfile
-    environment:
-      ASPNETCORE_ENVIRONMENT: '${ASPNETCORE_ENVIRONMENT:-Development}'
-      ASPNETCORE_URLS: 'http://+:80'    
     healthcheck:
-      test: curl --fail http://ecommerceddd-apigateway:80/health || exit 1
+      test: curl --fail http://localhost:80/health || exit 1
       interval: 10s
-      timeout: 30s
+      timeout: 10s
       retries: 5
       start_period: 60s
-      start_interval: 5s
     ports:
       - '5000:80'
-    networks:
-      - ecommercedddnet    
-    restart:
-      always
-    depends_on:      
+    restart: always
+    depends_on:
       ecommerceddd-identityserver:
         condition: service_started
       ecommerceddd-product-catalog:
@@ -207,173 +175,97 @@ services:
         condition: service_started
       ecommerceddd-shipment-processing:
         condition: service_started
-  
+
   ecommerceddd-signalr:
-    image: ecommerceddd-signalr
-    container_name: ecommerceddd-signalr
+    <<: *dotnet-service
     build:
       context: .
       dockerfile: src/Crosscutting/EcommerceDDD.SignalR/Dockerfile
-    environment:
-      ASPNETCORE_ENVIRONMENT: '${ASPNETCORE_ENVIRONMENT:-Development}'
-      ASPNETCORE_URLS: 'http://+:80'    
-    healthcheck:
-      test: curl --fail http://ecommerceddd-signalr:80/health || exit 1
-      interval: 10s
-      timeout: 30s
-      retries: 5
-      start_period: 5s
-      start_interval: 5s
     ports:
       - '5002:80'
-    networks:
-      - ecommercedddnet    
-    restart:
-      always
-    depends_on:      
+    restart: always
+    depends_on:
       ecommerceddd-identityserver:
         condition: service_started
       ecommerceddd-order-processing:
         condition: service_started
 
-  # Services  
+  # Services
   ecommerceddd-customer-management:
-    image: ecommerceddd-customer-management
-    container_name: ecommerceddd-customer-management
+    <<: *dotnet-service
     build:
       context: .
       dockerfile: src/Services/EcommerceDDD.CustomerManagement/Dockerfile
-    environment:
-      ASPNETCORE_ENVIRONMENT: '${ASPNETCORE_ENVIRONMENT:-Development}'
-      ASPNETCORE_URLS: 'http://+:80'   
-    healthcheck:      
-      test: curl --fail http://ecommerceddd-customer-management:80/health || exit 1
-      interval: 10s
-      timeout: 30s
-      retries: 5
-      start_period: 5s
-      start_interval: 5s
     ports:
-      - '8001:80'    
-    networks:
-      - ecommercedddnet
-    restart:
-      on-failure
+      - '8001:80'
     depends_on:
       postgres:
         condition: service_healthy
       ecommerceddd-identityserver:
-        condition: service_started      
+        condition: service_started
 
   ecommerceddd-product-catalog:
-    image: ecommerceddd-product-catalog
-    container_name: ecommerceddd-product-catalog
+    <<: *dotnet-service
     build:
       context: .
       dockerfile: src/Services/EcommerceDDD.ProductCatalog/Dockerfile
-    environment:
-      ASPNETCORE_ENVIRONMENT: '${ASPNETCORE_ENVIRONMENT:-Development}'
-      ASPNETCORE_URLS: 'http://+:80'    
     healthcheck:
-      test: curl --fail http://ecommerceddd-product-catalog:80/health || exit 1
-      interval: 40s
-      timeout: 30s
+      test: curl --fail http://localhost:80/health || exit 1
+      interval: 30s
+      timeout: 10s
       retries: 3
-      start_period: 60s    
-      start_interval: 5s
+      start_period: 60s
     ports:
       - '8002:80'
-    networks:
-      - ecommercedddnet
-    restart:
-      on-failure
-    depends_on:      
+    depends_on:
       postgres:
         condition: service_healthy
       ecommerceddd-identityserver:
-        condition: service_started      
+        condition: service_started
 
   ecommerceddd-inventory-management:
-    image: ecommerceddd-inventory-management
-    container_name: ecommerceddd-inventory-management
+    <<: *dotnet-service
     build:
       context: .
       dockerfile: src/Services/EcommerceDDD.InventoryManagement/Dockerfile
-    environment:
-      ASPNETCORE_ENVIRONMENT: '${ASPNETCORE_ENVIRONMENT:-Development}'
-      ASPNETCORE_URLS: 'http://+:80'
-    ports:
-      - '8003:80'    
-    healthcheck:      
-      test: curl --fail http://ecommerceddd-inventory-management:80/health || exit 1
-      interval: 40s
-      timeout: 30s
+    healthcheck:
+      test: curl --fail http://localhost:80/health || exit 1
+      interval: 30s
+      timeout: 10s
       retries: 3
       start_period: 60s
-    networks:
-      - ecommercedddnet
-    restart:
-      on-failure
+    ports:
+      - '8003:80'
     depends_on:
       postgres:
-        condition: service_healthy      
+        condition: service_healthy
       ecommerceddd-product-catalog:
         condition: service_started
       ecommerceddd-identityserver:
         condition: service_started
-      
+
   ecommerceddd-quote-management:
-    image: ecommerceddd-quote-management
-    container_name: ecommerceddd-quote-management
+    <<: *dotnet-service
     build:
       context: .
       dockerfile: src/Services/EcommerceDDD.QuoteManagement/Dockerfile
-    environment:
-      ASPNETCORE_ENVIRONMENT: '${ASPNETCORE_ENVIRONMENT:-Development}'
-      ASPNETCORE_URLS: 'http://+:80'    
-    healthcheck:      
-      test: curl --fail http://ecommerceddd-quote-management:80/health || exit 1
-      interval: 10s
-      timeout: 30s
-      retries: 5
-      start_period: 5s
-      start_interval: 5s
     ports:
       - '8004:80'
-    networks:
-      - ecommercedddnet    
-    restart: 
-      on-failure
     depends_on:
       postgres:
-        condition: service_healthy      
+        condition: service_healthy
       ecommerceddd-product-catalog:
         condition: service_started
       ecommerceddd-identityserver:
         condition: service_started
 
   ecommerceddd-order-processing:
-    image: ecommerceddd-order-processing
-    container_name: ecommerceddd-order-processing
+    <<: *dotnet-service
     build:
       context: .
       dockerfile: src/Services/EcommerceDDD.OrderProcessing/Dockerfile
-    environment:
-      ASPNETCORE_ENVIRONMENT: '${ASPNETCORE_ENVIRONMENT:-Development}'
-      ASPNETCORE_URLS: 'http://+:80'      
-    healthcheck:      
-      test: curl --fail http://ecommerceddd-order-processing:80/health || exit 1
-      interval: 10s
-      timeout: 30s
-      retries: 5
-      start_period: 5s
-      start_interval: 5s
     ports:
       - '8005:80'
-    networks:
-      - ecommercedddnet    
-    restart:
-      on-failure
     depends_on:
       postgres:
         condition: service_healthy
@@ -384,78 +276,62 @@ services:
       ecommerceddd-product-catalog:
         condition: service_started
       ecommerceddd-identityserver:
-        condition: service_started   
+        condition: service_started
 
   ecommerceddd-payment-processing:
-    image: ecommerceddd-payment-processing
-    container_name: ecommerceddd-payment-processing
+    <<: *dotnet-service
     build:
       context: .
       dockerfile: src/Services/EcommerceDDD.PaymentProcessing/Dockerfile
-    environment:
-      ASPNETCORE_ENVIRONMENT: '${ASPNETCORE_ENVIRONMENT:-Development}'
-      ASPNETCORE_URLS: 'http://+:80'    
-    healthcheck:      
-      test: curl --fail http://ecommerceddd-payment-processing:80/health || exit 1
-      interval: 10s
-      timeout: 30s
-      retries: 5
-      start_period: 5s
-      start_interval: 5s
     ports:
       - '8006:80'
-    networks:
-      - ecommercedddnet    
-    restart:
-      on-failure
     depends_on:
       postgres:
-        condition: service_healthy      
+        condition: service_healthy
       kafka:
+        condition: service_healthy
+      connect:
         condition: service_healthy
       ecommerceddd-product-catalog:
         condition: service_started
-      connect:
-        condition: service_healthy
       ecommerceddd-identityserver:
-        condition: service_started         
+        condition: service_started
 
   ecommerceddd-shipment-processing:
-    image: ecommerceddd-shipment-processing
-    container_name: ecommerceddd-shipment-processing
+    <<: *dotnet-service
     build:
       context: .
       dockerfile: src/Services/EcommerceDDD.ShipmentProcessing/Dockerfile
-    environment:
-      ASPNETCORE_ENVIRONMENT: '${ASPNETCORE_ENVIRONMENT:-Development}'
-      ASPNETCORE_URLS: 'http://+:80'    
-    healthcheck:      
-      test: curl --fail http://ecommerceddd-shipment-processing:80/health || exit 1
-      interval: 10s
-      timeout: 30s
-      retries: 5
-      start_period: 5s
-      start_interval: 5s
     ports:
       - '8007:80'
-    networks:
-      - ecommercedddnet    
-    restart:
-      on-failure
     depends_on:
       postgres:
-        condition: service_healthy      
+        condition: service_healthy
       kafka:
+        condition: service_healthy
+      connect:
         condition: service_healthy
       ecommerceddd-product-catalog:
         condition: service_started
-      connect:
-        condition: service_healthy
       ecommerceddd-identityserver:
-        condition: service_started      
+        condition: service_started
+
+  # Frontend SPA (Angular)
+  # Usage: docker compose --profile frontend up
+  ecommerceddd-spa:
+    profiles: ["frontend"]
+    build:
+      context: .
+      dockerfile: src/EcommerceDDD.Spa/Dockerfile
+    ports:
+      - '4200:80'
+    restart: on-failure
+    depends_on:
+      ecommerceddd-apigateway:
+        condition: service_healthy
 
   # Tool for regenerating Kiota API clients (Backend & Frontend)
-  # Usage: docker-compose --profile tools run regenerate-clients
+  # Usage: docker compose --profile tools run regenerate-clients
   regenerate-clients:
     image: mcr.microsoft.com/dotnet/sdk:10.0
     profiles: ["tools"]
@@ -465,8 +341,6 @@ services:
       - ./scripts:/scripts
     environment:
       - DOTNET_NOLOGO=1
-    networks:
-      - ecommercedddnet
     depends_on:
       ecommerceddd-apigateway:
         condition: service_healthy
@@ -477,7 +351,7 @@ services:
         tr -d '\\015' < /scripts/regenerate-clients.sh | bash"
 
 networks:
-  ecommercedddnet:
+  default:
     driver: bridge
     ipam:
       config:
