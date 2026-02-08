@@ -1,51 +1,39 @@
-import { Injectable, inject } from '@angular/core';
+import { inject } from '@angular/core';
 import {
-  HttpInterceptor,
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
+  HttpInterceptorFn,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { TokenStorageService } from '../services/token-storage.service';
 import { AuthService } from '../services/auth.service';
 
 const TOKEN_HEADER_KEY = 'Authorization';
 
-@Injectable()
-export class AuthInterceptor implements HttpInterceptor {
-  private token = inject(TokenStorageService);
-  private authenticationService = inject(AuthService);
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const tokenService = inject(TokenStorageService);
+  const authService = inject(AuthService);
 
+  const token = tokenService.getToken();
+  let authReq = req;
 
-  intercept(
-    request: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
-    const token = this.token.getToken();
-    let authReq = request;
-
-    if (token) {
-      authReq = request.clone({
-        headers: request.headers.set(TOKEN_HEADER_KEY, 'Bearer ' + token),
-      });
-    }
-
-    return next.handle(authReq).pipe(
-      tap(
-        () => {},
-        (err: any) => {
-          if (err instanceof HttpErrorResponse && err.status === 401) {
-            // Token expired or unauthorized
-            this.authenticationService.logout();
-          }
-        }
-      ),
-      catchError((error) => {
-        // Handle other types of errors if needed
-        return throwError(error);
-      })
-    );
+  if (token) {
+    authReq = req.clone({
+      headers: req.headers.set(TOKEN_HEADER_KEY, 'Bearer ' + token),
+    });
   }
-}
+
+  return next(authReq).pipe(
+    tap(
+      () => {},
+      (err: any) => {
+        if (err instanceof HttpErrorResponse && err.status === 401) {
+          authService.logout();
+        }
+      }
+    ),
+    catchError((error) => {
+      return throwError(() => error);
+    })
+  );
+};

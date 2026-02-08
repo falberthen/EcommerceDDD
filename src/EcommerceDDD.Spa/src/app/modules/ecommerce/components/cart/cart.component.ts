@@ -1,5 +1,7 @@
 import { Router } from '@angular/router';
 import { faList, faMinusCircle } from '@fortawesome/free-solid-svg-icons';
+import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LOCAL_STORAGE_ENTRIES } from '@ecommerce/constants/appConstants';
 import { AuthService } from '@core/services/auth.service';
 import { ConfirmationDialogService } from '@core/services/confirmation-dialog.service';
@@ -17,12 +19,14 @@ import {
   QuoteItemViewModel,
   QuoteViewModel,
 } from 'src/app/clients/models';
+import { LoaderSkeletonComponent } from '@shared/components/loader-skeleton/loader-skeleton.component';
 
 @Component({
-    selector: 'app-cart',
-    templateUrl: './cart.component.html',
-    styleUrls: ['./cart.component.scss'],
-    standalone: false
+  selector: 'app-cart',
+  templateUrl: './cart.component.html',
+  styleUrls: ['./cart.component.scss'],
+  
+  imports: [CommonModule, FontAwesomeModule, LoaderSkeletonComponent],
 })
 export class CartComponent implements OnInit {
   private router = inject(Router);
@@ -65,7 +69,6 @@ export class CartComponent implements OnInit {
       await this.getOpenQuote();
     }
 
-    // Currency change listener
     this.currencyNotificationService.currentCurrency.subscribe(
       async (currencyCode) => {
         if (currencyCode != '') {
@@ -255,7 +258,6 @@ export class CartComponent implements OnInit {
   }
 
   private emitQuote(openQuote: QuoteViewModel) {
-    // emiting quote object to product selection
     this.quote = openQuote;
     this.sendQuoteItemsEvent.emit(this.quote);
   }

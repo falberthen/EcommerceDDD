@@ -1,14 +1,17 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, inject, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { AuthService } from '@core/services/auth.service';
 import { LoaderService } from '@core/services/loader.service';
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss'],
-    standalone: false
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
+  
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class LoginComponent implements OnInit {
   private router = inject(Router);
@@ -21,7 +24,6 @@ export class LoginComponent implements OnInit {
   returnUrl!: string;
 
   constructor() {
-    // redirect to home if already logged in
     if (this.authenticationService.currentUser) {
       this.router.navigate(['/home']);
     }
@@ -33,7 +35,6 @@ export class LoginComponent implements OnInit {
       password: ['', Validators.required],
     });
 
-    // get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
@@ -66,7 +67,6 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  // getter for easy access to form fields
   private get f() {
     return this.loginForm.controls;
   }

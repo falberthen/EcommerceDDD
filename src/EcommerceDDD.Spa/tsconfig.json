@@ -19,11 +19,12 @@
     "declaration": false,
     "experimentalDecorators": true,
     "useDefineForClassFields": true,
-    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "es2022",
-    "module": "es2020",
-    "lib": ["es2018", "dom"],
+    "module": "es2022",
+    "lib": ["es2022", "dom"],
     "esModuleInterop": true
   },
   "angularCompilerOptions": {

@@ -1,11 +1,16 @@
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CartComponent } from '../cart/cart.component';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { LoaderService } from '@core/services/loader.service';
 import { CurrencyNotificationService } from '../../services/currency-notification.service';
 import { LOCAL_STORAGE_ENTRIES } from '../../constants/appConstants';
 import { KiotaClientService } from '@core/services/kiota-client.service';
+import { SortPipe } from '@core/pipes/sort.pipe';
+import { LoaderSkeletonComponent } from '@shared/components/loader-skeleton/loader-skeleton.component';
 import {
   GetProductsRequest,
   ProductViewModel,
@@ -14,10 +19,11 @@ import {
 } from 'src/app/clients/models';
 
 @Component({
-    selector: 'app-products',
-    templateUrl: './product-selection.component.html',
-    styleUrls: ['./product-selection.component.scss'],
-    standalone: false
+  selector: 'app-products',
+  templateUrl: './product-selection.component.html',
+  styleUrls: ['./product-selection.component.scss'],
+  
+  imports: [CommonModule, FontAwesomeModule, CartComponent, FormsModule, SortPipe, LoaderSkeletonComponent],
 })
 export class ProductSelectionComponent implements OnInit {
   private loaderService = inject(LoaderService);
@@ -42,7 +48,6 @@ export class ProductSelectionComponent implements OnInit {
 
     await this.loadProducts();
 
-    // Currency change listener
     this.currencyNotificationService.currentCurrency.subscribe(
       (currencyCode) => {
         if (currencyCode != '') {

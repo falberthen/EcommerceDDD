@@ -1,16 +1,18 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { NotificationService } from '@core/services/notification.service';
 import { LoaderService } from '@core/services/loader.service';
 import { KiotaClientService } from '@core/services/kiota-client.service';
 import { RegisterCustomerRequest } from 'src/app/clients/models';
 
 @Component({
-    selector: 'app-customer-account',
-    templateUrl: './customer-account.component.html',
-    styleUrls: ['./customer-account.component.scss'],
-    standalone: false
+  selector: 'app-customer-account',
+  templateUrl: './customer-account.component.html',
+  styleUrls: ['./customer-account.component.scss'],
+  
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
 })
 export class CustomerAccountComponent implements OnInit {
   private router = inject(Router);
@@ -33,7 +35,6 @@ export class CustomerAccountComponent implements OnInit {
       creditLimit: ['10000', Validators.required],
     });
 
-    // get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
@@ -72,7 +73,6 @@ export class CustomerAccountComponent implements OnInit {
     }
   }
 
-  // getter for easy access to form fields
   private get f() {
     return this.accountForm.controls;
   }
