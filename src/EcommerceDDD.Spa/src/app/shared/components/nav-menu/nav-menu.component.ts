@@ -2,6 +2,8 @@ import { AuthService } from '@core/services/auth.service';
 import { TokenStorageService } from '@core/services/token-storage.service';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewContainerRef, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import {
   faList,
   faShoppingBasket,
@@ -9,16 +11,19 @@ import {
   faSignOutAlt,
   faUser,
 } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LOCAL_STORAGE_ENTRIES } from '@ecommerce/constants/appConstants';
 import { KiotaClientService } from '@core/services/kiota-client.service';
 import { Subscription } from 'rxjs';
 import { CustomerDetails, QuoteViewModel } from 'src/app/clients/models';
+import { CurrencyDropdownComponent } from '@ecommerce/components/currency-dropdown/currency-dropdown.component';
 
 @Component({
-    selector: 'app-nav-menu',
-    templateUrl: './nav-menu.component.html',
-    styleUrls: ['./nav-menu.component.scss'],
-    standalone: false
+  selector: 'app-nav-menu',
+  templateUrl: './nav-menu.component.html',
+  styleUrls: ['./nav-menu.component.scss'],
+  
+  imports: [CommonModule, RouterModule, FontAwesomeModule, CurrencyDropdownComponent],
 })
 export class NavMenuComponent implements OnInit, OnDestroy {
   private cdr = inject(ChangeDetectorRef);
@@ -78,13 +83,11 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // prevent memory leak when component destroyed
     this.subscription.unsubscribe();
     this.isModalOpen = false;
   }
 
   private async storeLoadedCustomer() {
-    // storing customer in the localstorage
     this.localStorageService.setValue(
       LOCAL_STORAGE_ENTRIES.storedCustomer,
       JSON.stringify(this.customer)

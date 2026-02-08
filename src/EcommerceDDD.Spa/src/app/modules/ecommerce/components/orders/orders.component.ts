@@ -1,18 +1,23 @@
 import { Component, OnInit, ViewChild, ViewContainerRef, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { faList } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AuthService } from '@core/services/auth.service';
 import { SignalrService } from '@core/services/signalr.service';
 import { IEventHistory, StoredEventService } from '@shared/services/stored-event.service';
 import { ORDER_STATUS_CODES, SIGNALR } from '@ecommerce/constants/appConstants';
 import { LoaderService } from '@core/services/loader.service';
 import { KiotaClientService } from '@core/services/kiota-client.service';
+import { SortPipe } from '@core/pipes/sort.pipe';
+import { LoaderSkeletonComponent } from '@shared/components/loader-skeleton/loader-skeleton.component';
 import { OrderViewModel } from 'src/app/clients/models';
 
 @Component({
-    selector: 'app-orders',
-    templateUrl: './orders.component.html',
-    styleUrls: ['./orders.component.scss'],
-    standalone: false
+  selector: 'app-orders',
+  templateUrl: './orders.component.html',
+  styleUrls: ['./orders.component.scss'],
+  
+  imports: [CommonModule, FontAwesomeModule, SortPipe, LoaderSkeletonComponent],
 })
 export class OrdersComponent implements OnInit {
   private kiotaClientService = inject(KiotaClientService);
@@ -38,7 +43,6 @@ export class OrdersComponent implements OnInit {
       await this.loadOrders();
     }
 
-    //SignalR
     this.addCustomerToSignalrGroup();
 
     this.signalrService.connection.on(
@@ -111,7 +115,6 @@ export class OrdersComponent implements OnInit {
   private async addCustomerToSignalrGroup() {
     if (this.signalrService.connection.state != 'Disconnected') return;
 
-    // SignalR
     this.signalrService.connection
       .start()
       .then(() => {

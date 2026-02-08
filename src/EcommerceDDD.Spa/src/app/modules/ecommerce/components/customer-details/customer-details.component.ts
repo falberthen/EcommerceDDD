@@ -1,19 +1,24 @@
 import { faList } from '@fortawesome/free-solid-svg-icons';
+import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LoaderService } from '@core/services/loader.service';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { NotificationService } from '@core/services/notification.service';
 import { StoredEventService } from '@shared/services/stored-event.service';
 import { Component, OnInit, ViewChild, ViewContainerRef, inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { LOCAL_STORAGE_ENTRIES } from '@ecommerce/constants/appConstants';
 import { KiotaClientService } from '@core/services/kiota-client.service';
 import { CustomerDetails, UpdateCustomerRequest } from 'src/app/clients/models';
+import { LoaderSkeletonComponent } from '@shared/components/loader-skeleton/loader-skeleton.component';
 
 @Component({
-    selector: 'app-customer-details',
-    templateUrl: './customer-details.component.html',
-    styleUrls: ['./customer-details.component.scss'],
-    standalone: false
+  selector: 'app-customer-details',
+  templateUrl: './customer-details.component.html',
+  styleUrls: ['./customer-details.component.scss'],
+  
+  imports: [CommonModule, FontAwesomeModule, ReactiveFormsModule, LoaderSkeletonComponent, RouterModule],
 })
 export class CustomerDetailsComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
@@ -51,7 +56,6 @@ export class CustomerDetailsComponent implements OnInit {
   }
 
   async saveDetails() {
-    // stop here if form is invalid
     if (this.customerDetailsForm.invalid) {
       return;
     }
@@ -98,7 +102,6 @@ export class CustomerDetailsComponent implements OnInit {
   }
 
   private async storeLoadedCustomer() {
-    // storing customer in the localstorage
     this.localStorageService.setValue(
       LOCAL_STORAGE_ENTRIES.storedCustomer,
       JSON.stringify(this.customer)
@@ -132,7 +135,6 @@ export class CustomerDetailsComponent implements OnInit {
     }
   }
 
-  // getter for easy access to form fields
   private get f() {
     return this.customerDetailsForm.controls;
   }

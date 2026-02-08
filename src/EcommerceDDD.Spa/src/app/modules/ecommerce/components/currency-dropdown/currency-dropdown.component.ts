@@ -1,14 +1,17 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { faDollarSign, faEuroSign } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LOCAL_STORAGE_ENTRIES } from '@ecommerce/constants/appConstants';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { CurrencyNotificationService } from '@ecommerce/services/currency-notification.service';
 
 @Component({
-    selector: 'app-currency-dropdown',
-    templateUrl: './currency-dropdown.component.html',
-    styleUrls: ['./currency-dropdown.component.css'],
-    standalone: false
+  selector: 'app-currency-dropdown',
+  templateUrl: './currency-dropdown.component.html',
+  styleUrls: ['./currency-dropdown.component.css'],
+  
+  imports: [CommonModule, FontAwesomeModule],
 })
 export class CurrencyDropdownComponent implements OnInit {
   private localStorageService = inject(LocalStorageService);

@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { LoaderSkeletonComponent } from './loader-skeleton.component';
 
 describe('LoaderSkeletonComponent', () => {
@@ -8,7 +7,7 @@ describe('LoaderSkeletonComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [LoaderSkeletonComponent],
+      imports: [LoaderSkeletonComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoaderSkeletonComponent);

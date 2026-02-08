@@ -377,6 +377,10 @@ export interface CustomerManagementProblemDetails extends AdditionalDataHolder, 
      * The type property
      */
     type?: string | null;
+    /**
+     * The additionalData property
+     */
+    additionalData?: Record<string, unknown>;
 }
 /**
  * The deserialization information for the current model
@@ -838,6 +842,10 @@ export interface InventoryManagementProblemDetails extends AdditionalDataHolder,
      * The type property
      */
     type?: string | null;
+    /**
+     * The additionalData property
+     */
+    additionalData?: Record<string, unknown>;
 }
 export interface InventoryStockUnitEventHistory extends Parsable {
     /**
@@ -1036,6 +1044,10 @@ export interface ProblemDetails extends AdditionalDataHolder, ApiError, Parsable
      * The type property
      */
     type?: string | null;
+    /**
+     * The additionalData property
+     */
+    additionalData?: Record<string, unknown>;
 }
 export interface ProductCatalogProblemDetails extends AdditionalDataHolder, ApiError, Parsable {
     /**
@@ -1058,6 +1070,10 @@ export interface ProductCatalogProblemDetails extends AdditionalDataHolder, ApiE
      * The type property
      */
     type?: string | null;
+    /**
+     * The additionalData property
+     */
+    additionalData?: Record<string, unknown>;
 }
 export interface ProductViewModel extends Parsable {
     /**
@@ -1190,6 +1206,10 @@ export interface QuoteManagementProblemDetails extends AdditionalDataHolder, Api
      * The type property
      */
     type?: string | null;
+    /**
+     * The additionalData property
+     */
+    additionalData?: Record<string, unknown>;
 }
 export interface QuoteViewModel extends Parsable {
     /**
