@@ -22,8 +22,7 @@
 
   <ItemGroup Label="API Documentation">
     <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.1.0" />
-    <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.0" />
-    <PackageVersion Include="Microsoft.OpenApi" Version="2.3.0" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.0" />    
   </ItemGroup>
 
   <ItemGroup Label="API Versioning">
@@ -33,7 +32,7 @@
 
   <ItemGroup Label="API Gateway">
     <PackageVersion Include="Ocelot" Version="24.1.0" />
-    <PackageVersion Include="Koalesce" Version="1.0.0-beta.1" />
+    <PackageVersion Include="Koalesce" Version="1.0.0-beta.5" />
   </ItemGroup>
 
   <ItemGroup Label="Event Sourcing and Messaging">
