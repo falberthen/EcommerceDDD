@@ -2,13 +2,12 @@
 
 An experimental full-stack application showcasing cutting-edge technologies and architectural patterns for building scalable e-commerce systems.
 
-⭐ **If you find this project useful, please consider giving it a star!** It helps others discover the project.
+⭐ **If you find this project useful, please consider giving it a star!** It helps others discover the project. ![GitHub Stars](https://img.shields.io/github/stars/falberthen/ecommerceddd?style=social&logo=github)
 
-![GitHub Stars](https://img.shields.io/github/stars/falberthen/ecommerceddd?style=social&logo=github)
+![.NET](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet) ![Angular](https://img.shields.io/badge/Angular-19-DD0031?logo=angular) [![License](https://img.shields.io/github/license/falberthen/ecommerceddd.svg)](LICENSE)
 
-![.NET](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet) ![Angular](https://img.shields.io/badge/Angular-19-DD0031?logo=angular) ![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker)
-![Build](https://github.com/falberthen/ecommerceddd/actions/workflows/ecommerceddd-build.yml/badge.svg)
-[![License](https://img.shields.io/github/license/falberthen/ecommerceddd.svg)](LICENSE)
+![Build](https://github.com/falberthen/ecommerceddd/actions/workflows/ecommerceddd-build.yml/badge.svg) ![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker)
+
 <br/>
 
 <p align="center">
@@ -113,7 +112,7 @@ Microservices communicate directly using **Kiota-generated typed HTTP clients**.
 |------------|---------|
 | .NET | 10 |
 | C# | 12 |
-| Koalesce.OpenAPI | 1.0.0-alpha.12 |
+| Koalesce | 1.0.0-beta.5 |
 | Ocelot | 24.1.0 |
 | Marten | 8.19.0 |
 | Confluent Kafka | 2.13.0 |
@@ -143,29 +142,37 @@ Microservices communicate directly using **Kiota-generated typed HTTP clients**.
 
 ### Running with Docker
 
+**Backend only** — starts all microservices, databases, Kafka, and infrastructure:
+
 ```bash
-# Start all services
-docker-compose up
+docker compose up
+```
+
+**Backend + Frontend** — also builds and serves the Angular SPA at `http://localhost:4200`:
+
+```bash
+docker compose --profile frontend up
 ```
 
 > 💡 **Tip:** You can also set `docker-compose.dcproj` as the startup project in Visual Studio for debugging.
 
 <br/>
 
+### Running the SPA locally (with hot-reload)
 
-### Running the Angular SPA
+If you prefer running the frontend outside Docker for development, start the backend with `docker compose up`, then:
 
 ```bash
-cd EcommerceDDD.Spa
+cd src/EcommerceDDD.Spa
 npm install
 ng serve
 ```
 
-Open your browser at `http://localhost:4200`
+The app will be available at `http://localhost:4200`.
 
 <br/>
 
-### Regenerating Kiota Clients
+### Advanced: Regenerating Kiota Clients
 
 If you want to regenerate all typed HTTP clients, after containers are running:
 
