@@ -15,6 +15,7 @@ services.AddSignalR();
 services.AddScoped<IOrderStatusUpdater, OrderStatusUpdater>();
 
 var app = builder.Build();
+app.UseExceptionHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

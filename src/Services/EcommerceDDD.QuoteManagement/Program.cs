@@ -34,6 +34,7 @@ services.AddAuthorization(options =>
 
 // App
 var app = builder.Build();
+app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
 	app.UseSwagger(builder.Configuration);
