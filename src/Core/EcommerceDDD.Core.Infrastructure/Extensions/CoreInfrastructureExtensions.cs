@@ -11,6 +11,9 @@ public static class CoreInfrastructureExtensions
 		services
 			.AddMemoryCache()
 			.AddHttpContextAccessor()
+			// Exception handling
+			.AddExceptionHandler<GlobalExceptionHandler>()
+			.AddProblemDetails()
 			// CQRS
 			.AddScoped<ICommandBus, CommandBus>()
 			.AddScoped<IQueryBus, QueryBus>()

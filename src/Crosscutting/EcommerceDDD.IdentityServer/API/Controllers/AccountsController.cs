@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.IdentityServer.Controllers;
+namespace EcommerceDDD.IdentityServer.Controllers;
 
 [AllowAnonymous]
 [ApiController]
@@ -13,17 +13,10 @@ public class AccountsController(IIdentityManager identityManager) : CustomContro
 	[ProducesResponseType(typeof(LoginResult), StatusCodes.Status200OK)]
 	public async Task<IActionResult> UserLogin(LoginRequest request)
     {
-        try
-        {
-			LoginResult result = await _identityManager
-                .AuthUserByCredentials(request);
+		LoginResult result = await _identityManager
+			.AuthUserByCredentials(request);
 
-            return Ok(result);
-        }
-        catch (Exception e)
-        {
-            return BadRequestActionResult(e.Message);
-        }
+		return Ok(result);
     }
 
     [HttpPost, Route("register")]
@@ -31,20 +24,13 @@ public class AccountsController(IIdentityManager identityManager) : CustomContro
 	[ProducesResponseType(typeof(UserRegisteredResult), StatusCodes.Status200OK)]
 	public async Task<IActionResult> Register(RegisterUserRequest request)
     {
-        try
-        {
-			UserRegisteredResult result = await _identityManager
-                .RegisterNewUser(request);
+		UserRegisteredResult result = await _identityManager
+			.RegisterNewUser(request);
 
-            return Ok(new
-            {
-                data = result,
-                success = result.Succeeded
-            });
-        }
-        catch (Exception e)
-        {
-            return BadRequestActionResult(e.Message);            
-        }
+		return Ok(new
+		{
+			data = result,
+			success = result.Succeeded
+		});
     }
 }
