@@ -15,6 +15,7 @@ global using EcommerceDDD.ServiceClients.Extensions;
 global using EcommerceDDD.ServiceClients.InventoryManagement;
 global using EcommerceDDD.ServiceClients.InventoryManagement.Models;
 global using Microsoft.AspNetCore.Authorization;
+global using Asp.Versioning;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
