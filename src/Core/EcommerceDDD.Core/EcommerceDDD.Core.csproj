@@ -13,9 +13,10 @@
     <None Remove="HttpRequests\**" />
   </ItemGroup>
 
-  <ItemGroup>	
+  <ItemGroup>
 	<PackageReference Include="Marten" />
 	<PackageReference Include="Newtonsoft.Json" />
+
 	<PackageReference Include="NSubstitute" />
 	<PackageReference Include="Microsoft.CodeAnalysis.Common" />
 	<PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" />

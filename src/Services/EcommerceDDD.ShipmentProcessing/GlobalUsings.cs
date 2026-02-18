@@ -22,5 +22,6 @@ global using JasperFx.Events.Projections;
 global using Microsoft.AspNetCore.Authorization;
 global using Asp.Versioning;
 global using Microsoft.AspNetCore.Mvc;
+
 global using Newtonsoft.Json;
 global using System.ComponentModel.DataAnnotations;

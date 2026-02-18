@@ -16,7 +16,7 @@ public class InventoryStockUnit : AggregateRoot<InventoryStockUnitId>
         if (Quantity < quantityToDecrease)
             throw new BusinessRuleException("Insufficient quantity in stock.");
 
-        var @event = StockQuantityDecreased.Create(
+        var @event = new StockQuantityDecreased(
             Id.Value,
             ProductId.Value,
             quantityToDecrease);
@@ -30,7 +30,7 @@ public class InventoryStockUnit : AggregateRoot<InventoryStockUnitId>
         if (quantityToIncrease <= 0)
             throw new BusinessRuleException("Quantity to increase must be greater than zero.");
 
-        var @event = StockQuantityIncreased.Create(
+        var @event = new StockQuantityIncreased(
             Id.Value,
             ProductId.Value,
             quantityToIncrease);
@@ -55,7 +55,7 @@ public class InventoryStockUnit : AggregateRoot<InventoryStockUnitId>
         if (initialQuantity < 0)
             throw new BusinessRuleException("Initial quantity cannot be less than zero.");
         
-        var @event = UnitEnteredInStock.Create(
+        var @event = new UnitEnteredInStock(
             Guid.NewGuid(),
             productId.Value,
             initialQuantity);

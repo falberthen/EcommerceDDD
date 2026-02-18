@@ -25,7 +25,7 @@ public class JsonEventSerializer<T> : ISerializer<T>, IDeserializer<T>
             throw new JsonSerializationException($"Cannot find type for event name: {eventName}");
 
         var eventData = jsonObject["JSON_Payload"]?.ToString();
-        var @event = JsonConvert.DeserializeObject(eventData, eventType) as T;
+        var @event = JsonConvert.DeserializeObject(eventData!, eventType) as T;
         return @event!;
     }
 

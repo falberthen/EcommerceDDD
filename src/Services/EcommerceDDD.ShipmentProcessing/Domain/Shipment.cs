@@ -30,7 +30,7 @@ public class Shipment : AggregateRoot<ShipmentId>
         if (Status == ShipmentStatus.Shipped)
             throw new BusinessRuleException($"Shipment cannot be canceled when '{Status}'");
 
-        var @event = ShipmentCanceled.Create(
+        var @event = new ShipmentCanceled(
             Id.Value,
             shipmentCancellationReason);
 
@@ -43,8 +43,7 @@ public class Shipment : AggregateRoot<ShipmentId>
         if (Status != ShipmentStatus.Pending)
             throw new BusinessRuleException($"Shipment cannot be completed when '{Status}'");
 
-        var @event = PackageShipped.Create(
-            Id.Value);
+        var @event = new PackageShipped(Id.Value);
 
         AppendEvent(@event);
         Apply(@event);
@@ -76,10 +75,13 @@ public class Shipment : AggregateRoot<ShipmentId>
 
     private Shipment(ShipmentData shipmentData)
     {
-        var @event = ShipmentCreated.Create(
+        var productItemDetails = shipmentData.ProductItems.Select(p =>
+            new Events.ProductItemDetails(p.ProductId.Value, p.Quantity)).ToList();
+
+        var @event = new ShipmentCreated(
             Guid.NewGuid(),
             shipmentData.OrderId.Value,
-            shipmentData.ProductItems);
+            productItemDetails);
 
         AppendEvent(@event);
         Apply(@event);
