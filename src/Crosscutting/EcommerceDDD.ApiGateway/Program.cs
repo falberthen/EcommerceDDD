@@ -39,6 +39,8 @@ services.AddCors(o =>
 	})
 );
 
+// OpenTelemetry
+services.AddOpenTelemetryObservability("EcommerceDDD.ApiGateway");
 
 // Register Koalesce
 services.AddKoalesce(builder.Configuration);
@@ -68,7 +70,7 @@ using (var scope = app.Services.CreateScope())
 	// Enable Swagger UI
 	app.UseSwaggerUI(c =>
 	{
-		c.SwaggerEndpoint(koalesceOptions.MergedEndpoint, koalesceOptions.Title);
+		c.SwaggerEndpoint(koalesceOptions.MergedEndpoint, koalesceOptions.Info.Title);
 	});
 }
 

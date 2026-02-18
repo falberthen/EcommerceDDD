@@ -2,4 +2,53 @@
   <div class="alert alert-info" role="alert">
     <h1 class="alert-heading text-center">Welcome to Ecommerce DDD!</h1>
   </div>
+
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col-md-12">
+        <h4>Developer Tools</h4>
+        <div class="list-group mt-4">
+          <a href="http://localhost:5000/swagger/index.html"
+             target="_blank"
+             class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">
+                <fa-icon [icon]="faBook" class="me-2"></fa-icon>
+                API Gateway Swagger
+              </h5>
+              <small class="text-muted">:5000</small>
+            </div>
+            <p class="mb-1">Swagger of API Gateway.</p>
+          </a>
+
+          <a href="http://localhost:5000/koalesce/report.html"
+             target="_blank"
+             class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">
+                <fa-icon [icon]="faFileAlt" class="me-2"></fa-icon>
+                API Gateway - Koalesce Report
+              </h5>
+              <small class="text-muted">:5000</small>
+            </div>
+            <p class="mb-1">Koalesce report of API Gateway merged.</p>
+          </a>
+
+          <a href="http://localhost:18888"
+             target="_blank"
+             class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">
+                <fa-icon [icon]="faTachometerAlt" class="me-2"></fa-icon>
+                Aspire Dashboard
+              </h5>
+              <small class="text-muted">:18888</small>
+            </div>
+            <p class="mb-1">Observability dashboard with traces, metrics, and logs</p>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
