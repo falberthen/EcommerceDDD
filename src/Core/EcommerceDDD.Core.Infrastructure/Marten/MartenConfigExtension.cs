@@ -23,10 +23,11 @@ public static class MartenConfigExtension
         {
             options.Connection(connectionString);
             options.AutoCreateSchemaObjects = AutoCreate.All;
-			options.UseNewtonsoftForSerialization(nonPublicMembersStorage: NonPublicMembersStorage.All);
-
 			options.Events.DatabaseSchemaName = martenConfig.WriteSchema;
-            
+
+            options.UseNewtonsoftForSerialization(
+                nonPublicMembersStorage: NonPublicMembersStorage.All);
+
             if (!string.IsNullOrEmpty(martenConfig.ReadSchema))
                 options.DatabaseSchemaName = martenConfig.ReadSchema;
 

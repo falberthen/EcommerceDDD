@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.InventoryManagement.Application.GettingInventoryStockUnitEventHistory;
+namespace EcommerceDDD.InventoryManagement.Application.GettingInventoryStockUnitEventHistory;
 
 public record InventoryStockUnitEventHistory(
     Guid Id, 

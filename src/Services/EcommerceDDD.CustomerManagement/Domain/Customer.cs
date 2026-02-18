@@ -43,7 +43,7 @@ public sealed class Customer : AggregateRoot<CustomerId>
         if (CreditLimit <= 0)
             throw new BusinessRuleException("Available credit limit must be greater than 0.");
 
-        var @event = CustomerUpdated.Create(
+        var @event = new CustomerUpdated(
             Id.Value,
             Name,
             ShippingAddress,
@@ -73,7 +73,7 @@ public sealed class Customer : AggregateRoot<CustomerId>
 
     private Customer(CustomerData customerData)
     {
-        var @event = CustomerRegistered.Create(
+        var @event = new CustomerRegistered(
             Guid.NewGuid(),
             customerData.Name,
             customerData.Email,

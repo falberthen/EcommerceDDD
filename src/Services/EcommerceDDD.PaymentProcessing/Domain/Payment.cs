@@ -38,7 +38,7 @@ public class Payment : AggregateRoot<PaymentId>
         if (Status != PaymentStatus.Pending)
             throw new BusinessRuleException($"Payment cannot be completed when '{Status}'");
 
-        var @event = PaymentCompleted.Create(Id.Value);
+        var @event = new PaymentCompleted(Id.Value);
 
         AppendEvent(@event);
         Apply(@event);
@@ -49,8 +49,8 @@ public class Payment : AggregateRoot<PaymentId>
         if (Status == PaymentStatus.Canceled)
             throw new BusinessRuleException($"Payment cannot be canceled when '{Status}'");
 
-        var @event = PaymentCanceled.Create(
-            Id.Value,            
+        var @event = new PaymentCanceled(
+            Id.Value,
             paymentCancellationReason);
 
         AppendEvent(@event);
@@ -87,13 +87,16 @@ public class Payment : AggregateRoot<PaymentId>
 
     private Payment(PaymentData paymentData)
     {       
-        var @event = PaymentCreated.Create(
+        var productItemDetails = paymentData.ProductItems.Select(p =>
+            new Events.ProductItemDetails(p.ProductId.Value, p.Quantity)).ToList();
+
+        var @event = new PaymentCreated(
             Guid.NewGuid(),
             paymentData.CustomerId.Value,
             paymentData.OrderId.Value,
             paymentData.TotalAmount.Amount,
             paymentData.TotalAmount.Currency.Code,
-			paymentData.ProductItems);
+            productItemDetails);
 
         AppendEvent(@event);
         Apply(@event);

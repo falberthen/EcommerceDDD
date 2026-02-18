@@ -8,9 +8,7 @@ public class OpenQuoteHandler(
 {
 	private readonly IEventStoreRepository<Quote> _quoteWriteRepository = quoteWriteRepository;
 	private readonly ICustomerOpenQuoteChecker _customerOpenQuoteChecker = customerOpenQuoteChecker;
-	private IUserInfoRequester _userInfoRequester { get; set; } = userInfoRequester
-		?? throw new ArgumentNullException(nameof(userInfoRequester));
-
+	
 	public async Task HandleAsync(OpenQuote command, CancellationToken cancellationToken)
     {
 		UserInfo? userInfo = await userInfoRequester

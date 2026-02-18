@@ -23,6 +23,7 @@ global using Marten.Events.Projections;
 global using Microsoft.AspNetCore.Authorization;
 global using Asp.Versioning;
 global using Microsoft.AspNetCore.Mvc;
+
 global using Newtonsoft.Json;
 global using Polly;
 global using System.ComponentModel.DataAnnotations;

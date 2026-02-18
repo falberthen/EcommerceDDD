@@ -1,3 +1,4 @@
+global using Asp.Versioning;
 global using EcommerceDDD.Core.CQRS.CommandHandling;
 global using EcommerceDDD.Core.CQRS.QueryHandling;
 global using EcommerceDDD.Core.Domain;
