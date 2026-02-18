@@ -1,7 +1,9 @@
 import { AuthService } from '@core/services/auth.service';
 import { TokenStorageService } from '@core/services/token-storage.service';
 import { LocalStorageService } from '@core/services/local-storage.service';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewContainerRef, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, OnDestroy, OnInit, ViewContainerRef, inject, viewChild } from '@angular/core';
+
+import { RouterModule } from '@angular/router';
 import {
   faList,
   faShoppingBasket,
@@ -9,16 +11,18 @@ import {
   faSignOutAlt,
   faUser,
 } from '@fortawesome/free-solid-svg-icons';
-import { LOCAL_STORAGE_ENTRIES } from '@ecommerce/constants/appConstants';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { LOCAL_STORAGE_ENTRIES } from '@features/ecommerce/constants/appConstants';
 import { KiotaClientService } from '@core/services/kiota-client.service';
-import { Subscription } from 'rxjs';
 import { CustomerDetails, QuoteViewModel } from 'src/app/clients/models';
+import { CurrencyDropdownComponent } from '@features/ecommerce/currency-dropdown/currency-dropdown.component';
 
 @Component({
-    selector: 'app-nav-menu',
-    templateUrl: './nav-menu.component.html',
-    styleUrls: ['./nav-menu.component.scss'],
-    standalone: false
+  selector: 'app-nav-menu',
+  templateUrl: './nav-menu.component.html',
+  styleUrls: ['./nav-menu.component.scss'],
+  
+  imports: [RouterModule, FontAwesomeModule, CurrencyDropdownComponent],
 })
 export class NavMenuComponent implements OnInit, OnDestroy {
   private cdr = inject(ChangeDetectorRef);
@@ -27,8 +31,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   private tokenStorageService = inject(TokenStorageService);
   private localStorageService = inject(LocalStorageService);
 
-  @ViewChild('storedEventViewerContainer', { read: ViewContainerRef })
-  storedEventViewerContainer!: ViewContainerRef;
+  readonly storedEventViewerContainer = viewChild.required('storedEventViewerContainer', { read: ViewContainerRef });
 
   faList = faList;
   faShoppingBasket = faShoppingBasket;
@@ -38,11 +41,10 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   isExpanded = false;
   isModalOpen = false;
   isLoggedIn = false;
-  subscription!: Subscription;
   customer!: CustomerDetails;
 
-  async ngOnInit() {
-    this.subscription = this.authService.isLoggedAnnounced$.subscribe(
+  async ngOnInit(): Promise<void> {
+    this.authService.isLoggedAnnounced$.subscribe(
       async (response) => {
         this.isLoggedIn = response;
         if (this.isLoggedIn) {
@@ -52,46 +54,43 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     );
   }
 
-  async ngAfterViewInit() {
+  async ngAfterViewInit(): Promise<void> {
     this.isLoggedIn = !!this.tokenStorageService.getToken();
     this.cdr.detectChanges();
   }
 
-  get quoteItems() {
-    let quoteStr = this.localStorageService.getValueByKey('openQuote');
-    if (quoteStr && quoteStr != 'undefined' && quoteStr != '{}') {
-      var quote = JSON.parse(quoteStr) as QuoteViewModel | undefined;
-      return quote?.items!.length;
+  get quoteItems(): number {
+    const quoteStr = this.localStorageService.getValueByKey('openQuote');
+    if (quoteStr && quoteStr !== 'undefined' && quoteStr !== '{}') {
+      const quote = JSON.parse(quoteStr) as QuoteViewModel | undefined;
+      return quote?.items!.length ?? 0;
     }
 
     return 0;
   }
 
-  get loadStoredUser() {
-    return this.authService.currentCustomer?.name;
+  get loadStoredUser(): string | null | undefined {
+    return this.authService.currentCustomer?.name ?? null;
   }
 
-  logout() {
+  logout(): void {
     this.localStorageService.clearAllKeys();
     this.authService.logout();
     this.isLoggedIn = !!this.tokenStorageService.getToken();
   }
 
-  ngOnDestroy() {
-    // prevent memory leak when component destroyed
-    this.subscription.unsubscribe();
+  ngOnDestroy(): void {
     this.isModalOpen = false;
   }
 
-  private async storeLoadedCustomer() {
-    // storing customer in the localstorage
+  private async storeLoadedCustomer(): Promise<void> {
     this.localStorageService.setValue(
       LOCAL_STORAGE_ENTRIES.storedCustomer,
-      JSON.stringify(this.customer)
+      this.customer
     );
   }
 
-  private async loadCustomerDetails() {
+  private async loadCustomerDetails(): Promise<void> {
     try {
       await this.kiotaClientService.client.customerManagement.api.v2.customers.details
         .get()

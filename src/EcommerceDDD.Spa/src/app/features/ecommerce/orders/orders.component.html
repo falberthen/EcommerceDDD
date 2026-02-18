@@ -1,12 +1,12 @@
 <div class="orders-container">
-  @if (!(isLoading | async) && orders.length == 0) {
+  @if (!(loaderService.loading()) && orders.length == 0) {
   <div class="alert alert-danger no-orders-message">You don't have Orders</div>
   }
   <!-- Stored Event Viewer container-->
   <div class="stored-event-viewer-container">
     <template #storedEventViewerContainer></template>
   </div>
-  @if ((isLoading | async)) {
+  @if (loaderService.loading()) {
   <div class="card order-details-container">
     <app-loader-skeleton></app-loader-skeleton>
   </div>

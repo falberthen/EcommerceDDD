@@ -1,28 +1,32 @@
-import { Component, OnInit, ViewChild, ViewContainerRef, inject } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, inject, viewChild } from '@angular/core';
+import { NgClass, DatePipe } from '@angular/common';
 import { faList } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AuthService } from '@core/services/auth.service';
 import { SignalrService } from '@core/services/signalr.service';
 import { IEventHistory, StoredEventService } from '@shared/services/stored-event.service';
-import { ORDER_STATUS_CODES, SIGNALR } from '@ecommerce/constants/appConstants';
+import { ORDER_STATUS_CODES, SIGNALR } from '@features/ecommerce/constants/appConstants';
 import { LoaderService } from '@core/services/loader.service';
 import { KiotaClientService } from '@core/services/kiota-client.service';
+import { SortPipe } from '@core/pipes/sort.pipe';
+import { LoaderSkeletonComponent } from '@shared/components/loader-skeleton/loader-skeleton.component';
 import { OrderViewModel } from 'src/app/clients/models';
 
 @Component({
-    selector: 'app-orders',
-    templateUrl: './orders.component.html',
-    styleUrls: ['./orders.component.scss'],
-    standalone: false
+  selector: 'app-orders',
+  templateUrl: './orders.component.html',
+  styleUrls: ['./orders.component.scss'],
+  
+  imports: [FontAwesomeModule, SortPipe, LoaderSkeletonComponent, DatePipe, NgClass],
 })
 export class OrdersComponent implements OnInit {
   private kiotaClientService = inject(KiotaClientService);
   private authService = inject(AuthService);
   private signalrService = inject(SignalrService);
   private storedEventService = inject(StoredEventService);
-  private loaderService = inject(LoaderService);
+  protected loaderService = inject(LoaderService);
 
-  @ViewChild('storedEventViewerContainer', { read: ViewContainerRef })
-  storedEventViewerContainer!: ViewContainerRef;
+  readonly storedEventViewerContainer = viewChild.required('storedEventViewerContainer', { read: ViewContainerRef });
 
   faList = faList;
   customerId?: string;
@@ -32,13 +36,7 @@ export class OrdersComponent implements OnInit {
   eventHistory: IEventHistory[] = [];
 
   async ngOnInit() {
-    if (this.authService.currentCustomer) {
-      const customer = this.authService.currentCustomer;
-      this.customerId = customer.id!;
-      await this.loadOrders();
-    }
-
-    //SignalR
+    await this.loadOrders();
     this.addCustomerToSignalrGroup();
 
     this.signalrService.connection.on(
@@ -49,8 +47,8 @@ export class OrdersComponent implements OnInit {
     );
   }
 
-  get isLoading() {
-    return this.loaderService.loading$;
+  get isLoading(): boolean {
+    return this.loaderService.loading();
   }
 
   getOrderIdString(guid: string): string {
@@ -67,8 +65,8 @@ export class OrdersComponent implements OnInit {
         .then((result) => {
           if (result!.success) {
             this.storedEventService.showStoredEvents(
-              this.storedEventViewerContainer,
-              result?.data ?? undefined
+              this.storedEventViewerContainer(),
+              result?.data ?? []
             );
           }
         });
@@ -109,9 +107,9 @@ export class OrdersComponent implements OnInit {
   }
 
   private async addCustomerToSignalrGroup() {
-    if (this.signalrService.connection.state != 'Disconnected') return;
+    if (!this.authService.currentCustomer) return;
+    if (this.signalrService.connection.state !== 'Disconnected') return;
 
-    // SignalR
     this.signalrService.connection
       .start()
       .then(() => {
@@ -121,9 +119,7 @@ export class OrdersComponent implements OnInit {
           this.authService.currentCustomer!.id
         );
       })
-      .catch(function (err) {
-        return console.error(err.toString());
-      });
+      .catch((err: Error) => console.error(err.toString()));
   }
 
   private updateOrderStatus(

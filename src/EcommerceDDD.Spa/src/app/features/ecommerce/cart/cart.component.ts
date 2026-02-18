@@ -1,14 +1,15 @@
 import { Router } from '@angular/router';
 import { faList, faMinusCircle } from '@fortawesome/free-solid-svg-icons';
-import { LOCAL_STORAGE_ENTRIES } from '@ecommerce/constants/appConstants';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { LOCAL_STORAGE_ENTRIES } from '@features/ecommerce/constants/appConstants';
 import { AuthService } from '@core/services/auth.service';
 import { ConfirmationDialogService } from '@core/services/confirmation-dialog.service';
-import { CurrencyNotificationService } from '@ecommerce/services/currency-notification.service';
+import { CurrencyNotificationService } from '@features/ecommerce/services/currency-notification.service';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { NotificationService } from '@core/services/notification.service';
 import { LoaderService } from '@core/services/loader.service';
 import { StoredEventService } from '@shared/services/stored-event.service';
-import { Component, OnInit, Output, EventEmitter, ViewContainerRef, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, inject, output, viewChild } from '@angular/core';
 import { KiotaClientService } from '@core/services/kiota-client.service';
 import {
   AddQuoteItemRequest,
@@ -17,17 +18,19 @@ import {
   QuoteItemViewModel,
   QuoteViewModel,
 } from 'src/app/clients/models';
+import { LoaderSkeletonComponent } from '@shared/components/loader-skeleton/loader-skeleton.component';
 
 @Component({
-    selector: 'app-cart',
-    templateUrl: './cart.component.html',
-    styleUrls: ['./cart.component.scss'],
-    standalone: false
+  selector: 'app-cart',
+  templateUrl: './cart.component.html',
+  styleUrls: ['./cart.component.scss'],
+  
+  imports: [FontAwesomeModule, LoaderSkeletonComponent],
 })
 export class CartComponent implements OnInit {
   private router = inject(Router);
   private authService = inject(AuthService);
-  private loaderService = inject(LoaderService);
+  protected loaderService = inject(LoaderService);
   private localStorageService = inject(LocalStorageService);
   private confirmationDialogService = inject(ConfirmationDialogService);
   private currencyNotificationService = inject(CurrencyNotificationService);
@@ -35,12 +38,11 @@ export class CartComponent implements OnInit {
   private storedEventService = inject(StoredEventService);
   private kiotaClientService = inject(KiotaClientService);
 
-  @ViewChild('storedEventViewerContainer', { read: ViewContainerRef })
-  storedEventViewerContainer!: ViewContainerRef;
+  readonly storedEventViewerContainer = viewChild.required('storedEventViewerContainer', { read: ViewContainerRef });
 
-  @Output() sendQuoteItemsEvent = new EventEmitter();
-  @Output() placeOrderEvent = new EventEmitter();
-  @Output() reloadProductsEvent = new EventEmitter();
+  readonly sendQuoteItemsEvent = output<QuoteViewModel>();
+  readonly placeOrderEvent = output();
+  readonly reloadProductsEvent = output();
 
   quote?: QuoteViewModel | undefined;
   currentCurrency!: string;
@@ -65,7 +67,6 @@ export class CartComponent implements OnInit {
       await this.getOpenQuote();
     }
 
-    // Currency change listener
     this.currencyNotificationService.currentCurrency.subscribe(
       async (currencyCode) => {
         if (currencyCode != '') {
@@ -77,7 +78,7 @@ export class CartComponent implements OnInit {
   }
 
   get isLoading() {
-    return this.loaderService.loading$;
+    return this.loaderService.loading;
   }
 
   async showQuoteStoredEvents() {
@@ -89,7 +90,7 @@ export class CartComponent implements OnInit {
         .then((result) => {
           if (result!.success) {
             this.storedEventService.showStoredEvents(
-              this.storedEventViewerContainer,
+              this.storedEventViewerContainer(),
               result!.data ?? undefined
             );
           }
@@ -255,8 +256,7 @@ export class CartComponent implements OnInit {
   }
 
   private emitQuote(openQuote: QuoteViewModel) {
-    // emiting quote object to product selection
     this.quote = openQuote;
-    this.sendQuoteItemsEvent.emit(this.quote);
+    this.sendQuoteItemsEvent.emit(openQuote);
   }
 }

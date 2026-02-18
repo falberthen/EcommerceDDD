@@ -21,7 +21,7 @@
       </div>
       <hr />
     </div>
-    @if ((isLoading | async) && !customer) {
+    @if ((loaderService.loading() ) && !customer) {
     <div class="container">
       <app-loader-skeleton></app-loader-skeleton>
     </div>
@@ -94,7 +94,7 @@
           <button
             (click)="saveDetails()"
             class="btn btn-primary footer-item"
-            [disabled]="customerDetailsForm.invalid || (isLoading | async)"
+            [disabled]="customerDetailsForm.invalid || (loaderService.loading() )"
           >
             Save
           </button>

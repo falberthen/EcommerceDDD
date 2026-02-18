@@ -41,7 +41,7 @@
               type="submit"
               class="btn btn-primary login-button"
               value="Log In"
-              [disabled]="loginForm.invalid || (isLoading | async)"
+              [disabled]="loginForm.invalid || (loaderService.loading() )"
             />
           </div>
         </div>

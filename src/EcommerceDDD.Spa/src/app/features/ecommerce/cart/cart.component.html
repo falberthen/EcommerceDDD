@@ -23,11 +23,11 @@
       </div>
       <hr />
     </div>
-    @if ((isLoading | async) && !quote) {
+    @if (loaderService.loading() && !quote) {
     <div>
       <app-loader-skeleton></app-loader-skeleton>
     </div>
-    } @if (!(isLoading | async) && !quote || quote?.items?.length == 0) {
+    } @if (!loaderService.loading() && !quote || quote?.items?.length == 0) {
     <div class="empty-cart-message alert alert-danger">Your cart is empty.</div>
     } @if (quote && quote.items?.length) {
     <div class="cart-body">
@@ -75,14 +75,14 @@
           <button
             (click)="cancelQuote()"
             class="btn btn-danger cancel-quote"
-            [disabled]="isLoading | async"
+            [disabled]="loaderService.loading()"
           >
             Cancel
           </button>
           <button
             (click)="placeOrder()"
             class="btn btn-success"
-            [disabled]="isLoading | async"
+            [disabled]="loaderService.loading()"
           >
             Place Order
           </button>
