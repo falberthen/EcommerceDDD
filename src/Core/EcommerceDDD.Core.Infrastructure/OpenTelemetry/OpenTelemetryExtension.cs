@@ -1,5 +1,3 @@
-using OpenTelemetry.Logs;
-
 namespace EcommerceDDD.Core.Infrastructure.OpenTelemetry;
 
 public static class OpenTelemetryExtension
