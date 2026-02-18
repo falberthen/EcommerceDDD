@@ -30,6 +30,10 @@ public static class CoreInfrastructureExtensions
 			// EventBus
 			.TryAddSingleton<IEventBus, EventPublisher>();
 
+		// OpenTelemetry
+		var serviceName = Assembly.GetEntryAssembly()?.GetName().Name ?? "Unknown";
+		services.AddOpenTelemetryObservability(serviceName);
+
 		return services;
 	}
 
