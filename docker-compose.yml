@@ -2,6 +2,7 @@ x-dotnet-service: &dotnet-service
   environment:
     ASPNETCORE_ENVIRONMENT: '${ASPNETCORE_ENVIRONMENT:-Development}'
     ASPNETCORE_URLS: 'http://+:80'
+    OTEL_EXPORTER_OTLP_ENDPOINT: 'http://aspire-dashboard:18889'
   healthcheck:
     test: curl --fail http://localhost:80/health || exit 1
     interval: 30s
@@ -254,6 +255,12 @@ services:
     build:
       context: .
       dockerfile: src/Services/EcommerceDDD.OrderProcessing/Dockerfile
+    healthcheck:
+      test: curl --fail http://localhost:80/health || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
     ports:
       - '8005:80'
     depends_on:
@@ -273,6 +280,12 @@ services:
     build:
       context: .
       dockerfile: src/Services/EcommerceDDD.PaymentProcessing/Dockerfile
+    healthcheck:
+      test: curl --fail http://localhost:80/health || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
     ports:
       - '8006:80'
     depends_on:
@@ -292,6 +305,12 @@ services:
     build:
       context: .
       dockerfile: src/Services/EcommerceDDD.ShipmentProcessing/Dockerfile
+    healthcheck:
+      test: curl --fail http://localhost:80/health || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
     ports:
       - '8007:80'
     depends_on:
@@ -305,6 +324,15 @@ services:
         condition: service_started
       ecommerceddd-identityserver:
         condition: service_started
+
+  # Observability
+  aspire-dashboard:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:9.1
+    ports:
+      - '18888:18888'
+    environment:
+      DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS: 'true'
+    restart: on-failure
 
   # Frontend SPA (Angular)
   # Usage: docker compose --profile frontend up
