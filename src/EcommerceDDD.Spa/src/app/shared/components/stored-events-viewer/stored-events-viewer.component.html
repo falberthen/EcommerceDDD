@@ -16,7 +16,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (row of eventHistory; track row) {
+          @for (row of eventHistory; track $index) {
             <tr>
               <td>
                 <span class="event-type">{{ row.eventTypeName }}</span>
