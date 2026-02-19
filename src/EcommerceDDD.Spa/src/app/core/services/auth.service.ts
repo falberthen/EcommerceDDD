@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Subject, take } from 'rxjs';
+import { Subject } from 'rxjs';
 import { LocalStorageService } from './local-storage.service';
 import { TokenStorageService } from './token-storage.service';
 import { Router } from '@angular/router';
@@ -24,7 +24,7 @@ export class AuthService {
   private isLogged = new Subject<boolean>();
 
   // Observable string streams
-  isLoggedAnnounced$ = this.isLogged.asObservable().pipe(take(1));
+  isLoggedAnnounced$ = this.isLogged.asObservable();
 
   public get currentUser(): string | null {
     const storedUser = this.localStorageService.getValueByKey(
@@ -39,8 +39,15 @@ export class AuthService {
     );
 
     if (storedCustomerData) {
-      var storedCustomer = JSON.parse(storedCustomerData);
-      return storedCustomer as CustomerDetails;
+      try {
+        // Check if it's already an object or needs parsing
+        const storedCustomer = typeof storedCustomerData === 'string'
+          ? JSON.parse(storedCustomerData)
+          : storedCustomerData;
+        return storedCustomer as CustomerDetails;
+      } catch {
+        return null;
+      }
     }
 
     return null;
