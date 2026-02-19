@@ -75,6 +75,10 @@ export class ProductSelectionComponent implements OnInit {
         .then((result) => {
           if (result?.data) {
             this.products = result.data!;
+            // Sync with existing quote after products load
+            if (this.cart()?.quote) {
+              this.syncronizeQuoteToProductList(this.cart().quote!);
+            }
           }
         });
     } catch (error) {

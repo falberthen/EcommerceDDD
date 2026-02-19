@@ -7,7 +7,7 @@
         </div>
       }
       <div class="container">
-        @for (product of products | sort:'name':'asc'; track product) {
+        @for (product of products | sort:'name':'asc'; track product.productId) {
           <div class="col-12">
             <div class="card product-container">
               <div class="card-body">
