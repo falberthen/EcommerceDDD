@@ -1,8 +1,8 @@
 import { AuthService } from '@core/services/auth.service';
 import { TokenStorageService } from '@core/services/token-storage.service';
 import { LocalStorageService } from '@core/services/local-storage.service';
-import { ChangeDetectorRef, Component, DestroyRef, OnDestroy, OnInit, ViewContainerRef, inject, viewChild } from '@angular/core';
-
+import { Component, DestroyRef, OnDestroy, OnInit, ViewContainerRef, inject, viewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import {
   faList,
@@ -14,22 +14,23 @@ import {
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LOCAL_STORAGE_ENTRIES } from '@features/ecommerce/constants/appConstants';
 import { KiotaClientService } from '@core/services/kiota-client.service';
-import { CustomerDetails, QuoteViewModel } from 'src/app/clients/models';
+import { QuoteNotificationService } from '@features/ecommerce/services/quote-notification.service';
+import { CustomerDetails } from 'src/app/clients/models';
 import { CurrencyDropdownComponent } from '@features/ecommerce/currency-dropdown/currency-dropdown.component';
 
 @Component({
   selector: 'app-nav-menu',
   templateUrl: './nav-menu.component.html',
   styleUrls: ['./nav-menu.component.scss'],
-  
   imports: [RouterModule, FontAwesomeModule, CurrencyDropdownComponent],
 })
 export class NavMenuComponent implements OnInit, OnDestroy {
-  private cdr = inject(ChangeDetectorRef);
+  private destroyRef = inject(DestroyRef);
   private authService = inject(AuthService);
   private kiotaClientService = inject(KiotaClientService);
   private tokenStorageService = inject(TokenStorageService);
   private localStorageService = inject(LocalStorageService);
+  private quoteNotificationService = inject(QuoteNotificationService);
 
   readonly storedEventViewerContainer = viewChild.required('storedEventViewerContainer', { read: ViewContainerRef });
 
@@ -42,31 +43,50 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   isModalOpen = false;
   isLoggedIn = false;
   customer!: CustomerDetails;
+  quoteItemsCount = 0;
 
   async ngOnInit(): Promise<void> {
-    this.authService.isLoggedAnnounced$.subscribe(
-      async (response) => {
+    this.isLoggedIn = !!this.tokenStorageService.getToken();
+    if (this.isLoggedIn) {
+      await this.loadQuoteFromServer();
+    }
+
+    this.authService.isLoggedAnnounced$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(async (response) => {
         this.isLoggedIn = response;
         if (this.isLoggedIn) {
           await this.loadCustomerDetails();
+          await this.loadQuoteFromServer();
         }
-      }
-    );
-  }
+      });
 
-  async ngAfterViewInit(): Promise<void> {
-    this.isLoggedIn = !!this.tokenStorageService.getToken();
-    this.cdr.detectChanges();
+    this.quoteNotificationService.currentQuoteItemsCount
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((count) => {
+        this.quoteItemsCount = count;
+      });
   }
 
   get quoteItems(): number {
-    const quoteStr = this.localStorageService.getValueByKey('openQuote');
-    if (quoteStr && quoteStr !== 'undefined' && quoteStr !== '{}') {
-      const quote = JSON.parse(quoteStr) as QuoteViewModel | undefined;
-      return quote?.items!.length ?? 0;
-    }
+    return this.quoteItemsCount;
+  }
 
-    return 0;
+  private async loadQuoteFromServer() {
+    try {
+      const result = await this.kiotaClientService.client.quoteManagement.api.v2.quotes.get();
+      if (result?.data?.quoteId) {
+        const count = result.data.items?.length ?? 0;
+        this.quoteItemsCount = count;
+        this.quoteNotificationService.changeQuoteItemsCount(count);
+      } else {
+        this.quoteItemsCount = 0;
+        this.quoteNotificationService.changeQuoteItemsCount(0);
+      }
+    } catch (error) {
+      // Silently fail - quote might not exist yet
+      this.quoteItemsCount = 0;
+    }
   }
 
   get loadStoredUser(): string | null | undefined {
