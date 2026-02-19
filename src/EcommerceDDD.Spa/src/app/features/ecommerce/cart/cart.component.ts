@@ -5,11 +5,12 @@ import { LOCAL_STORAGE_ENTRIES } from '@features/ecommerce/constants/appConstant
 import { AuthService } from '@core/services/auth.service';
 import { ConfirmationDialogService } from '@core/services/confirmation-dialog.service';
 import { CurrencyNotificationService } from '@features/ecommerce/services/currency-notification.service';
+import { QuoteNotificationService } from '@features/ecommerce/services/quote-notification.service';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { NotificationService } from '@core/services/notification.service';
 import { LoaderService } from '@core/services/loader.service';
 import { StoredEventService } from '@shared/services/stored-event.service';
-import { Component, OnInit, ViewContainerRef, inject, output, viewChild } from '@angular/core';
+import { Component, DestroyRef, OnInit, ViewContainerRef, inject, output, viewChild } from '@angular/core';
 import { KiotaClientService } from '@core/services/kiota-client.service';
 import {
   AddQuoteItemRequest,
@@ -34,9 +35,15 @@ export class CartComponent implements OnInit {
   private localStorageService = inject(LocalStorageService);
   private confirmationDialogService = inject(ConfirmationDialogService);
   private currencyNotificationService = inject(CurrencyNotificationService);
+  private quoteNotificationService = inject(QuoteNotificationService);
   private notificationService = inject(NotificationService);
   private storedEventService = inject(StoredEventService);
   private kiotaClientService = inject(KiotaClientService);
+  private destroyed = false;
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => this.destroyed = true);
+  }
 
   readonly storedEventViewerContainer = viewChild.required('storedEventViewerContainer', { read: ViewContainerRef });
 
@@ -226,9 +233,7 @@ export class CartComponent implements OnInit {
               .byQuoteId(this.quote.quoteId!)
               .post()
               .then(() => {
-                this.localStorageService.clearKey(
-                  LOCAL_STORAGE_ENTRIES.storedOpenQuote
-                );
+                this.quoteNotificationService.changeQuoteItemsCount(0);
                 this.notificationService.showSuccess(
                   'Order placed with success.'
                 );
@@ -245,18 +250,18 @@ export class CartComponent implements OnInit {
 
   private setQuote(openQuote: QuoteViewModel) {
     if (!openQuote) {
-      this.localStorageService.clearKey(LOCAL_STORAGE_ENTRIES.storedOpenQuote);
+      this.quoteNotificationService.changeQuoteItemsCount(0);
       return;
     }
 
-    this.localStorageService.setValue(
-      LOCAL_STORAGE_ENTRIES.storedOpenQuote,
-      JSON.stringify(openQuote)
-    );
+    // Notify navbar about the change
+    this.quoteNotificationService.changeQuoteItemsCount(openQuote.items?.length ?? 0);
   }
 
   private emitQuote(openQuote: QuoteViewModel) {
     this.quote = openQuote;
-    this.sendQuoteItemsEvent.emit(openQuote);
+    if (!this.destroyed) {
+      this.sendQuoteItemsEvent.emit(openQuote);
+    }
   }
 }
