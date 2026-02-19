@@ -12,7 +12,7 @@
   </div>
   } @if (orders.length > 0) {
   <div>
-    @for (order of orders | sort:'createdAt':'desc'; track order) {
+    @for (order of orders | sort:'createdAt':'desc'; track order.orderId) {
     <div class="order-container">
       <div class="card order-details-container">
         <div class="card-body">
@@ -53,7 +53,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  @for (orderLine of order.orderLines; track orderLine; let i =
+                  @for (orderLine of order.orderLines; track orderLine.productId; let i =
                   $index) {
                   <tr>
                     <td class="table-row product-name">
