@@ -106,7 +106,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   private async storeLoadedCustomer(): Promise<void> {
     this.localStorageService.setValue(
       LOCAL_STORAGE_ENTRIES.storedCustomer,
-      this.customer
+      JSON.stringify(this.customer)
     );
   }
 
