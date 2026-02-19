@@ -129,13 +129,13 @@ Microservices communicate directly using **Kiota-generated typed HTTP clients**.
 
 | Technology | Version |
 |------------|---------|
-| Angular | 19.2.7 |
-| TypeScript | 5.5.4 |
-| Jest | 29.7.0 |
-| NgBootstrap | 18.0.0 |
-| Bootstrap | 5.3.5 |
-| Font Awesome | 6.7.2 |
-| Toastr | 19.0.0 |
+| angular | 21.1.3 |
+| typescript | 5.9.3 |
+| jest | 30.2.0 |
+| @ng-bootstrap/ng-bootstrap | 20.0.0 |
+| bootstrap | 5.3.5 |
+| @fortawesome/angular-fontawesome | 4.0.0 |
+| ngx-toastr | 19.0.0 |
 
 ---
 
