@@ -5,8 +5,8 @@
     "baseUrl": "./",
     "paths": {
       "@core/*": ["src/app/core/*"],
-      "@ecommerce/*": ["src/app/modules/ecommerce/*"],
-      "@authentication/*": ["src/app/modules/authentication/*"],
+      "@features/ecommerce/*": ["src/app/features/ecommerce/*"],
+      "@features/authentication/*": ["src/app/features/authentication/*"],
       "@shared/*": ["src/app/shared/*"],
       "@environments/*": ["src/environments/*"]
     },
@@ -19,12 +19,15 @@
     "declaration": false,
     "experimentalDecorators": true,
     "useDefineForClassFields": true,
-    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "es2022",
-    "module": "es2020",
-    "lib": ["es2018", "dom"],
-    "esModuleInterop": true
+    "module": "es2022",
+    "lib": ["es2022", "dom"],
+    "esModuleInterop": true, 
+   "allowSyntheticDefaultImports": true,
+    "isolatedModules": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

@@ -1,0 +1,32 @@
+.ddl-currency-container {
+  width: 200px;
+  float: left;
+  margin-left: -30px;
+}
+
+.currency-name-container {
+  width: 50px;
+  padding-top: 7px;
+  margin-left: 5px;
+  float: left;
+}
+
+.currency-icon-container {
+  width: 10px;
+  margin-top: 7px;
+  float: left;
+}
+
+.currency-selector-container {
+  width: 100px;
+  float: left;
+  text-align: left;
+}
+
+.currency-selector-container .btn:focus,
+.currency-selector-container .btn:active,
+.currency-selector-container .btn:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}

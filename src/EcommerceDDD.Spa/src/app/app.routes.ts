@@ -1,55 +1,50 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from '@ecommerce/components/home/home.component';
-import { LoginComponent } from '@authentication/components/login/login.component';
-import { AuthGuard } from '@core/guards/auth.guard';
-import { CustomerAccountComponent } from '@authentication/components/customer-account/customer-account.component';
-import { ProductSelectionComponent } from '@ecommerce/components/product-selection/product-selection.component';
-import { OrdersComponent } from '@ecommerce/components/orders/orders.component';
-import { CustomerDetailsComponent } from '@ecommerce/components/customer-details/customer-details.component';
 
-export const APP_ROUTES: Routes = [
+import { authGuard } from '@core/guards/auth.guard';
+
+export const routes: Routes = [
   {
     path: 'login',
-    component: LoginComponent,
+    loadComponent: () => import('@features/authentication/login/login.component').then(m => m.LoginComponent),
   },
   {
     path: 'customer-account',
-    component: CustomerAccountComponent,
+    loadComponent: () => import('@features/authentication/customer-account/customer-account.component').then(m => m.CustomerAccountComponent),
   },
   {
     path: 'home',
-    component: HomeComponent,
-    canActivate: [AuthGuard],
+    loadComponent: () => import('@features/ecommerce/home/home.component').then(m => m.HomeComponent),
+    canActivate: [authGuard],
     pathMatch: 'full',
   },
   {
     path: 'products',
-    component: ProductSelectionComponent,
-    canActivate: [AuthGuard],
+    loadComponent: () => import('@features/ecommerce/product-selection/product-selection.component').then(m => m.ProductSelectionComponent),
+    canActivate: [authGuard],
     pathMatch: 'full',
   },
   {
     path: 'products/:quoteId',
-    component: ProductSelectionComponent,
-    canActivate: [AuthGuard],
+    loadComponent: () => import('@features/ecommerce/product-selection/product-selection.component').then(m => m.ProductSelectionComponent),
+    canActivate: [authGuard],
     pathMatch: 'full',
   },
   {
     path: 'orders',
-    component: OrdersComponent,
-    canActivate: [AuthGuard],
+    loadComponent: () => import('@features/ecommerce/orders/orders.component').then(m => m.OrdersComponent),
+    canActivate: [authGuard],
     pathMatch: 'full',
   },
   {
     path: 'customer-details',
-    component: CustomerDetailsComponent,
-    canActivate: [AuthGuard],
+    loadComponent: () => import('@features/ecommerce/customer-details/customer-details.component').then(m => m.CustomerDetailsComponent),
+    canActivate: [authGuard],
     pathMatch: 'full',
   },
   {
     path: '**',
-    component: LoginComponent,
-    canActivate: [AuthGuard],
+    loadComponent: () => import('@features/authentication/login/login.component').then(m => m.LoginComponent),
+    canActivate: [authGuard],
     pathMatch: 'full',
   },
 ];

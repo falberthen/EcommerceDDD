@@ -7,7 +7,7 @@ import { NotificationService } from './notification.service';
 import {
   LOCAL_STORAGE_ENTRIES,
   ROUTE_PATHS,
-} from '@ecommerce/constants/appConstants';
+} from '@features/ecommerce/constants/appConstants';
 import { KiotaClientService } from './kiota-client.service';
 import { CustomerDetails, LoginResult } from 'src/app/clients/models';
 
@@ -39,8 +39,15 @@ export class AuthService {
     );
 
     if (storedCustomerData) {
-      var storedCustomer = JSON.parse(storedCustomerData);
-      return storedCustomer as CustomerDetails;
+      try {
+        // Check if it's already an object or needs parsing
+        const storedCustomer = typeof storedCustomerData === 'string'
+          ? JSON.parse(storedCustomerData)
+          : storedCustomerData;
+        return storedCustomer as CustomerDetails;
+      } catch {
+        return null;
+      }
     }
 
     return null;

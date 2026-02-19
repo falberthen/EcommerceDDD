@@ -1,49 +1,33 @@
-import { Injectable, Injector, inject } from '@angular/core';
+import { inject, Injector } from '@angular/core';
 import {
-  HttpEvent,
-  HttpInterceptor,
-  HttpHandler,
-  HttpRequest,
+  HttpInterceptorFn,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { NotificationService } from '../services/notification.service';
 
-@Injectable()
-export class ServerErrorInterceptor implements HttpInterceptor {
-  private injector = inject(Injector);
+export const serverErrorInterceptor: HttpInterceptorFn = (req, next) => {
+  const injector = inject(Injector);
 
+  return next(req).pipe(
+    catchError((error) => {
+      const notifier = injector.get(NotificationService);
 
-  intercept(
-    req: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
-    return next.handle(req).pipe(
-      catchError((error) => {
-        const notifier = this.injector.get(NotificationService);
-
-        if (error.status === 400 || error.status === 500) {
-          const errorResult = this.getServerErrorMessage(error).error;
-          if (errorResult.errors) {
-            Object.keys(errorResult.errors).forEach(function (key, index) {
-              const errorMsg = errorResult.errors[key];
-              notifier.showError(errorMsg);
-            });
-          } else {
-            notifier.showError(errorResult.message);
-          }
+      if (error.status === 400 || error.status === 500) {
+        const errorResult = error.error;
+        if (errorResult.errors) {
+          Object.keys(errorResult.errors).forEach(function (key) {
+            const errorMsg = errorResult.errors[key];
+            notifier.showError(errorMsg);
+          });
         } else {
-          notifier.showError(error.message);
+          notifier.showError(errorResult.message);
         }
-        return throwError(error);
-      })
-    );
-  }
-
-  private getServerErrorMessage(
-    errorResponse: HttpErrorResponse
-  ): HttpErrorResponse {
-    return errorResponse;
-  }
-}
+      } else {
+        notifier.showError(error.message);
+      }
+      return throwError(() => error);
+    })
+  );
+};

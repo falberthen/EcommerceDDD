@@ -1,0 +1,133 @@
+<div class="card fadeInDown customer-account-container">
+  <div class="card-body customer-account-form">
+    <div class="cart-header">
+      <div class="row">
+        <div class="col-7">
+          <h4>Customer account</h4>
+        </div>
+      </div>
+      <hr />
+    </div>
+    <div class="container">
+      <div class="form-group row">
+        <form [formGroup]="accountForm">
+          <div class="form-group mt-3">
+            <label for="email" class="form-label col-lg-12">Email</label>
+            <input
+              type="text"
+              id="email"
+              name="email"
+              class="form-control"
+              formControlName="email"
+              placeholder="E-mail"
+              [ngClass]="{ 'is-invalid': isFieldInvalid('email') }"
+            />
+            @if (isFieldInvalid('email')) {
+            <div class="invalid-feedback">Email is required</div>
+            }
+          </div>
+          <div class="form-group mt-3">
+            <label for="name" class="form-label col-lg-12">Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              class="form-control"
+              formControlName="name"
+              placeholder="Name"
+              [ngClass]="{ 'is-invalid': isFieldInvalid('name') }"
+            />
+            @if (isFieldInvalid('name')) {
+            <div class="invalid-feedback">Name is required</div>
+            }
+          </div>
+          <div class="form-group mt-3">
+            <label for="shippingAddress" class="form-label col-lg-12">
+              Shipping address
+            </label>
+            <input
+              type="text"
+              id="shippingAddress"
+              name="shippingAddress"
+              class="form-control"
+              formControlName="shippingAddress"
+              placeholder="Shipping Address"
+              [ngClass]="{ 'is-invalid': isFieldInvalid('shippingAddress') }"
+            />
+            @if (isFieldInvalid('shippingAddress')) {
+            <div class="invalid-feedback">Shipping Address is required</div>
+            }
+          </div>
+          <div class="form-group mt-3">
+            <label for="password" class="form-label col-lg-12">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-control"
+              formControlName="password"
+              placeholder="Password"
+              [ngClass]="{ 'is-invalid': isFieldInvalid('password') }"
+            />
+            @if (isFieldInvalid('password')) {
+            <div class="invalid-feedback">Password is required</div>
+            }
+          </div>
+          <div class="form-group mt-3">
+            <label for="passwordConfirm" class="form-label col-lg-12">
+              Password confirmation
+            </label>
+            <input
+              type="password"
+              id="passwordConfirm"
+              name="passwordConfirm"
+              class="form-control"
+              formControlName="passwordConfirm"
+              placeholder="Confirmation"
+              [ngClass]="{ 'is-invalid': isFieldInvalid('passwordConfirm') }"
+            />
+            @if (isFieldInvalid('password')) {
+            <div class="invalid-feedback">Password confirm is required</div>
+            }
+          </div>
+          <div class="form-group mt-3">
+            <label for="creditLimit" class="form-label col-lg-12">
+              Credit limit
+            </label>
+            <input
+              type="text"
+              id="creditLimit"
+              name="creditLimit"
+              class="form-control credit-limit-field"
+              formControlName="creditLimit"
+              placeholder="Credit limit"
+              [ngClass]="{ 'is-invalid': isFieldInvalid('creditLimit') }"
+            />
+            @if (isFieldInvalid('creditLimit')) {
+            <div class="invalid-feedback">Credit Limit is required</div>
+            }
+          </div>
+          <div class="row mt-3">
+            <hr />
+            <div class="col-lg-12 customer-account-footer">
+              <button
+                [routerLink]="['/home']"
+                class="btn btn-secondary footer-item"
+                [disabled]="loaderService.loading() "
+              >
+                Cancel
+              </button>
+              <button
+                (click)="onSubmit()"
+                class="btn btn-primary footer-item"
+                [disabled]="accountForm.invalid || (loaderService.loading() )"
+              >
+                Create
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

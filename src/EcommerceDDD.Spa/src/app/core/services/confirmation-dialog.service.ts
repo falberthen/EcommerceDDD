@@ -6,7 +6,6 @@ import { ConfirmationDialogComponent } from '@shared/components/confirmation-dia
 export class ConfirmationDialogService {
   private modalService = inject(NgbModal);
 
-
   public confirm(
     title: string,
     message: string,
@@ -17,10 +16,12 @@ export class ConfirmationDialogService {
     const modalRef = this.modalService.open(ConfirmationDialogComponent, {
       size: dialogSize,
     });
-    modalRef.componentInstance.title = title;
-    modalRef.componentInstance.message = message;
-    modalRef.componentInstance.btnOkText = btnOkText;
-    modalRef.componentInstance.btnCancelText = btnCancelText;
+    
+    const instance = modalRef.componentInstance;
+    instance.title = title;
+    instance.message = message;
+    instance.btnOkText = btnOkText;
+    instance.btnCancelText = btnCancelText;
 
     return modalRef.result;
   }

@@ -1,0 +1,79 @@
+import { Component, OnInit, inject } from '@angular/core';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { NotificationService } from '@core/services/notification.service';
+import { LoaderService } from '@core/services/loader.service';
+import { KiotaClientService } from '@core/services/kiota-client.service';
+import { RegisterCustomerRequest } from 'src/app/clients/models';
+
+@Component({
+  selector: 'app-customer-account',
+  templateUrl: './customer-account.component.html',
+  styleUrls: ['./customer-account.component.scss'],
+  
+  imports: [ReactiveFormsModule, RouterModule, CommonModule],
+})
+export class CustomerAccountComponent implements OnInit {
+  private router = inject(Router);
+  private formBuilder = inject(FormBuilder);
+  private route = inject(ActivatedRoute);
+  protected loaderService = inject(LoaderService);
+  private kiotaClientService = inject(KiotaClientService);
+  private notificationService = inject(NotificationService);
+
+  accountForm!: FormGroup;
+  returnUrl!: string;
+
+  ngOnInit() {
+    this.accountForm = this.formBuilder.group({
+      email: ['', Validators.required],
+      name: ['', Validators.required],
+      shippingAddress: ['404 Rue Infinite Loop', Validators.required],
+      password: ['', Validators.required],
+      passwordConfirm: ['', Validators.required],
+      creditLimit: ['10000', Validators.required],
+    });
+
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+  }
+
+  get isLoading() {
+    return this.loaderService.loading;
+  }
+
+  isFieldInvalid(fieldName: string): boolean {
+    const field = this.accountForm.get(fieldName);
+    return field!.invalid && field!.touched;
+  }
+
+  async onSubmit() {
+    if (this.accountForm.invalid) return;
+
+    this.loaderService.setLoading(true);
+    const customerRegistration: RegisterCustomerRequest = {
+      email: this.f.email.value,
+      name: this.f.name.value,
+      shippingAddress: this.f.shippingAddress.value,
+      password: this.f.password.value,
+      passwordConfirm: this.f.passwordConfirm.value,
+      creditLimit: this.f.creditLimit.value,
+    };
+
+    try {
+      await this.kiotaClientService.client.customerManagement.api.v2.customers.post(
+        customerRegistration
+      );
+      this.notificationService.showSuccess('Account successfully created!');
+      this.router.navigate([this.returnUrl]);
+    } catch (error) {
+      this.kiotaClientService.handleError(error);
+    } finally {
+      this.loaderService.setLoading(false);
+    }
+  }
+
+  private get f() {
+    return this.accountForm.controls;
+  }
+}
