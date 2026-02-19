@@ -1,19 +1,4 @@
-﻿namespace EcommerceDDD.PaymentProcessing.Domain.Events;
+namespace EcommerceDDD.PaymentProcessing.Domain.Events;
 
-public record PaymentCompleted : DomainEvent
-{
-    public Guid PaymentId { get; private set; }
-
-    public static PaymentCompleted Create(Guid paymentId)
-    {
-        if (paymentId == Guid.Empty)
-            throw new ArgumentOutOfRangeException(nameof(paymentId));
-
-        return new PaymentCompleted(paymentId);
-    }
-
-    private PaymentCompleted(Guid paymentId)
-    {
-        PaymentId = paymentId;
-    }
-}
+public record PaymentCompleted(
+    Guid PaymentId) : DomainEvent;

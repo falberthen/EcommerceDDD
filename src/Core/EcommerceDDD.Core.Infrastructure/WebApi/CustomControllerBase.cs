@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.Core.Infrastructure.WebApi;
+namespace EcommerceDDD.Core.Infrastructure.WebApi;
 
 public class CustomControllerBase : ControllerBase
 {
@@ -18,22 +18,7 @@ public class CustomControllerBase : ControllerBase
     protected async new Task<IActionResult> Response<TResult>(IQuery<TResult> query,
         CancellationToken cancellationToken)
     {
-        TResult result;
-
-        try
-        {
-            result = await _queryBus
-				.SendAsync(query, cancellationToken);
-        }
-        catch (OperationCanceledException)
-        {
-            return StatusCode(500, "Operation was canceled.");
-        }
-        catch (Exception e)
-        {
-            return BadRequestActionResult(e.Message);
-        }
-
+        var result = await _queryBus.SendAsync(query, cancellationToken);
         return Ok(new ApiResponse<TResult>
         {
             Data = result,
@@ -41,34 +26,13 @@ public class CustomControllerBase : ControllerBase
         });
     }
 
-    protected async new Task<IActionResult> Response(ICommand command, 
+    protected async new Task<IActionResult> Response(ICommand command,
 		CancellationToken cancellationToken)
     {
-        try
-        {
-            await _commandBus
-				.SendAsync(command, cancellationToken);
-        }
-        catch (OperationCanceledException)
-        {
-            // Handle cancellation
-            return StatusCode(500, "Operation was canceled.");
-        }
-        catch (Exception e)
-        {
-            return BadRequestActionResult(e.Message);
-        }
-
+        await _commandBus.SendAsync(command, cancellationToken);
         return Ok(new ApiResponse<IActionResult>
         {
             Success = true
         });
     }
-
-    protected IActionResult BadRequestActionResult(string resultErrors) 
-		=> BadRequest(new ApiResponse<IActionResult>
-			{
-				Success = false,
-				Message = resultErrors
-			});
 }

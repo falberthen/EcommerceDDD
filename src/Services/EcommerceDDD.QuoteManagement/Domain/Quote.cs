@@ -36,8 +36,16 @@ public class Quote : AggregateRoot<QuoteId>
             p.ProductItem.ProductId == quoteItemData.ProductId);
 
         dynamic @event = quoteItem is null
-            ? QuoteItemAdded.Create(quoteItemData)
-            : QuoteItemQuantityChanged.Create(quoteItemData);
+            ? new QuoteItemAdded(
+                quoteItemData.QuoteId.Value,
+                quoteItemData.ProductId.Value,
+                quoteItemData.ProductName,
+                quoteItemData.ProductPrice.Amount,
+                quoteItemData.Quantity)
+            : new QuoteItemQuantityChanged(
+                quoteItemData.QuoteId.Value,
+                quoteItemData.ProductId.Value,
+                quoteItemData.Quantity);
 
         AppendEvent(@event);
         Apply(@event);
@@ -54,9 +62,8 @@ public class Quote : AggregateRoot<QuoteId>
         if (quoteItem is null)
             throw new BusinessRuleException("Quote item not found.");
 
-        var @event = QuoteItemRemoved.Create(
-            Id.Value, quoteItem.ProductItem.ProductId.Value
-        );
+        var @event = new QuoteItemRemoved(
+            Id.Value, quoteItem.ProductItem.ProductId.Value);
 
         AppendEvent(@event);
         Apply(@event);
@@ -67,8 +74,7 @@ public class Quote : AggregateRoot<QuoteId>
         if (Status != QuoteStatus.Open)
             throw new BusinessRuleException("Quote cannot be canceled at this point.");
 
-        var @event = QuoteCanceled.Create(
-            Id.Value);
+        var @event = new QuoteCanceled(Id.Value);
 
         AppendEvent(@event);
         Apply(@event);
@@ -82,7 +88,7 @@ public class Quote : AggregateRoot<QuoteId>
         if (!Items.Any())
             throw new BusinessRuleException("Quote needs at least 1 item to be confirmed.");
 
-        var @event = QuoteConfirmed.Create(Id.Value);
+        var @event = new QuoteConfirmed(Id.Value);
 
         AppendEvent(@event);
         Apply(@event);
@@ -139,7 +145,7 @@ public class Quote : AggregateRoot<QuoteId>
 
     private Quote(CustomerId customerId, Currency currency)
     {
-        var @event = QuoteOpen.Create(
+        var @event = new QuoteOpen(
             Guid.NewGuid(),
             customerId.Value,
             currency.Code);

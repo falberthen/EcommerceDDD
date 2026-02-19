@@ -61,6 +61,7 @@ builder.Services.AddIdentityServer(opt =>
 
 // App
 var app = builder.Build();
+app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
 	app.UseSwagger(builder.Configuration);

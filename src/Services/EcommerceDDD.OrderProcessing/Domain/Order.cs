@@ -36,10 +36,16 @@ public class Order : AggregateRoot<OrderId>
         var orderLines = BuildOrderLines(orderData);
         var totalPrice = CalculateTotalPrice(orderLines, orderData?.Currency!);
 
-        var @event = OrderProcessed.Create(
+        var orderLineDetails = orderLines.Select(ol => new OrderLineDetails(
+            ol.ProductItem.ProductId.Value,
+            ol.ProductItem.ProductName,
+            ol.ProductItem.UnitPrice.Amount,
+            ol.ProductItem.Quantity)).ToList();
+
+        var @event = new OrderProcessed(
             orderData!.CustomerId.Value,
             Id.Value,
-            orderLines,
+            orderLineDetails,
             orderData.Currency!.Code,
             totalPrice.Amount);
 
@@ -55,7 +61,7 @@ public class Order : AggregateRoot<OrderId>
         var productsIds = OrderLines
             .Select(ol => ol.ProductItem.ProductId.Value).ToList();
 
-        var @event = OrderPaid.Create(
+        var @event = new OrderPaid(
             Id.Value,
             paymentId.Value,
             productsIds,
@@ -73,7 +79,7 @@ public class Order : AggregateRoot<OrderId>
 
         var productsIds = OrderLines
             .Select(ol => ol.ProductItem.ProductId.Value).ToList();
-        var @event = OrderShipped.Create(
+        var @event = new OrderShipped(
             Id.Value,
             shipmentId.Value,
             productsIds);
@@ -87,7 +93,7 @@ public class Order : AggregateRoot<OrderId>
         if (Status != OrderStatus.Shipped)
             throw new BusinessRuleException("The order must be shipped before completed.");
 
-        var @event = OrderCompleted.Create(
+        var @event = new OrderCompleted(
             Id.Value,
             shipmentId.Value);
 
@@ -100,10 +106,11 @@ public class Order : AggregateRoot<OrderId>
         if (Status == OrderStatus.Completed || Status == OrderStatus.Canceled)
             throw new BusinessRuleException("The order cannot be cancelled at this point.");
 
-        var @event = OrderCanceled.Create(
+        var @event = new OrderCanceled(
             Id.Value,
             PaymentId?.Value,
-            cancellationReason);
+            cancellationReason,
+            cancellationReason.GetDescription());
 
         AppendEvent(@event);
         Apply(@event);
@@ -189,7 +196,7 @@ public class Order : AggregateRoot<OrderId>
     private Order(OrderData orderData)
     {
         Guid orderId = Guid.NewGuid();
-        var @event = OrderPlaced.Create(
+        var @event = new OrderPlaced(
             orderData.CustomerId.Value,
             orderId,
             orderData.QuoteId.Value);

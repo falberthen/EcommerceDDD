@@ -3,15 +3,12 @@
 public class IdentityManager(
 	ITokenRequester tokenRequester,
 	UserManager<ApplicationUser> userManager,
-	IOptions<TokenIssuerSettings> issuerSettings,
 	RoleManager<IdentityRole> roleManager) : IIdentityManager
 {
 	private readonly ITokenRequester _tokenRequester = tokenRequester
 		?? throw new ArgumentNullException(nameof(tokenRequester));
 	private readonly UserManager<ApplicationUser> _userManager = userManager
-		?? throw new ArgumentNullException(nameof(userManager));
-	private readonly TokenIssuerSettings _issuerSettings = issuerSettings.Value
-		?? throw new ArgumentNullException(nameof(issuerSettings));
+		?? throw new ArgumentNullException(nameof(userManager));	
 	public readonly RoleManager<IdentityRole> _roleManager = roleManager
 		?? throw new ArgumentNullException(nameof(roleManager));
 
@@ -21,15 +18,15 @@ public class IdentityManager(
 			request.Email, request.Password
 		);
 
-		if (response.HttpStatusCode == HttpStatusCode.BadRequest)
+		if (response?.HttpStatusCode == HttpStatusCode.BadRequest)
 			throw new ApplicationException($"Invalid username or password.");
 
 		return new LoginResult()
 		{
-			AccessToken = response.AccessToken,
-			ErrorDescription = response.ErrorDescription,
-			IdentityToken = response.IdentityToken,
-			RefreshToken = response.RefreshToken,
+			AccessToken = response?.AccessToken,
+			ErrorDescription = response?.ErrorDescription,
+			IdentityToken = response?.IdentityToken,
+			RefreshToken = response?.RefreshToken,
 		};
 	}
 

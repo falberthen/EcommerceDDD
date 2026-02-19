@@ -25,7 +25,7 @@ public class PlaceOrderHandler(
 		await ConfirmQuoteAsync(quote.QuoteId!.Value, cancellationToken);
 
 		// Placing order
-		var oderItems = quote.Items!.Select(qi => new ProductItemData()
+		var orderItems = quote.Items!.Select(qi => new ProductItemData()
 		{
 			ProductId = ProductId.Of(qi.ProductId!.Value),
 			ProductName = qi.ProductName!,
@@ -37,7 +37,7 @@ public class PlaceOrderHandler(
 			CustomerId.Of(quote.CustomerId!.Value),
 			QuoteId.Of(quote.QuoteId.Value),
 			Currency.OfCode(quote.CurrencyCode!),
-			oderItems);
+			orderItems);
 
 		var order = Order.Place(orderData);
 

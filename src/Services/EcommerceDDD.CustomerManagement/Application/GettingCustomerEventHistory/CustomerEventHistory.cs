@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.CustomerManagement.Application.GettingCustomerEventHistory;
+namespace EcommerceDDD.CustomerManagement.Application.GettingCustomerEventHistory;
 
 public record CustomerEventHistory(
     Guid Id,

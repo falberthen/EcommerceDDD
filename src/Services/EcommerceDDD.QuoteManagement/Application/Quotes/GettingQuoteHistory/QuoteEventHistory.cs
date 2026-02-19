@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.QuoteManagement.Application.Quotes.GettingQuoteHistory;
+namespace EcommerceDDD.QuoteManagement.Application.Quotes.GettingQuoteHistory;
 
 public record QuoteEventHistory(
     Guid Id, 
