@@ -22,3 +22,11 @@
   float: left;
   text-align: left;
 }
+
+.currency-selector-container .btn:focus,
+.currency-selector-container .btn:active,
+.currency-selector-container .btn:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
