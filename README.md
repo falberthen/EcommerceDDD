@@ -2,11 +2,13 @@
 
 An experimental full-stack application showcasing cutting-edge technologies and architectural patterns for building scalable e-commerce systems.
 
+![.NET](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet) ![Angular](https://img.shields.io/badge/Angular-21-DD0031?logo=angular)  ![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker)
+
+![Build](https://github.com/falberthen/ecommerceddd/actions/workflows/ecommerceddd-build.yml/badge.svg)
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 ⭐ **If you find this project useful, please consider giving it a star!** It helps others discover the project. ![GitHub Stars](https://img.shields.io/github/stars/falberthen/ecommerceddd?style=social&logo=github)
-
-![.NET](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet) ![Angular](https://img.shields.io/badge/Angular-19-DD0031?logo=angular) [![License](https://img.shields.io/github/license/falberthen/ecommerceddd.svg)](LICENSE)
-
-![Build](https://github.com/falberthen/ecommerceddd/actions/workflows/ecommerceddd-build.yml/badge.svg) ![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker)
 
 <br/>
 
