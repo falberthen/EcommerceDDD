@@ -1,4 +1,4 @@
-using EcommerceDDD.Core.Exceptions.Types;
+using EcommerceDDD.Core.Exceptions;
 
 namespace EcommerceDDD.ShipmentProcessing.Tests.Domain;
 
@@ -62,7 +62,7 @@ public class ShipmentTests
         var shipmentData = new ShipmentData(orderId, productItems);
 
 		// When & Then
-		BusinessRuleException exception = Assert.Throws<BusinessRuleException>(() =>
+		DomainException exception = Assert.Throws<DomainException>(() =>
 			Shipment.Create(shipmentData));
 	}
 }

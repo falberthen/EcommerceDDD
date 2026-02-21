@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.OrderProcessing.Domain;
+namespace EcommerceDDD.OrderProcessing.Domain;
 
 public class ProductItem : ValueObject<ProductItem>
 {
@@ -12,15 +12,15 @@ public class ProductItem : ValueObject<ProductItem>
         ProductId productId, string productName, Money unitPrice, int quantity, Currency currency)
     {
         if (productId is null)
-            throw new BusinessRuleException("ProductId is required.");
+            throw new DomainException("ProductId is required.");
         if (string.IsNullOrEmpty(productName))
-            throw new BusinessRuleException("Product name cannot be null or empty.");
+            throw new DomainException("Product name cannot be null or empty.");
         if (unitPrice is null)
-            throw new BusinessRuleException("Product unit price is required.");
+            throw new DomainException("Product unit price is required.");
         if (currency is null)
-            throw new BusinessRuleException("Currency is required.");
+            throw new DomainException("Currency is required.");
         if (quantity <= 0)
-            throw new BusinessRuleException("Product quantity must be > 0.");
+            throw new DomainException("Product quantity must be > 0.");
 
         ProductId = productId;
         ProductName = productName;

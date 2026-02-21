@@ -15,7 +15,8 @@ public class RegisterCustomerHandler(
 
 	public async Task<Result> HandleAsync(RegisterCustomer command, CancellationToken cancellationToken)
 	{
-		if (!_uniquenessChecker.IsUnique(command.Email))
+		var isUnique = await _uniquenessChecker.IsUniqueAsync(command.Email, cancellationToken);
+		if (!isUnique)
 			return Result.Fail("This e-mail is already in use.");
 
 		var customerData = new CustomerData(

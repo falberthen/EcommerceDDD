@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.CustomerManagement.Domain;
+namespace EcommerceDDD.CustomerManagement.Domain;
 
 public sealed class Customer : AggregateRoot<CustomerId>
 {
@@ -15,16 +15,16 @@ public sealed class Customer : AggregateRoot<CustomerId>
             ?? throw new ArgumentNullException(nameof(customerData));
 
         if (string.IsNullOrWhiteSpace(Email))
-            throw new BusinessRuleException("Customer email cannot be null or whitespace.");
+            throw new DomainException("Customer email cannot be null or whitespace.");
 
         if (string.IsNullOrWhiteSpace(Name))
-            throw new BusinessRuleException("Customer name cannot be null or whitespace.");
+            throw new DomainException("Customer name cannot be null or whitespace.");
 
         if (string.IsNullOrWhiteSpace(ShippingAddress))
-            throw new BusinessRuleException("Customer shipping address cannot be null or whitespace.");
+            throw new DomainException("Customer shipping address cannot be null or whitespace.");
 
         if (CreditLimit <= 0)
-            throw new BusinessRuleException("Customer available credit limit must be greater than 0.");
+            throw new DomainException("Customer available credit limit must be greater than 0.");
 
         return new Customer(customerData);
     }
@@ -35,13 +35,13 @@ public sealed class Customer : AggregateRoot<CustomerId>
             ?? throw new ArgumentNullException(nameof(customerData));
 
         if (string.IsNullOrWhiteSpace(customerData.Name))
-            throw new BusinessRuleException("Customer name cannot be null or whitespace.");
+            throw new DomainException("Customer name cannot be null or whitespace.");
 
         if (string.IsNullOrWhiteSpace(ShippingAddress))
-            throw new BusinessRuleException("Customer shipping address cannot be null or whitespace.");
+            throw new DomainException("Customer shipping address cannot be null or whitespace.");
 
         if (CreditLimit <= 0)
-            throw new BusinessRuleException("Available credit limit must be greater than 0.");
+            throw new DomainException("Available credit limit must be greater than 0.");
 
         var @event = new CustomerUpdated(
             Id.Value,

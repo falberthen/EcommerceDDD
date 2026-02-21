@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.QuoteManagement.Domain;
+namespace EcommerceDDD.QuoteManagement.Domain;
 
 public class Quote : AggregateRoot<QuoteId>
 {
@@ -15,9 +15,9 @@ public class Quote : AggregateRoot<QuoteId>
     public static Quote OpenQuoteForCustomer(CustomerId customerId, Currency currency)
     {
         if (customerId is null)
-            throw new BusinessRuleException("The customer Id is required.");
+            throw new DomainException("The customer Id is required.");
         if (currency is null)
-            throw new BusinessRuleException("The currency is required.");
+            throw new DomainException("The currency is required.");
 
         var quote = new Quote(customerId, currency);
         return quote;
@@ -26,11 +26,11 @@ public class Quote : AggregateRoot<QuoteId>
     public void AddItem(QuoteItemData quoteItemData)
     {
         if(quoteItemData is null)
-            throw new BusinessRuleException("Quote item data is required.");
+            throw new DomainException("Quote item data is required.");
 
         if (Status == QuoteStatus.Confirmed 
             || Status == QuoteStatus.Cancelled)
-            throw new BusinessRuleException("Quote cannot be changed at this point.");
+            throw new DomainException("Quote cannot be changed at this point.");
 
         var quoteItem = Items.FirstOrDefault(p => 
             p.ProductItem.ProductId == quoteItemData.ProductId);
@@ -54,13 +54,13 @@ public class Quote : AggregateRoot<QuoteId>
     public void RemoveItem(ProductId productId)
     {
         if (productId is null)
-            throw new BusinessRuleException("The ProductId is required.");
+            throw new DomainException("The ProductId is required.");
 
         var quoteItem = Items.FirstOrDefault(i => 
             i.ProductItem.ProductId.Value == productId.Value);
 
         if (quoteItem is null)
-            throw new BusinessRuleException("Quote item not found.");
+            throw new DomainException("Quote item not found.");
 
         var @event = new QuoteItemRemoved(
             Id.Value, quoteItem.ProductItem.ProductId.Value);
@@ -72,7 +72,7 @@ public class Quote : AggregateRoot<QuoteId>
     public void Cancel()
     {
         if (Status != QuoteStatus.Open)
-            throw new BusinessRuleException("Quote cannot be canceled at this point.");
+            throw new DomainException("Quote cannot be canceled at this point.");
 
         var @event = new QuoteCanceled(Id.Value);
 
@@ -83,10 +83,10 @@ public class Quote : AggregateRoot<QuoteId>
     public void Confirm()
     {
         if (Status != QuoteStatus.Open)
-            throw new BusinessRuleException("Quote cannot be confirmed at this point.");
+            throw new DomainException("Quote cannot be confirmed at this point.");
 
         if (!Items.Any())
-            throw new BusinessRuleException("Quote needs at least 1 item to be confirmed.");
+            throw new DomainException("Quote needs at least 1 item to be confirmed.");
 
         var @event = new QuoteConfirmed(Id.Value);
 

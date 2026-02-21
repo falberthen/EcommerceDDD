@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.CustomerManagement.Domain;
+namespace EcommerceDDD.CustomerManagement.Domain;
 
 public class CreditLimit : ValueObject<CreditLimit>
 {
@@ -7,7 +7,7 @@ public class CreditLimit : ValueObject<CreditLimit>
     public static CreditLimit Create(decimal creditLimit)
     {
         if(creditLimit <= 0) 
-            throw new BusinessRuleException("The customer credit limit must be greater than zero.");
+            throw new DomainException("The customer credit limit must be greater than zero.");
 
         return new CreditLimit(creditLimit);
     }

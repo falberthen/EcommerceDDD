@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.InventoryManagement.Domain;
+namespace EcommerceDDD.InventoryManagement.Domain;
 
 public class InventoryStockUnit : AggregateRoot<InventoryStockUnitId>
 {
@@ -11,10 +11,10 @@ public class InventoryStockUnit : AggregateRoot<InventoryStockUnitId>
     public void DecreaseStockQuantity(int quantityToDecrease)
     {
         if (quantityToDecrease <= 0)
-            throw new BusinessRuleException("Quantity to decrease must be greater than zero.");
+            throw new DomainException("Quantity to decrease must be greater than zero.");
 
         if (Quantity < quantityToDecrease)
-            throw new BusinessRuleException("Insufficient quantity in stock.");
+            throw new DomainException("Insufficient quantity in stock.");
 
         var @event = new StockQuantityDecreased(
             Id.Value,
@@ -28,7 +28,7 @@ public class InventoryStockUnit : AggregateRoot<InventoryStockUnitId>
     public void IncreaseStockQuantity(int quantityToIncrease)
     {
         if (quantityToIncrease <= 0)
-            throw new BusinessRuleException("Quantity to increase must be greater than zero.");
+            throw new DomainException("Quantity to increase must be greater than zero.");
 
         var @event = new StockQuantityIncreased(
             Id.Value,
@@ -53,7 +53,7 @@ public class InventoryStockUnit : AggregateRoot<InventoryStockUnitId>
     private InventoryStockUnit(ProductId productId, int initialQuantity)
     {
         if (initialQuantity < 0)
-            throw new BusinessRuleException("Initial quantity cannot be less than zero.");
+            throw new DomainException("Initial quantity cannot be less than zero.");
         
         var @event = new UnitEnteredInStock(
             Guid.NewGuid(),

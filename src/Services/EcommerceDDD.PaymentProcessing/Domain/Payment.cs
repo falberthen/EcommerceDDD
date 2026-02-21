@@ -1,4 +1,4 @@
-﻿using PaymentCompleted = EcommerceDDD.PaymentProcessing.Domain.Events.PaymentCompleted;
+using PaymentCompleted = EcommerceDDD.PaymentProcessing.Domain.Events.PaymentCompleted;
 
 namespace EcommerceDDD.PaymentProcessing.Domain;
 
@@ -19,16 +19,16 @@ public class Payment : AggregateRoot<PaymentId>
             ?? throw new ArgumentNullException(nameof(paymentData));
 
         if (CustomerId is null)
-            throw new BusinessRuleException("The customer Id is required.");
+            throw new DomainException("The customer Id is required.");
 
         if (OrderId is null)
-            throw new BusinessRuleException("The order Id is required.");
+            throw new DomainException("The order Id is required.");
     
         if (TotalAmount is null)
-            throw new BusinessRuleException("The total amount is required.");
+            throw new DomainException("The total amount is required.");
 
 		if (ProductItems is null || paymentData.ProductItems.Count == 0)
-			throw new BusinessRuleException("There are no products to pay.");
+			throw new DomainException("There are no products to pay.");
 
 		return new Payment(paymentData);
     }
@@ -36,7 +36,7 @@ public class Payment : AggregateRoot<PaymentId>
     public void Complete()
     {
         if (Status != PaymentStatus.Pending)
-            throw new BusinessRuleException($"Payment cannot be completed when '{Status}'");
+            throw new DomainException($"Payment cannot be completed when '{Status}'");
 
         var @event = new PaymentCompleted(Id.Value);
 
@@ -47,7 +47,7 @@ public class Payment : AggregateRoot<PaymentId>
     public void Cancel(PaymentCancellationReason paymentCancellationReason)
     {
         if (Status == PaymentStatus.Canceled)
-            throw new BusinessRuleException($"Payment cannot be canceled when '{Status}'");
+            throw new DomainException($"Payment cannot be canceled when '{Status}'");
 
         var @event = new PaymentCanceled(
             Id.Value,

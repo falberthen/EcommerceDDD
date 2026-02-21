@@ -1,6 +1,6 @@
-﻿namespace EcommerceDDD.QuoteManagement.Domain;
+namespace EcommerceDDD.QuoteManagement.Domain;
 
 public interface IProductMapper
 {
-	Task<IEnumerable<ProductViewModel>> MapProductFromCatalogAsync(IEnumerable<ProductId> productIds, Currency currency, CancellationToken cancellationToken);
+	Task<Result<IEnumerable<ProductViewModel>>> MapProductFromCatalogAsync(IEnumerable<ProductId> productIds, Currency currency, CancellationToken cancellationToken);
 }

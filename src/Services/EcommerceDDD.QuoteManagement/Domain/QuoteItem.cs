@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.QuoteManagement.Domain;
+namespace EcommerceDDD.QuoteManagement.Domain;
 
 public class QuoteItem
 {
@@ -7,7 +7,7 @@ public class QuoteItem
     internal static QuoteItem Create(ProductItem productItem)
     {
         if (productItem is null)
-            throw new BusinessRuleException("ProductItem is required");
+            throw new DomainException("ProductItem is required");
 
         return new QuoteItem(productItem);
     }
@@ -15,7 +15,7 @@ public class QuoteItem
     internal void ChangeQuantity(int quantity)
     {
         if (quantity == 0)
-            throw new BusinessRuleException("The product quantity must be at last 1.");
+            throw new DomainException("The product quantity must be at last 1.");
 
         ProductItem.ChangeQuantity(quantity);
     }
