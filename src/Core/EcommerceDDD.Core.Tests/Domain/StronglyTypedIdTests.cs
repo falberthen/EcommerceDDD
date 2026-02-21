@@ -1,4 +1,4 @@
-﻿using EcommerceDDD.Core.Exceptions.Types;
+﻿using EcommerceDDD.Core.Exceptions;
 
 namespace EcommerceDDD.Core.Tests.Domain;
 
@@ -8,11 +8,11 @@ public class StronglyTypedIdTests
     public void EmptyGuid_ShouldThrowDomainException()
     {
         // Given
-        var ex = Assert.Throws<BusinessRuleException>(() => 
+        var ex = Assert.Throws<DomainException>(() => 
             new DummyAggregateId(new Guid())); // When
 
 		// Then
-		Assert.Equal(typeof(BusinessRuleException), ex.GetType());
+		Assert.Equal(typeof(DomainException), ex.GetType());
     }
 
     [Fact]
