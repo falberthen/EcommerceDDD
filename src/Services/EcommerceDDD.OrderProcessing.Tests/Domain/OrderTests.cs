@@ -58,7 +58,7 @@ public class OrderTests
 		var order = Order.Place(orderData);
 
 		// When & Then
-		Assert.Throws<BusinessRuleException>(() => 
+		Assert.Throws<DomainException>(() => 
 			order.Process(orderData));
 	}
 

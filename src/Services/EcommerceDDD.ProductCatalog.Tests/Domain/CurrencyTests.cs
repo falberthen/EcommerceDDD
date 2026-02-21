@@ -23,7 +23,7 @@ public class CurrencyTests
 		var code = string.Empty;
 
 		// When & Then
-		Assert.Throws<BusinessRuleException>(() =>
+		Assert.Throws<DomainException>(() =>
 			Currency.OfCode(code));
 	}
 
@@ -34,7 +34,7 @@ public class CurrencyTests
 		var code = "USK";
 
 		// When & Then
-		Assert.Throws<BusinessRuleException>(() =>
+		Assert.Throws<DomainException>(() =>
 			Currency.OfCode(code));
 	}
 }

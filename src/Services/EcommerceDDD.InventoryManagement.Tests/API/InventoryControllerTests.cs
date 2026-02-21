@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.InventoryManagement.Tests.API;
+namespace EcommerceDDD.InventoryManagement.Tests.API;
 
 public class InventoryControllerTests
 {
@@ -18,42 +18,42 @@ public class InventoryControllerTests
             DecreasedQuantity = 3
         };
 
-        await _commandBus.SendAsync(Arg.Any<DecreaseStockQuantity>(), CancellationToken.None);
+        _commandBus.SendAsync(Arg.Any<DecreaseStockQuantity>(), CancellationToken.None)
+            .Returns(Result.Ok());
 
         // When
         var response = await _inventoryController
             .DecreaseQuantity(productId, request, CancellationToken.None);
 
 		// Then
-		Assert.IsType<OkObjectResult>(response);
+		Assert.IsType<OkResult>(response);
     }
 
     [Fact]
     public async Task CheckStockQuantity_WithProductIds_ShouldReturnListOfInventoryStockUnitViewModel()
     {
-        // Given        
+        // Given
         var inventoryStockUnitId = Guid.NewGuid();
         var quantityInStock = 10;
 
         var request = new CheckProductsInStockRequest()
-        { 
+        {
             ProductIds = [Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()]
         };
 
         var expectedData = request.ProductIds.Select(pid => new
             InventoryStockUnitViewModel(inventoryStockUnitId, pid, quantityInStock)
         ).ToList();
-        
+
         _queryBus.SendAsync(Arg.Any<CheckProductsInStock>(), Arg.Any<CancellationToken>())
-            .Returns(expectedData);
+            .Returns(Result.Ok<IList<InventoryStockUnitViewModel>>(expectedData));
 
         // When
         var response = await _inventoryController.CheckStockQuantity(request, CancellationToken.None);
 
 		// Then
 		var okResult = Assert.IsType<OkObjectResult>(response);
-		var apiResponse = Assert.IsType<ApiResponse<IList<InventoryStockUnitViewModel>>>(okResult.Value);
-		Assert.IsAssignableFrom<IList<InventoryStockUnitViewModel>>(apiResponse.Data);
+		Assert.IsAssignableFrom<IList<InventoryStockUnitViewModel>>(okResult.Value);
     }
 
     [Fact]
@@ -81,7 +81,7 @@ public class InventoryControllerTests
         };
 
         _queryBus.SendAsync(Arg.Any<GetInventoryStockUnitEventHistory>(), CancellationToken.None)
-            .Returns(expectedData);
+            .Returns(Result.Ok<IReadOnlyList<InventoryStockUnitEventHistory>>(expectedData));
 
         // When
         var response = await _inventoryController
@@ -89,8 +89,7 @@ public class InventoryControllerTests
 
 		// Then
 		var okResult = Assert.IsType<OkObjectResult>(response);
-		var apiResponse = Assert.IsType<ApiResponse<IReadOnlyList<InventoryStockUnitEventHistory>>>(okResult.Value);
-		Assert.IsAssignableFrom<IReadOnlyList<InventoryStockUnitEventHistory>>(apiResponse.Data);
+		Assert.IsAssignableFrom<IReadOnlyList<InventoryStockUnitEventHistory>>(okResult.Value);
 	}
 
     private ICommandBus _commandBus = Substitute.For<ICommandBus>();

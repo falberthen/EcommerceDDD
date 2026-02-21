@@ -30,7 +30,7 @@ public class MoneyTests
 	public void CreateOfMoney_WithNegativeAmount_ShouldThrowException()
 	{
 		// Given & When & Then
-		Assert.Throws<BusinessRuleException>(() =>
+		Assert.Throws<DomainException>(() =>
 			Money.Of(-20, Currency.USDollar.Code));
 	}
 
@@ -42,8 +42,8 @@ public class MoneyTests
 		Money money2 = Money.Of(10, Currency.CanadianDollar.Code);
 
 		// When & Then
-		BusinessRuleException ex = Assert
-			.Throws<BusinessRuleException>(() => money1 + money2);
+		DomainException ex = Assert
+			.Throws<DomainException>(() => money1 + money2);
 	}
 
 	[Fact]

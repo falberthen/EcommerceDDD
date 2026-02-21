@@ -1,6 +1,8 @@
+global using FluentResults;
+global using EcommerceDDD.Core.CQRS;
 global using EcommerceDDD.Core.CQRS.CommandHandling;
 global using EcommerceDDD.Core.CQRS.QueryHandling;
-global using EcommerceDDD.Core.Exceptions.Types;
+global using EcommerceDDD.Core.Exceptions;
 global using EcommerceDDD.Core.Infrastructure.Identity;
 global using EcommerceDDD.Core.Infrastructure.WebApi;
 global using EcommerceDDD.Core.Testing;

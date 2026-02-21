@@ -8,7 +8,7 @@ public class AddQuoteItemHandlerTests
 		// Given
 		_productMapper
 			.MapProductFromCatalogAsync(Arg.Any<IEnumerable<ProductId>>(), Arg.Any<Currency>(), CancellationToken.None)
-			.Returns(new List<ProductViewModel>()
+			.Returns(Result.Ok<IEnumerable<ProductViewModel>>(new List<ProductViewModel>()
 			{
 				new ProductViewModel()
 				{
@@ -18,7 +18,7 @@ public class AddQuoteItemHandlerTests
 					QuantityAddedToCart = 10,
 					CurrencySymbol = Currency.USDollar.Code
 				}
-			});
+			}));
 
 		var quote = Quote.OpenQuoteForCustomer(_customerId, _currency);
 
@@ -31,7 +31,7 @@ public class AddQuoteItemHandlerTests
 		// When
 		await addQuoteItemHandler.HandleAsync(addQuoteItem, CancellationToken.None);
 
-		// Then        
+		// Then
 		var storedQuote = quoteWriteRepository.AggregateStream.First().Aggregate;
 		Assert.Single(storedQuote.Items);
 	}
@@ -42,7 +42,7 @@ public class AddQuoteItemHandlerTests
 		// Given
 		_productMapper
 			.MapProductFromCatalogAsync(Arg.Any<IEnumerable<ProductId>>(), Arg.Any<Currency>(), CancellationToken.None)
-			.Returns(new List<ProductViewModel>()
+			.Returns(Result.Ok<IEnumerable<ProductViewModel>>(new List<ProductViewModel>()
 			{
 				new ProductViewModel()
 				{
@@ -52,7 +52,7 @@ public class AddQuoteItemHandlerTests
 					Price = _productPrice,
 					CurrencySymbol = Currency.USDollar.Code
 				}
-			});
+			}));
 
 		var quote = Quote.OpenQuoteForCustomer(_customerId, _currency);
 
@@ -69,7 +69,7 @@ public class AddQuoteItemHandlerTests
 		// When
 		await addQuoteItemHandler.HandleAsync(changeQuoteItem, CancellationToken.None);
 
-		// Then   
+		// Then
 		var storedQuote = quoteWriteRepository.AggregateStream.First().Aggregate;
 		Assert.Single(storedQuote.Items);
 		Assert.Equal(storedQuote.Items.First().ProductItem.Quantity, productNewQuantity);

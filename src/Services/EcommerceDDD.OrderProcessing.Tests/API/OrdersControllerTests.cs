@@ -41,15 +41,14 @@ public class OrdersControllerTests
         };
 
         _queryBus.SendAsync(Arg.Any<GetOrders>(), Arg.Any<CancellationToken>())
-            .Returns(expectedData);
+            .Returns(Result.Ok<IReadOnlyList<OrderViewModel>>(expectedData));
 
         // When
         var response = await _ordersController.ListCustomerOrders(CancellationToken.None);
 
 		// Then
 		var okResult = Assert.IsType<OkObjectResult>(response);
-		var apiResponse = Assert.IsType<ApiResponse<IReadOnlyList<OrderViewModel>>>(okResult.Value);
-		Assert.IsAssignableFrom<IReadOnlyList<OrderViewModel>>(apiResponse.Data);
+		Assert.IsAssignableFrom<IReadOnlyList<OrderViewModel>>(okResult.Value);
 	}
 
     [Fact]
@@ -77,15 +76,14 @@ public class OrdersControllerTests
         };
 
         _queryBus.SendAsync(Arg.Any<GetOrderEventHistory>(), CancellationToken.None)
-            .Returns(expectedData);
+            .Returns(Result.Ok<IReadOnlyList<OrderEventHistory>>(expectedData));
 
         // When
         var response = await _ordersController.ListHistory(customerId, CancellationToken.None);
 
-		// Then		
+		// Then
 		var okResult = Assert.IsType<OkObjectResult>(response);
-		var apiResponse = Assert.IsType<ApiResponse<IReadOnlyList<OrderEventHistory>>>(okResult.Value);
-		Assert.IsAssignableFrom<IReadOnlyList<OrderEventHistory>>(apiResponse.Data);
+		Assert.IsAssignableFrom<IReadOnlyList<OrderEventHistory>>(okResult.Value);
 	}
 
     [Fact]
@@ -95,14 +93,15 @@ public class OrdersControllerTests
         Guid customerId = Guid.NewGuid();
         Guid quoteId = Guid.NewGuid();
 
-        await _commandBus.SendAsync(Arg.Any<PlaceOrder>(), CancellationToken.None);
+        _commandBus.SendAsync(Arg.Any<PlaceOrder>(), CancellationToken.None)
+            .Returns(Result.Ok());
 
         // When
         var response = await _ordersController
             .PlaceOrderFromQuote(quoteId, CancellationToken.None);
 
-        // Then        
-		Assert.IsType<OkObjectResult>(response);
+        // Then
+		Assert.IsType<OkResult>(response);
     }
 
     private ICommandBus _commandBus = Substitute.For<ICommandBus>();
