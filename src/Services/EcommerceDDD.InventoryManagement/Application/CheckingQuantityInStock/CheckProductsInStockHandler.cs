@@ -16,8 +16,8 @@ public class CheckProductsInStockHandler(
 
         IList<Guid> productIds = query.ProductIds
             .Select(p => p.Value).Distinct().ToList();
-        var projectedInventoryStockUnits = await _querySession.Query<InventoryStockUnitDetails>()
-            .Where(x => productIds.Contains(x.ProductId)).ToListAsync(cancellationToken);
+        IReadOnlyList<InventoryStockUnitDetails> projectedInventoryStockUnits = await _querySession.QueryListAsync<InventoryStockUnitDetails>(
+            x => productIds.Contains(x.ProductId), cancellationToken);
 
         foreach (var inventoryStockUnit in projectedInventoryStockUnits)
         {

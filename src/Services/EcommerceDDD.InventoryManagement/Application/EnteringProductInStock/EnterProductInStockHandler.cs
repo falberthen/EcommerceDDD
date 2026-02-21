@@ -15,9 +15,8 @@ public class EnterProductInStockHandler(
 			.Select(pq => pq.Item1.Value)
 			.ToHashSet();
 
-		var existingEntries = await _querySession.Query<InventoryStockUnitDetails>()
-			.Where(x => productIds.Contains(x.ProductId))
-			.ToListAsync(cancellationToken);
+		IReadOnlyList<InventoryStockUnitDetails> existingEntries = await _querySession.QueryListAsync<InventoryStockUnitDetails>(
+			x => productIds.Contains(x.ProductId), cancellationToken);
 
 		if (!existingEntries.Any())
 		{

@@ -49,6 +49,7 @@ global using OpenTelemetry.Trace;
 global using Polly;
 global using Swashbuckle.AspNetCore.SwaggerGen;
 global using System.Diagnostics;
+global using System.Linq.Expressions;
 global using System.IdentityModel.Tokens.Jwt;
 global using System.Net.Mime;
 global using System.Reflection;

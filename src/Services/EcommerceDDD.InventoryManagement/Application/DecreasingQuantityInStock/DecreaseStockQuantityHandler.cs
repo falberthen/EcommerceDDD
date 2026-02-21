@@ -10,9 +10,8 @@ public class DecreaseStockQuantityHandler(
 
 	public async Task<Result> HandleAsync(DecreaseStockQuantity command, CancellationToken cancellationToken)
 	{
-		var query = await _querySession.Query<InventoryStockUnitDetails>()
-			.Where(x => x.ProductId == command.ProductId.Value)
-			.FirstOrDefaultAsync(cancellationToken);
+		var query = await _querySession.QueryFirstOrDefaultAsync<InventoryStockUnitDetails>(
+			x => x.ProductId == command.ProductId.Value, cancellationToken);
 
 		if (query is null)
 			return Result.Fail($"The product {command.ProductId.Value} was not found in the inventory.");
