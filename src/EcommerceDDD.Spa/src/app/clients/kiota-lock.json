@@ -1,8 +1,8 @@
 {
-  "descriptionHash": "F424818A7DDC175FAE03DD969A48CC8ECC2959477F9C16B80FCF58CAAE5A0667B2EBF15117EA7274A524B76FF0C0B70A13CA4D503AF23132CB8A7D1F1FABA78D",
+  "descriptionHash": "756B1C9EC467596FA02A0D72DDFAEE414ED973C66ABD8F98A5C868F13A7ED2745702D8904F1D965ACE0B5DF12A0AA4FBA9FB1796A2F4CE3F2F25B407FAADF4E2",
   "descriptionLocation": "http://ecommerceddd-apigateway/swagger/v2/apigateway.yaml",
   "lockFileVersion": "1.0.0",
-  "kiotaVersion": "1.29.0",
+  "kiotaVersion": "1.30.0",
   "clientClassName": "apiClient",
   "typeAccessModifier": "Public",
   "clientNamespaceName": "ApiSdk",

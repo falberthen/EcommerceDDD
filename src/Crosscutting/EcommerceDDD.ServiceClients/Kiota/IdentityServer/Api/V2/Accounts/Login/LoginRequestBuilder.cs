@@ -37,6 +37,11 @@ namespace EcommerceDDD.ServiceClients.IdentityServer.Api.V2.Accounts.Login
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
+        /// <exception cref="global::EcommerceDDD.ServiceClients.IdentityServer.Models.ProblemDetails">When receiving a 400 status code</exception>
+        /// <exception cref="global::EcommerceDDD.ServiceClients.IdentityServer.Models.ProblemDetails">When receiving a 401 status code</exception>
+        /// <exception cref="global::EcommerceDDD.ServiceClients.IdentityServer.Models.ProblemDetails">When receiving a 404 status code</exception>
+        /// <exception cref="global::EcommerceDDD.ServiceClients.IdentityServer.Models.ValidationProblemDetails">When receiving a 422 status code</exception>
+        /// <exception cref="global::EcommerceDDD.ServiceClients.IdentityServer.Models.ProblemDetails">When receiving a 500 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
         public async Task<global::EcommerceDDD.ServiceClients.IdentityServer.Models.LoginResult?> PostAsync(global::EcommerceDDD.ServiceClients.IdentityServer.Models.LoginRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
@@ -48,7 +53,15 @@ namespace EcommerceDDD.ServiceClients.IdentityServer.Api.V2.Accounts.Login
 #endif
             if(ReferenceEquals(body, null)) throw new ArgumentNullException(nameof(body));
             var requestInfo = ToPostRequestInformation(body, requestConfiguration);
-            return await RequestAdapter.SendAsync<global::EcommerceDDD.ServiceClients.IdentityServer.Models.LoginResult>(requestInfo, global::EcommerceDDD.ServiceClients.IdentityServer.Models.LoginResult.CreateFromDiscriminatorValue, default, cancellationToken).ConfigureAwait(false);
+            var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
+            {
+                { "400", global::EcommerceDDD.ServiceClients.IdentityServer.Models.ProblemDetails.CreateFromDiscriminatorValue },
+                { "401", global::EcommerceDDD.ServiceClients.IdentityServer.Models.ProblemDetails.CreateFromDiscriminatorValue },
+                { "404", global::EcommerceDDD.ServiceClients.IdentityServer.Models.ProblemDetails.CreateFromDiscriminatorValue },
+                { "422", global::EcommerceDDD.ServiceClients.IdentityServer.Models.ValidationProblemDetails.CreateFromDiscriminatorValue },
+                { "500", global::EcommerceDDD.ServiceClients.IdentityServer.Models.ProblemDetails.CreateFromDiscriminatorValue },
+            };
+            return await RequestAdapter.SendAsync<global::EcommerceDDD.ServiceClients.IdentityServer.Models.LoginResult>(requestInfo, global::EcommerceDDD.ServiceClients.IdentityServer.Models.LoginResult.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="body">The request body</param>

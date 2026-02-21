@@ -1,8 +1,8 @@
 {
-  "descriptionHash": "2BDA348DAC25619AD177BAB68864D956958EDF2600CBF2D23123523A0E78128A8AFD1531AC1B42E3F51EC51436A83D6066A595ADBD2169A8270DC9B4D25345AA",
+  "descriptionHash": "8971F5D7AA2F1E0DDB3E59CAD99435120139993931967FD2153E41E8599C0678F27EEF7B3F1ADA284824DE7F20F8CBB23FF730FB23688C6D0422458543EDE76F",
   "descriptionLocation": "http://ecommerceddd-product-catalog/swagger/v2/swagger.json",
   "lockFileVersion": "1.0.0",
-  "kiotaVersion": "1.29.0",
+  "kiotaVersion": "1.30.0",
   "clientClassName": "ProductCatalogClient",
   "typeAccessModifier": "Public",
   "clientNamespaceName": "EcommerceDDD.ServiceClients.ProductCatalog",

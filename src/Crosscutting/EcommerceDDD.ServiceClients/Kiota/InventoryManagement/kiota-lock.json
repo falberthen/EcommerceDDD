@@ -1,8 +1,8 @@
 {
-  "descriptionHash": "7A1602DF6EEB9C9437B0079C63E82642445D6E61E9465332A8B4567DA15F6C68D9E0D2CD7D41ABD5BB8A3B982B12BA7980520945031D52E2C559911891D93143",
+  "descriptionHash": "43405B10FC4949A185C295CC065B69A1FBB95E89F3DB991D56FA62538F54DC82CB16241A41C8BBE820EBA82C210BC376FFA3E9506541EB3F4F7C9CEA273031A2",
   "descriptionLocation": "http://ecommerceddd-inventory-management/swagger/v2/swagger.json",
   "lockFileVersion": "1.0.0",
-  "kiotaVersion": "1.29.0",
+  "kiotaVersion": "1.30.0",
   "clientClassName": "InventoryManagementClient",
   "typeAccessModifier": "Public",
   "clientNamespaceName": "EcommerceDDD.ServiceClients.InventoryManagement",

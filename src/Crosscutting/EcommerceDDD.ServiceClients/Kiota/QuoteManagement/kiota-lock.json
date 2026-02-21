@@ -1,8 +1,8 @@
 {
-  "descriptionHash": "9A2FBD09B503B4F26D66AD69BEA020D33AB62A779702853C91DEB23FA74D47CF19B9BB0C32BD09B1DACFEC8948A11E06922BD80F9BC46B3F51910B8671DD0F97",
+  "descriptionHash": "D6D335A3105007C428D41EF356BFE3C443F33525771AD85892E265B6D1148B3BA287C0DFB7FFB7314BCE1393F0BEFA1EC31E48420C308516E8264050285A73E0",
   "descriptionLocation": "http://ecommerceddd-quote-management/swagger/v2/swagger.json",
   "lockFileVersion": "1.0.0",
-  "kiotaVersion": "1.29.0",
+  "kiotaVersion": "1.30.0",
   "clientClassName": "QuoteManagementClient",
   "typeAccessModifier": "Public",
   "clientNamespaceName": "EcommerceDDD.ServiceClients.QuoteManagement",

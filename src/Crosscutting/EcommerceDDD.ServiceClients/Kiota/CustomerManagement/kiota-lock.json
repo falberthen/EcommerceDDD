@@ -1,8 +1,8 @@
 {
-  "descriptionHash": "148E79C0E77670BB504DC542F35CC6FE4EFAE377C9B1BCFAC6A2D6264080FCCCDDADE7A13874F297B4318818ACC009F1C980C720F7B5E567F355FDC6E441C76D",
+  "descriptionHash": "5B553CDC1D2A6B76BC366939A794A32D99F5A18286B2CDC1A32DB257E0C44A8666741ABBC4FC000AD4C1FCF6E2F93655C36687066479E4143307A4B59744CB02",
   "descriptionLocation": "http://ecommerceddd-customer-management/swagger/v2/swagger.json",
   "lockFileVersion": "1.0.0",
-  "kiotaVersion": "1.29.0",
+  "kiotaVersion": "1.30.0",
   "clientClassName": "CustomerManagementClient",
   "typeAccessModifier": "Public",
   "clientNamespaceName": "EcommerceDDD.ServiceClients.CustomerManagement",
