@@ -1,8 +1,8 @@
 {
-  "descriptionHash": "997CC1769443E100CB3430DBE6E4FD4392CF7902172A6B538A58D129730CBF73E8E56980330A82794B62C59D04DA22B74B316F2776CE74237828983D66832004",
+  "descriptionHash": "C7F419B2C3F353F6F173A161C4C82FD1C7E2C8992BCA8402EEF79C79545F08759E27BC6ACE3EAC122973783075CF0951FBEF9F9B521818578D2888A83E327DEE",
   "descriptionLocation": "http://ecommerceddd-signalr/swagger/v2/swagger.json",
   "lockFileVersion": "1.0.0",
-  "kiotaVersion": "1.29.0",
+  "kiotaVersion": "1.30.0",
   "clientClassName": "SignalRClient",
   "typeAccessModifier": "Public",
   "clientNamespaceName": "EcommerceDDD.ServiceClients.SignalR",

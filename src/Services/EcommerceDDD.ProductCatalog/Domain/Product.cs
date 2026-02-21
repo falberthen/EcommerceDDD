@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.ProductCatalog.Domain;
+namespace EcommerceDDD.ProductCatalog.Domain;
 
 public class Product : AggregateRoot<ProductId>
 {
@@ -14,15 +14,15 @@ public class Product : AggregateRoot<ProductId>
             ?? throw new ArgumentNullException(nameof(productData));
 
         if (string.IsNullOrWhiteSpace(Name))
-            throw new BusinessRuleException("Product name cannot be null or whitespace.");
+            throw new DomainException("Product name cannot be null or whitespace.");
         if (string.IsNullOrWhiteSpace(Category))
-            throw new BusinessRuleException("Product category cannot be null or whitespace.");
+            throw new DomainException("Product category cannot be null or whitespace.");
         if (string.IsNullOrWhiteSpace(Description))
-            throw new BusinessRuleException("Product description cannot be null or whitespace.");
+            throw new DomainException("Product description cannot be null or whitespace.");
         if (string.IsNullOrWhiteSpace(ImageUrl))
-            throw new BusinessRuleException("ImageUrl cannot be null.");
+            throw new DomainException("ImageUrl cannot be null.");
         if (UnitPrice is null)
-            throw new BusinessRuleException("Product unit price cannot be null.");
+            throw new DomainException("Product unit price cannot be null.");
 
         return new Product(productData, productId);
     }

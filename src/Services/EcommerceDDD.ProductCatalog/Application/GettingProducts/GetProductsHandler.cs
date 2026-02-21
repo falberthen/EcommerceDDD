@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.ProductCatalog.Application.Products.GettingProducts;
+namespace EcommerceDDD.ProductCatalog.Application.GettingProducts;
 
 public class GetProductsHandler(
 	InventoryManagementClient inventoryManagementClient,
@@ -10,15 +10,15 @@ public class GetProductsHandler(
 	private readonly IProducts _productsRepository = productsRepository;
 	private readonly ICurrencyConverter _currencyConverter = currencyConverter;
 
-	public async Task<IList<ProductViewModel>> HandleAsync(GetProducts query, CancellationToken cancellationToken)
+	public async Task<Result<IList<ProductViewModel>>> HandleAsync(GetProducts query, CancellationToken cancellationToken)
 	{
+		if (string.IsNullOrEmpty(query.CurrencyCode))
+			return Result.Fail<IList<ProductViewModel>>("Currency code cannot be empty.");
+
 		var productsViewModel = new List<ProductViewModel>();
 		var products = query.ProductIds.Count == 0
 			? await _productsRepository.ListAll(cancellationToken)
-			: await _productsRepository.GetByIds(query.ProductIds);
-
-		if (string.IsNullOrEmpty(query.CurrencyCode))
-			throw new RecordNotFoundException("Currency code cannot be empty.");
+			: await _productsRepository.GetByIds(query.ProductIds, cancellationToken);
 
 		// Getting stock quantity
 		var productIds = products.Select(x =>
@@ -52,7 +52,7 @@ public class GetProductsHandler(
 			));
 		}
 
-		return productsViewModel;
+		return Result.Ok<IList<ProductViewModel>>(productsViewModel);
 	}
 
 	private async Task<List<InventoryStockUnitViewModel>> GetProductsFromInventoryAsync(List<Guid?> productIds,
@@ -68,12 +68,9 @@ public class GetProductsHandler(
 			var response = await inventoryRequestBuilder.CheckStockQuantity
 				.PostAsync(request, cancellationToken: cancellationToken);
 
-			if (response?.Data is null)
-				throw new ApplicationLogicException(response?.Message ?? string.Empty);
-
-			return response.Data;
+			return response ?? new List<InventoryStockUnitViewModel>();
 		}
-		catch (Exception ex)
+		catch (Exception)
 		{
 			return new List<InventoryStockUnitViewModel>();
 		}

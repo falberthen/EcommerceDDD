@@ -17,7 +17,8 @@ public class PaymentsControllerTests
         Guid orderId = Guid.NewGuid();
 		Guid productId = Guid.NewGuid();
 
-		await _commandBus.SendAsync(Arg.Any<RequestPayment>(), CancellationToken.None);
+		_commandBus.SendAsync(Arg.Any<RequestPayment>(), Arg.Any<CancellationToken>())
+			.Returns(Task.FromResult(Result.Ok()));
 
         var request = new PaymentRequest()
         {
@@ -37,11 +38,10 @@ public class PaymentsControllerTests
 		};
 
         // When
-        var response = await _paymentsController.RequestCreate(request, 
-            Arg.Any<CancellationToken>());
+        var response = await _paymentsController.RequestCreate(request, CancellationToken.None);
 
         // Then
-		Assert.IsType<OkObjectResult>(response);
+		Assert.IsType<OkResult>(response);
     }
 
     private ICommandBus _commandBus = Substitute.For<ICommandBus>();

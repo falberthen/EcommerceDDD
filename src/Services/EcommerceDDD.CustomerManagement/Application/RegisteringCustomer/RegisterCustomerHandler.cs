@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.CustomerManagement.Application.RegisteringCustomer;
+namespace EcommerceDDD.CustomerManagement.Application.RegisteringCustomer;
 
 public class RegisterCustomerHandler(
 	IdentityServerClient identityServerClient,
@@ -13,10 +13,11 @@ public class RegisterCustomerHandler(
 	private readonly IEventStoreRepository<Customer> _customerWriteRepository = customerWriteRepository
 		?? throw new ArgumentNullException(nameof(customerWriteRepository));
 
-	public async Task HandleAsync(RegisterCustomer command, CancellationToken cancellationToken)
+	public async Task<Result> HandleAsync(RegisterCustomer command, CancellationToken cancellationToken)
 	{
-		if (!_uniquenessChecker.IsUnique(command.Email))
-			throw new BusinessRuleException("This e-mail is already in use.");
+		var isUnique = await _uniquenessChecker.IsUniqueAsync(command.Email, cancellationToken);
+		if (!isUnique)
+			return Result.Fail("This e-mail is already in use.");
 
 		var customerData = new CustomerData(
 			command.Email,
@@ -26,13 +27,17 @@ public class RegisterCustomerHandler(
 
 		var customer = Customer.Create(customerData);
 
-		var response = await CreateUserForCustomerAsync(command, customer.Id, cancellationToken);
+		var registerResult = await CreateUserForCustomerAsync(command, customer.Id, cancellationToken);
+		if (registerResult.IsFailed)
+			return registerResult;
 
 		await _customerWriteRepository
 			.AppendEventsAsync(customer, cancellationToken);
+
+		return Result.Ok();
 	}
 
-	private async Task<UserRegisteredResult?> CreateUserForCustomerAsync(RegisterCustomer command,
+	private async Task<Result> CreateUserForCustomerAsync(RegisterCustomer command,
 		CustomerId customerId, CancellationToken cancellationToken)
 	{
 		try
@@ -46,15 +51,14 @@ public class RegisterCustomerHandler(
 			};
 
 			var accountRequestBuilder = _identityServerClient.Api.V2.Accounts;
-			var response = await accountRequestBuilder.Register
+			await accountRequestBuilder.Register
 				.PostAsync(request, cancellationToken: cancellationToken);
 
-			return response;
+			return Result.Ok();
 		}
-		catch (Microsoft.Kiota.Abstractions.ApiException ex)
+		catch (Microsoft.Kiota.Abstractions.ApiException)
 		{
-			throw new ApplicationLogicException(
-				$"An error occurred while registering the customer.", ex);
-		}		
+			return Result.Fail("An error occurred while registering the customer.");
+		}
 	}
 }

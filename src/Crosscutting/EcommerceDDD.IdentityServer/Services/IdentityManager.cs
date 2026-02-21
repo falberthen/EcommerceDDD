@@ -12,14 +12,14 @@ public class IdentityManager(
 	public readonly RoleManager<IdentityRole> _roleManager = roleManager
 		?? throw new ArgumentNullException(nameof(roleManager));
 
-	public async Task<LoginResult> AuthUserByCredentials(LoginRequest request)
+	public async Task<LoginResult?> AuthUserByCredentials(LoginRequest request)
 	{
 		var response = await _tokenRequester.GetUserTokenFromCredentialsAsync(
 			request.Email, request.Password
 		);
 
 		if (response?.HttpStatusCode == HttpStatusCode.BadRequest)
-			throw new ApplicationException($"Invalid username or password.");
+			return null;
 
 		return new LoginResult()
 		{
@@ -55,14 +55,13 @@ public class IdentityManager(
 
 		// Adding claims
 		result = await _userManager.AddClaimsAsync(user,
-			new Claim[]
-			{
+			[
 				new Claim(JwtClaimTypes.Subject, user.Id),
 				new Claim(JwtClaimTypes.Name, user.UserName),
 				new Claim(JwtClaimTypes.Email, user.Email),
 				new Claim(JwtClaimTypes.Role, Roles.Customer),
 				new Claim(IdentityConfiguration.CustomerIdClaimType, request.CustomerId.ToString())
-			});
+			]);
 		if (!result.Succeeded)
 			throw new ApplicationException($"Can't add claims for {user.Email}");
 
@@ -84,7 +83,7 @@ public class IdentityManager(
 				.CreateAsync(new IdentityRole(Roles.Customer));
 
 			if (!result.Succeeded)
-				throw new ApplicationException($"Can't add role {Roles.Customer}");
+				throw new InvalidOperationException($"Can't add role {Roles.Customer}");
 		}
 
 		await Task.CompletedTask;

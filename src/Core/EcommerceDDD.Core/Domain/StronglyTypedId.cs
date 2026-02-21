@@ -1,4 +1,6 @@
-﻿public abstract class StronglyTypedId<T> : ValueObject<StronglyTypedId<T>>
+namespace EcommerceDDD.Core.Domain;
+
+public abstract class StronglyTypedId<T> : ValueObject<StronglyTypedId<T>>
 {
 	public T Value { get; }
 
@@ -7,7 +9,7 @@
 		if (value is null)
 			throw new ArgumentNullException(nameof(value));
 		if (value.Equals(Guid.Empty))
-			throw new BusinessRuleException("A valid id must be provided.");
+			throw new DomainException("A valid id must be provided.");
 
 		Value = value;
 	}

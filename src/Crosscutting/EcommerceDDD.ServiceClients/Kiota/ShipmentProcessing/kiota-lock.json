@@ -1,8 +1,8 @@
 {
-  "descriptionHash": "131D19CED18F8DE75D796D519FC87D6452DDCB5EBF15317C313A068C09033C704F0F63C035D8A5FD0FA979144CD5A75C50D42AD518AD148E848B09CBB1D6C441",
+  "descriptionHash": "24D95766FAC2B0C0973AE49B2675F16C1862D5FC9C6F8442E9E7E7F073F9269072A4F9F4B028403DE1149F35DA7BE117BE60445D9C39555864537CD6193FEACF",
   "descriptionLocation": "http://ecommerceddd-shipment-processing/swagger/v2/swagger.json",
   "lockFileVersion": "1.0.0",
-  "kiotaVersion": "1.29.0",
+  "kiotaVersion": "1.30.0",
   "clientClassName": "ShipmentProcessingClient",
   "typeAccessModifier": "Public",
   "clientNamespaceName": "EcommerceDDD.ServiceClients.ShipmentProcessing",

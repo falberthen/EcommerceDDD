@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.CustomerManagement.Api.Application.GettingCustomerDetailsById;
+namespace EcommerceDDD.CustomerManagement.Api.Application.GettingCustomerDetailsById;
 
 public class GetCustomerDetailsByIdHandler(
     IQuerySession querySession) : IQueryHandler<GetCustomerDetailsById, CustomerDetails>
@@ -6,12 +6,15 @@ public class GetCustomerDetailsByIdHandler(
     private readonly IQuerySession _querySession = querySession
 		?? throw new ArgumentNullException(nameof(querySession));
 
-    public async Task<CustomerDetails> HandleAsync(GetCustomerDetailsById query, 
+    public async Task<Result<CustomerDetails>> HandleAsync(GetCustomerDetailsById query,
         CancellationToken cancellationToken)
     {
         var customer = await _querySession.Query<CustomerDetails>()
-            .FirstOrDefaultAsync(c => c.Id == query.CustomerId.Value)
-            ?? throw new RecordNotFoundException($"Customer not found.");
+            .FirstOrDefaultAsync(c => c.Id == query.CustomerId.Value);
+
+		if (customer is null)
+			return Result.Fail<CustomerDetails>(
+				new RecordNotFoundError($"Customer {query.CustomerId} not found."));
 
 		var details = new CustomerDetails()
 		{
@@ -21,7 +24,7 @@ public class GetCustomerDetailsByIdHandler(
 			ShippingAddress = customer.ShippingAddress,
 			CreditLimit = customer.CreditLimit
 		};
-        
-        return details;
+
+        return Result.Ok(details);
     }
 }

@@ -1,16 +1,21 @@
-﻿namespace EcommerceDDD.CustomerManagement.Application.GettingCreditLimit;
+namespace EcommerceDDD.CustomerManagement.Application.GettingCreditLimit;
 
 public class GetCreditLimitHandler(IQuerySession querySession) : IQueryHandler<GetCreditLimit, CreditLimitModel>
 {
     private readonly IQuerySession _querySession = querySession
 		?? throw new ArgumentNullException(nameof(querySession));
 
-    public Task<CreditLimitModel> HandleAsync(GetCreditLimit query, CancellationToken cancellationToken)
-    {        
-        var customer = _querySession.Query<CustomerDetails>()
-        .FirstOrDefault(c => c.Id == query.CustomerId.Value)
-            ?? throw new RecordNotFoundException($"Customer {query.CustomerId} not found.");
+    public async Task<Result<CreditLimitModel>> HandleAsync(GetCreditLimit query, CancellationToken cancellationToken)
+    {
+        var customer = await _querySession.Query<CustomerDetails>()
+            .FirstOrDefaultAsync(c => c.Id == query.CustomerId.Value, cancellationToken);
 
-        return Task.FromResult(new CreditLimitModel(query.CustomerId.Value, customer.CreditLimit));
+		if (customer is null)
+			return Result.Fail<CreditLimitModel>(
+				new RecordNotFoundError($"Customer {query.CustomerId} not found."));
+
+		return Result.Ok(
+			new CreditLimitModel(query.CustomerId.Value, customer.CreditLimit)
+		);
     }
 }

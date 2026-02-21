@@ -57,25 +57,33 @@ namespace EcommerceDDD.ServiceClients.QuoteManagement.Api.V2.Quotes.Item
         public WithQuoteItemRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/api/v2/quotes/{quoteId}", rawUrl)
         {
         }
-        /// <returns>A <see cref="string"/></returns>
+        /// <returns>A <see cref="Stream"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::EcommerceDDD.ServiceClients.QuoteManagement.Models.ProblemDetails">When receiving a 400 status code</exception>
+        /// <exception cref="global::EcommerceDDD.ServiceClients.QuoteManagement.Models.ProblemDetails">When receiving a 401 status code</exception>
+        /// <exception cref="global::EcommerceDDD.ServiceClients.QuoteManagement.Models.ProblemDetails">When receiving a 404 status code</exception>
+        /// <exception cref="global::EcommerceDDD.ServiceClients.QuoteManagement.Models.ValidationProblemDetails">When receiving a 422 status code</exception>
+        /// <exception cref="global::EcommerceDDD.ServiceClients.QuoteManagement.Models.ProblemDetails">When receiving a 500 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<string?> DeleteAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<Stream?> DeleteAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<string> DeleteAsync(Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<Stream> DeleteAsync(Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToDeleteRequestInformation(requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
                 { "400", global::EcommerceDDD.ServiceClients.QuoteManagement.Models.ProblemDetails.CreateFromDiscriminatorValue },
+                { "401", global::EcommerceDDD.ServiceClients.QuoteManagement.Models.ProblemDetails.CreateFromDiscriminatorValue },
+                { "404", global::EcommerceDDD.ServiceClients.QuoteManagement.Models.ProblemDetails.CreateFromDiscriminatorValue },
+                { "422", global::EcommerceDDD.ServiceClients.QuoteManagement.Models.ValidationProblemDetails.CreateFromDiscriminatorValue },
+                { "500", global::EcommerceDDD.ServiceClients.QuoteManagement.Models.ProblemDetails.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendPrimitiveAsync<string>(requestInfo, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendPrimitiveAsync<Stream>(requestInfo, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>

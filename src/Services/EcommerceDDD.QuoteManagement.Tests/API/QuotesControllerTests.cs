@@ -32,27 +32,24 @@ public class QuotesControllerTests
         };
 
         _queryBus.SendAsync(Arg.Any<GetQuoteEventHistory>(), CancellationToken.None)
-            .Returns(expectedData);
+            .Returns(Result.Ok<IReadOnlyList<QuoteEventHistory>>(expectedData));
 
         // When
         var response = await _quotesController.ListHistory(quoteId,
             CancellationToken.None);
 
 		// Then
-		Assert.IsType<OkObjectResult>(response);
-		var okResult = (OkObjectResult)response;
-
-		Assert.IsType<ApiResponse<IReadOnlyList<QuoteEventHistory>>>(okResult.Value);
-		var apiResponse = (ApiResponse<IReadOnlyList<QuoteEventHistory>>)okResult.Value;
-
-		Assert.Equal(expectedData.Count, apiResponse.Data!.Count);
+		var okResult = Assert.IsType<OkObjectResult>(response);
+		var data = Assert.IsAssignableFrom<IReadOnlyList<QuoteEventHistory>>(okResult.Value);
+		Assert.Equal(expectedData.Count, data.Count);
 	}
 
     [Fact]
     public async Task OpenCustomerQuote_WithOpenQuoteRequest_ShouldOpeQuoteForCustomer()
     {
         // Given
-        await _commandBus.SendAsync(Arg.Any<OpenQuote>(), CancellationToken.None);
+        _commandBus.SendAsync(Arg.Any<OpenQuote>(), CancellationToken.None)
+            .Returns(Result.Ok());
 
         var request = new OpenQuoteRequest()
         {
@@ -64,7 +61,7 @@ public class QuotesControllerTests
 			.OpenQuoteForCustomer(request, CancellationToken.None);
 
 		// Then
-		Assert.IsType<OkObjectResult>(response);
+		Assert.IsType<OkResult>(response);
 	}
 
     [Fact]
@@ -73,10 +70,11 @@ public class QuotesControllerTests
         // Given
         Guid quoteId = Guid.NewGuid();
 
-        await _commandBus.SendAsync(Arg.Any<AddQuoteItem>(), CancellationToken.None);
+        _commandBus.SendAsync(Arg.Any<AddQuoteItem>(), CancellationToken.None)
+            .Returns(Result.Ok());
 
         var request = new AddQuoteItemRequest()
-        {            
+        {
             ProductId = Guid.NewGuid(),
             Quantity = 10
         };
@@ -86,7 +84,7 @@ public class QuotesControllerTests
             CancellationToken.None);
 
         // Then
-		Assert.IsType<OkObjectResult>(response);
+		Assert.IsType<OkResult>(response);
 	}
 
     [Fact]
@@ -96,14 +94,15 @@ public class QuotesControllerTests
         Guid quoteId = Guid.NewGuid();
         Guid productId = Guid.NewGuid();
 
-        await _commandBus.SendAsync(Arg.Any<RemoveQuoteItem>(), CancellationToken.None);
+        _commandBus.SendAsync(Arg.Any<RemoveQuoteItem>(), CancellationToken.None)
+            .Returns(Result.Ok());
 
         // When
         var response = await _quotesController.RemoveItem(quoteId, productId,
             CancellationToken.None);
 
 		// Then
-		Assert.IsType<OkObjectResult>(response);
+		Assert.IsType<OkResult>(response);
 	}
 
     [Fact]
@@ -112,14 +111,15 @@ public class QuotesControllerTests
         // Given
         Guid quoteId = Guid.NewGuid();
 
-        await _commandBus.SendAsync(Arg.Any<CancelQuote>(), CancellationToken.None);
+        _commandBus.SendAsync(Arg.Any<CancelQuote>(), CancellationToken.None)
+            .Returns(Result.Ok());
 
         // When
         var response = await _quotesController.Cancel(quoteId,
             CancellationToken.None);
 
 		// Then
-		Assert.IsType<OkObjectResult>(response);
+		Assert.IsType<OkResult>(response);
 	}
 
     [Fact]
@@ -128,14 +128,15 @@ public class QuotesControllerTests
         // Given
         Guid quoteId = Guid.NewGuid();
 
-        await _commandBus.SendAsync(Arg.Any<ConfirmQuote>(), CancellationToken.None);
+        _commandBus.SendAsync(Arg.Any<ConfirmQuote>(), CancellationToken.None)
+            .Returns(Result.Ok());
 
         // When
         var response = await _quotesController.Confirm(quoteId,
             CancellationToken.None);
 
 		// Then
-		Assert.IsType<OkObjectResult>(response);
+		Assert.IsType<OkResult>(response);
 	}
 
     private ICommandBus _commandBus = Substitute.For<ICommandBus>();

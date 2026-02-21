@@ -8,24 +8,10 @@ public class RegisterCustomerHandlerTests
 		// Given
 		Guid customerId = Guid.NewGuid();
 
-		_checker.IsUnique(Arg.Any<string>())
+		_checker.IsUniqueAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
 			.Returns(true);
 
-		var userCreationResult = new UserRegisteredResult()
-		{
-			Succeeded = true,
-			UserId = Guid.NewGuid().ToString()
-		};
-
 		var apiClient = new IdentityServerClient(_requestAdapter);
-		// mocked kiota request
-		_requestAdapter.SendAsync(
-			Arg.Any<RequestInformation>(),
-			Arg.Any<ParsableFactory<UserRegisteredResult>>(),
-			Arg.Any<Dictionary<string, ParsableFactory<IParsable>>>(),
-			Arg.Any<CancellationToken>())
-			.Returns(userCreationResult);
-
 		var confirmation = _password;
 		var registerCommand = RegisterCustomer
 			.Create(_email, _password, confirmation, _name, _streetAddress, _creditLimit);
@@ -43,29 +29,24 @@ public class RegisterCustomerHandlerTests
 	}
 
 	[Fact]
-	public async Task Register_WithExistingEmail_ShouldThrownException()
+	public async Task Register_WithExistingEmail_ShouldReturnFailure()
 	{
 		// Given       
-		_checker.IsUnique(Arg.Any<string>())
+		_checker.IsUniqueAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
 			.Returns(false);
 
 		var apiClient = new IdentityServerClient(_requestAdapter);
-		// mocked kiota request
-		_ = _requestAdapter.SendAsync(
-			Arg.Any<RequestInformation>(),
-			Arg.Any<ParsableFactory<UserRegisteredResult>>(),
-			Arg.Any<Dictionary<string, ParsableFactory<IParsable>>>(),
-			Arg.Any<CancellationToken>());
-
 		var confirmation = _password;
 		var registerCommand = RegisterCustomer
 			.Create(_email, _password, confirmation, _name, _streetAddress, _creditLimit);
 		var commandHandler = new RegisterCustomerHandler(
 			apiClient, _checker, _dummyRepository);
 
-		// When & Then
-		await Assert.ThrowsAsync<BusinessRuleException>(() =>
-			commandHandler.HandleAsync(registerCommand, CancellationToken.None));
+		// When
+		var result = await commandHandler.HandleAsync(registerCommand, CancellationToken.None);
+
+		// Then
+		Assert.True(result.IsFailed);
 	}
 
 	public const string _email = "email@test.com";

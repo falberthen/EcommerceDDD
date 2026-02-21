@@ -4,7 +4,7 @@ namespace EcommerceDDD.SignalR.API.Controllers;
 [ApiController]
 [ApiVersion(ApiVersions.V2)]
 [Route("api/v{version:apiVersion}/signalr")]
-public class SignalrController(IOrderStatusUpdater orderStatusUpdater) : ControllerBase
+public class SignalrController(IOrderStatusUpdater orderStatusUpdater) : CustomControllerBase
 {
 	private IOrderStatusUpdater _orderStatusUpdater = orderStatusUpdater
 		?? throw new ArgumentNullException(nameof(orderStatusUpdater));
@@ -12,7 +12,6 @@ public class SignalrController(IOrderStatusUpdater orderStatusUpdater) : Control
 	[HttpPost, Route("updateorderstatus")]
 	[MapToApiVersion(ApiVersions.V2)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
-	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<IActionResult> UpdateOrderStatus([FromBody] UpdateOrderStatusRequest request)
 	{
 		await _orderStatusUpdater.UpdateOrderStatusAsync(

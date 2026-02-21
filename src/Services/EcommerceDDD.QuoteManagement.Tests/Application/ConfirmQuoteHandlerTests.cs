@@ -43,7 +43,7 @@ public class ConfirmQuoteHandlerTests
 		var confirmQuoteHandler = new ConfirmQuoteHandler(quoteWriteRepository);
 
 		// When & Then
-		await Assert.ThrowsAsync<BusinessRuleException>(() =>
+		await Assert.ThrowsAsync<DomainException>(() =>
 			confirmQuoteHandler.HandleAsync(confirmQuote, CancellationToken.None));
 	}
 }

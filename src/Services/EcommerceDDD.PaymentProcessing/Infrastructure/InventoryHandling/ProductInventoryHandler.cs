@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.PaymentProcessing.Infrastructure.InventoryHandling;
+namespace EcommerceDDD.PaymentProcessing.Infrastructure.InventoryHandling;
 
 public class ProductInventoryHandler(InventoryManagementClient inventoryManagementClient) : IProductInventoryHandler
 {
@@ -14,7 +14,6 @@ public class ProductInventoryHandler(InventoryManagementClient inventoryManageme
 		{
 			ProductIds = productIdFilter
 		};
-		bool hasOutOfStockItem = false;
 
 		try
 		{
@@ -23,29 +22,26 @@ public class ProductInventoryHandler(InventoryManagementClient inventoryManageme
 				.CheckStockQuantity
 				.PostAsync(request, cancellationToken: cancellationToken);
 
-			if (response?.Success != true)
-				throw new ApplicationLogicException("An error occurred checking products stock availability.");
+			if (response is null)
+				return false;
 
-			var inventoryData = response.Data
-				?? throw new RecordNotFoundException("No data was provided for the filtered products.");
+			var inventoryData = response;
 
-			// Check if any product's requested quantity exceeds what's in stock
-			hasOutOfStockItem = productItems.Any(item =>
+			bool hasOutOfStockItem = productItems.Any(item =>
 			{
-				InventoryStockUnitViewModel stock = inventoryData
-					.SingleOrDefault(p => p.ProductId == item.ProductId.Value)
-					?? throw new RecordNotFoundException($"Product {item.ProductId.Value} not found in stock data.");
+				var stock = inventoryData
+					.SingleOrDefault(p => p.ProductId == item.ProductId.Value);
 
+				if (stock is null) return true; // treat missing as out of stock
 				return item.Quantity > stock.QuantityInStock;
 			});
-		}
-		catch (Microsoft.Kiota.Abstractions.ApiException ex)
-		{
-			throw new ApplicationLogicException(
-				$"An error occurred checking stock quantity for products.", ex);
-		}
 
-		return !hasOutOfStockItem;
+			return !hasOutOfStockItem;
+		}
+		catch (Exception)
+		{
+			return false;
+		}
 	}
 
 	public async Task DecreaseQuantityInStockAsync(IReadOnlyList<ProductItem> productItems, CancellationToken cancellationToken)
@@ -57,18 +53,10 @@ public class ProductInventoryHandler(InventoryManagementClient inventoryManageme
 				DecreasedQuantity = productItem.Quantity
 			};
 
-			try
-			{
-				var inventoryRequestBuilder = _inventoryManagementClient.Api.V2.Inventory[productItem.ProductId.Value];
-				await inventoryRequestBuilder
-					.DecreaseStockQuantity
-					.PutAsync(request, cancellationToken: cancellationToken);
-			}
-			catch (Microsoft.Kiota.Abstractions.ApiException ex)
-			{
-				throw new ApplicationLogicException(
-					$"An error occurred decreasing stock quantity for product {productItem.ProductId.Value}.", ex);
-			}
+			var inventoryRequestBuilder = _inventoryManagementClient.Api.V2.Inventory[productItem.ProductId.Value];
+			await inventoryRequestBuilder
+				.DecreaseStockQuantity
+				.PutAsync(request, cancellationToken: cancellationToken);
 		});
 
 		await Task.WhenAll(tasks);

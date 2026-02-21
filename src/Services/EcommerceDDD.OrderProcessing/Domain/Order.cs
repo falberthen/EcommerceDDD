@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.OrderProcessing.Domain;
+namespace EcommerceDDD.OrderProcessing.Domain;
 
 public class Order : AggregateRoot<OrderId>
 {
@@ -19,9 +19,9 @@ public class Order : AggregateRoot<OrderId>
     public static Order Place(OrderData orderData)
     {
         if (orderData.CustomerId is null)
-            throw new BusinessRuleException("The customer Id is required.");
+            throw new DomainException("The customer Id is required.");
         if (orderData.QuoteId is null)
-            throw new BusinessRuleException("The quote Id is required.");        
+            throw new DomainException("The quote Id is required.");        
 
         return new Order(orderData);
     }
@@ -29,9 +29,9 @@ public class Order : AggregateRoot<OrderId>
     public void Process(OrderData orderData)
     {
         if (orderData?.Items is null || !orderData.Items.Any())
-            throw new BusinessRuleException("There's no items to process.");
+            throw new DomainException("There's no items to process.");
         if (orderData.Currency is null)
-            throw new BusinessRuleException("The currency is required.");
+            throw new DomainException("The currency is required.");
 
         var orderLines = BuildOrderLines(orderData);
         var totalPrice = CalculateTotalPrice(orderLines, orderData?.Currency!);
@@ -56,7 +56,7 @@ public class Order : AggregateRoot<OrderId>
     public void RecordPayment(PaymentId paymentId, Money totalPaid)
     {
         if (Status != OrderStatus.Processed)
-            throw new BusinessRuleException("The order must be processed before paid.");
+            throw new DomainException("The order must be processed before paid.");
 
         var productsIds = OrderLines
             .Select(ol => ol.ProductItem.ProductId.Value).ToList();
@@ -75,7 +75,7 @@ public class Order : AggregateRoot<OrderId>
     public void RecordShipment(ShipmentId shipmentId)
     {
         if (Status != OrderStatus.Paid)
-            throw new BusinessRuleException("The order must be paid before shipped.");
+            throw new DomainException("The order must be paid before shipped.");
 
         var productsIds = OrderLines
             .Select(ol => ol.ProductItem.ProductId.Value).ToList();
@@ -91,7 +91,7 @@ public class Order : AggregateRoot<OrderId>
     public void Complete(ShipmentId shipmentId)
     {
         if (Status != OrderStatus.Shipped)
-            throw new BusinessRuleException("The order must be shipped before completed.");
+            throw new DomainException("The order must be shipped before completed.");
 
         var @event = new OrderCompleted(
             Id.Value,
@@ -104,7 +104,7 @@ public class Order : AggregateRoot<OrderId>
     public void Cancel(OrderCancellationReason cancellationReason)
     {
         if (Status == OrderStatus.Completed || Status == OrderStatus.Canceled)
-            throw new BusinessRuleException("The order cannot be cancelled at this point.");
+            throw new DomainException("The order cannot be cancelled at this point.");
 
         var @event = new OrderCanceled(
             Id.Value,

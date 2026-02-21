@@ -33,19 +33,13 @@ public class PlaceOrderHandlerTests
 			}
 		};
 
-		var quoteApiResponse = new QuoteViewModelApiResponse()
-		{
-			Data = viewModelResponse,
-			Success = true
-		};
-
 		// mocked kiota request
 		_requestAdapter.SendAsync(
 			Arg.Is<RequestInformation>(req => req.PathParameters.Values.Contains(_quoteId.Value)),
-			Arg.Any<ParsableFactory<QuoteViewModelApiResponse>>(),
+			Arg.Any<ParsableFactory<QuoteViewModel>>(),
 			Arg.Any<Dictionary<string, ParsableFactory<IParsable>>>(),
 			Arg.Any<CancellationToken>())
-		.Returns(quoteApiResponse);
+		.Returns(viewModelResponse);
 
 		var placeOrder = PlaceOrder.Create(_quoteId);
 		var placeOrderHandler = new PlaceOrderHandler(signalRClient, quoteManagementClient, orderWriteRepository);
@@ -62,10 +56,9 @@ public class PlaceOrderHandlerTests
 	}
 
 	[Fact]
-	public async Task PlaceOrder_WithEmptyQuoteItems_ShouldThrowException()
+	public async Task PlaceOrder_WithEmptyQuoteItems_ShouldReturnFailure()
 	{
 		// Given
-		var currency = Currency.OfCode(Currency.USDollar.Code);
 		var orderWriteRepository = new DummyEventStoreRepository<Order>();
 		var signalRClient = new SignalRClient(_requestAdapter);
 		var quoteManagementClient = new QuoteManagementClient(_requestAdapter);
@@ -73,9 +66,11 @@ public class PlaceOrderHandlerTests
 		var placeOrder = PlaceOrder.Create(_quoteId);
 		var placeOrderHandler = new PlaceOrderHandler(signalRClient, quoteManagementClient, orderWriteRepository);
 
-		// When & Then
-		await Assert.ThrowsAsync<ApplicationLogicException>(() =>
-			placeOrderHandler.HandleAsync(placeOrder, CancellationToken.None));
+		// When
+		var result = await placeOrderHandler.HandleAsync(placeOrder, CancellationToken.None);
+
+		// Then
+		Assert.True(result.IsFailed);
 	}
 
 	private readonly QuoteId _quoteId = QuoteId.Of(Guid.NewGuid());

@@ -5,5 +5,5 @@
 /// </summary>
 public interface IEmailUniquenessChecker
 {
-    bool IsUnique(string customerEmail);
+	Task<bool> IsUniqueAsync(string customerEmail, CancellationToken cancellationToken);
 }

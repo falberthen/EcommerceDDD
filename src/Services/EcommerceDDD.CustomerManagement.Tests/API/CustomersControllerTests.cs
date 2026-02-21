@@ -22,7 +22,7 @@ public class CustomersControllerTests
 		};
 
 		_queryBus.SendAsync(Arg.Any<GetCustomerDetailsById>(), CancellationToken.None)
-			.Returns(expectedData);
+			.Returns(Result.Ok<CustomerDetails>(expectedData));
 
 		// When
 		var response = await _customersController
@@ -30,8 +30,7 @@ public class CustomersControllerTests
 
 		// Then
 		var okResult = Assert.IsType<OkObjectResult>(response);
-		var apiResponse = Assert.IsType<ApiResponse<CustomerDetails>>(okResult.Value);
-		Assert.IsAssignableFrom<CustomerDetails>(apiResponse.Data);
+		Assert.IsAssignableFrom<CustomerDetails>(okResult.Value);
 	}
 
 	[Fact]
@@ -46,16 +45,15 @@ public class CustomersControllerTests
 		);
 
 		_queryBus.SendAsync(Arg.Any<GetCreditLimit>(), CancellationToken.None)
-			.Returns(expectedData);
+			.Returns(Result.Ok<CreditLimitModel>(expectedData));
 
 		// When
 		var response = await _customersController
 			.GetCustomerCreditLimit(customerId, CancellationToken.None);
 
-		// Then		
+		// Then
 		var okResult = Assert.IsType<OkObjectResult>(response);
-		var apiResponse = Assert.IsType<ApiResponse<CreditLimitModel>>(okResult.Value);
-		Assert.IsAssignableFrom<CreditLimitModel>(apiResponse.Data);
+		Assert.IsAssignableFrom<CreditLimitModel>(okResult.Value);
 	}
 
 	[Fact]
@@ -82,15 +80,14 @@ public class CustomersControllerTests
 		};
 
 		_queryBus.SendAsync(Arg.Any<GetCustomerEventHistory>(), CancellationToken.None)
-			.Returns(expectedData);
+			.Returns(Result.Ok<IReadOnlyList<CustomerEventHistory>>(expectedData));
 
 		// When
 		var response = await _customersController.ListHistory(CancellationToken.None);
 
-		// Then		
+		// Then
 		var okResult = Assert.IsType<OkObjectResult>(response);
-		var apiResponse = Assert.IsType<ApiResponse<IReadOnlyList<CustomerEventHistory>>>(okResult.Value);
-		Assert.IsAssignableFrom<IReadOnlyList<CustomerEventHistory>>(apiResponse.Data);
+		Assert.IsAssignableFrom<IReadOnlyList<CustomerEventHistory>>(okResult.Value);
 	}
 
 	[Fact]
@@ -107,14 +104,15 @@ public class CustomersControllerTests
 			CreditLimit = 1000
 		};
 
-		await _commandBus.SendAsync(Arg.Any<RegisterCustomer>(), Arg.Any<CancellationToken>());
+		_commandBus.SendAsync(Arg.Any<RegisterCustomer>(), Arg.Any<CancellationToken>())
+			.Returns(Result.Ok());
 
 		// When
 		var response = await _customersController
-			.Register(request, Arg.Any<CancellationToken>());
+			.Register(request, CancellationToken.None);
 
-		// Then		
-		Assert.IsType<OkObjectResult>(response);
+		// Then
+		Assert.IsType<OkResult>(response);
 	}
 
 	[Fact]
@@ -129,14 +127,15 @@ public class CustomersControllerTests
 			CreditLimit = 1000m
 		};
 
-		await _commandBus.SendAsync(Arg.Any<RegisterCustomer>(), Arg.Any<CancellationToken>());
+		_commandBus.SendAsync(Arg.Any<UpdateCustomerInformation>(), Arg.Any<CancellationToken>())
+			.Returns(Result.Ok());
 
 		// When
 		var response = await _customersController
-			.UpdateInformation(request, Arg.Any<CancellationToken>());
+			.UpdateInformation(request, CancellationToken.None);
 
 		// Then
-		Assert.IsType<OkObjectResult>(response);
+		Assert.IsType<OkResult>(response);
 	}
 
 	private CustomersController _customersController;

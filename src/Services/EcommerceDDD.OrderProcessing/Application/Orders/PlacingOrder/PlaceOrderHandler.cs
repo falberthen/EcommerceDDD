@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
+namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
 
 public class PlaceOrderHandler(
 	SignalRClient signalrClient,
@@ -13,18 +13,21 @@ public class PlaceOrderHandler(
 	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository
 		?? throw new ArgumentNullException(nameof(orderWriteRepository));
 
-	public async Task HandleAsync(PlaceOrder command, CancellationToken cancellationToken)
+	public async Task<Result> HandleAsync(PlaceOrder command, CancellationToken cancellationToken)
 	{
-		// Getting quote data
-		QuoteViewModel quote = await GetQuoteAsync(command, cancellationToken)
-			?? throw new RecordNotFoundException($"No open quote found for customer.");
+		var quoteResult = await GetQuoteAsync(command, cancellationToken);
+		if (quoteResult.IsFailed)
+			return Result.Fail(quoteResult.Errors);
+
+		var quote = quoteResult.Value!;
+
 		if (!quote.Items!.Any())
-			throw new RecordNotFoundException($"No quote items found for customer.");
+			return Result.Fail("No quote items found for customer.");
 
-		// Confirming quote
-		await ConfirmQuoteAsync(quote.QuoteId!.Value, cancellationToken);
+		var confirmResult = await ConfirmQuoteAsync(quote.QuoteId!.Value, cancellationToken);
+		if (confirmResult.IsFailed)
+			return confirmResult;
 
-		// Placing order
 		var orderItems = quote.Items!.Select(qi => new ProductItemData()
 		{
 			ProductId = ProductId.Of(qi.ProductId!.Value),
@@ -41,18 +44,15 @@ public class PlaceOrderHandler(
 
 		var order = Order.Place(orderData);
 
-		// Appending to outbox for message broker
 		var orderPlacedEvent = order.GetUncommittedEvents()
 			.OfType<OrderPlaced>().FirstOrDefault();
 		_orderWriteRepository.AppendToOutbox(orderPlacedEvent!);
 
-		// Persisting aggregate
 		await _orderWriteRepository
 			.AppendEventsAsync(order, cancellationToken);
 
 		try
 		{
-			// Updating order status on the UI with SignalR
 			var request = new UpdateOrderStatusRequest()
 			{
 				CustomerId = order.CustomerId.Value,
@@ -64,14 +64,15 @@ public class PlaceOrderHandler(
 			await _signalrClient.Api.V2.Signalr.Updateorderstatus
 				.PostAsync(request, cancellationToken: cancellationToken);
 		}
-		catch (Microsoft.Kiota.Abstractions.ApiException ex)
+		catch (Microsoft.Kiota.Abstractions.ApiException)
 		{
-			throw new ApplicationLogicException(
-				$"An error occurred when updating status for order {order.Id.Value}.", ex);
+			return Result.Fail($"An error occurred when updating status for order {order.Id.Value}.");
 		}
+
+		return Result.Ok();
 	}
 
-	private async Task<QuoteViewModel> GetQuoteAsync(PlaceOrder command, CancellationToken cancellationToken)
+	private async Task<Result<QuoteViewModel>> GetQuoteAsync(PlaceOrder command, CancellationToken cancellationToken)
 	{
 		try
 		{
@@ -79,30 +80,32 @@ public class PlaceOrderHandler(
 			var response = await quoteRequestBuilder.Details
 				.GetAsync(cancellationToken: cancellationToken);
 
-			if (response?.Data is null)
-				throw new ApplicationLogicException(response?.Message ?? string.Empty);
+			if (response is null)
+				return Result.Fail<QuoteViewModel>(
+					new RecordNotFoundError($"Quote data not found."));
 
-			return response.Data;
+			return Result.Ok(response);
 		}
-		catch (Microsoft.Kiota.Abstractions.ApiException ex)
+		catch (Microsoft.Kiota.Abstractions.ApiException)
 		{
-			throw new ApplicationLogicException(
-				$"An error occurred when getting quote {command.QuoteId.Value}.", ex);
+			return Result.Fail<QuoteViewModel>(
+				$"An error occurred when getting quote {command.QuoteId.Value}.");
 		}
 	}
 
-	private async Task ConfirmQuoteAsync(Guid quoteId, CancellationToken cancellationToken)
+	private async Task<Result> ConfirmQuoteAsync(Guid quoteId, CancellationToken cancellationToken)
 	{
 		try
 		{
 			var quoteRequestBuilder = _quoteManagementClient.Api.V2.Quotes[quoteId];
 			await quoteRequestBuilder.Confirm
 				.PutAsync(cancellationToken: cancellationToken);
+
+			return Result.Ok();
 		}
-		catch (Microsoft.Kiota.Abstractions.ApiException ex)
+		catch (Microsoft.Kiota.Abstractions.ApiException)
 		{
-			throw new ApplicationLogicException(
-				$"An error occurred when confirming quote {quoteId}.", ex);
+			return Result.Fail($"An error occurred when confirming quote {quoteId}.");
 		}
 	}
 }

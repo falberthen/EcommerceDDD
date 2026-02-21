@@ -1,8 +1,8 @@
 {
-  "descriptionHash": "2E435FA3E96E61716DDE812D24073B73EEF8463CA81E0B5C88BFD31FD9A841FB1C4EDFA06F5826C830C9D14586C7B90E30B756DE091FC7C4A66043E9E48C6234",
+  "descriptionHash": "363FBC415AAFF6D97C679542F88ABEE05A56D7758D1EED95C4C7E22D05D63F5241687DE08A6E4C363D7BEE9B609A1CF1847CE4818A861F295C15383580DBDF16",
   "descriptionLocation": "http://ecommerceddd-identityserver/swagger/v2/swagger.json",
   "lockFileVersion": "1.0.0",
-  "kiotaVersion": "1.29.0",
+  "kiotaVersion": "1.30.0",
   "clientClassName": "IdentityServerClient",
   "typeAccessModifier": "Public",
   "clientNamespaceName": "EcommerceDDD.ServiceClients.IdentityServer",

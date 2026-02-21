@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.CustomerManagement.Application.GettingCustomerDetails;
+namespace EcommerceDDD.CustomerManagement.Application.GettingCustomerDetails;
 
 public class GetCustomerDetailsHandler(
 	IUserInfoRequester userInfoRequester,
@@ -10,15 +10,18 @@ public class GetCustomerDetailsHandler(
 	private IUserInfoRequester _userInfoRequester { get; set; } = userInfoRequester
 		?? throw new ArgumentNullException(nameof(userInfoRequester));
 
-	public async Task<CustomerDetails> HandleAsync(GetCustomerDetails query,
+	public async Task<Result<CustomerDetails>> HandleAsync(GetCustomerDetails query,
 		CancellationToken cancellationToken)
 	{
 		UserInfo? userInfo = await _userInfoRequester
 			.RequestUserInfoAsync();
-		
+
 		var customer = _querySession.Query<CustomerDetails>()
-			.FirstOrDefault(c => c.Id == userInfo!.CustomerId)
-			?? throw new RecordNotFoundException($"Customer not found.");
+			.FirstOrDefault(c => c.Id == userInfo!.CustomerId);
+
+		if (customer is null)
+			return Result.Fail<CustomerDetails>(
+				new RecordNotFoundError($"Customer {userInfo!.CustomerId} not found."));
 
 		var details = new CustomerDetails();
 		details.Id = customer.Id;
@@ -27,6 +30,6 @@ public class GetCustomerDetailsHandler(
 		details.ShippingAddress = customer.ShippingAddress;
 		details.CreditLimit = customer.CreditLimit;
 
-		return details;
+		return Result.Ok(details);
 	}
 }

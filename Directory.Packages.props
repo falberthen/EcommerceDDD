@@ -18,8 +18,8 @@
     <PackageVersion Include="Duende.IdentityServer.EntityFramework" Version="7.4.6" />
   </ItemGroup>
   <ItemGroup Label="API Documentation">
-    <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.1.3" />
-    <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.3" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.1.4" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.4" />
   </ItemGroup>
   <ItemGroup Label="API Versioning">
     <PackageVersion Include="Asp.Versioning.Mvc" Version="8.1.1" />
@@ -27,15 +27,18 @@
   </ItemGroup>
   <ItemGroup Label="API Gateway">
     <PackageVersion Include="Ocelot" Version="24.1.0" />
-    <PackageVersion Include="Koalesce" Version="1.0.0-beta.8" />
+    <PackageVersion Include="Koalesce" Version="1.0.0-beta.9" />
   </ItemGroup>
   <ItemGroup Label="Event Sourcing and Messaging">
     <PackageVersion Include="Marten" Version="8.22.0" />
-    <PackageVersion Include="Confluent.Kafka" Version="2.13.0" />
+    <PackageVersion Include="Confluent.Kafka" Version="2.13.1" />
   </ItemGroup>
   <ItemGroup Label="Resilience and DI">
     <PackageVersion Include="Polly" Version="8.6.5" />
     <PackageVersion Include="Scrutor" Version="7.0.0" />
+  </ItemGroup>
+  <ItemGroup Label="Result Pattern">
+    <PackageVersion Include="FluentResults" Version="4.0.0" />
   </ItemGroup>
   <ItemGroup Label="Serialization">
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />

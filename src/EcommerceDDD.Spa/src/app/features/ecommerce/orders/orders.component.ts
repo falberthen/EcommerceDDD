@@ -63,10 +63,10 @@ export class OrdersComponent implements OnInit {
         .byOrderId(orderId)
         .history.get()
         .then((result) => {
-          if (result!.success) {
+          if (result) {
             this.storedEventService.showStoredEvents(
               this.storedEventViewerContainer(),
-              result?.data ?? []
+              result
             );
           }
         });
@@ -78,8 +78,8 @@ export class OrdersComponent implements OnInit {
   async loadOrders() {
     try {
       await this.kiotaClientService.client.orderProcessing.api.v2.orders.get().then((result) => {
-        if (result!.success) {
-          this.orders = result?.data!;
+        if (result) {
+          this.orders = result;
         }
       });
     } catch (error) {

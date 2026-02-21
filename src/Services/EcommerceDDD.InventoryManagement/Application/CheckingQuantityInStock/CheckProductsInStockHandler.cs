@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.InventoryManagement.Application.CheckingQuantityInStock;
+namespace EcommerceDDD.InventoryManagement.Application.CheckingQuantityInStock;
 
 public class CheckProductsInStockHandler(
 	IQuerySessionWrapper querySession
@@ -6,18 +6,18 @@ public class CheckProductsInStockHandler(
 {
     private readonly IQuerySessionWrapper _querySession = querySession;
 
-    public async Task<IList<InventoryStockUnitViewModel>> HandleAsync(CheckProductsInStock query,
+    public async Task<Result<IList<InventoryStockUnitViewModel>>> HandleAsync(CheckProductsInStock query,
         CancellationToken cancellationToken)
     {
-        var viewModels = new List<InventoryStockUnitViewModel>();
-
         if (!query.ProductIds.Any())
-            throw new ApplicationLogicException("The list of Products to check cannot be empty.");
+            return Result.Fail<IList<InventoryStockUnitViewModel>>("The list of Products to check cannot be empty.");
+
+        var viewModels = new List<InventoryStockUnitViewModel>();
 
         IList<Guid> productIds = query.ProductIds
             .Select(p => p.Value).Distinct().ToList();
-        var projectedInventoryStockUnits = _querySession.Query<InventoryStockUnitDetails>()
-            .Where(x => productIds.Contains(x.ProductId)).ToList();
+        IReadOnlyList<InventoryStockUnitDetails> projectedInventoryStockUnits = await _querySession.QueryListAsync<InventoryStockUnitDetails>(
+            x => productIds.Contains(x.ProductId), cancellationToken);
 
         foreach (var inventoryStockUnit in projectedInventoryStockUnits)
         {
@@ -27,6 +27,6 @@ public class CheckProductsInStockHandler(
                 inventoryStockUnit.QuantityInStock));
         }
 
-        return await Task.FromResult(viewModels);
+        return Result.Ok<IList<InventoryStockUnitViewModel>>(viewModels);
     }
 }

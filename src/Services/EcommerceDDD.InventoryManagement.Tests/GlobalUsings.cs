@@ -1,6 +1,8 @@
+global using FluentResults;
+global using EcommerceDDD.Core.CQRS;
 global using EcommerceDDD.Core.CQRS.CommandHandling;
 global using EcommerceDDD.Core.CQRS.QueryHandling;
-global using EcommerceDDD.Core.Exceptions.Types;
+global using EcommerceDDD.Core.Exceptions;
 global using EcommerceDDD.Core.Infrastructure.Marten;
 global using EcommerceDDD.Core.Infrastructure.WebApi;
 global using EcommerceDDD.Core.Persistence;
@@ -15,4 +17,5 @@ global using EcommerceDDD.InventoryManagement.Domain.Events;
 global using EcommerceDDD.InventoryManagement.Infrastructure.Projections;
 global using Microsoft.AspNetCore.Mvc;
 global using NSubstitute;
+global using System.Linq.Expressions;
 global using Xunit;

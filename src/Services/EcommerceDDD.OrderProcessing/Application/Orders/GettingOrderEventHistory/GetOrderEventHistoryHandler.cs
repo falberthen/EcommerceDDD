@@ -1,12 +1,12 @@
-﻿namespace EcommerceDDD.OrderProcessing.Application.GettingOrderEventHistory;
+namespace EcommerceDDD.OrderProcessing.Application.GettingOrderEventHistory;
 
 public class GetOrderEventHistoryHandler(
     IQuerySession querySession
-) : IQueryHandler<GetOrderEventHistory, IReadOnlyList<OrderEventHistory>> 
+) : IQueryHandler<GetOrderEventHistory, IReadOnlyList<OrderEventHistory>>
 {
 	private readonly IQuerySession _querySession = querySession;
 
-	public async Task<IReadOnlyList<OrderEventHistory>> HandleAsync(GetOrderEventHistory query, 
+	public async Task<Result<IReadOnlyList<OrderEventHistory>>> HandleAsync(GetOrderEventHistory query,
         CancellationToken cancellationToken)
     {
         var quoteHistory = await _querySession.Query<OrderEventHistory>()
@@ -14,6 +14,6 @@ public class GetOrderEventHistoryHandler(
            .OrderBy(c => c.Timestamp)
            .ToListAsync(cancellationToken);
 
-        return quoteHistory;
+        return Result.Ok(quoteHistory);
     }
 }

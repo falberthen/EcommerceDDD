@@ -67,7 +67,7 @@ public class InventoryStockUnitTests
 		var initialQuantity = -1;
 
 		// When & Then
-		Assert.Throws<BusinessRuleException>(() =>
+		Assert.Throws<DomainException>(() =>
 			InventoryStockUnit.EnterStockUnit(productId, initialQuantity));
 	}
 
@@ -80,7 +80,7 @@ public class InventoryStockUnitTests
 		var inventoryStockUnit = InventoryStockUnit.EnterStockUnit(productId, initialQuantity);
 
 		// When & Then
-		Assert.Throws<BusinessRuleException>(() =>
+		Assert.Throws<DomainException>(() =>
 			inventoryStockUnit.IncreaseStockQuantity(0));
 	}
 
@@ -93,7 +93,7 @@ public class InventoryStockUnitTests
 		var inventoryStockUnit = InventoryStockUnit.EnterStockUnit(productId, initialQuantity);
 
 		// When & Then
-		Assert.Throws<BusinessRuleException>(() =>
+		Assert.Throws<DomainException>(() =>
 			inventoryStockUnit.DecreaseStockQuantity(0));
 	}
 }

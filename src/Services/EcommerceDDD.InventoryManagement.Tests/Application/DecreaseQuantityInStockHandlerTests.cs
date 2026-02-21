@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.InventoryManagement.Tests.Application;
+namespace EcommerceDDD.InventoryManagement.Tests.Application;
 
 public class DecreaseQuantityInStockHandlerTests
 {
@@ -14,12 +14,12 @@ public class DecreaseQuantityInStockHandlerTests
 			QuantityInStock = 10
 		};
 
-		// Mocking query session  
 		var querySessionMock = Substitute.For<IQuerySessionWrapper>();
-		var queryableData = new List<InventoryStockUnitDetails> { existingEntry }.AsQueryable();
-		querySessionMock.Query<InventoryStockUnitDetails>()
-			.Returns(queryableData);
-		
+		querySessionMock.QueryFirstOrDefaultAsync<InventoryStockUnitDetails>(
+				Arg.Any<Expression<Func<InventoryStockUnitDetails, bool>>>(),
+				Arg.Any<CancellationToken>())
+			.Returns(existingEntry);
+
 		var inventoryStockUnit = InventoryStockUnit.EnterStockUnit(ProductId.Of(productId), 10);
 		_inventoryStockUnitRepository.FetchStreamAsync(existingEntry.Id)
 			.Returns(inventoryStockUnit);
@@ -34,6 +34,6 @@ public class DecreaseQuantityInStockHandlerTests
 		Assert.Equal(8, inventoryStockUnit.Quantity); // 10 - 2
 	}
 
-	private readonly IEventStoreRepository<InventoryStockUnit> _inventoryStockUnitRepository = 
+	private readonly IEventStoreRepository<InventoryStockUnit> _inventoryStockUnitRepository =
 		Substitute.For<IEventStoreRepository<InventoryStockUnit>>();
 }

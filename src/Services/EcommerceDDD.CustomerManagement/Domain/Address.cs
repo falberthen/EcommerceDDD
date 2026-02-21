@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.CustomerManagement.Domain;
+namespace EcommerceDDD.CustomerManagement.Domain;
 
 public class Address : ValueObject<Address>
 {
@@ -7,7 +7,7 @@ public class Address : ValueObject<Address>
     public static Address FromStreetAddress(string address)
     {
         if (string.IsNullOrWhiteSpace(address))
-            throw new BusinessRuleException("Address cannot be null or whitespace.");
+            throw new DomainException("Address cannot be null or whitespace.");
 
         return new Address(address);
     }

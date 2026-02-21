@@ -114,10 +114,10 @@ Microservices communicate directly using **Kiota-generated typed HTTP clients**.
 |------------|---------|
 | .NET | 10 |
 | C# | 12 |
-| Koalesce | 1.0.0-beta.8 |
+| Koalesce | 1.0.0-beta.9 |
 | Ocelot | 24.1.0 |
 | Marten | 8.22.0 |
-| Confluent Kafka | 2.13.0 |
+| Confluent Kafka | 2.13.1 |
 | Entity Framework Core | 10.0.3 |
 | Npgsql (PostgreSQL) | 10.0.0 |
 | Duende IdentityServer | 7.4.6 |
@@ -126,6 +126,8 @@ Microservices communicate directly using **Kiota-generated typed HTTP clients**.
 | OpenTelemetry | 1.15.0 |
 | xUnit | 2.9.3 |
 | NSubstitute | 5.3.0 |
+| Swashbuckle.AspNetCore.SwaggerUI | 10.1.4 |
+| FluentResults | 4.0.0 |
 
 ### Frontend
 

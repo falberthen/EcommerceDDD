@@ -1,8 +1,9 @@
+global using Asp.Versioning;
 global using EcommerceDDD.Core.CQRS.CommandHandling;
 global using EcommerceDDD.Core.CQRS.QueryHandling;
 global using EcommerceDDD.Core.Domain;
 global using EcommerceDDD.Core.EventBus;
-global using EcommerceDDD.Core.Exceptions.Types;
+global using EcommerceDDD.Core.Exceptions;
 global using EcommerceDDD.Core.Infrastructure.Extensions;
 global using EcommerceDDD.Core.Infrastructure.Identity;
 global using EcommerceDDD.Core.Infrastructure.Marten;
@@ -22,12 +23,11 @@ global using EcommerceDDD.ServiceClients.CustomerManagement;
 global using EcommerceDDD.ServiceClients.Extensions;
 global using EcommerceDDD.ServiceClients.InventoryManagement;
 global using EcommerceDDD.ServiceClients.InventoryManagement.Models;
+global using FluentResults;
 global using JasperFx.Events.Projections;
 global using Marten;
 global using Marten.Events.Aggregation;
 global using Microsoft.AspNetCore.Authorization;
-global using Asp.Versioning;
 global using Microsoft.AspNetCore.Mvc;
-
 global using Newtonsoft.Json;
 global using System.ComponentModel.DataAnnotations;

@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.InventoryManagement.Application.EnteringProductInStock;
+namespace EcommerceDDD.InventoryManagement.Application.EnteringProductInStock;
 
 public class EnterProductInStockHandler(
 	IQuerySessionWrapper querySession,
@@ -8,15 +8,15 @@ public class EnterProductInStockHandler(
 	private readonly IQuerySessionWrapper _querySession = querySession;
 	private readonly IEventStoreRepository<InventoryStockUnit> _inventoryStockUnitWriteRepository = inventoryStockUnitWriteRepository;
 
-	public async Task HandleAsync(EnterProductInStock command, CancellationToken cancellationToken)
+	public async Task<Result> HandleAsync(EnterProductInStock command, CancellationToken cancellationToken)
 	{
 		// Extract product IDs from the command
 		var productIds = command.ProductIdsQuantities
 			.Select(pq => pq.Item1.Value)
 			.ToHashSet();
-		
-		var existingEntries = _querySession.Query<InventoryStockUnitDetails>()
-			.Where(x => productIds.Contains(x.ProductId));
+
+		IReadOnlyList<InventoryStockUnitDetails> existingEntries = await _querySession.QueryListAsync<InventoryStockUnitDetails>(
+			x => productIds.Contains(x.ProductId), cancellationToken);
 
 		if (!existingEntries.Any())
 		{
@@ -29,5 +29,7 @@ public class EnterProductInStockHandler(
 					.AppendEventsAsync(inventoryStockUnit);
 			}
 		}
+
+		return Result.Ok();
 	}
 }

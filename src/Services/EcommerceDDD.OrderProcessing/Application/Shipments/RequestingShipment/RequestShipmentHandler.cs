@@ -1,4 +1,4 @@
-﻿using ProductItemRequest = EcommerceDDD.ServiceClients.ShipmentProcessing.Models.ProductItemRequest;
+using ProductItemRequest = EcommerceDDD.ServiceClients.ShipmentProcessing.Models.ProductItemRequest;
 
 namespace EcommerceDDD.OrderProcessing.Application.Shipments.RequestingShipment;
 
@@ -12,11 +12,13 @@ public class RequestShipmentHandler(
 	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository
 		?? throw new ArgumentNullException(nameof(orderWriteRepository));
 
-	public async Task HandleAsync(RequestShipment command, CancellationToken cancellationToken)
+	public async Task<Result> HandleAsync(RequestShipment command, CancellationToken cancellationToken)
 	{
 		var order = await _orderWriteRepository
-			.FetchStreamAsync(command.OrderId.Value, cancellationToken: cancellationToken)
-			?? throw new RecordNotFoundException($"Failed to find the order {command.OrderId}.");
+			.FetchStreamAsync(command.OrderId.Value, cancellationToken: cancellationToken);
+
+		if (order is null)
+			return Result.Fail($"Failed to find the order {command.OrderId}.");
 
 		var productItemsRequest = order.OrderLines
 			.Select(ol => new ProductItemRequest()
@@ -27,14 +29,13 @@ public class RequestShipmentHandler(
 				UnitPrice = Convert.ToDouble(ol.ProductItem.UnitPrice.Amount)
 			}).ToList();
 
-		await RequestShipmentAsync(order.Id, productItemsRequest, cancellationToken);
+		return await RequestShipmentAsync(order.Id, productItemsRequest, cancellationToken);
 	}
 
-	public async Task RequestShipmentAsync(OrderId orderId, List<ProductItemRequest> productItemsRequest, CancellationToken cancellationToken)
+	private async Task<Result> RequestShipmentAsync(OrderId orderId, List<ProductItemRequest> productItemsRequest, CancellationToken cancellationToken)
 	{
 		try
 		{
-			// Requesting shippment	
 			var shipOrderRequest = new ShipOrderRequest()
 			{
 				OrderId = orderId.Value,
@@ -44,11 +45,12 @@ public class RequestShipmentHandler(
 			var shipmentsRequestBuilder = _shipmentProcessingClient.Api.V2.Shipments;
 			await shipmentsRequestBuilder
 				.PostAsync(shipOrderRequest, cancellationToken: cancellationToken);
+
+			return Result.Ok();
 		}
 		catch (Microsoft.Kiota.Abstractions.ApiException)
 		{
-			throw new ApplicationLogicException(
-				$"An error occurred requesting shipping order.");
+			return Result.Fail("An error occurred requesting shipping order.");
 		}
 	}
 }

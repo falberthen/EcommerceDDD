@@ -25,11 +25,11 @@ public class ProductsControllerTests
 				_productPrice,
 				_currency.Symbol.ToString(),
 				100,
-				_productQuantity)			
+				_productQuantity)
 		};
 
 		_queryBus.SendAsync(Arg.Any<GetProducts>(), CancellationToken.None)
-			.Returns(expectedData);
+			.Returns(Result.Ok<IList<ProductViewModel>>(expectedData));
 
 		var request = new GetProductsRequest
 		{
@@ -42,8 +42,7 @@ public class ProductsControllerTests
 
 		// Then
 		var okResult = Assert.IsType<OkObjectResult>(result);
-		var apiResponse = Assert.IsType<ApiResponse<IList<ProductViewModel>>>(okResult.Value);
-		Assert.IsAssignableFrom<IList<ProductViewModel>>(apiResponse.Data);
+		Assert.IsAssignableFrom<IList<ProductViewModel>>(okResult.Value);
 	}
 
 	[Fact]
@@ -66,7 +65,7 @@ public class ProductsControllerTests
 		};
 
         _queryBus.SendAsync(Arg.Any<GetProducts>(), CancellationToken.None)
-            .Returns(expectedData);
+            .Returns(Result.Ok<IList<ProductViewModel>>(expectedData));
 
         var request = new GetProductsRequest()
         {
@@ -79,8 +78,7 @@ public class ProductsControllerTests
 
 		// Then
 		var okResult = Assert.IsType<OkObjectResult>(response);
-		var apiResponse = Assert.IsType<ApiResponse<IList<ProductViewModel>>>(okResult.Value);
-		Assert.IsAssignableFrom<IList<ProductViewModel>>(apiResponse.Data);
+		Assert.IsAssignableFrom<IList<ProductViewModel>>(okResult.Value);
 	}
 
 	private const int _productQuantity = 1;

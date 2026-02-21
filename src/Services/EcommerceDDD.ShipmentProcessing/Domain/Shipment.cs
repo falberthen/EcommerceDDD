@@ -1,4 +1,4 @@
-﻿using PackageShipped = EcommerceDDD.ShipmentProcessing.Domain.Events.PackageShipped;
+using PackageShipped = EcommerceDDD.ShipmentProcessing.Domain.Events.PackageShipped;
 
 namespace EcommerceDDD.ShipmentProcessing.Domain;
 
@@ -17,10 +17,10 @@ public class Shipment : AggregateRoot<ShipmentId>
             ?? throw new ArgumentNullException(nameof(shipmentData));
 
         if (OrderId is null)
-            throw new BusinessRuleException("The order id is required.");
+            throw new DomainException("The order id is required.");
 
         if (ProductItems is null || shipmentData.ProductItems.Count == 0)
-            throw new BusinessRuleException("There are no products to ship.");
+            throw new DomainException("There are no products to ship.");
 
         return new Shipment(shipmentData);
     }
@@ -28,7 +28,7 @@ public class Shipment : AggregateRoot<ShipmentId>
     public void Cancel(ShipmentCancellationReason shipmentCancellationReason)
     {
         if (Status == ShipmentStatus.Shipped)
-            throw new BusinessRuleException($"Shipment cannot be canceled when '{Status}'");
+            throw new DomainException($"Shipment cannot be canceled when '{Status}'");
 
         var @event = new ShipmentCanceled(
             Id.Value,
@@ -41,7 +41,7 @@ public class Shipment : AggregateRoot<ShipmentId>
     public void Complete()
     {
         if (Status != ShipmentStatus.Pending)
-            throw new BusinessRuleException($"Shipment cannot be completed when '{Status}'");
+            throw new DomainException($"Shipment cannot be completed when '{Status}'");
 
         var @event = new PackageShipped(Id.Value);
 

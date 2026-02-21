@@ -1,3 +1,5 @@
+global using FluentResults;
+global using EcommerceDDD.Core.CQRS;
 global using EcommerceDDD.Core.CQRS.CommandHandling;
 global using EcommerceDDD.Core.CQRS.QueryHandling;
 global using EcommerceDDD.Core.Testing;

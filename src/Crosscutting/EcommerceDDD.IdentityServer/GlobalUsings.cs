@@ -1,3 +1,4 @@
+global using Asp.Versioning;
 global using Duende.IdentityModel;
 global using Duende.IdentityServer;
 global using Duende.IdentityServer.EntityFramework.DbContexts;
@@ -18,10 +19,8 @@ global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.AspNetCore.Identity;
 global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-global using Asp.Versioning;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;
-global using Microsoft.Extensions.Options;
 global using Newtonsoft.Json;
 global using System.ComponentModel.DataAnnotations;
 global using System.Net;

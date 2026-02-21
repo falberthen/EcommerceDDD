@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.InventoryManagement.Tests.Application;
+namespace EcommerceDDD.InventoryManagement.Tests.Application;
 
 public class EnterProductInStockHandlerTests
 {
@@ -13,10 +13,11 @@ public class EnterProductInStockHandlerTests
 			new Tuple<ProductId, int>(ProductId.Of(Guid.NewGuid()), 1),
 		};
 
-		var inventoryStockUnitDetails = new List<InventoryStockUnitDetails>();
 		var querySessionMock = Substitute.For<IQuerySessionWrapper>();
-		querySessionMock.Query<InventoryStockUnitDetails>()
-			.Returns(inventoryStockUnitDetails.AsQueryable());
+		querySessionMock.QueryListAsync<InventoryStockUnitDetails>(
+				Arg.Any<Expression<Func<InventoryStockUnitDetails, bool>>>(),
+				Arg.Any<CancellationToken>())
+			.Returns((IReadOnlyList<InventoryStockUnitDetails>)new List<InventoryStockUnitDetails>());
 
 		var handler = new EnterProductInStockHandler(
 			querySessionMock, _inventoryStockUnitRepository);

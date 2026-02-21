@@ -72,7 +72,7 @@ export class AuthService {
         return isLogged;
       }
     } catch (error) {
-      this.notificationService.showError('Invalid username or password.');
+      this.kiotaClientService.handleError(error);
     }
 
     return isLogged;

@@ -33,18 +33,22 @@ namespace EcommerceDDD.ServiceClients.ProductCatalog.Api.V2.Products
         public ProductsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/api/v2/products", rawUrl)
         {
         }
-        /// <returns>A <see cref="global::EcommerceDDD.ServiceClients.ProductCatalog.Models.ProductViewModelIListApiResponse"/></returns>
+        /// <returns>A List&lt;global::EcommerceDDD.ServiceClients.ProductCatalog.Models.ProductViewModel&gt;</returns>
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::EcommerceDDD.ServiceClients.ProductCatalog.Models.ProblemDetails">When receiving a 400 status code</exception>
+        /// <exception cref="global::EcommerceDDD.ServiceClients.ProductCatalog.Models.ProblemDetails">When receiving a 401 status code</exception>
+        /// <exception cref="global::EcommerceDDD.ServiceClients.ProductCatalog.Models.ProblemDetails">When receiving a 404 status code</exception>
+        /// <exception cref="global::EcommerceDDD.ServiceClients.ProductCatalog.Models.ValidationProblemDetails">When receiving a 422 status code</exception>
+        /// <exception cref="global::EcommerceDDD.ServiceClients.ProductCatalog.Models.ProblemDetails">When receiving a 500 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::EcommerceDDD.ServiceClients.ProductCatalog.Models.ProductViewModelIListApiResponse?> PostAsync(global::EcommerceDDD.ServiceClients.ProductCatalog.Models.GetProductsRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<List<global::EcommerceDDD.ServiceClients.ProductCatalog.Models.ProductViewModel>?> PostAsync(global::EcommerceDDD.ServiceClients.ProductCatalog.Models.GetProductsRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::EcommerceDDD.ServiceClients.ProductCatalog.Models.ProductViewModelIListApiResponse> PostAsync(global::EcommerceDDD.ServiceClients.ProductCatalog.Models.GetProductsRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<List<global::EcommerceDDD.ServiceClients.ProductCatalog.Models.ProductViewModel>> PostAsync(global::EcommerceDDD.ServiceClients.ProductCatalog.Models.GetProductsRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             if(ReferenceEquals(body, null)) throw new ArgumentNullException(nameof(body));
@@ -52,8 +56,13 @@ namespace EcommerceDDD.ServiceClients.ProductCatalog.Api.V2.Products
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
                 { "400", global::EcommerceDDD.ServiceClients.ProductCatalog.Models.ProblemDetails.CreateFromDiscriminatorValue },
+                { "401", global::EcommerceDDD.ServiceClients.ProductCatalog.Models.ProblemDetails.CreateFromDiscriminatorValue },
+                { "404", global::EcommerceDDD.ServiceClients.ProductCatalog.Models.ProblemDetails.CreateFromDiscriminatorValue },
+                { "422", global::EcommerceDDD.ServiceClients.ProductCatalog.Models.ValidationProblemDetails.CreateFromDiscriminatorValue },
+                { "500", global::EcommerceDDD.ServiceClients.ProductCatalog.Models.ProblemDetails.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::EcommerceDDD.ServiceClients.ProductCatalog.Models.ProductViewModelIListApiResponse>(requestInfo, global::EcommerceDDD.ServiceClients.ProductCatalog.Models.ProductViewModelIListApiResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            var collectionResult = await RequestAdapter.SendCollectionAsync<global::EcommerceDDD.ServiceClients.ProductCatalog.Models.ProductViewModel>(requestInfo, global::EcommerceDDD.ServiceClients.ProductCatalog.Models.ProductViewModel.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return collectionResult?.AsList();
         }
         /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="body">The request body</param>
@@ -70,7 +79,7 @@ namespace EcommerceDDD.ServiceClients.ProductCatalog.Api.V2.Products
             if(ReferenceEquals(body, null)) throw new ArgumentNullException(nameof(body));
             var requestInfo = new RequestInformation(Method.POST, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
-            requestInfo.Headers.TryAdd("Accept", "application/json, text/plain;q=0.9");
+            requestInfo.Headers.TryAdd("Accept", "text/plain;q=0.9");
             requestInfo.SetContentFromParsable(RequestAdapter, "application/json", body);
             return requestInfo;
         }

@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.OrderProcessing.Application.Shipments.RecordingShipment;
+namespace EcommerceDDD.OrderProcessing.Application.Shipments.RecordingShipment;
 
 public class RecordShipmentHandler(
 	SignalRClient signalrClient,
@@ -10,22 +10,22 @@ public class RecordShipmentHandler(
 	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository
 		?? throw new ArgumentNullException(nameof(orderWriteRepository));
 
-	public async Task HandleAsync(RecordShipment command, CancellationToken cancellationToken)
+	public async Task<Result> HandleAsync(RecordShipment command, CancellationToken cancellationToken)
 	{
 		var order = await _orderWriteRepository
-			.FetchStreamAsync(command.OrderId.Value, cancellationToken: cancellationToken)
-			?? throw new RecordNotFoundException($"Failed to find the order {command.OrderId}.");
+			.FetchStreamAsync(command.OrderId.Value, cancellationToken: cancellationToken);
 
-		// Recording shipment
+		if (order is null)
+			return Result.Fail($"Failed to find the order {command.OrderId}.");
+
 		order.RecordShipment(command.ShipmentId);
 		await _orderWriteRepository
 			.AppendEventsAsync(order, cancellationToken);
 
 		try
 		{
-			await Task.Delay(TimeSpan.FromSeconds(5)); // 5-second delay
+			await Task.Delay(TimeSpan.FromSeconds(5));
 
-			// Updating order status on the UI with SignalR
 			var request = new UpdateOrderStatusRequest()
 			{
 				CustomerId = order.CustomerId.Value,
@@ -37,10 +37,11 @@ public class RecordShipmentHandler(
 			await _signalrClient.Api.V2.Signalr.Updateorderstatus
 				.PostAsync(request, cancellationToken: cancellationToken);
 		}
-		catch (Microsoft.Kiota.Abstractions.ApiException ex)
+		catch (Microsoft.Kiota.Abstractions.ApiException)
 		{
-			throw new ApplicationLogicException(
-				$"An error occurred when updating status for order {order.Id.Value}.", ex);
+			return Result.Fail($"An error occurred when updating status for order {order.Id.Value}.");
 		}
+
+		return Result.Ok();
 	}
 }

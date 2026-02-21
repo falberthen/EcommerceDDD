@@ -13,8 +13,9 @@ public class QueryHandlerTests
         var aggregate = await queryHandler.HandleAsync(query, CancellationToken.None);
 
         // Then
-        Assert.NotNull(aggregate);
-		Assert.Equal(aggregate.Id.Value, query.Id.Value);
+        Assert.True(aggregate.IsSuccess);
+        Assert.NotNull(aggregate.Value);
+		Assert.Equal(aggregate.Value!.Id.Value, query.Id.Value);
 	}
 
 	private readonly IEventStoreRepository<DummyAggregateRoot> _repository =

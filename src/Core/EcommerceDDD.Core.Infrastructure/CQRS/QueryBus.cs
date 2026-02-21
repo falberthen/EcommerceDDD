@@ -5,7 +5,7 @@ public class QueryBus(
 	ILogger<QueryBus> logger
 ) : IQueryBus
 {
-	public async Task<TResponse> SendAsync<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken)
+	public async Task<Result<TResponse>> SendAsync<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken)
 	{
 		logger.LogInformation("Executing query: {query}", query);
 
