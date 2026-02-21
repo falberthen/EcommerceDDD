@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.QuoteManagement.Application.Quotes.GettingQuoteById;
+namespace EcommerceDDD.QuoteManagement.Application.Quotes.GettingQuoteById;
 
 public class GetQuoteByIdCommandHandler(
 	IQuerySession querySession,
@@ -8,13 +8,13 @@ public class GetQuoteByIdCommandHandler(
 	private readonly IQuerySession _querySession = querySession;
 	private readonly IProductMapper _productMapper = productMapper;
 
-	public async Task<QuoteViewModel> HandleAsync(GetQuoteById query, CancellationToken cancellationToken)
+	public async Task<Result<QuoteViewModel>> HandleAsync(GetQuoteById query, CancellationToken cancellationToken)
 	{
 		QuoteDetails? quoteDetails = default;
 		var queryExpression = _querySession.Query<QuoteDetails>();
-		quoteDetails = queryExpression
-			.FirstOrDefault(q =>
-				q.Id == query.QuoteId.Value);
+		quoteDetails = await queryExpression
+			.FirstOrDefaultAsync(q =>
+				q.Id == query.QuoteId.Value, token: cancellationToken);
 
 		QuoteViewModel viewModel = default!;
 		if (quoteDetails is not null)
@@ -38,19 +38,24 @@ public class GetQuoteByIdCommandHandler(
 
 				Currency currency = Currency.OfCode(quoteDetails.CurrencyCode);
 
-				// Getting product data from catalog
-				var productsData = await _productMapper
-					.MapProductFromCatalogAsync(producIds, currency, cancellationToken)
-					?? throw new RecordNotFoundException($"The was no data for the provided products.");
+				var productsDataResult = await _productMapper
+					.MapProductFromCatalogAsync(producIds, currency, cancellationToken);
+
+				if (productsDataResult.IsFailed)
+					return Result.Fail<QuoteViewModel>(productsDataResult.Errors);
+
+				var productsData = productsDataResult.Value!;
 
 				var catalogItems = new List<QuoteItemViewModel>();
 				foreach (var quoteItem in quoteDetails.Items)
 				{
 					var product = productsData.FirstOrDefault(p =>
-						p.ProductId == quoteItem.ProductId)
-						?? throw new ApplicationLogicException(
+						p.ProductId == quoteItem.ProductId);
+
+					if (product is null)
+						return Result.Fail<QuoteViewModel>(
 							$"The product {quoteItem.ProductId} is invalid.");
-					
+
 					catalogItems.Add(new QuoteItemViewModel()
 					{
 						ProductId = product.ProductId!.Value,
@@ -66,6 +71,6 @@ public class GetQuoteByIdCommandHandler(
 			}
 		}
 
-		return viewModel;
+		return Result.Ok(viewModel);
 	}
 }

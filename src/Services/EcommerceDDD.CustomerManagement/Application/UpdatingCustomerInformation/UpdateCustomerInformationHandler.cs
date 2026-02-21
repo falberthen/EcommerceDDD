@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.CustomerManagement.Application.UpdatingCustomerInformation;
+namespace EcommerceDDD.CustomerManagement.Application.UpdatingCustomerInformation;
 
 public class UpdateCustomerInformationHandler(
 	IUserInfoRequester userInfoRequester,
@@ -13,18 +13,22 @@ public class UpdateCustomerInformationHandler(
 	private readonly IQuerySession _querySession = querySession
 		?? throw new ArgumentNullException(nameof(querySession));
 
-	public async Task HandleAsync(UpdateCustomerInformation command, CancellationToken cancellationToken)
+	public async Task<Result> HandleAsync(UpdateCustomerInformation command, CancellationToken cancellationToken)
     {
 		UserInfo? response = await _userInfoRequester
 			.RequestUserInfoAsync();
 
 		var customerDetails = _querySession.Query<CustomerDetails>()
-			.FirstOrDefault(c => c.Id == response!.CustomerId)
-			?? throw new RecordNotFoundException($"Customer not found.");
+			.FirstOrDefault(c => c.Id == response!.CustomerId);
+
+		if (customerDetails is null)
+			return Result.Fail("Customer not found.");
 
 		var customer = await _customerWriteRepository
-			.FetchStreamAsync(customerDetails.Id, cancellationToken: cancellationToken)
-            ?? throw new ArgumentNullException($"Customer {customerDetails.Id} not found.");
+			.FetchStreamAsync(customerDetails.Id, cancellationToken: cancellationToken);
+
+		if (customer is null)
+			return Result.Fail($"Customer {customerDetails.Id} not found.");
 
         var customerData = new CustomerData(
             customer.Email,
@@ -36,5 +40,7 @@ public class UpdateCustomerInformationHandler(
 
         await _customerWriteRepository
 			.AppendEventsAsync(customer, cancellationToken);
+
+		return Result.Ok();
     }
 }

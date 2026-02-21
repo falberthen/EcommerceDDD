@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.PaymentProcessing.Application.ProcessingPayment;
+namespace EcommerceDDD.PaymentProcessing.Application.ProcessingPayment;
 
 public class CustomerCreditChecker(CustomerManagementClient customerManagementClient) : ICustomerCreditChecker
 {
@@ -7,17 +7,21 @@ public class CustomerCreditChecker(CustomerManagementClient customerManagementCl
 	public async Task<bool> CheckIfCreditIsEnoughAsync(CustomerId customerId, Money totalAmount,
 		CancellationToken cancellationToken)
 	{
-		// Checking customer's credit
-		var customerRequestBuilder = _customerManagementClient.Api.V2.Customers[customerId.Value];
-		var response = await customerRequestBuilder
-			.Credit.GetAsync(cancellationToken: cancellationToken);
+		try
+		{
+			// Checking customer's credit
+			var customerRequestBuilder = _customerManagementClient.Api.V2.Customers[customerId.Value];
+			var response = await customerRequestBuilder
+				.Credit.GetAsync(cancellationToken: cancellationToken);
 
-		if (response?.Success == false)
-			throw new ApplicationLogicException($"An error ocurred trying to obtain the credit limit for customer {customerId.Value}");
-		if (response?.Data is null)
-			throw new RecordNotFoundException("No data was provided for customer credit limit.");
+			if (response is null)
+				return false;
 
-		// Simply comparing with the customer credit limit
-		return totalAmount.Amount < Convert.ToDecimal(response.Data.CreditLimit);
+			return totalAmount.Amount < Convert.ToDecimal(response.CreditLimit);
+		}
+		catch (Exception)
+		{
+			return false;
+		}
 	}
 }

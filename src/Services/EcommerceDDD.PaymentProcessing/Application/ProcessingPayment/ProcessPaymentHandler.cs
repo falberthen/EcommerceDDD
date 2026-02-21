@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.PaymentProcessing.Application.ProcessingPayment;
+namespace EcommerceDDD.PaymentProcessing.Application.ProcessingPayment;
 
 public class ProcessPaymentHandler(
 	IProductInventoryHandler productInventoryHandler,
@@ -10,39 +10,36 @@ public class ProcessPaymentHandler(
 	private readonly IProductInventoryHandler _productInventoryHandler = productInventoryHandler;
 	private readonly IEventStoreRepository<Payment> _paymentWriteRepository = paymentWriteRepository;
 
-	public async Task HandleAsync(ProcessPayment command, CancellationToken cancellationToken)
+	public async Task<Result> HandleAsync(ProcessPayment command, CancellationToken cancellationToken)
 	{
 		var payment = await _paymentWriteRepository
-			.FetchStreamAsync(command.PaymentId.Value, cancellationToken: cancellationToken)
-			?? throw new RecordNotFoundException($"Payment {command.PaymentId} was not found.");
+			.FetchStreamAsync(command.PaymentId.Value, cancellationToken: cancellationToken);
+
+		if (payment is null)
+			return Result.Fail($"Payment {command.PaymentId} was not found.");
 
 		try
 		{
-			// Checking customer credit
 			if (!await _creditChecker
 				.CheckIfCreditIsEnoughAsync(payment.CustomerId, payment.TotalAmount, cancellationToken))
 			{
 				await CancelPaymentAsync(payment, PaymentCancellationReason.CustomerReachedCreditLimit, cancellationToken);
-				return;
+				return Result.Ok();
 			}
 
-			// Checking if all items are in stock
 			bool allProductsAreAvailable = await _productInventoryHandler
 				.CheckProductsInStockAsync(payment.ProductItems, cancellationToken);
 			if (!allProductsAreAvailable)
 			{
 				await CancelPaymentAsync(payment, PaymentCancellationReason.ProductOutOfStock, cancellationToken);
-				return;
+				return Result.Ok();
 			}
 
-			// Decreasing quantity in stock
 			await _productInventoryHandler
 				.DecreaseQuantityInStockAsync(payment.ProductItems, cancellationToken);
 
-			// Completing payment
 			payment.Complete();
 
-			// Appending to outbox for message broker
 			_paymentWriteRepository.AppendToOutbox(
 			   new PaymentFinalized(
 				   payment.Id.Value,
@@ -51,15 +48,15 @@ public class ProcessPaymentHandler(
 				   payment.TotalAmount.Currency.Code,
 				   payment.CompletedAt!.Value));
 
-			// Persisting aggregate
 			await _paymentWriteRepository
 				.AppendEventsAsync(payment, cancellationToken);
+
+			return Result.Ok();
 		}
-		catch (Exception) // Unexpected issue
+		catch (Exception)
 		{
 			payment.Cancel(PaymentCancellationReason.ProcessmentError);
 
-			// Appending integration event to outbox
 			_paymentWriteRepository.AppendToOutbox(
 				new PaymentFailed(
 					payment.Id.Value,
@@ -69,15 +66,16 @@ public class ProcessPaymentHandler(
 
 			await _paymentWriteRepository
 				.AppendEventsAsync(payment, cancellationToken);
+
+			return Result.Fail($"An unexpected error occurred processing payment {command.PaymentId}.");
 		}
 	}
 
-	private async Task CancelPaymentAsync(Payment payment, PaymentCancellationReason reason, 
+	private async Task CancelPaymentAsync(Payment payment, PaymentCancellationReason reason,
 		CancellationToken cancellationToken)
 	{
 		payment.Cancel(reason);
 
-		// Appending integration event to outbox
 		if (reason == PaymentCancellationReason.CustomerReachedCreditLimit)
 		{
 			_paymentWriteRepository.AppendToOutbox(
@@ -91,6 +89,5 @@ public class ProcessPaymentHandler(
 
 		await _paymentWriteRepository
 			.AppendEventsAsync(payment, cancellationToken);
-
 	}
 }

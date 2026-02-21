@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
+namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
 
 public class ProcessOrderHandler(
 	QuoteManagementClient quoteManagementClient,
@@ -13,17 +13,19 @@ public class ProcessOrderHandler(
 	private readonly IEventBus _eventPublisher = eventPublisher
 		?? throw new ArgumentNullException(nameof(eventPublisher));
 
-	public async Task HandleAsync(ProcessOrder command, CancellationToken cancellationToken)
+	public async Task<Result> HandleAsync(ProcessOrder command, CancellationToken cancellationToken)
 	{
 		// Getting open quote data
-		QuoteViewModel quote = await GetQuoteAsync(command, cancellationToken)
-			?? throw new RecordNotFoundException($"No open quote found for customer {command.CustomerId}.");
+		var quoteResult = await GetQuoteAsync(command, cancellationToken);
+		if (quoteResult.IsFailed)
+			return Result.Fail(quoteResult.Errors);
+
+		var quote = quoteResult.Value!;
 		var quoteId = QuoteId.Of(quote.QuoteId!.Value);
 
 		if (!quote.Items!.Any())
-			throw new RecordNotFoundException($"No quote items found for customer.");
+			return Result.Fail("No quote items found for customer.");
 
-		// Building Order data
 		var quoteItems = quote.Items!.Select(qi =>
 			new ProductItemData()
 			{
@@ -39,28 +41,28 @@ public class ProcessOrderHandler(
 			Currency.OfCode(quote.CurrencyCode!),
 			quoteItems);
 
-		// Processing order
 		var order = await _orderWriteRepository
-			.FetchStreamAsync(command.OrderId.Value, cancellationToken: cancellationToken)
-			?? throw new RecordNotFoundException($"Order {command.OrderId} not found.");
+			.FetchStreamAsync(command.OrderId.Value, cancellationToken: cancellationToken);
+
+		if (order is null)
+			return Result.Fail($"Order {command.OrderId} not found.");
 
 		order.Process(orderData);
 
-		// Keeping event for publishing
 		var orderProcessedEvent = order.GetUncommittedEvents()
 		   .OfType<OrderProcessed>()
 		   .FirstOrDefault();
 
-		// Persisting domain event
 		await _orderWriteRepository
 			.AppendEventsAsync(order, cancellationToken);
 
-		// publishing event
 		await _eventPublisher
 			.PublishEventAsync(orderProcessedEvent!, cancellationToken);
+
+		return Result.Ok();
 	}
 
-	private async Task<QuoteViewModel> GetQuoteAsync(ProcessOrder command, CancellationToken cancellationToken)
+	private async Task<Result<QuoteViewModel>> GetQuoteAsync(ProcessOrder command, CancellationToken cancellationToken)
 	{
 		try
 		{
@@ -68,15 +70,16 @@ public class ProcessOrderHandler(
 			var response = await quoteRequestBuilder
 				.Details.GetAsync(cancellationToken: cancellationToken);
 
-			if (response?.Data is null)
-				throw new ApplicationLogicException(response?.Message ?? string.Empty);
+			if (response is null)
+				return Result.Fail<QuoteViewModel>(
+					new RecordNotFoundError($"Quote data not found."));
 
-			return response.Data;
+			return Result.Ok(response);
 		}
-		catch (Microsoft.Kiota.Abstractions.ApiException ex)
+		catch (Microsoft.Kiota.Abstractions.ApiException)
 		{
-			throw new ApplicationLogicException(
-				$"An error occurred processing order {command.OrderId}.", ex);
-		}		
+			return Result.Fail<QuoteViewModel>(
+				$"An error occurred processing order {command.OrderId}.");
+		}
 	}
 }

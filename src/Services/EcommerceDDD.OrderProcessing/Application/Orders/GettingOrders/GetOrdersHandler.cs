@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.OrderProcessing.Application.Orders.GettingOrders;
+namespace EcommerceDDD.OrderProcessing.Application.Orders.GettingOrders;
 
 public class GetOrdersHandler(
 	QuoteManagementClient quoteManagementClient,
@@ -13,7 +13,7 @@ public class GetOrdersHandler(
 	private readonly IUserInfoRequester _userInfoRequester = userInfoRequester
 		?? throw new ArgumentNullException(nameof(userInfoRequester));
 
-	public async Task<IReadOnlyList<OrderViewModel>> HandleAsync(GetOrders query, CancellationToken cancellationToken)
+	public async Task<Result<IReadOnlyList<OrderViewModel>>> HandleAsync(GetOrders query, CancellationToken cancellationToken)
 	{
 		var userInfo = await _userInfoRequester.RequestUserInfoAsync();
 
@@ -22,29 +22,35 @@ public class GetOrdersHandler(
 			.ToListAsync(cancellationToken);
 
 		if (orders == null || orders.Count == 0)
-			return Array.Empty<OrderViewModel>();
+			return Result.Ok<IReadOnlyList<OrderViewModel>>(Array.Empty<OrderViewModel>());
 
-		var viewModels = await Task.WhenAll(
-				orders.Select(orderDetails =>
-					BuildOrderViewModel(orderDetails, cancellationToken)
-			)
+		var viewModelResults = await Task.WhenAll(
+			orders.Select(orderDetails => BuildOrderViewModelAsync(orderDetails, cancellationToken))
 		);
 
-		return viewModels.ToList();
+		var failedResult = viewModelResults.FirstOrDefault(r => r.IsFailed);
+		if (failedResult is not null)
+			return Result.Fail<IReadOnlyList<OrderViewModel>>(failedResult.Errors);
+
+		return Result.Ok<IReadOnlyList<OrderViewModel>>(viewModelResults.Select(r => r.Value!).ToList());
 	}
 
-	private async Task<OrderViewModel> BuildOrderViewModel(OrderDetails order, CancellationToken cancellationToken)
+	private async Task<Result<OrderViewModel>> BuildOrderViewModelAsync(OrderDetails order, CancellationToken cancellationToken)
 	{
 		List<OrderLineViewModel> orderLines;
 		string currencySymbol;
 
-		if (order.OrderStatus == OrderStatus.Placed) // order was just placed
+		if (order.OrderStatus == OrderStatus.Placed)
 		{
-			// retrieving quote details
-			var quote = await GetQuoteAsync(order, cancellationToken);
+			var quoteResult = await GetQuoteAsync(order, cancellationToken);
+			if (quoteResult.IsFailed)
+				return Result.Fail<OrderViewModel>(quoteResult.Errors);
+
+			var quote = quoteResult.Value!;
 
 			if (!quote.Items!.Any())
-				throw new RecordNotFoundException($"No quote items found for customer.");
+				return Result.Fail<OrderViewModel>(
+					new RecordNotFoundError($"No quote items found for customer."));
 
 			orderLines = quote.Items!.Select(item =>
 				new OrderLineViewModel
@@ -55,11 +61,10 @@ public class GetOrdersHandler(
 					Quantity = item.Quantity!.Value
 				}).ToList();
 
-			currencySymbol = Currency
-				.OfCode(quote.CurrencyCode!).Symbol;
+			currencySymbol = Currency.OfCode(quote.CurrencyCode!).Symbol;
 			order.TotalPrice = Convert.ToDecimal(quote.TotalPrice);
 		}
-		else // Order has been processed and contains confirmed items
+		else
 		{
 			orderLines = order.OrderLines.Select(item => new OrderLineViewModel
 			{
@@ -72,7 +77,7 @@ public class GetOrdersHandler(
 			currencySymbol = order.Currency.Symbol;
 		}
 
-		return new OrderViewModel
+		return Result.Ok(new OrderViewModel
 		{
 			OrderId = order.Id,
 			QuoteId = order.QuoteId,
@@ -83,10 +88,10 @@ public class GetOrdersHandler(
 			OrderLines = orderLines,
 			CurrencySymbol = currencySymbol,
 			TotalPrice = order.TotalPrice
-		};
+		});
 	}
 
-	private async Task<QuoteViewModel> GetQuoteAsync(OrderDetails orderDetails, CancellationToken cancellationToken)
+	private async Task<Result<QuoteViewModel>> GetQuoteAsync(OrderDetails orderDetails, CancellationToken cancellationToken)
 	{
 		try
 		{
@@ -94,15 +99,16 @@ public class GetOrdersHandler(
 			var response = await quoteRequestBuilder.Details
 				.GetAsync(cancellationToken: cancellationToken);
 
-			if (response?.Data is null)
-				throw new ApplicationLogicException(response?.Message ?? string.Empty);
+			if (response is null)
+				return Result.Fail<QuoteViewModel>(
+					new RecordNotFoundError($"Quote data not found."));
 
-			return response.Data;
+			return Result.Ok(response);
 		}
-		catch (Microsoft.Kiota.Abstractions.ApiException ex)
+		catch (Microsoft.Kiota.Abstractions.ApiException)
 		{
-			throw new ApplicationLogicException(
-				$"An error occurred when getting quote {orderDetails.QuoteId} for order {orderDetails.Id}.", ex);
+			return Result.Fail<QuoteViewModel>(
+				$"An error occurred when getting quote {orderDetails.QuoteId} for order {orderDetails.Id}.");
 		}
 	}
 }

@@ -2,5 +2,5 @@
 
 public interface ICustomerOpenQuoteChecker
 {
-	QuoteDetails? CheckCustomerOpenQuote(CustomerId customerId);
+	Task<QuoteDetails?> CheckCustomerOpenQuoteAsync(CustomerId customerId, CancellationToken cancellationToken);
 }

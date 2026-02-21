@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.CustomerManagement.Application.GettingCustomerEventHistory;
+namespace EcommerceDDD.CustomerManagement.Application.GettingCustomerEventHistory;
 
 public class GetCustomerEventHistoryHandler(
 	IUserInfoRequester userInfoRequester,
@@ -10,17 +10,20 @@ public class GetCustomerEventHistoryHandler(
 	private IUserInfoRequester _userInfoRequester { get; set; } = userInfoRequester
 		?? throw new ArgumentNullException(nameof(userInfoRequester));
 
-	public async Task<IReadOnlyList<CustomerEventHistory>> HandleAsync(GetCustomerEventHistory query,
+	public async Task<Result<IReadOnlyList<CustomerEventHistory>>> HandleAsync(GetCustomerEventHistory query,
 		CancellationToken cancellationToken)
 	{
-		UserInfo? userInfo = await _userInfoRequester.RequestUserInfoAsync()
-			?? throw new RecordNotFoundException($"User not found.");
+		UserInfo? userInfo = await _userInfoRequester.RequestUserInfoAsync();
+
+		if (userInfo is null)
+			return Result.Fail<IReadOnlyList<CustomerEventHistory>>(
+				new RecordNotFoundError($"Customer not found."));
 
 		var customerHistory = await _querySession.Query<CustomerEventHistory>()
 		   .Where(c => c.AggregateId == userInfo.CustomerId)
 		   .OrderBy(c => c.Timestamp)
 		   .ToListAsync(cancellationToken);
 
-		return customerHistory;
+		return Result.Ok(customerHistory);
 	}
 }

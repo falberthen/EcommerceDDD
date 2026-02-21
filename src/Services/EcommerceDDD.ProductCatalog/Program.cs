@@ -1,3 +1,5 @@
+using EcommerceDDD.ProductCatalog.Application.GettingProducts;
+
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 

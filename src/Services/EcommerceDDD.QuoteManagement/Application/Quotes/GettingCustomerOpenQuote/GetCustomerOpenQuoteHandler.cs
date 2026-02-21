@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.QuoteManagement.Application.Quotes.GettingCustomerOpenQuote;
+namespace EcommerceDDD.QuoteManagement.Application.Quotes.GettingCustomerOpenQuote;
 
 public class GetCustomerOpenQuoteHandler(
 	IUserInfoRequester userInfoRequester,
@@ -11,24 +11,23 @@ public class GetCustomerOpenQuoteHandler(
 	private IUserInfoRequester _userInfoRequester { get; set; } = userInfoRequester
 		?? throw new ArgumentNullException(nameof(userInfoRequester));
 
-	public async Task<QuoteViewModel> HandleAsync(GetCustomerOpenQuote query, CancellationToken cancellationToken)
+	public async Task<Result<QuoteViewModel>> HandleAsync(GetCustomerOpenQuote query, CancellationToken cancellationToken)
     {
 		CustomerId customerId = default!;
 		UserInfo? userInfo = await _userInfoRequester
 			.RequestUserInfoAsync();
 
-		customerId = CustomerId.Of(userInfo!.CustomerId);		
-		
+		customerId = CustomerId.Of(userInfo!.CustomerId);
+
 		QuoteDetails? quoteDetails = default;
         var queryExpression = _querySession.Query<QuoteDetails>();
 
-		// Customer's open quote
-		quoteDetails = queryExpression
-			.FirstOrDefault(q =>
+		quoteDetails = await queryExpression
+			.FirstOrDefaultAsync(q =>
 				q.CustomerId == customerId.Value
-				&& q.QuoteStatus == QuoteStatus.Open);
+				&& q.QuoteStatus == QuoteStatus.Open, token: cancellationToken);
 
-		QuoteViewModel viewModel = default!;        
+		QuoteViewModel viewModel = default!;
         if (quoteDetails is not null)
         {
             viewModel = new QuoteViewModel() with
@@ -50,17 +49,22 @@ public class GetCustomerOpenQuoteHandler(
 
                 Currency currency = Currency.OfCode(quoteDetails.CurrencyCode);
 
-                // Getting product data from catalog
-                var productsData = await _productMapper
-                    .MapProductFromCatalogAsync(producIds, currency, cancellationToken)
-                    ?? throw new RecordNotFoundException($"The was no data for the provided products.");
+                var productsDataResult = await _productMapper
+                    .MapProductFromCatalogAsync(producIds, currency, cancellationToken);
+
+                if (productsDataResult.IsFailed)
+                    return Result.Fail<QuoteViewModel>(productsDataResult.Errors);
+
+                var productsData = productsDataResult.Value!;
 
                 var catalogItems = new List<QuoteItemViewModel>();
                 foreach (var quoteItem in quoteDetails.Items)
                 {
-                    var product = productsData.FirstOrDefault(p => 
-                        p.ProductId == quoteItem.ProductId)
-                        ?? throw new ApplicationLogicException(
+                    var product = productsData.FirstOrDefault(p =>
+                        p.ProductId == quoteItem.ProductId);
+
+                    if (product is null)
+                        return Result.Fail<QuoteViewModel>(
                             $"The product {quoteItem.ProductId} is invalid.");
 
 					catalogItems.Add(new QuoteItemViewModel()
@@ -78,6 +82,6 @@ public class GetCustomerOpenQuoteHandler(
             }
         }
 
-        return viewModel;
+        return Result.Ok(viewModel);
     }
 }

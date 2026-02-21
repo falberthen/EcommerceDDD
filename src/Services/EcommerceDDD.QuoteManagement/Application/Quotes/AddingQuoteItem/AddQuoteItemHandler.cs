@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.QuoteManagement.Application.Quotes.AddingQuoteItem;
+namespace EcommerceDDD.QuoteManagement.Application.Quotes.AddingQuoteItem;
 
 public class AddQuoteItemHandler(
     IEventStoreRepository<Quote> quoteWriteRepository,
@@ -8,19 +8,24 @@ public class AddQuoteItemHandler(
 	private readonly IEventStoreRepository<Quote> _quoteWriteRepository = quoteWriteRepository;
 	private readonly IProductMapper _productMapper = productMapper;
 
-	public async Task HandleAsync(AddQuoteItem command, CancellationToken cancellationToken)
+	public async Task<Result> HandleAsync(AddQuoteItem command, CancellationToken cancellationToken)
     {
         var quote = await _quoteWriteRepository
-			.FetchStreamAsync(command.QuoteId.Value, cancellationToken: cancellationToken)
-            ?? throw new RecordNotFoundException($"The quote {command.QuoteId} was not found.");
+			.FetchStreamAsync(command.QuoteId.Value, cancellationToken: cancellationToken);
 
-        // Getting product data from catalog
+        if (quote is null)
+            return Result.Fail($"The quote {command.QuoteId} was not found.");
+
         var currency = Currency.OfCode(quote.Currency.Code);
-        var productData = await _productMapper
-			.MapProductFromCatalogAsync([command.ProductId], currency, cancellationToken)
-            ?? throw new ApplicationLogicException($"Product {command.ProductId} is invalid.");
-        var product = productData.FirstOrDefault()
-            ?? throw new ApplicationLogicException($"Product {command.ProductId} is invalid.");
+        var productDataResult = await _productMapper
+			.MapProductFromCatalogAsync([command.ProductId], currency, cancellationToken);
+
+        if (productDataResult.IsFailed)
+            return Result.Fail(productDataResult.Errors);
+
+        var product = productDataResult.Value!.FirstOrDefault();
+        if (product is null)
+            return Result.Fail($"Product {command.ProductId} is invalid.");
 
 		decimal productPrice = Convert.ToDecimal(product.Price!.Value);
 		var quotetemData = new QuoteItemData(
@@ -34,5 +39,7 @@ public class AddQuoteItemHandler(
 
 		await _quoteWriteRepository
 			.AppendEventsAsync(quote, cancellationToken);
+
+        return Result.Ok();
     }
 }

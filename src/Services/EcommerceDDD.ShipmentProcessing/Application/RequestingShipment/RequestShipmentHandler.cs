@@ -1,4 +1,4 @@
-﻿using EcommerceDDD.ShipmentProcessing.Application.ProcessingShipment;
+using EcommerceDDD.ShipmentProcessing.Application.ProcessingShipment;
 
 namespace EcommerceDDD.ShipmentProcessing.Application.RequestingShipment;
 
@@ -10,7 +10,7 @@ public class RequestShipmentHandler(
 	private readonly ICommandBus _commandBus = commandBus;
 	private readonly IEventStoreRepository<Shipment> _shipmentWriteRepository = shipmentWriteRepository;
 
-	public async Task HandleAsync(RequestShipment command, CancellationToken cancellationToken)
+	public async Task<Result> HandleAsync(RequestShipment command, CancellationToken cancellationToken)
     {
         var shipmentData = new ShipmentData(command.OrderId, command.ProductItems);
         var shipment = Shipment.Create(shipmentData);
@@ -18,7 +18,7 @@ public class RequestShipmentHandler(
         await _shipmentWriteRepository
 			.AppendEventsAsync(shipment, cancellationToken);
 
-        await _commandBus
-			.SendAsync(ProcessShipment.Create(shipment.Id), cancellationToken);        
+        return await _commandBus
+			.SendAsync(ProcessShipment.Create(shipment.Id), cancellationToken);
     }
 }
