@@ -45,7 +45,7 @@ public class TokenRequester(
 			UserName = userName,
 			Password = password
 		})
-		?? throw new RecordNotFoundException($"Cannot retrieve token with given credentials.");
+		?? throw new InvalidOperationException($"Cannot retrieve token with given credentials.");
 
 		return response;
 	}

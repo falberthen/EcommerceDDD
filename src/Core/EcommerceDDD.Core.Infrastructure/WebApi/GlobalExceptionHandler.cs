@@ -1,3 +1,5 @@
+using EcommerceDDD.Core.Exceptions;
+
 namespace EcommerceDDD.Core.Infrastructure.WebApi;
 
 public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger)
@@ -16,9 +18,7 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger)
 
 		var (statusCode, message) = exception switch
 		{
-			BusinessRuleException e => (StatusCodes.Status422UnprocessableEntity, e.Message),
-			RecordNotFoundException e => (StatusCodes.Status404NotFound, e.Message),
-			ApplicationLogicException e => (StatusCodes.Status500InternalServerError, e.Message),
+			DomainException e => (StatusCodes.Status422UnprocessableEntity, e.Message),
 			_ => (StatusCodes.Status500InternalServerError, "An unexpected error occurred.")
 		};
 
@@ -30,13 +30,7 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger)
 		httpContext.Response.StatusCode = statusCode;
 		httpContext.Response.ContentType = "application/json";
 
-		var response = new ApiResponse<object>
-		{
-			Success = false,
-			Message = message
-		};
-
-		await httpContext.Response.WriteAsJsonAsync(response, cancellationToken);
+		await httpContext.Response.WriteAsJsonAsync(new { success = false, message }, cancellationToken);
 		return true;
 	}
 }
