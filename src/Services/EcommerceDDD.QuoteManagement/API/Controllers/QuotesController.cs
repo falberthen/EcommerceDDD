@@ -16,12 +16,11 @@ public class QuotesController(
 	[HttpGet]
 	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanRead)]
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<QuoteViewModel?>))]
-	[ProducesResponseType(StatusCodes.Status400BadRequest)]
+	[ProducesResponseType(typeof(QuoteViewModel), StatusCodes.Status200OK)]
 	public async Task<IActionResult> GetOpenQuote(CancellationToken cancellationToken) =>
 		await Response(
-		   GetCustomerOpenQuote.Create(), cancellationToken
-	   );
+			GetCustomerOpenQuote.Create(), cancellationToken
+		);
 
 	/// <summary>
 	/// Creates a quote for a customer
@@ -32,12 +31,11 @@ public class QuotesController(
 	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanWrite)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
-	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<IActionResult> OpenQuoteForCustomer([FromBody] OpenQuoteRequest request,
 		CancellationToken cancellationToken) =>
 		await Response(
-		   OpenQuote.Create(Currency.OfCode(request.CurrencyCode)),
-		   cancellationToken
+			OpenQuote.Create(Currency.OfCode(request.CurrencyCode)),
+			cancellationToken
 		);
 
 	/// <summary>
@@ -48,14 +46,13 @@ public class QuotesController(
 	[HttpGet, Route("{quoteId:guid}/history")]
 	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanRead)]
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IReadOnlyList<QuoteEventHistory>>))]
-	[ProducesResponseType(StatusCodes.Status400BadRequest)]
+	[ProducesResponseType(typeof(IReadOnlyList<QuoteEventHistory>), StatusCodes.Status200OK)]
 	public async Task<IActionResult> ListHistory([FromRoute] Guid quoteId,
 		CancellationToken cancellationToken) =>
 		await Response(
-		   GetQuoteEventHistory.Create(QuoteId.Of(quoteId)),
-		   cancellationToken
-	   );
+			GetQuoteEventHistory.Create(QuoteId.Of(quoteId)),
+			cancellationToken
+		);
 
 	/// <summary>
 	/// Add a quote item
@@ -67,7 +64,6 @@ public class QuotesController(
 	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanWrite)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
-	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<IActionResult> AddItem([FromRoute] Guid quoteId,
 		[FromBody] AddQuoteItemRequest request, CancellationToken cancellationToken) =>
 		await Response(
@@ -76,7 +72,7 @@ public class QuotesController(
 				ProductId.Of(request.ProductId),
 				request.Quantity
 			), cancellationToken
-	   );
+		);
 
 	/// <summary>
 	/// Delete a quote item
@@ -88,7 +84,6 @@ public class QuotesController(
 	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanDelete)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
-	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<IActionResult> RemoveItem([FromRoute] Guid quoteId, [FromRoute] Guid productId,
 		CancellationToken cancellationToken) =>
 		await Response(
@@ -105,7 +100,6 @@ public class QuotesController(
 	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanDelete)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
-	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<IActionResult> Cancel([FromRoute] Guid quoteId,
 		CancellationToken cancellationToken) =>
 		await Response(
@@ -122,12 +116,10 @@ public class QuotesController(
 	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.M2MAccess, Policy = Policies.CanWrite)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
-	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<IActionResult> Confirm([FromRoute] Guid quoteId,
 		CancellationToken cancellationToken) =>
 		await Response(
-			ConfirmQuote.Create(
-				QuoteId.Of(quoteId)),
+			ConfirmQuote.Create(QuoteId.Of(quoteId)),
 			cancellationToken
 		);
 
@@ -138,12 +130,11 @@ public class QuotesController(
 	[HttpGet, Route("{quoteId:guid?}/details")]
 	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.M2MAccess, Policy = Policies.CanRead)]
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<QuoteViewModel?>))]
-	[ProducesResponseType(StatusCodes.Status400BadRequest)]
+	[ProducesResponseType(typeof(QuoteViewModel), StatusCodes.Status200OK)]
 	public async Task<IActionResult> GetQuoteDetails([FromRoute] Guid quoteId,
 		CancellationToken cancellationToken) =>
 		await Response(
-		   GetQuoteById.Create(QuoteId.Of(quoteId)),
-		   cancellationToken
-	   );
+			GetQuoteById.Create(QuoteId.Of(quoteId)),
+			cancellationToken
+		);
 }

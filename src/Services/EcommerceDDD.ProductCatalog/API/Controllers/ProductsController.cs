@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.ProductCatalog.API.Controllers;
+namespace EcommerceDDD.ProductCatalog.API.Controllers;
 
 [Authorize]
 [ApiController]
@@ -9,18 +9,17 @@ public class ProductsController(
 	IQueryBus queryBus
 ) : CustomControllerBase(commandBus, queryBus)
 {
-    [HttpPost]
+	[HttpPost]
 	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer + "," + Roles.M2MAccess, Policy = Policies.CanRead)]
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IList<ProductViewModel?>>))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> ListProducts([FromBody] GetProductsRequest request,
-        CancellationToken cancellationToken) =>  
-			await Response(
-				GetProducts.Create(
-					request.CurrencyCode,
-					ProductId.Of(request.ProductIds).ToList()
-				),
-				cancellationToken
-			);
+	[ProducesResponseType(typeof(IList<ProductViewModel?>), StatusCodes.Status200OK)]
+	public async Task<IActionResult> ListProducts([FromBody] GetProductsRequest request,
+		CancellationToken cancellationToken) =>
+		await Response(
+			GetProducts.Create(
+				request.CurrencyCode,
+				ProductId.Of(request.ProductIds).ToList()
+			),
+			cancellationToken
+		);
 }

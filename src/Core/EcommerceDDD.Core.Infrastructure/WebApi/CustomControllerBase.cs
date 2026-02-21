@@ -1,5 +1,11 @@
 namespace EcommerceDDD.Core.Infrastructure.WebApi;
 
+[ProducesErrorResponseType(typeof(ProblemDetails))]
+[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+[ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status422UnprocessableEntity)]
+[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
 public class CustomControllerBase : ControllerBase
 {
 	private readonly ICommandBus? _commandBus;

@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.CustomerManagement.API.Controllers;
+namespace EcommerceDDD.CustomerManagement.API.Controllers;
 
 [Authorize]
 [ApiController]
@@ -18,7 +18,6 @@ public class CustomersController(
 	[AllowAnonymous]
 	[MapToApiVersion(ApiVersions.V2)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
-	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<IActionResult> Register([FromBody] RegisterCustomerRequest request,
 		CancellationToken cancellationToken) =>
 			await Response(
@@ -29,22 +28,21 @@ public class CustomersController(
 					request.Name,
 					request.ShippingAddress,
 					request.CreditLimit
-				), 
+				),
 				cancellationToken
 			);
 
 	/// <summary>
-	/// Get customer details for authenticated users with identity 
+	/// Get customer details for authenticated users with identity
 	/// </summary>
 	/// <returns></returns>
 	[HttpGet, Route("details")]
 	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanRead)]
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<CustomerDetails>))]
-	[ProducesResponseType(StatusCodes.Status400BadRequest)]
+	[ProducesResponseType(typeof(CustomerDetails), StatusCodes.Status200OK)]
 	public async Task<IActionResult> GetUserDetails(CancellationToken cancellationToken) =>
 		await Response(
-			GetCustomerDetails.Create(), 
+			GetCustomerDetails.Create(),
 			cancellationToken
 		);
 
@@ -55,11 +53,10 @@ public class CustomersController(
 	[HttpGet, Route("history")]
 	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanRead)]
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IReadOnlyList<CustomerEventHistory>>))]
-	[ProducesResponseType(StatusCodes.Status400BadRequest)]
+	[ProducesResponseType(typeof(IReadOnlyList<CustomerEventHistory>), StatusCodes.Status200OK)]
 	public async Task<IActionResult> ListHistory(CancellationToken cancellationToken) =>
 		await Response(
-			GetCustomerEventHistory.Create(), 
+			GetCustomerEventHistory.Create(),
 			cancellationToken
 		);
 
@@ -72,8 +69,7 @@ public class CustomersController(
 	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanWrite)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
-	[ProducesResponseType(StatusCodes.Status400BadRequest)]
-	public async Task<IActionResult> UpdateInformation([FromBody] UpdateCustomerRequest request, 
+	public async Task<IActionResult> UpdateInformation([FromBody] UpdateCustomerRequest request,
 		CancellationToken cancellationToken) =>
 			await Response(
 				UpdateCustomerInformation.Create(
@@ -90,8 +86,7 @@ public class CustomersController(
 	[HttpGet, Route("{customerId:guid}/details")]
 	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.M2MAccess)]
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<CustomerDetails>))]
-	[ProducesResponseType(StatusCodes.Status400BadRequest)]
+	[ProducesResponseType(typeof(CustomerDetails), StatusCodes.Status200OK)]
 	public async Task<IActionResult> GetDetailsByCustomerId([FromRoute] Guid customerId,
 		CancellationToken cancellationToken) =>
 			await Response(
@@ -107,9 +102,8 @@ public class CustomersController(
 	[HttpGet, Route("{customerId:guid}/credit")]
 	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.M2MAccess)]
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<CreditLimitModel>))]
-	[ProducesResponseType(StatusCodes.Status400BadRequest)]
-	public async Task<IActionResult> GetCustomerCreditLimit([FromRoute] Guid customerId, 
+	[ProducesResponseType(typeof(CreditLimitModel), StatusCodes.Status200OK)]
+	public async Task<IActionResult> GetCustomerCreditLimit([FromRoute] Guid customerId,
 		CancellationToken cancellationToken) =>
 			await Response(
 				GetCreditLimit.Create(CustomerId.Of(customerId)),

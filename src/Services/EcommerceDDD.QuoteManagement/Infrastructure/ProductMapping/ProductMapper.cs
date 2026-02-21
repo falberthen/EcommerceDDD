@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.QuoteManagement.Infrastructure.ProductMapping;
+namespace EcommerceDDD.QuoteManagement.Infrastructure.ProductMapping;
 
 public class ProductMapper(ProductCatalogClient productCatalogClient) : IProductMapper
 {
@@ -9,15 +9,13 @@ public class ProductMapper(ProductCatalogClient productCatalogClient) : IProduct
 	/// <param name="currency"></param>
 	/// <param name="cancellationToken"></param>
 	/// <returns></returns>
-	/// <exception cref="RecordNotFoundException"></exception>
-	public async Task<IEnumerable<ProductViewModel>> MapProductFromCatalogAsync(IEnumerable<ProductId> productIds,
+	public async Task<Result<IEnumerable<ProductViewModel>>> MapProductFromCatalogAsync(IEnumerable<ProductId> productIds,
 		Currency currency, CancellationToken cancellationToken)
 	{
 		var productIdValues = productIds
 			.Select(p => (Guid?)p.Value)
 			.ToList();
 
-		// Bringing all products from the catalog
 		var request = new GetProductsRequest()
 		{
 			CurrencyCode = currency.Code,
@@ -29,16 +27,14 @@ public class ProductMapper(ProductCatalogClient productCatalogClient) : IProduct
 			var response = await productCatalogClient.Api.V2.Products
 				.PostAsync(request, cancellationToken: cancellationToken);
 
-			if (response?.Success == false || response?.Data is null)
-				throw new HttpRequestException("An error occurred while retrieving products.");
+			if (response is null)
+				return Result.Fail<IEnumerable<ProductViewModel>>("An error occurred while retrieving products from catalog.");
 
-			var productViewModel = response?.Data!;
-			return productViewModel;
+			return Result.Ok<IEnumerable<ProductViewModel>>(response);
 		}
-		catch (Microsoft.Kiota.Abstractions.ApiException ex)
+		catch (Microsoft.Kiota.Abstractions.ApiException)
 		{
-			throw new ApplicationLogicException(
-				$"An error occurred requesting products from catalog.", ex);
+			return Result.Fail<IEnumerable<ProductViewModel>>("An error occurred requesting products from catalog.");
 		}
 	}
 }

@@ -5,41 +5,39 @@ namespace EcommerceDDD.OrderProcessing.API.Controllers;
 [ApiVersion(ApiVersions.V2)]
 [Route("api/v{version:apiVersion}/orders")]
 public class OrdersController(
-    ICommandBus commandBus,
-    IQueryBus queryBus
+	ICommandBus commandBus,
+	IQueryBus queryBus
 ) : CustomControllerBase(commandBus, queryBus)
 {
-    /// <summary>
-    /// Get customer's orders
-    /// </summary>
-    /// <returns></returns>
-    [HttpGet]
+	/// <summary>
+	/// Get customer's orders
+	/// </summary>
+	/// <returns></returns>
+	[HttpGet]
 	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Policy = Policies.CanRead)]
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IReadOnlyList<OrderViewModel>>))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> ListCustomerOrders(CancellationToken cancellationToken) => 
-        await Response(
-			GetOrders.Create(), 
+	[ProducesResponseType(typeof(IReadOnlyList<OrderViewModel>), StatusCodes.Status200OK)]
+	public async Task<IActionResult> ListCustomerOrders(CancellationToken cancellationToken) =>
+		await Response(
+			GetOrders.Create(),
 			cancellationToken
 		);
 
-    /// <summary>
-    /// Get order event history
-    /// </summary>
-    /// <param name="orderId"></param>
-    /// <returns></returns>
-    [HttpGet, Route("{orderId:guid}/history")]
+	/// <summary>
+	/// Get order event history
+	/// </summary>
+	/// <param name="orderId"></param>
+	/// <returns></returns>
+	[HttpGet, Route("{orderId:guid}/history")]
 	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Policy = Policies.CanRead)]
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<IReadOnlyList<OrderEventHistory>>))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> ListHistory([FromRoute] Guid orderId, 
-		CancellationToken cancellationToken) =>  
-			await Response(
-				GetOrderEventHistory.Create(OrderId.Of(orderId)),
-				cancellationToken
-			);
+	[ProducesResponseType(typeof(IReadOnlyList<OrderEventHistory>), StatusCodes.Status200OK)]
+	public async Task<IActionResult> ListHistory([FromRoute] Guid orderId,
+		CancellationToken cancellationToken) =>
+		await Response(
+			GetOrderEventHistory.Create(OrderId.Of(orderId)),
+			cancellationToken
+		);
 
 	/// <summary>
 	/// Places an order from a quote
@@ -51,11 +49,10 @@ public class OrdersController(
 	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Policy = Policies.CanWrite)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> PlaceOrderFromQuote([FromRoute] Guid quoteId, 
+	public async Task<IActionResult> PlaceOrderFromQuote([FromRoute] Guid quoteId,
 		CancellationToken cancellationToken) =>
-			await Response(
-				PlaceOrder.Create(QuoteId.Of(quoteId)), 
-				cancellationToken
-			);
+		await Response(
+			PlaceOrder.Create(QuoteId.Of(quoteId)),
+			cancellationToken
+		);
 }
