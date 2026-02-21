@@ -73,8 +73,8 @@ export class ProductSelectionComponent implements OnInit {
       await this.kiotaClientService.client.productCatalog.api.v2.products
         .post(request)
         .then((result) => {
-          if (result?.data) {
-            this.products = result.data!;
+          if (result) {
+            this.products = result;
             // Sync with existing quote after products load
             if (this.cart()?.quote) {
               this.syncronizeQuoteToProductList(this.cart().quote!);

@@ -75,8 +75,8 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   private async loadQuoteFromServer() {
     try {
       const result = await this.kiotaClientService.client.quoteManagement.api.v2.quotes.get();
-      if (result?.data?.quoteId) {
-        const count = result.data.items?.length ?? 0;
+      if (result?.quoteId) {
+        const count = result.items?.length ?? 0;
         this.quoteItemsCount = count;
         this.quoteNotificationService.changeQuoteItemsCount(count);
       } else {
@@ -115,18 +115,8 @@ export class NavMenuComponent implements OnInit, OnDestroy {
       await this.kiotaClientService.client.customerManagement.api.v2.customers.details
         .get()
         .then((result) => {
-          if (result!.success) {
-            const data = result!.data!;
-
-            const customerDetails: CustomerDetails = {
-              id: data.id,
-              name: data.name,
-              email: data.email,
-              shippingAddress: data.shippingAddress,
-              creditLimit: data.creditLimit,
-            };
-
-            this.customer = customerDetails;
+          if (result) {
+            this.customer = result;
             this.storeLoadedCustomer();
           }
         });

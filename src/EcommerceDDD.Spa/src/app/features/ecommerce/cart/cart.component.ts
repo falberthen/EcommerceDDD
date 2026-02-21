@@ -95,10 +95,10 @@ export class CartComponent implements OnInit {
         .byQuoteId(this.quote?.quoteId!)
         .history.get()
         .then((result) => {
-          if (result!.success) {
+          if (result) {
             this.storedEventService.showStoredEvents(
               this.storedEventViewerContainer(),
-              result!.data ?? undefined
+              result
             );
           }
         });
@@ -139,9 +139,9 @@ export class CartComponent implements OnInit {
     try {
       this.loaderService.setLoading(true);
       await this.kiotaClientService.client.quoteManagement.api.v2.quotes.get().then((result) => {
-        if (result?.data?.quoteId) {
-          this.setQuote(result.data!);
-          this.emitQuote(result.data!);
+        if (result?.quoteId) {
+          this.setQuote(result);
+          this.emitQuote(result);
           return;
         }
 

@@ -86,10 +86,10 @@ export class CustomerDetailsComponent implements OnInit {
       await this.kiotaClientService.client.customerManagement.api.v2.customers.history
         .get()
         .then((result) => {
-          if (result!.success) {
+          if (result) {
             this.storedEventService.showStoredEvents(
               this.storedEventViewerContainer(),
-              result!.data ?? undefined
+              result
             );
           }
         });
@@ -113,17 +113,8 @@ export class CustomerDetailsComponent implements OnInit {
       await this.kiotaClientService.client.customerManagement.api.v2.customers.details
         .get()
         .then((result) => {
-          if (result!.success) {
-            const data = result!.data!;
-            const customerDetails : CustomerDetails = {
-              id : data.id,
-              name: data.name,
-              email : data.email,
-              shippingAddress : data.shippingAddress,
-              creditLimit : data.creditLimit
-            };
-
-            this.customer = customerDetails;
+          if (result) {
+            this.customer = result;
             this.storeLoadedCustomer();
           }
         });
