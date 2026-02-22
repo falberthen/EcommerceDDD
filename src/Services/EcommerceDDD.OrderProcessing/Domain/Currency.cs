@@ -6,7 +6,7 @@ public class Currency : ValueObject<Currency>
     public string Symbol { get; }
     public static Currency USDollar => new Currency("USD", "$");
     public static Currency CanadianDollar => new Currency("CAD", "CA$");
-    public static Currency Euro => new Currency("EUR", "€");
+    public static Currency Euro => new Currency("EUR", "â‚¬");
 
     public static Currency OfCode(string code)
     {
