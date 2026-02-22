@@ -1,5 +1,3 @@
-using EcommerceDDD.Core.Infrastructure.Identity;
-
 namespace EcommerceDDD.QuoteManagement.Tests.Application;
 
 public class OpenQuoteHandlerTests
@@ -20,7 +18,7 @@ public class OpenQuoteHandlerTests
 
 		var currency = Currency.OfCode(Currency.USDollar.Code);
 		var command = OpenQuote.Create(currency);
-		var commandHandler = new OpenQuoteHandler(_userInfoRequester, 
+		var commandHandler = new OpenQuoteHandler(_userInfoRequester,
 			quoteWriteRepository, _customerOpenQuoteChecker);
 
 		// When
@@ -28,7 +26,7 @@ public class OpenQuoteHandlerTests
 
 		// Then		
 		Assert.Single(quoteWriteRepository.AggregateStream);
-		var openQuote = quoteWriteRepository.AggregateStream.First().Aggregate;		
+		var openQuote = quoteWriteRepository.AggregateStream.First().Aggregate;
 		Assert.Equal(customerId, openQuote.CustomerId);
 		Assert.Equal(QuoteStatus.Open, openQuote.Status);
 	}

@@ -1,10 +1,7 @@
-global using FluentResults;
-global using EcommerceDDD.Core.CQRS;
 global using EcommerceDDD.Core.CQRS.CommandHandling;
 global using EcommerceDDD.Core.CQRS.QueryHandling;
 global using EcommerceDDD.Core.Exceptions;
 global using EcommerceDDD.Core.Infrastructure.Marten;
-global using EcommerceDDD.Core.Infrastructure.WebApi;
 global using EcommerceDDD.Core.Persistence;
 global using EcommerceDDD.InventoryManagement.API.Controllers;
 global using EcommerceDDD.InventoryManagement.API.Controllers.Requests;
@@ -12,9 +9,11 @@ global using EcommerceDDD.InventoryManagement.Application.CheckingQuantityInStoc
 global using EcommerceDDD.InventoryManagement.Application.DecreasingQuantityInStock;
 global using EcommerceDDD.InventoryManagement.Application.EnteringProductInStock;
 global using EcommerceDDD.InventoryManagement.Application.GettingInventoryStockUnitEventHistory;
+global using EcommerceDDD.InventoryManagement.Application.IncreaseQuantityInStock;
 global using EcommerceDDD.InventoryManagement.Domain;
 global using EcommerceDDD.InventoryManagement.Domain.Events;
 global using EcommerceDDD.InventoryManagement.Infrastructure.Projections;
+global using FluentResults;
 global using Microsoft.AspNetCore.Mvc;
 global using NSubstitute;
 global using System.Linq.Expressions;

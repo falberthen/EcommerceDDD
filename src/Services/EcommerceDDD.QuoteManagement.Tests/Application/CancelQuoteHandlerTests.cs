@@ -1,5 +1,3 @@
-using EcommerceDDD.Core.Infrastructure.Identity;
-
 namespace EcommerceDDD.QuoteManagement.Tests.Application;
 
 public class CancelQuoteHandlerTests
@@ -19,7 +17,7 @@ public class CancelQuoteHandlerTests
 			}));
 
 		var openCommand = OpenQuote.Create(_currency);
-		var openCommandHandler = new OpenQuoteHandler(_userInfoRequester, 
+		var openCommandHandler = new OpenQuoteHandler(_userInfoRequester,
 			quoteWriteRepository, _customerOpenQuoteChecker);
 		await openCommandHandler.HandleAsync(openCommand, CancellationToken.None);
 

@@ -1,5 +1,3 @@
-using EcommerceDDD.ShipmentProcessing.Application.ProcessingShipment;
-
 namespace EcommerceDDD.ShipmentProcessing.Tests.Application;
 
 public class ShipPackageHandlerTests

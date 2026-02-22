@@ -9,6 +9,7 @@ global using EcommerceDDD.Core.Infrastructure.Marten;
 global using EcommerceDDD.Core.Infrastructure.WebApi;
 global using EcommerceDDD.Core.Persistence;
 global using EcommerceDDD.QuoteManagement.API.Controllers.Requests;
+global using EcommerceDDD.QuoteManagement.Application;
 global using EcommerceDDD.QuoteManagement.Application.AddingQuoteItem;
 global using EcommerceDDD.QuoteManagement.Application.CancelingQuote;
 global using EcommerceDDD.QuoteManagement.Application.ConfirmingQuote;
