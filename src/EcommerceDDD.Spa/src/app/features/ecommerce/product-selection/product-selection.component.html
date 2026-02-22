@@ -5,18 +5,30 @@
         <div class="card">
           <app-loader-skeleton></app-loader-skeleton>
         </div>
-      }
-      <div class="container">
-        @for (product of products | sort:'name':'asc'; track product.productId) {
-          <div class="col-12">
-            <div class="card product-container">
-              <div class="card-body">
-                <h3 class="card-title product-title" title="{{ product.name }}">
-                  {{ product.name }}
-                </h3>
-                <span class="product-price">
-                  <span class="currency-symbol">
-                    {{ product.currencySymbol }}</span
+      } @else {
+        <div class="container">
+          <input
+            [(ngModel)]="searchTerm"
+            type="text"
+            class="form-control mb-3"
+            placeholder="Search products..."
+          />
+          @for (
+            product of filteredProducts | sort: "name" : "asc";
+            track product.productId
+          ) {
+            <div class="col-12">
+              <div class="card product-container">
+                <div class="card-body">
+                  <h3
+                    class="card-title product-title"
+                    title="{{ product.name }}"
+                  >
+                    {{ product.name }}
+                  </h3>
+                  <span class="product-price">
+                    <span class="currency-symbol">
+                      {{ product.currencySymbol }}</span
                     >{{ product.price }}
                   </span>
                   <span class="badge badge-category mb-4">
@@ -27,7 +39,7 @@
                       <img
                         src="{{ product.imageUrl }}"
                         class="card-img-top product-img"
-                        />
+                      />
                     </div>
                     <div class="col-10">
                       <p class="card-text product-description">
@@ -38,10 +50,13 @@
                   <div class="row mt-3 mb-2">
                     <div class="col-4">
                       @if (product.quantityInStock === 0) {
-                        <span class="product-stock-quantity"> Out of Stock </span>
+                        <span class="product-stock-quantity">
+                          Out of Stock
+                        </span>
                       } @else if (product.quantityInStock <= 10) {
                         <span class="product-stock-quantity text-warning">
-                          Only <b>{{ product.quantityInStock }}</b> left in stock!
+                          Only <b>{{ product.quantityInStock }}</b> left in
+                          stock!
                         </span>
                       } @else {
                         <span class="product-stock-quantity text-success">
@@ -50,7 +65,7 @@
                       }
                     </div>
 
-                    @if(product.quantityInStock > 0){
+                    @if (product.quantityInStock > 0) {
                       @if (product.quantityAddedToCart == 0) {
                         <div class="col-8">
                           <div class="add-product-container">
@@ -58,7 +73,7 @@
                               (click)="saveCart(product)"
                               class="btn btn-primary add-change-item-button"
                               [disabled]="loaderService.loading()"
-                              >
+                            >
                               <fa-icon
                                 [icon]="faPlusCircle"
                                 title="Add to Cart"
@@ -74,17 +89,18 @@
                               (click)="addQuoteItem(product)"
                               class="btn btn-secondary add-change-item-button"
                               [disabled]="loaderService.loading()"
-                              >
+                            >
                               Change quantity
                             </button>
                             <select
                               [(ngModel)]="product.quantityAddedToCart"
                               class="quantity-selector"
-                              >
-                              @for (n of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; track n) {
-                                <option
-                                  [ngValue]="n"
-                                  >
+                            >
+                              @for (
+                                n of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+                                track n
+                              ) {
+                                <option [ngValue]="n">
                                   {{ n }}
                                 </option>
                               }
@@ -99,14 +115,15 @@
             </div>
           }
         </div>
-      </div>
-    </div>
-    <div class="cart-details-container">
-      <app-cart
-        #cart
-        (sendQuoteItemsEvent)="syncronizeQuoteToProductList($event)"
-        (reloadProductsEvent)="loadProducts()"
-        >
-      </app-cart>
+      }
     </div>
   </div>
+  <div class="cart-details-container">
+    <app-cart
+      #cart
+      (sendQuoteItemsEvent)="syncronizeQuoteToProductList($event)"
+      (reloadProductsEvent)="loadProducts()"
+    >
+    </app-cart>
+  </div>
+</div>

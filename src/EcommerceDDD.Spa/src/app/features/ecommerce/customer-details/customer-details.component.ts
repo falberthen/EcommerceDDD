@@ -73,6 +73,7 @@ export class CustomerDetailsComponent implements OnInit {
 
       this.notificationService.showSuccess('Customer successfully updated!');
       await this.loadCustomerDetails();
+      await this.storedEventService.refreshCurrentViewer();
     } catch (error) {
       this.kiotaClientService.handleError(error);
     } finally {
@@ -83,16 +84,18 @@ export class CustomerDetailsComponent implements OnInit {
   async showCustomerStoredEvents() {
     try {
       this.loaderService.setLoading(true);
-      await this.kiotaClientService.client.customerManagement.api.v2.customers.history
-        .get()
-        .then((result) => {
-          if (result) {
-            this.storedEventService.showStoredEvents(
-              this.storedEventViewerContainer(),
-              result
-            );
-          }
-        });
+      const refreshFn = () =>
+        this.kiotaClientService.client.customerManagement.api.v2.customers.history.get();
+
+      await refreshFn().then((result) => {
+        if (result) {
+          this.storedEventService.showStoredEvents(
+            this.storedEventViewerContainer(),
+            result,
+            refreshFn
+          );
+        }
+      });
     } catch (error) {
       this.kiotaClientService.handleError(error);
     } finally {

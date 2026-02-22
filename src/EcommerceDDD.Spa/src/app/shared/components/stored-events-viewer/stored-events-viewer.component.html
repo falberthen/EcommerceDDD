@@ -1,38 +1,34 @@
 <div class="card fadeInDown stored-events-viewer">
   <div class="card-body">
-    @if (eventHistory && eventHistory.length == 0) {
-      <div
-        class="alert alert-danger"
-        >
-        No events to display
-      </div>
-    }
-    <div class="row">
-      <table class="table table-responsive">
-        <thead>
-          <tr>
-            <th>Event</th>
-            <th>Data</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (row of eventHistory; track $index) {
-            <tr>
-              <td>
-                <span class="event-type">{{ row.eventTypeName }}</span>
-              </td>
-              <td>
-                <span class="event-data">{{ row.eventData }}</span>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
+    <div class="viewer-header">
+      <span class="viewer-title">Event History</span>
+      <button (click)="close()" class="btn btn-sm btn-outline-secondary">Close</button>
     </div>
-    <div class="row">
-      <div class="close-container">
-        <button (click)="close()" class="btn btn-secondary">Close</button>
-      </div>
+
+    @if (eventHistory && eventHistory.length === 0) {
+      <div class="alert alert-warning mt-2">No events to display</div>
+    }
+
+    <div class="event-timeline">
+      @for (event of eventHistory; track $index) {
+        <div class="event-entry">
+          <div class="event-dot"></div>
+          <div class="event-content">
+            <div class="event-header">
+              <span class="event-name">{{ formatEventName(event.eventTypeName) }}</span>
+              <span class="event-time">{{ event.timestamp | date:'MMM d, y, HH:mm' }}</span>
+            </div>
+            <div class="event-fields">
+              @for (field of parseEventData(event.eventData); track field.key) {
+                <div class="event-field">
+                  <span class="field-key">{{ formatKey(field.key) }}</span>
+                  <span class="field-value">{{ field.value }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      }
     </div>
   </div>
 </div>

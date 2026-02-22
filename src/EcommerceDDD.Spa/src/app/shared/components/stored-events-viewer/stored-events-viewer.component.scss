@@ -1,30 +1,106 @@
-table {
-  margin-top: 5px;
-  display: block;
-  overflow: auto;
-}
-th div {
-  margin-top: -20px;
-  position: absolute;
-}
-
 .stored-events-viewer {
   margin-bottom: 5%;
+  min-width: 380px;
 
-  .table-scroll {
-    max-width: 100%;
-    max-height: 400px;
-    overflow-x: auto;
-    overflow-y: auto;
+  .viewer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+
+    .viewer-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #0e4860;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
   }
-  .event-type {
-    color: #0e4860;
-    font-weight: bolder;
-  }
-  .event-data {
-    color: #3c748f;
-  }
-  .close-container {
-    text-align: center;
+
+  .event-timeline {
+    position: relative;
+    padding-left: 20px;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: #d0e4ee;
+    }
+
+    .event-entry {
+      position: relative;
+      margin-bottom: 16px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .event-dot {
+        position: absolute;
+        left: -17px;
+        top: 6px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #0e4860;
+        border: 2px solid #fff;
+        box-shadow: 0 0 0 2px #d0e4ee;
+      }
+
+      .event-content {
+        padding-left: 4px;
+
+        .event-header {
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+          gap: 8px;
+          margin-bottom: 4px;
+
+          .event-name {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #0e4860;
+            white-space: nowrap;
+          }
+
+          .event-time {
+            font-size: 0.72rem;
+            color: #8ca8b8;
+            white-space: nowrap;
+            flex-shrink: 0;
+          }
+        }
+
+        .event-fields {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+
+          .event-field {
+            display: flex;
+            gap: 8px;
+            font-size: 0.78rem;
+
+            .field-key {
+              color: #8ca8b8;
+              min-width: 110px;
+              flex-shrink: 0;
+              text-align: right;
+            }
+
+            .field-value {
+              color: #3c748f;
+              font-weight: 500;
+              word-break: break-all;
+            }
+          }
+        }
+      }
+    }
   }
 }
