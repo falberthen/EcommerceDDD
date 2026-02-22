@@ -1,4 +1,4 @@
-namespace EcommerceDDD.QuoteManagement.Application.Quotes.OpeningQuote;
+namespace EcommerceDDD.QuoteManagement.Application.OpeningQuote;
 
 public class OpenQuoteHandler(
 	IUserInfoRequester userInfoRequester,

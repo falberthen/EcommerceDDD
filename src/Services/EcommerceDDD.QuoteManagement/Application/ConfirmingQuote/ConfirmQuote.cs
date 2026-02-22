@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.QuoteManagement.Application.Quotes.ConfirmingQuote;
+﻿namespace EcommerceDDD.QuoteManagement.Application.ConfirmingQuote;
 
 public record class ConfirmQuote : ICommand
 {

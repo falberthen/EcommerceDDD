@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.QuoteManagement.Application.Quotes.RemovingQuoteItem;
+﻿namespace EcommerceDDD.QuoteManagement.Application.RemovingQuoteItem;
 
 public record class RemoveQuoteItem : ICommand
 {

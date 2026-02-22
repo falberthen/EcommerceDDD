@@ -1,4 +1,4 @@
-namespace EcommerceDDD.QuoteManagement.Application.Quotes.ConfirmingQuote;
+namespace EcommerceDDD.QuoteManagement.Application.ConfirmingQuote;
 
 public class ConfirmQuoteHandler(
     IEventStoreRepository<Quote> quoteWriteRepository

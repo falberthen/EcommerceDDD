@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.QuoteManagement.Application.Quotes;
+﻿namespace EcommerceDDD.QuoteManagement.Application;
 
 public record QuoteViewModel()
 {
