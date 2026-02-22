@@ -1,4 +1,4 @@
-namespace EcommerceDDD.QuoteManagement.Application.Quotes.GettingQuoteById;
+namespace EcommerceDDD.QuoteManagement.Application.GettingQuoteById;
 
 public class GetQuoteByIdCommandHandler(
 	IQuerySession querySession,

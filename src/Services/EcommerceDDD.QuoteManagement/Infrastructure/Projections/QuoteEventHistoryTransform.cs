@@ -1,4 +1,6 @@
-﻿namespace EcommerceDDD.QuoteManagement.Infrastructure.Projections;
+﻿using EcommerceDDD.QuoteManagement.Application.GettingQuoteHistory;
+
+namespace EcommerceDDD.QuoteManagement.Infrastructure.Projections;
 
 public class QuoteEventHistoryTransform : EventProjection
 {

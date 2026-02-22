@@ -1,5 +1,3 @@
-using EcommerceDDD.Core.Exceptions;
-
 namespace EcommerceDDD.ShipmentProcessing.Tests.Domain;
 
 public class ShipmentTests

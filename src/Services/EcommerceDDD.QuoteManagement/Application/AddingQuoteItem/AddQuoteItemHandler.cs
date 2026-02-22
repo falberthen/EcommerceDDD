@@ -1,4 +1,4 @@
-namespace EcommerceDDD.QuoteManagement.Application.Quotes.AddingQuoteItem;
+namespace EcommerceDDD.QuoteManagement.Application.AddingQuoteItem;
 
 public class AddQuoteItemHandler(
     IEventStoreRepository<Quote> quoteWriteRepository,

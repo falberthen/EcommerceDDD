@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.QuoteManagement.Application.Quotes.AddingQuoteItem;
+﻿namespace EcommerceDDD.QuoteManagement.Application.AddingQuoteItem;
 
 public record class AddQuoteItem : ICommand
 {

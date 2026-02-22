@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.InventoryManagement.Application.IncreaseQuantityInStock;
-
-namespace EcommerceDDD.InventoryManagement.Tests.Application;
+﻿namespace EcommerceDDD.InventoryManagement.Tests.Application;
 
 public class IncreaseQuantityInStockHandlerTests
 {

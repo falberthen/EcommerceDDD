@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.QuoteManagement.Application.Quotes.GettingCustomerOpenQuote;
+﻿namespace EcommerceDDD.QuoteManagement.Application.GettingCustomerOpenQuote;
 
 public record class GetCustomerOpenQuote : IQuery<QuoteViewModel>
 {

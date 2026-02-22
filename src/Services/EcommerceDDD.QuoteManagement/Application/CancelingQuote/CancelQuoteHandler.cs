@@ -1,4 +1,4 @@
-namespace EcommerceDDD.QuoteManagement.Application.Quotes.CancelingQuote;
+namespace EcommerceDDD.QuoteManagement.Application.CancelingQuote;
 
 public class CancelQuoteHandler(
 	IEventStoreRepository<Quote> quoteWriteRepository
