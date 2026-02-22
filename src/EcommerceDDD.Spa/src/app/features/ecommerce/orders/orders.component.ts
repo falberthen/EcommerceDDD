@@ -4,7 +4,7 @@ import { faList } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AuthService } from '@core/services/auth.service';
 import { SignalrService } from '@core/services/signalr.service';
-import { IEventHistory, StoredEventService } from '@shared/services/stored-event.service';
+import { StoredEventService } from '@shared/services/stored-event.service';
 import { ORDER_STATUS_CODES, SIGNALR } from '@features/ecommerce/constants/appConstants';
 import { LoaderService } from '@core/services/loader.service';
 import { KiotaClientService } from '@core/services/kiota-client.service';
@@ -29,11 +29,7 @@ export class OrdersComponent implements OnInit {
   readonly storedEventViewerContainer = viewChild.required('storedEventViewerContainer', { read: ViewContainerRef });
 
   faList = faList;
-  customerId?: string;
   orders: OrderViewModel[] = [];
-  storedEventsViewerComponentRef: any;
-  hubHelloMessage!: string;
-  eventHistory: IEventHistory[] = [];
 
   async ngOnInit() {
     await this.loadOrders();
@@ -59,17 +55,20 @@ export class OrdersComponent implements OnInit {
 
   async showOrderStoredEvents(orderId: string) {
     try {
-      await this.kiotaClientService.client.orderProcessing.api.v2.orders
-        .byOrderId(orderId)
-        .history.get()
-        .then((result) => {
-          if (result) {
-            this.storedEventService.showStoredEvents(
-              this.storedEventViewerContainer(),
-              result
-            );
-          }
-        });
+      const refreshFn = () =>
+        this.kiotaClientService.client.orderProcessing.api.v2.orders
+          .byOrderId(orderId)
+          .history.get();
+
+      await refreshFn().then((result) => {
+        if (result) {
+          this.storedEventService.showStoredEvents(
+            this.storedEventViewerContainer(),
+            result,
+            refreshFn
+          );
+        }
+      });
     } catch (error) {
       this.kiotaClientService.handleError(error);
     }
@@ -108,18 +107,21 @@ export class OrdersComponent implements OnInit {
 
   private async addCustomerToSignalrGroup() {
     if (!this.authService.currentCustomer) return;
-    if (this.signalrService.connection.state !== 'Disconnected') return;
+    const conn = this.signalrService.connection;
 
-    this.signalrService.connection
-      .start()
-      .then(() => {
+    if (conn.state === 'Disconnected') {
+      try {
+        await conn.start();
         console.log('SignalR Connected!');
-        this.signalrService.connection.invoke(
-          'JoinCustomerToGroup',
-          this.authService.currentCustomer!.id
-        );
-      })
-      .catch((err: Error) => console.error(err.toString()));
+      } catch (err) {
+        console.error(err);
+        return;
+      }
+    }
+
+    if (conn.state === 'Connected') {
+      conn.invoke('JoinCustomerToGroup', this.authService.currentCustomer!.id);
+    }
   }
 
   private updateOrderStatus(
@@ -131,6 +133,7 @@ export class OrdersComponent implements OnInit {
     if (order) {
       order.statusText = statusText;
       order.statusCode = statusCode;
+      this.storedEventService.refreshCurrentViewer();
     }
   }
 }
