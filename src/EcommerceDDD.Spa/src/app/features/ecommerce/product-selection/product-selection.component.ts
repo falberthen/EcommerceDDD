@@ -35,7 +35,18 @@ export class ProductSelectionComponent implements OnInit {
   currentCurrency!: string;
   customerId!: string;
   products: ProductViewModel[] = [];
+  searchTerm = '';
   faPlusCircle = faPlusCircle;
+
+  get filteredProducts(): ProductViewModel[] {
+    if (!this.searchTerm.trim()) return this.products;
+    const term = this.searchTerm.toLowerCase();
+    return this.products.filter(p =>
+      p.name?.toLowerCase().includes(term) ||
+      p.description?.toLowerCase().includes(term) ||
+      p.category?.toLowerCase().includes(term)
+    );
+  }
 
   async ngOnInit() {
     var storedCurrency = this.localStorageService.getValueByKey(
