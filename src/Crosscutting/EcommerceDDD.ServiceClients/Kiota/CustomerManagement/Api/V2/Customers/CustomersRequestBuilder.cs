@@ -2,7 +2,6 @@
 #pragma warning disable CS0618
 using EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Customers.Details;
 using EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Customers.History;
-using EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Customers.Item;
 using EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Customers.Update;
 using EcommerceDDD.ServiceClients.CustomerManagement.Models;
 using Microsoft.Kiota.Abstractions.Extensions;
@@ -35,31 +34,6 @@ namespace EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Customers
         public global::EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Customers.Update.UpdateRequestBuilder Update
         {
             get => new global::EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Customers.Update.UpdateRequestBuilder(PathParameters, RequestAdapter);
-        }
-        /// <summary>Gets an item from the EcommerceDDD.ServiceClients.CustomerManagement.api.v2.customers.item collection</summary>
-        /// <param name="position">Unique identifier of the item</param>
-        /// <returns>A <see cref="global::EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Customers.Item.WithCustomerItemRequestBuilder"/></returns>
-        public global::EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Customers.Item.WithCustomerItemRequestBuilder this[Guid position]
-        {
-            get
-            {
-                var urlTplParams = new Dictionary<string, object>(PathParameters);
-                urlTplParams.Add("customerId", position);
-                return new global::EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Customers.Item.WithCustomerItemRequestBuilder(urlTplParams, RequestAdapter);
-            }
-        }
-        /// <summary>Gets an item from the EcommerceDDD.ServiceClients.CustomerManagement.api.v2.customers.item collection</summary>
-        /// <param name="position">Unique identifier of the item</param>
-        /// <returns>A <see cref="global::EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Customers.Item.WithCustomerItemRequestBuilder"/></returns>
-        [Obsolete("This indexer is deprecated and will be removed in the next major version. Use the one with the typed parameter instead.")]
-        public global::EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Customers.Item.WithCustomerItemRequestBuilder this[string position]
-        {
-            get
-            {
-                var urlTplParams = new Dictionary<string, object>(PathParameters);
-                if (!string.IsNullOrWhiteSpace(position)) urlTplParams.Add("customerId", position);
-                return new global::EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Customers.Item.WithCustomerItemRequestBuilder(urlTplParams, RequestAdapter);
-            }
         }
         /// <summary>
         /// Instantiates a new <see cref="global::EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Customers.CustomersRequestBuilder"/> and sets the default values.

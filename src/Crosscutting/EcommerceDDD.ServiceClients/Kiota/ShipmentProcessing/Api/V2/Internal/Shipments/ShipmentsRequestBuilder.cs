@@ -9,28 +9,28 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace EcommerceDDD.ServiceClients.ShipmentProcessing.Api.V2.Shipments
+namespace EcommerceDDD.ServiceClients.ShipmentProcessing.Api.V2.Internal.Shipments
 {
     /// <summary>
-    /// Builds and executes requests for operations under \api\v2\shipments
+    /// Builds and executes requests for operations under \api\v2\internal\shipments
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     public partial class ShipmentsRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="global::EcommerceDDD.ServiceClients.ShipmentProcessing.Api.V2.Shipments.ShipmentsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::EcommerceDDD.ServiceClients.ShipmentProcessing.Api.V2.Internal.Shipments.ShipmentsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public ShipmentsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/api/v2/shipments", pathParameters)
+        public ShipmentsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/api/v2/internal/shipments", pathParameters)
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="global::EcommerceDDD.ServiceClients.ShipmentProcessing.Api.V2.Shipments.ShipmentsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::EcommerceDDD.ServiceClients.ShipmentProcessing.Api.V2.Internal.Shipments.ShipmentsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public ShipmentsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/api/v2/shipments", rawUrl)
+        public ShipmentsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/api/v2/internal/shipments", rawUrl)
         {
         }
         /// <returns>A <see cref="Stream"/></returns>
@@ -85,11 +85,11 @@ namespace EcommerceDDD.ServiceClients.ShipmentProcessing.Api.V2.Shipments
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="global::EcommerceDDD.ServiceClients.ShipmentProcessing.Api.V2.Shipments.ShipmentsRequestBuilder"/></returns>
+        /// <returns>A <see cref="global::EcommerceDDD.ServiceClients.ShipmentProcessing.Api.V2.Internal.Shipments.ShipmentsRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public global::EcommerceDDD.ServiceClients.ShipmentProcessing.Api.V2.Shipments.ShipmentsRequestBuilder WithUrl(string rawUrl)
+        public global::EcommerceDDD.ServiceClients.ShipmentProcessing.Api.V2.Internal.Shipments.ShipmentsRequestBuilder WithUrl(string rawUrl)
         {
-            return new global::EcommerceDDD.ServiceClients.ShipmentProcessing.Api.V2.Shipments.ShipmentsRequestBuilder(rawUrl, RequestAdapter);
+            return new global::EcommerceDDD.ServiceClients.ShipmentProcessing.Api.V2.Internal.Shipments.ShipmentsRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Configuration for the request such as headers, query parameters, and middleware options.
