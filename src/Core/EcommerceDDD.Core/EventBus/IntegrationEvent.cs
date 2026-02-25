@@ -5,10 +5,11 @@ public class IntegrationEvent : IIntegrationEvent
     public Guid Id { get; } = Guid.NewGuid();
     public string EventName { get; } // Event name identifier
     public string JSON_Payload { get; } // Serialized data
+    public string? TraceContext { get; } // W3C traceparent for distributed tracing
 
     public static IntegrationEvent FromNotification(INotification domainEvent)
     {
-		if(domainEvent == null) 
+		if(domainEvent == null)
 			throw new ArgumentNullException(nameof(domainEvent));
 
         return new IntegrationEvent(domainEvent);
@@ -20,5 +21,6 @@ public class IntegrationEvent : IIntegrationEvent
     {
         EventName = @event.GetType().Name;
         JSON_Payload = JsonConvert.SerializeObject(@event);
-    }    
+        TraceContext = Activity.Current?.Id;
+    }
 }

@@ -4,11 +4,13 @@ namespace EcommerceDDD.Core.Infrastructure.Kafka.Consumer;
 
 public class KafkaConsumer : IEventConsumer
 {
+	private static readonly ActivitySource _activitySource = new(ActivitySources.KafkaConsumer);
+
 	private readonly IEventBus _eventPublisher;
 	private readonly ILogger<KafkaConsumer> _logger;
 	private readonly KafkaConsumerConfig _config;
 	private readonly JsonEventSerializer<INotification> _serializer;
-	private IConsumer<string, INotification>? _consumer;
+	private IConsumer<string, string>? _consumer;
 	private bool _isInitialized = false;
 	private readonly SemaphoreSlim _initializationLock = new SemaphoreSlim(1, 1);
 
@@ -172,9 +174,9 @@ public class KafkaConsumer : IEventConsumer
 					Debug = "broker,topic,msg"
 				};
 
-				_consumer = new ConsumerBuilder<string, INotification>(consumerConfig)
+				_consumer = new ConsumerBuilder<string, string>(consumerConfig)
 					.SetKeyDeserializer(Deserializers.Utf8)
-					.SetValueDeserializer(_serializer)
+					.SetValueDeserializer(Deserializers.Utf8)
 					.SetErrorHandler((_, error) =>
 					{
 						_logger.LogError("Kafka error: {Reason} (Code: {Code})", error.Reason, error.Code);
@@ -216,7 +218,7 @@ public class KafkaConsumer : IEventConsumer
 		}
 	}
 
-	private async Task ConsumeNextMessage(IConsumer<string, INotification> consumer,
+	private async Task ConsumeNextMessage(IConsumer<string, string> consumer,
 		CancellationToken cancellationToken)
 	{
 		try
@@ -243,12 +245,40 @@ public class KafkaConsumer : IEventConsumer
 				return;
 			}
 
+			// Extract W3C trace context stored in the outbox payload
+			var jsonObject = JObject.Parse(result.Message.Value);
+			var traceParent = jsonObject["TraceContext"]?.ToString();
+
+			// Per OTel Messaging spec, async consumer spans use ActivityLink
+			// to represent a causal relationship without collapsing producer and consumer into one trace.
+			// https://opentelemetry.io/docs/specs/semconv/messaging/messaging-spans/
+			ActivityLink[] links = [];
+			if (!string.IsNullOrEmpty(traceParent) &&
+				ActivityContext.TryParse(traceParent, null, isRemote: true, out var producerContext))
+			{
+				links = [new ActivityLink(producerContext)];
+			}
+
+			using var activity = _activitySource.StartActivity(
+				$"kafka.consume {result.Topic}",
+				ActivityKind.Consumer,
+				parentContext: default,
+				tags: null,
+				links: links);
+			activity?.SetTag("messaging.system", "kafka");
+			activity?.SetTag("messaging.destination", result.Topic);
+			activity?.SetTag("messaging.kafka.partition", result.Partition.Value);
+
+			// Deserialize the domain event from the raw outbox payload
+			var messageBytes = Encoding.UTF8.GetBytes(result.Message.Value);
+			var notification = _serializer.Deserialize(messageBytes, isNull: false, SerializationContext.Empty);
+
 			var stopwatch = Stopwatch.StartNew();
 			_logger.LogInformation("Processing message from topic {Topic} at offset {Offset}", result.Topic, result.Offset);
 
 			// Process the message
 			await _eventPublisher
-				.PublishEventAsync(result.Message.Value, cancellationToken);
+				.PublishEventAsync(notification, cancellationToken);
 
 			// Commit offset after successful processing
 			consumer.Commit(result);
