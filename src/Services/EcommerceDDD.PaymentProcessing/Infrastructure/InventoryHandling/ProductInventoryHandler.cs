@@ -17,7 +17,7 @@ public class ProductInventoryHandler(InventoryManagementClient inventoryManageme
 
 		try
 		{
-			var inventoryRequestBuilder = _inventoryManagementClient.Api.V2.Inventory;
+			var inventoryRequestBuilder = _inventoryManagementClient.Api.V2.Internal.Inventory;
 			var response = await inventoryRequestBuilder
 				.CheckStockQuantity
 				.PostAsync(request, cancellationToken: cancellationToken);
@@ -53,7 +53,7 @@ public class ProductInventoryHandler(InventoryManagementClient inventoryManageme
 				DecreasedQuantity = productItem.Quantity
 			};
 
-			var inventoryRequestBuilder = _inventoryManagementClient.Api.V2.Inventory[productItem.ProductId.Value];
+			var inventoryRequestBuilder = _inventoryManagementClient.Api.V2.Internal.Inventory[productItem.ProductId.Value];
 			await inventoryRequestBuilder
 				.DecreaseStockQuantity
 				.PutAsync(request, cancellationToken: cancellationToken);

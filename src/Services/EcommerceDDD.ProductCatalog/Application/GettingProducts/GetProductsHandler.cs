@@ -64,7 +64,7 @@ public class GetProductsHandler(
 			{
 				ProductIds = productIds
 			};
-			var inventoryRequestBuilder = _inventoryManagementClient.Api.V2.Inventory;
+			var inventoryRequestBuilder = _inventoryManagementClient.Api.V2.Internal.Inventory;
 			var response = await inventoryRequestBuilder.CheckStockQuantity
 				.PostAsync(request, cancellationToken: cancellationToken);
 

@@ -16,7 +16,7 @@ public class RequestCancelPaymentHandler(
 
 		try
 		{
-			var paymentsRequestBuilder = _paymentProcessingClient.Api.V2.Payments[command.PaymentId.Value];
+			var paymentsRequestBuilder = _paymentProcessingClient.Api.V2.Internal.Payments[command.PaymentId.Value];
 			await paymentsRequestBuilder
 				.DeleteAsync(cancelRequest, cancellationToken: cancellationToken);
 

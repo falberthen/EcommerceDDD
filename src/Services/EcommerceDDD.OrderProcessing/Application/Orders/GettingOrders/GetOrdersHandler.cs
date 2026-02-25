@@ -95,7 +95,7 @@ public class GetOrdersHandler(
 	{
 		try
 		{
-			var quoteRequestBuilder = _quoteManagementClient.Api.V2.Quotes[orderDetails.QuoteId];
+			var quoteRequestBuilder = _quoteManagementClient.Api.V2.Internal.Quotes[orderDetails.QuoteId];
 			var response = await quoteRequestBuilder.Details
 				.GetAsync(cancellationToken: cancellationToken);
 

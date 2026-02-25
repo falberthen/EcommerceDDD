@@ -17,6 +17,8 @@ public class RequestPaymentHandler(
 
 	public async Task<Result> HandleAsync(RequestPayment command, CancellationToken cancellationToken)
 	{
+		await Task.Delay(TimeSpan.FromSeconds(5));
+
 		var order = await _orderWriteRepository
 			.FetchStreamAsync(command.OrderId.Value, cancellationToken: cancellationToken);
 
@@ -38,8 +40,6 @@ public class RequestPaymentHandler(
 
 		try
 		{
-			await Task.Delay(TimeSpan.FromSeconds(5));
-
 			var request = new UpdateOrderStatusRequest()
 			{
 				CustomerId = order.CustomerId.Value,
@@ -73,7 +73,7 @@ public class RequestPaymentHandler(
 				ProductItems = productItemsRequest
 			};
 
-			var paymentsRequestBuilder = _paymentProcessingClient.Api.V2.Payments;
+			var paymentsRequestBuilder = _paymentProcessingClient.Api.V2.Internal.Payments;
 			await paymentsRequestBuilder
 				.PostAsync(paymentRequest, cancellationToken: cancellationToken);
 
