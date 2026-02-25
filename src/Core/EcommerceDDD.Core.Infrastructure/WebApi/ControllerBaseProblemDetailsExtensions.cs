@@ -23,7 +23,8 @@ public static class ControllerBaseProblemDetailsExtensions
 
 		if (controller.HttpContext is not null)
 		{
-			problem.Extensions["traceId"] = controller.HttpContext.TraceIdentifier;
+			problem.Extensions["traceId"] = Activity.Current?.TraceId.ToString()
+				?? controller.HttpContext.TraceIdentifier;
 		}
 
 		if (extensions is not null)
@@ -64,7 +65,8 @@ public static class ControllerBaseProblemDetailsExtensions
 
 		if (controller.HttpContext is not null)
 		{
-			problem.Extensions["traceId"] = controller.HttpContext.TraceIdentifier;
+			problem.Extensions["traceId"] = Activity.Current?.TraceId.ToString()
+				?? controller.HttpContext.TraceIdentifier;
 		}
 
 		if (extensions is not null)
@@ -77,7 +79,7 @@ public static class ControllerBaseProblemDetailsExtensions
 
 		return controller.StatusCode(statusCode, problem);
 	}
-	
+
 	// Convenience helpers for common status codes
 	public static IActionResult BadRequestProblem(
 		this ControllerBase controller,
