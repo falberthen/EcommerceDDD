@@ -12,6 +12,7 @@ public static class OpenTelemetryExtension
                 tracing
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
+                    .AddSource(ActivitySources.KafkaConsumer)
                     .AddOtlpExporter();
             })
             .WithMetrics(metrics =>
