@@ -10,7 +10,7 @@ public class CustomerCreditChecker(CustomerManagementClient customerManagementCl
 		try
 		{
 			// Checking customer's credit
-			var customerRequestBuilder = _customerManagementClient.Api.V2.Customers[customerId.Value];
+			var customerRequestBuilder = _customerManagementClient.Api.V2.Internal.Customers[customerId.Value];
 			var response = await customerRequestBuilder
 				.Credit.GetAsync(cancellationToken: cancellationToken);
 

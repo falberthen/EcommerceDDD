@@ -1,16 +1,11 @@
-﻿using EcommerceDDD.OrderProcessing.Application.Orders.CompletingOrder;
-using EcommerceDDD.OrderProcessing.Application.Orders.ProcessingOrder;
-using EcommerceDDD.OrderProcessing.Application.Payments.RecordingPayment;
-using EcommerceDDD.OrderProcessing.Application.Shipments.RecordingShipment;
-
-namespace EcommerceDDD.OrderProcessing.Application;
+﻿namespace EcommerceDDD.OrderProcessing.Application;
 
 public class OrderSaga(
 	ICommandBus commandBus
 ) : IEventHandler<OrderPlaced>,
-    IEventHandler<OrderProcessed>,
-    IEventHandler<PaymentFinalized>,
-    IEventHandler<ShipmentFinalized>
+	IEventHandler<OrderProcessed>,
+	IEventHandler<PaymentFinalized>,
+	IEventHandler<ShipmentFinalized>
 {
 	private readonly ICommandBus _commandBus = commandBus;
 
@@ -21,83 +16,83 @@ public class OrderSaga(
 	/// <param name="cancellationToken"></param>
 	/// <returns></returns>
 	public async Task HandleAsync(OrderPlaced @domainEvent,
-        CancellationToken cancellationToken)
-    {
-        var processOrderCommand = ProcessOrder.Create(
-            CustomerId.Of(@domainEvent.CustomerId),
-            OrderId.Of(@domainEvent.OrderId),
-            QuoteId.Of(@domainEvent.QuoteId)
-        );
+		CancellationToken cancellationToken)
+	{
+		var processOrderCommand = ProcessOrder.Create(
+			CustomerId.Of(@domainEvent.CustomerId),
+			OrderId.Of(@domainEvent.OrderId),
+			QuoteId.Of(@domainEvent.QuoteId)
+		);
 
-        await _commandBus
+		await _commandBus
 			.SendAsync(processOrderCommand, cancellationToken);
-    }
+	}
 
-    /// <summary>
-    /// Requesting payment
-    /// </summary>
-    /// <param name="@domainEvent"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    public async Task HandleAsync(OrderProcessed @domainEvent,
-        CancellationToken cancellationToken)
-    {
-        var requestPaymentCommand = RequestPayment.Create(
-            CustomerId.Of(@domainEvent.CustomerId),
-            OrderId.Of(@domainEvent.OrderId),
-            Money.Of(@domainEvent.TotalPrice, @domainEvent.CurrencyCode),
-            Currency.OfCode(@domainEvent.CurrencyCode));
+	/// <summary>
+	/// Requesting payment
+	/// </summary>
+	/// <param name="@domainEvent"></param>
+	/// <param name="cancellationToken"></param>
+	/// <returns></returns>
+	public async Task HandleAsync(OrderProcessed @domainEvent,
+		CancellationToken cancellationToken)
+	{
+		var requestPaymentCommand = RequestPayment.Create(
+			CustomerId.Of(@domainEvent.CustomerId),
+			OrderId.Of(@domainEvent.OrderId),
+			Money.Of(@domainEvent.TotalPrice, @domainEvent.CurrencyCode),
+			Currency.OfCode(@domainEvent.CurrencyCode));
 
-        await _commandBus
+		await _commandBus
 			.SendAsync(requestPaymentCommand, cancellationToken);
-    }
+	}
 
-    /// <summary>
-    /// Requesting shipment
-    /// </summary>
-    /// <param name="@integrationEvent"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    public async Task HandleAsync(PaymentFinalized @integrationEvent,
-        CancellationToken cancellationToken)
-    {
-        // recording payment        
-        var recordPaymentCommand = RecordPayment.Create(
-            OrderId.Of(@integrationEvent.OrderId),
-            PaymentId.Of(@integrationEvent.PaymentId),
-            Money.Of(@integrationEvent.TotalAmount,
-                @integrationEvent.CurrencyCode));
-        await _commandBus
+	/// <summary>
+	/// Requesting shipment
+	/// </summary>
+	/// <param name="@integrationEvent"></param>
+	/// <param name="cancellationToken"></param>
+	/// <returns></returns>
+	public async Task HandleAsync(PaymentFinalized @integrationEvent,
+		CancellationToken cancellationToken)
+	{
+		// recording payment        
+		var recordPaymentCommand = RecordPayment.Create(
+			OrderId.Of(@integrationEvent.OrderId),
+			PaymentId.Of(@integrationEvent.PaymentId),
+			Money.Of(@integrationEvent.TotalAmount,
+				@integrationEvent.CurrencyCode));
+		await _commandBus
 			.SendAsync(recordPaymentCommand, cancellationToken);
 
-        // requesting shipment        
-        var requestShipmentCommand = RequestShipment.Create(
-            OrderId.Of(@integrationEvent.OrderId));
-        await _commandBus
+		// requesting shipment        
+		var requestShipmentCommand = RequestShipment.Create(
+			OrderId.Of(@integrationEvent.OrderId));
+		await _commandBus
 			.SendAsync(requestShipmentCommand, cancellationToken);
-    }
+	}
 
-    /// <summary>
-    /// Completing order
-    /// </summary>
-    /// <param name="@integrationEvent"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    public async Task HandleAsync(ShipmentFinalized @integrationEvent,
-        CancellationToken cancellationToken)
-    {
-        // recording shipment
-        var recordShipmentCommand = RecordShipment.Create(
-            OrderId.Of(@integrationEvent.OrderId),
-            ShipmentId.Of(@integrationEvent.ShipmentId));
-        await _commandBus
+	/// <summary>
+	/// Completing order
+	/// </summary>
+	/// <param name="@integrationEvent"></param>
+	/// <param name="cancellationToken"></param>
+	/// <returns></returns>
+	public async Task HandleAsync(ShipmentFinalized @integrationEvent,
+		CancellationToken cancellationToken)
+	{
+		// recording shipment
+		var recordShipmentCommand = RecordShipment.Create(
+			OrderId.Of(@integrationEvent.OrderId),
+			ShipmentId.Of(@integrationEvent.ShipmentId));
+		await _commandBus
 			.SendAsync(recordShipmentCommand, cancellationToken);
 
-        // completing order
-        var completeOrderCommand = CompleteOrder.Create(
-            OrderId.Of(@integrationEvent.OrderId),
-            ShipmentId.Of(@integrationEvent.ShipmentId));
-        await _commandBus
+		// completing order
+		var completeOrderCommand = CompleteOrder.Create(
+			OrderId.Of(@integrationEvent.OrderId),
+			ShipmentId.Of(@integrationEvent.ShipmentId));
+		await _commandBus
 			.SendAsync(completeOrderCommand, cancellationToken);
-    }
+	}
 }

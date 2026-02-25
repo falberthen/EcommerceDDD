@@ -12,6 +12,8 @@ public class RecordShipmentHandler(
 
 	public async Task<Result> HandleAsync(RecordShipment command, CancellationToken cancellationToken)
 	{
+		await Task.Delay(TimeSpan.FromSeconds(5));
+
 		var order = await _orderWriteRepository
 			.FetchStreamAsync(command.OrderId.Value, cancellationToken: cancellationToken);
 
@@ -24,8 +26,6 @@ public class RecordShipmentHandler(
 
 		try
 		{
-			await Task.Delay(TimeSpan.FromSeconds(5));
-
 			var request = new UpdateOrderStatusRequest()
 			{
 				CustomerId = order.CustomerId.Value,

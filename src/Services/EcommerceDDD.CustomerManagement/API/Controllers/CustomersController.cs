@@ -16,7 +16,6 @@ public class CustomersController(
 	/// <returns></returns>
 	[HttpPost]
 	[AllowAnonymous]
-	[MapToApiVersion(ApiVersions.V2)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	public async Task<IActionResult> Register([FromBody] RegisterCustomerRequest request,
 		CancellationToken cancellationToken) =>
@@ -37,7 +36,6 @@ public class CustomersController(
 	/// </summary>
 	/// <returns></returns>
 	[HttpGet, Route("details")]
-	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanRead)]
 	[ProducesResponseType(typeof(CustomerDetails), StatusCodes.Status200OK)]
 	public async Task<IActionResult> GetUserDetails(CancellationToken cancellationToken) =>
@@ -51,7 +49,6 @@ public class CustomersController(
 	/// </summary>
 	/// <returns></returns>
 	[HttpGet, Route("history")]
-	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanRead)]
 	[ProducesResponseType(typeof(IReadOnlyList<CustomerEventHistory>), StatusCodes.Status200OK)]
 	public async Task<IActionResult> ListHistory(CancellationToken cancellationToken) =>
@@ -66,7 +63,6 @@ public class CustomersController(
 	/// <param name="request"></param>
 	/// <returns></returns>
 	[HttpPut, Route("update")]
-	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanWrite)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	public async Task<IActionResult> UpdateInformation([FromBody] UpdateCustomerRequest request,
@@ -79,34 +75,4 @@ public class CustomersController(
 				), cancellationToken
 			);
 
-	/// <summary>
-	/// Get customer details by CustomerId | M2M only
-	/// </summary>
-	/// <returns></returns>
-	[HttpGet, Route("{customerId:guid}/details")]
-	[MapToApiVersion(ApiVersions.V2)]
-	[Authorize(Roles = Roles.M2MAccess)]
-	[ProducesResponseType(typeof(CustomerDetails), StatusCodes.Status200OK)]
-	public async Task<IActionResult> GetDetailsByCustomerId([FromRoute] Guid customerId,
-		CancellationToken cancellationToken) =>
-			await Response(
-				GetCustomerDetailsById.Create(CustomerId.Of(customerId)),
-				cancellationToken
-			);
-
-	/// <summary>
-	/// Get customer available credit limit | M2M only
-	/// </summary>
-	/// <param name="customerId"></param>
-	/// <returns></returns>
-	[HttpGet, Route("{customerId:guid}/credit")]
-	[MapToApiVersion(ApiVersions.V2)]
-	[Authorize(Roles = Roles.M2MAccess)]
-	[ProducesResponseType(typeof(CreditLimitModel), StatusCodes.Status200OK)]
-	public async Task<IActionResult> GetCustomerCreditLimit([FromRoute] Guid customerId,
-		CancellationToken cancellationToken) =>
-			await Response(
-				GetCreditLimit.Create(CustomerId.Of(customerId)),
-				cancellationToken
-			);
 }

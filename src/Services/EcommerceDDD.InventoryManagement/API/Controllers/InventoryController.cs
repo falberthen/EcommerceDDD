@@ -10,30 +10,11 @@ public class InventoryController(
 ) : CustomControllerBase(commandBus, queryBus)
 {
 	/// <summary>
-	/// Checks the quantity of a given stock unit in stock
-	/// </summary>
-	/// <param name="request"></param>
-	/// <returns></returns>
-	[HttpPost("check-stock-quantity")]
-	[MapToApiVersion(ApiVersions.V2)]
-	[Authorize(Roles = Roles.M2MAccess)]
-	[ProducesResponseType(typeof(IList<InventoryStockUnitViewModel>), StatusCodes.Status200OK)]
-	public async Task<IActionResult> CheckStockQuantity([FromBody] CheckProductsInStockRequest request,
-		CancellationToken cancellationToken) =>
-		await Response(
-			CheckProductsInStock.Create(
-				ProductId.Of(request.ProductIds).ToList()
-			),
-			cancellationToken
-		);
-
-	/// <summary>
 	/// Get inventory stock unit event history
 	/// </summary>
 	/// <param name="productId"></param>
 	/// <returns></returns>
 	[HttpGet, Route("{productId:guid}/history")]
-	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanRead)]
 	[ProducesResponseType(typeof(IReadOnlyList<InventoryStockUnitEventHistory>), StatusCodes.Status200OK)]
 	public async Task<IActionResult> ListHistory([FromRoute] Guid productId,
@@ -43,23 +24,4 @@ public class InventoryController(
 			cancellationToken
 		);
 
-	/// <summary>
-	/// Decreases the quantity of a given stock unit | M2M only
-	/// </summary>
-	/// <param name="productId"></param>
-	/// <param name="request"></param>
-	/// <returns></returns>
-	[HttpPut("{productId:guid}/decrease-stock-quantity")]
-	[MapToApiVersion(ApiVersions.V2)]
-	[Authorize(Roles = Roles.M2MAccess, Policy = Policies.CanWrite)]
-	[ProducesResponseType(StatusCodes.Status200OK)]
-	public async Task<IActionResult> DecreaseQuantity([FromRoute] Guid productId,
-		[FromBody] DecreaseQuantityInStockRequest request,
-		CancellationToken cancellationToken) =>
-		await Response(
-			DecreaseStockQuantity.Create(
-				ProductId.Of(productId), request.DecreasedQuantity
-			),
-			cancellationToken
-		);
 }

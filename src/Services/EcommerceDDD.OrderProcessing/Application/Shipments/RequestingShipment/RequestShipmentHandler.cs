@@ -42,7 +42,7 @@ public class RequestShipmentHandler(
 				ProductItems = productItemsRequest
 			};
 
-			var shipmentsRequestBuilder = _shipmentProcessingClient.Api.V2.Shipments;
+			var shipmentsRequestBuilder = _shipmentProcessingClient.Api.V2.Internal.Shipments;
 			await shipmentsRequestBuilder
 				.PostAsync(shipOrderRequest, cancellationToken: cancellationToken);
 

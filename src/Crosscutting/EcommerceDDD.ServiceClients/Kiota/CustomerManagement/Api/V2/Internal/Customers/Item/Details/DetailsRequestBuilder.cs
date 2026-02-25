@@ -9,31 +9,31 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Customers.Item.Credit
+namespace EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Internal.Customers.Item.Details
 {
     /// <summary>
-    /// Builds and executes requests for operations under \api\v2\customers\{customerId}\credit
+    /// Builds and executes requests for operations under \api\v2\internal\customers\{customerId}\details
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
-    public partial class CreditRequestBuilder : BaseRequestBuilder
+    public partial class DetailsRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="global::EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Customers.Item.Credit.CreditRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Internal.Customers.Item.Details.DetailsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public CreditRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/api/v2/customers/{customerId}/credit", pathParameters)
+        public DetailsRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/api/v2/internal/customers/{customerId}/details", pathParameters)
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="global::EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Customers.Item.Credit.CreditRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Internal.Customers.Item.Details.DetailsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public CreditRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/api/v2/customers/{customerId}/credit", rawUrl)
+        public DetailsRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/api/v2/internal/customers/{customerId}/details", rawUrl)
         {
         }
-        /// <returns>A <see cref="global::EcommerceDDD.ServiceClients.CustomerManagement.Models.CreditLimitModel"/></returns>
+        /// <returns>A <see cref="global::EcommerceDDD.ServiceClients.CustomerManagement.Models.CustomerDetails"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::EcommerceDDD.ServiceClients.CustomerManagement.Models.ProblemDetails">When receiving a 400 status code</exception>
@@ -43,11 +43,11 @@ namespace EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Customers.Item.C
         /// <exception cref="global::EcommerceDDD.ServiceClients.CustomerManagement.Models.ProblemDetails">When receiving a 500 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::EcommerceDDD.ServiceClients.CustomerManagement.Models.CreditLimitModel?> GetAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::EcommerceDDD.ServiceClients.CustomerManagement.Models.CustomerDetails?> GetAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::EcommerceDDD.ServiceClients.CustomerManagement.Models.CreditLimitModel> GetAsync(Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::EcommerceDDD.ServiceClients.CustomerManagement.Models.CustomerDetails> GetAsync(Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
@@ -59,7 +59,7 @@ namespace EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Customers.Item.C
                 { "422", global::EcommerceDDD.ServiceClients.CustomerManagement.Models.ValidationProblemDetails.CreateFromDiscriminatorValue },
                 { "500", global::EcommerceDDD.ServiceClients.CustomerManagement.Models.ProblemDetails.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::EcommerceDDD.ServiceClients.CustomerManagement.Models.CreditLimitModel>(requestInfo, global::EcommerceDDD.ServiceClients.CustomerManagement.Models.CreditLimitModel.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::EcommerceDDD.ServiceClients.CustomerManagement.Models.CustomerDetails>(requestInfo, global::EcommerceDDD.ServiceClients.CustomerManagement.Models.CustomerDetails.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
@@ -80,18 +80,18 @@ namespace EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Customers.Item.C
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="global::EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Customers.Item.Credit.CreditRequestBuilder"/></returns>
+        /// <returns>A <see cref="global::EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Internal.Customers.Item.Details.DetailsRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public global::EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Customers.Item.Credit.CreditRequestBuilder WithUrl(string rawUrl)
+        public global::EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Internal.Customers.Item.Details.DetailsRequestBuilder WithUrl(string rawUrl)
         {
-            return new global::EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Customers.Item.Credit.CreditRequestBuilder(rawUrl, RequestAdapter);
+            return new global::EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Internal.Customers.Item.Details.DetailsRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Configuration for the request such as headers, query parameters, and middleware options.
         /// </summary>
         [Obsolete("This class is deprecated. Please use the generic RequestConfiguration class generated by the generator.")]
         [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
-        public partial class CreditRequestBuilderGetRequestConfiguration : RequestConfiguration<DefaultQueryParameters>
+        public partial class DetailsRequestBuilderGetRequestConfiguration : RequestConfiguration<DefaultQueryParameters>
         {
         }
     }

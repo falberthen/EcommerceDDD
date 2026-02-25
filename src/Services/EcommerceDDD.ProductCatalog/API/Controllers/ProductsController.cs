@@ -10,7 +10,6 @@ public class ProductsController(
 ) : CustomControllerBase(commandBus, queryBus)
 {
 	[HttpPost]
-	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer + "," + Roles.M2MAccess, Policy = Policies.CanRead)]
 	[ProducesResponseType(typeof(IList<ProductViewModel?>), StatusCodes.Status200OK)]
 	public async Task<IActionResult> ListProducts([FromBody] GetProductsRequest request,

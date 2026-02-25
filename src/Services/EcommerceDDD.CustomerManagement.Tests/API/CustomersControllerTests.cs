@@ -5,55 +5,7 @@ public class CustomersControllerTests
 	public CustomersControllerTests()
 	{
 		_customersController = new CustomersController(_commandBus, _queryBus);
-	}
-
-	[Fact]
-	public async Task GetDetailsByCustomerId_WithCustomerId_ShouldReturnCustomerDetails()
-	{
-		// Given
-		var customerId = Guid.NewGuid();
-		var expectedData = new CustomerDetails
-		{
-			Id = customerId,
-			Email = "customer@test.com",
-			Name = "CustomerX",
-			ShippingAddress = "Infinite loop street",
-			CreditLimit = 1000
-		};
-
-		_queryBus.SendAsync(Arg.Any<GetCustomerDetailsById>(), CancellationToken.None)
-			.Returns(Result.Ok<CustomerDetails>(expectedData));
-
-		// When
-		var response = await _customersController
-			.GetDetailsByCustomerId(customerId, CancellationToken.None);
-
-		// Then
-		var okResult = Assert.IsType<OkObjectResult>(response);
-		Assert.IsAssignableFrom<CustomerDetails>(okResult.Value);
-	}
-
-	[Fact]
-	public async Task GetCustomerCreditLimit_WithCustomerId_ShouldReturnCreditLimitModel()
-	{
-		// Given
-		var customerId = Guid.NewGuid();
-		var expectedData = new CreditLimitModel
-		(
-			customerId,
-			10000
-		);
-
-		_queryBus.SendAsync(Arg.Any<GetCreditLimit>(), CancellationToken.None)
-			.Returns(Result.Ok<CreditLimitModel>(expectedData));
-
-		// When
-		var response = await _customersController
-			.GetCustomerCreditLimit(customerId, CancellationToken.None);
-
-		// Then
-		var okResult = Assert.IsType<OkObjectResult>(response);
-		Assert.IsAssignableFrom<CreditLimitModel>(okResult.Value);
+		_customersInternalController = new CustomersInternalController(_commandBus, _queryBus);
 	}
 
 	[Fact]
@@ -138,7 +90,60 @@ public class CustomersControllerTests
 		Assert.IsType<OkResult>(response);
 	}
 
+	#region INTERNAL
+	[Fact]
+	public async Task GetDetailsByCustomerId_WithCustomerId_ShouldReturnCustomerDetails()
+	{
+		// Given
+		var customerId = Guid.NewGuid();
+		var expectedData = new CustomerDetails
+		{
+			Id = customerId,
+			Email = "customer@test.com",
+			Name = "CustomerX",
+			ShippingAddress = "Infinite loop street",
+			CreditLimit = 1000
+		};
+
+		_queryBus.SendAsync(Arg.Any<GetCustomerDetailsById>(), CancellationToken.None)
+			.Returns(Result.Ok<CustomerDetails>(expectedData));
+
+		// When
+		var response = await _customersInternalController
+			.GetDetailsByCustomerId(customerId, CancellationToken.None);
+
+		// Then
+		var okResult = Assert.IsType<OkObjectResult>(response);
+		Assert.IsAssignableFrom<CustomerDetails>(okResult.Value);
+	}
+
+	[Fact]
+	public async Task GetCustomerCreditLimit_WithCustomerId_ShouldReturnCreditLimitModel()
+	{
+		// Given
+		var customerId = Guid.NewGuid();
+		var expectedData = new CreditLimitModel
+		(
+			customerId,
+			10000
+		);
+
+		_queryBus.SendAsync(Arg.Any<GetCreditLimit>(), CancellationToken.None)
+			.Returns(Result.Ok<CreditLimitModel>(expectedData));
+
+		// When
+		var response = await _customersInternalController
+			.GetCustomerCreditLimit(customerId, CancellationToken.None);
+
+		// Then
+		var okResult = Assert.IsType<OkObjectResult>(response);
+		Assert.IsAssignableFrom<CreditLimitModel>(okResult.Value);
+	}
+
+	#endregion
+
 	private CustomersController _customersController;
+	private CustomersInternalController _customersInternalController;
 	private ICommandBus _commandBus = Substitute.For<ICommandBus>();
 	private IQueryBus _queryBus = Substitute.For<IQueryBus>();
 }

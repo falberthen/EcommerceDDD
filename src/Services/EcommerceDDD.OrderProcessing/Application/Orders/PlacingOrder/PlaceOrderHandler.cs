@@ -76,7 +76,7 @@ public class PlaceOrderHandler(
 	{
 		try
 		{
-			var quoteRequestBuilder = _quoteManagementClient.Api.V2.Quotes[command.QuoteId.Value];
+			var quoteRequestBuilder = _quoteManagementClient.Api.V2.Internal.Quotes[command.QuoteId.Value];
 			var response = await quoteRequestBuilder.Details
 				.GetAsync(cancellationToken: cancellationToken);
 
@@ -97,7 +97,7 @@ public class PlaceOrderHandler(
 	{
 		try
 		{
-			var quoteRequestBuilder = _quoteManagementClient.Api.V2.Quotes[quoteId];
+			var quoteRequestBuilder = _quoteManagementClient.Api.V2.Internal.Quotes[quoteId];
 			await quoteRequestBuilder.Confirm
 				.PutAsync(cancellationToken: cancellationToken);
 

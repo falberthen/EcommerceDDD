@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.OrderProcessing.Application.Orders.CancelingOrder;
-
-namespace EcommerceDDD.OrderProcessing.Application;
+﻿namespace EcommerceDDD.OrderProcessing.Application;
 
 /// <summary>
 /// Handles compensation events for OrderSaga

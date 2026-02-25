@@ -9,31 +9,31 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace EcommerceDDD.ServiceClients.InventoryManagement.Api.V2.Inventory.CheckStockQuantity
+namespace EcommerceDDD.ServiceClients.InventoryManagement.Api.V2.Internal.Inventory.Item.DecreaseStockQuantity
 {
     /// <summary>
-    /// Builds and executes requests for operations under \api\v2\inventory\check-stock-quantity
+    /// Builds and executes requests for operations under \api\v2\internal\inventory\{productId}\decrease-stock-quantity
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
-    public partial class CheckStockQuantityRequestBuilder : BaseRequestBuilder
+    public partial class DecreaseStockQuantityRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="global::EcommerceDDD.ServiceClients.InventoryManagement.Api.V2.Inventory.CheckStockQuantity.CheckStockQuantityRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::EcommerceDDD.ServiceClients.InventoryManagement.Api.V2.Internal.Inventory.Item.DecreaseStockQuantity.DecreaseStockQuantityRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public CheckStockQuantityRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/api/v2/inventory/check-stock-quantity", pathParameters)
+        public DecreaseStockQuantityRequestBuilder(Dictionary<string, object> pathParameters, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/api/v2/internal/inventory/{productId}/decrease-stock-quantity", pathParameters)
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="global::EcommerceDDD.ServiceClients.InventoryManagement.Api.V2.Inventory.CheckStockQuantity.CheckStockQuantityRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::EcommerceDDD.ServiceClients.InventoryManagement.Api.V2.Internal.Inventory.Item.DecreaseStockQuantity.DecreaseStockQuantityRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
-        public CheckStockQuantityRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/api/v2/inventory/check-stock-quantity", rawUrl)
+        public DecreaseStockQuantityRequestBuilder(string rawUrl, IRequestAdapter requestAdapter) : base(requestAdapter, "{+baseurl}/api/v2/internal/inventory/{productId}/decrease-stock-quantity", rawUrl)
         {
         }
-        /// <returns>A List&lt;global::EcommerceDDD.ServiceClients.InventoryManagement.Models.InventoryStockUnitViewModel&gt;</returns>
+        /// <returns>A <see cref="Stream"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
@@ -44,15 +44,15 @@ namespace EcommerceDDD.ServiceClients.InventoryManagement.Api.V2.Inventory.Check
         /// <exception cref="global::EcommerceDDD.ServiceClients.InventoryManagement.Models.ProblemDetails">When receiving a 500 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<List<global::EcommerceDDD.ServiceClients.InventoryManagement.Models.InventoryStockUnitViewModel>?> PostAsync(global::EcommerceDDD.ServiceClients.InventoryManagement.Models.CheckProductsInStockRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<Stream?> PutAsync(global::EcommerceDDD.ServiceClients.InventoryManagement.Models.DecreaseQuantityInStockRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<List<global::EcommerceDDD.ServiceClients.InventoryManagement.Models.InventoryStockUnitViewModel>> PostAsync(global::EcommerceDDD.ServiceClients.InventoryManagement.Models.CheckProductsInStockRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<Stream> PutAsync(global::EcommerceDDD.ServiceClients.InventoryManagement.Models.DecreaseQuantityInStockRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             if(ReferenceEquals(body, null)) throw new ArgumentNullException(nameof(body));
-            var requestInfo = ToPostRequestInformation(body, requestConfiguration);
+            var requestInfo = ToPutRequestInformation(body, requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
                 { "400", global::EcommerceDDD.ServiceClients.InventoryManagement.Models.ProblemDetails.CreateFromDiscriminatorValue },
@@ -61,43 +61,42 @@ namespace EcommerceDDD.ServiceClients.InventoryManagement.Api.V2.Inventory.Check
                 { "422", global::EcommerceDDD.ServiceClients.InventoryManagement.Models.ValidationProblemDetails.CreateFromDiscriminatorValue },
                 { "500", global::EcommerceDDD.ServiceClients.InventoryManagement.Models.ProblemDetails.CreateFromDiscriminatorValue },
             };
-            var collectionResult = await RequestAdapter.SendCollectionAsync<global::EcommerceDDD.ServiceClients.InventoryManagement.Models.InventoryStockUnitViewModel>(requestInfo, global::EcommerceDDD.ServiceClients.InventoryManagement.Models.InventoryStockUnitViewModel.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
-            return collectionResult?.AsList();
+            return await RequestAdapter.SendPrimitiveAsync<Stream>(requestInfo, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPostRequestInformation(global::EcommerceDDD.ServiceClients.InventoryManagement.Models.CheckProductsInStockRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPutRequestInformation(global::EcommerceDDD.ServiceClients.InventoryManagement.Models.DecreaseQuantityInStockRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPostRequestInformation(global::EcommerceDDD.ServiceClients.InventoryManagement.Models.CheckProductsInStockRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPutRequestInformation(global::EcommerceDDD.ServiceClients.InventoryManagement.Models.DecreaseQuantityInStockRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default)
         {
 #endif
             if(ReferenceEquals(body, null)) throw new ArgumentNullException(nameof(body));
-            var requestInfo = new RequestInformation(Method.POST, UrlTemplate, PathParameters);
+            var requestInfo = new RequestInformation(Method.PUT, UrlTemplate, PathParameters);
             requestInfo.Configure(requestConfiguration);
-            requestInfo.Headers.TryAdd("Accept", "text/plain;q=0.9");
+            requestInfo.Headers.TryAdd("Accept", "application/json, text/plain;q=0.9");
             requestInfo.SetContentFromParsable(RequestAdapter, "application/json", body);
             return requestInfo;
         }
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="global::EcommerceDDD.ServiceClients.InventoryManagement.Api.V2.Inventory.CheckStockQuantity.CheckStockQuantityRequestBuilder"/></returns>
+        /// <returns>A <see cref="global::EcommerceDDD.ServiceClients.InventoryManagement.Api.V2.Internal.Inventory.Item.DecreaseStockQuantity.DecreaseStockQuantityRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public global::EcommerceDDD.ServiceClients.InventoryManagement.Api.V2.Inventory.CheckStockQuantity.CheckStockQuantityRequestBuilder WithUrl(string rawUrl)
+        public global::EcommerceDDD.ServiceClients.InventoryManagement.Api.V2.Internal.Inventory.Item.DecreaseStockQuantity.DecreaseStockQuantityRequestBuilder WithUrl(string rawUrl)
         {
-            return new global::EcommerceDDD.ServiceClients.InventoryManagement.Api.V2.Inventory.CheckStockQuantity.CheckStockQuantityRequestBuilder(rawUrl, RequestAdapter);
+            return new global::EcommerceDDD.ServiceClients.InventoryManagement.Api.V2.Internal.Inventory.Item.DecreaseStockQuantity.DecreaseStockQuantityRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Configuration for the request such as headers, query parameters, and middleware options.
         /// </summary>
         [Obsolete("This class is deprecated. Please use the generic RequestConfiguration class generated by the generator.")]
         [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
-        public partial class CheckStockQuantityRequestBuilderPostRequestConfiguration : RequestConfiguration<DefaultQueryParameters>
+        public partial class DecreaseStockQuantityRequestBuilderPutRequestConfiguration : RequestConfiguration<DefaultQueryParameters>
         {
         }
     }
