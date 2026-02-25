@@ -14,7 +14,6 @@ public class OrdersController(
 	/// </summary>
 	/// <returns></returns>
 	[HttpGet]
-	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Policy = Policies.CanRead)]
 	[ProducesResponseType(typeof(IReadOnlyList<OrderViewModel>), StatusCodes.Status200OK)]
 	public async Task<IActionResult> ListCustomerOrders(CancellationToken cancellationToken) =>
@@ -29,7 +28,6 @@ public class OrdersController(
 	/// <param name="orderId"></param>
 	/// <returns></returns>
 	[HttpGet, Route("{orderId:guid}/history")]
-	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Policy = Policies.CanRead)]
 	[ProducesResponseType(typeof(IReadOnlyList<OrderEventHistory>), StatusCodes.Status200OK)]
 	public async Task<IActionResult> ListHistory([FromRoute] Guid orderId,
@@ -46,7 +44,6 @@ public class OrdersController(
 	/// <param name="cancellationToken"></param>
 	/// <returns></returns>
 	[HttpPost, Route("quote/{quoteId:guid}")]
-	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Policy = Policies.CanWrite)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	public async Task<IActionResult> PlaceOrderFromQuote([FromRoute] Guid quoteId,

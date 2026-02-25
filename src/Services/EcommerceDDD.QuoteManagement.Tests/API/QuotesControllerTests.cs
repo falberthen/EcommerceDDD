@@ -4,8 +4,8 @@ public class QuotesControllerTests
 {
 	public QuotesControllerTests()
 	{
-		_quotesController = new QuotesController(
-			_commandBus, _queryBus);
+		_quotesController = new QuotesController(_commandBus, _queryBus);
+		_quotesInternalController = new QuotesInternalController(_commandBus, _queryBus);
 	}
 
 	[Fact]
@@ -122,6 +122,7 @@ public class QuotesControllerTests
 		Assert.IsType<OkResult>(response);
 	}
 
+	#region INTERNAL
 	[Fact]
 	public async Task ConfirmQuote_WithQuoteId_and_CurrencyCode_ShouldConfirmQuote()
 	{
@@ -132,14 +133,16 @@ public class QuotesControllerTests
 			.Returns(Result.Ok());
 
 		// When
-		var response = await _quotesController.Confirm(quoteId,
+		var response = await _quotesInternalController.Confirm(quoteId,
 			CancellationToken.None);
 
 		// Then
 		Assert.IsType<OkResult>(response);
 	}
+	#endregion
 
 	private ICommandBus _commandBus = Substitute.For<ICommandBus>();
 	private IQueryBus _queryBus = Substitute.For<IQueryBus>();
 	private QuotesController _quotesController;
+	private QuotesInternalController _quotesInternalController;
 }

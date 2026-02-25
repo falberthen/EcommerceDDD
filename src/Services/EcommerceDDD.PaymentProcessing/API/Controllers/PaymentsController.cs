@@ -3,14 +3,13 @@ namespace EcommerceDDD.PaymentProcessing.API.Controllers;
 [Authorize(Roles = Roles.M2MAccess)]
 [ApiController]
 [ApiVersion(ApiVersions.V2)]
-[Route("api/v{version:apiVersion}/payments")]
+[Route("api/v{version:apiVersion}/internal/payments")]
 public class PaymentsController(
 	ICommandBus commandBus,
 	IQueryBus queryBus
 ) : CustomControllerBase(commandBus, queryBus)
 {
 	[HttpPost]
-	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Policy = Policies.CanWrite)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	public async Task<IActionResult> RequestCreate([FromBody] PaymentRequest request,
@@ -31,7 +30,6 @@ public class PaymentsController(
 		);
 
 	[HttpDelete("{paymentId:guid}")]
-	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Policy = Policies.CanDelete)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	public async Task<IActionResult> Cancel([FromRoute] Guid paymentId, [FromBody] CancelPaymentRequest request,

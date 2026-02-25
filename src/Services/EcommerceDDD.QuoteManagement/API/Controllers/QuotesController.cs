@@ -14,7 +14,6 @@ public class QuotesController(
 	/// </summary>
 	/// <returns></returns>
 	[HttpGet]
-	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanRead)]
 	[ProducesResponseType(typeof(QuoteViewModel), StatusCodes.Status200OK)]
 	public async Task<IActionResult> GetOpenQuote(CancellationToken cancellationToken) =>
@@ -28,7 +27,6 @@ public class QuotesController(
 	/// <param name="request"></param>
 	/// <returns></returns>
 	[HttpPost]
-	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanWrite)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	public async Task<IActionResult> OpenQuoteForCustomer([FromBody] OpenQuoteRequest request,
@@ -44,7 +42,6 @@ public class QuotesController(
 	/// <param name="quoteId"></param>
 	/// <returns></returns>
 	[HttpGet, Route("{quoteId:guid}/history")]
-	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanRead)]
 	[ProducesResponseType(typeof(IReadOnlyList<QuoteEventHistory>), StatusCodes.Status200OK)]
 	public async Task<IActionResult> ListHistory([FromRoute] Guid quoteId,
@@ -61,7 +58,6 @@ public class QuotesController(
 	/// <param name="request"></param>
 	/// <returns></returns>
 	[HttpPut, Route("{quoteId:guid}/items")]
-	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanWrite)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	public async Task<IActionResult> AddItem([FromRoute] Guid quoteId,
@@ -81,7 +77,6 @@ public class QuotesController(
 	/// <param name="productId"></param>
 	/// <returns></returns>
 	[HttpDelete, Route("{quoteId:guid}/items/{productId:guid}")]
-	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanDelete)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	public async Task<IActionResult> RemoveItem([FromRoute] Guid quoteId, [FromRoute] Guid productId,
@@ -97,7 +92,6 @@ public class QuotesController(
 	/// <param name="quoteId"></param>
 	/// <returns></returns>
 	[HttpDelete, Route("{quoteId:guid}")]
-	[MapToApiVersion(ApiVersions.V2)]
 	[Authorize(Roles = Roles.Customer, Policy = Policies.CanDelete)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	public async Task<IActionResult> Cancel([FromRoute] Guid quoteId,
@@ -107,34 +101,4 @@ public class QuotesController(
 			cancellationToken
 		);
 
-	/// <summary>
-	/// Confirms a quote | M2M only
-	/// </summary>
-	/// <param name="quoteId"></param>
-	/// <returns></returns>
-	[HttpPut, Route("{quoteId:guid}/confirm")]
-	[MapToApiVersion(ApiVersions.V2)]
-	[Authorize(Roles = Roles.M2MAccess, Policy = Policies.CanWrite)]
-	[ProducesResponseType(StatusCodes.Status200OK)]
-	public async Task<IActionResult> Confirm([FromRoute] Guid quoteId,
-		CancellationToken cancellationToken) =>
-		await Response(
-			ConfirmQuote.Create(QuoteId.Of(quoteId)),
-			cancellationToken
-		);
-
-	/// <summary>
-	/// Get a quote by quoteId | M2M only
-	/// </summary>
-	/// <returns></returns>
-	[HttpGet, Route("{quoteId:guid?}/details")]
-	[MapToApiVersion(ApiVersions.V2)]
-	[Authorize(Roles = Roles.M2MAccess, Policy = Policies.CanRead)]
-	[ProducesResponseType(typeof(QuoteViewModel), StatusCodes.Status200OK)]
-	public async Task<IActionResult> GetQuoteDetails([FromRoute] Guid quoteId,
-		CancellationToken cancellationToken) =>
-		await Response(
-			GetQuoteById.Create(QuoteId.Of(quoteId)),
-			cancellationToken
-		);
 }
