@@ -1,28 +1,24 @@
 namespace EcommerceDDD.OrderProcessing.Application.Payments.CancelingPayment;
 
 public class RequestCancelPaymentHandler(
-	PaymentProcessingClient paymentProcessingClient
+	IPaymentService paymentService
 ) : ICommandHandler<RequestCancelPayment>
 {
-	private readonly PaymentProcessingClient _paymentProcessingClient = paymentProcessingClient
-		?? throw new ArgumentNullException(nameof(paymentProcessingClient));
+	private readonly IPaymentService _paymentService = paymentService
+		?? throw new ArgumentNullException(nameof(paymentService));
 
 	public async Task<Result> HandleAsync(RequestCancelPayment command, CancellationToken cancellationToken)
 	{
-		var cancelRequest = new CancelPaymentRequest()
-		{
-			PaymentCancellationReason = (int)command.PaymentCancellationReason
-		};
-
 		try
 		{
-			var paymentsRequestBuilder = _paymentProcessingClient.Api.V2.Internal.Payments[command.PaymentId.Value];
-			await paymentsRequestBuilder
-				.DeleteAsync(cancelRequest, cancellationToken: cancellationToken);
+			await _paymentService.CancelPaymentAsync(
+				command.PaymentId.Value,
+				(int)command.PaymentCancellationReason,
+				cancellationToken);
 
 			return Result.Ok();
 		}
-		catch (Microsoft.Kiota.Abstractions.ApiException)
+		catch (Exception)
 		{
 			return Result.Fail($"An error occurred requesting cancelling payment {command.PaymentId.Value}.");
 		}

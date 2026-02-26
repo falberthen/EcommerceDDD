@@ -16,16 +16,10 @@ public class CancelOrderHandlerTests
 		await orderWriteRepository
 			.AppendEventsAsync(order);
 
-		// mocked kiota request
-		var signalrClient = new SignalRClient(_requestAdapter);
-		_requestAdapter.SendPrimitiveAsync<string>(
-			Arg.Any<RequestInformation>(),
-			Arg.Any<Dictionary<string, ParsableFactory<IParsable>>>(),
-			Arg.Any<CancellationToken>())
-			.Returns("Success");
+		var orderNotificationService = Substitute.For<IOrderNotificationService>();
 
 		var cancelOrder = CancelOrder.Create(order.Id, OrderCancellationReason.CanceledByCustomer);
-		var cancelOrderHandler = new CancelOrderHandler(signalrClient, orderWriteRepository);
+		var cancelOrderHandler = new CancelOrderHandler(orderNotificationService, orderWriteRepository);
 
 		// When
 		await cancelOrderHandler.HandleAsync(cancelOrder, CancellationToken.None);
@@ -38,5 +32,4 @@ public class CancelOrderHandlerTests
 		Assert.Equal(OrderStatus.Canceled, canceledOrder.Status);
 	}
 
-	private IRequestAdapter _requestAdapter = Substitute.For<IRequestAdapter>();
 }

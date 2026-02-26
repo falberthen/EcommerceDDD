@@ -10,11 +10,11 @@ services.AddCoreInfrastructure(builder.Configuration);
 services.AddHandlersFromType(typeof(OrderSaga));
 services.AddHealthChecks();
 
-// Kiota clients
-services.AddKiotaClient<PaymentProcessingClient>(builder.Configuration["Services:PaymentProcessing"]);
-services.AddKiotaClient<ShipmentProcessingClient>(builder.Configuration["Services:ShipmentProcessing"]);
-services.AddKiotaClient<QuoteManagementClient>(builder.Configuration["Services:QuoteManagement"]);
-services.AddKiotaClient<SignalRClient>(builder.Configuration["Services:SignalRClient"]);
+// Service clients
+services.AddPaymentServiceClient(builder.Configuration);
+services.AddShipmentServiceClient(builder.Configuration);
+services.AddQuoteServiceClient(builder.Configuration);
+services.AddOrderNotificationServiceClient(builder.Configuration);
 
 // Services
 services.AddScoped<IEventStoreRepository<Order>, MartenRepository<Order>>();

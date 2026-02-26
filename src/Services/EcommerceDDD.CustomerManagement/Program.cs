@@ -10,10 +10,8 @@ services.AddCoreInfrastructure(builder.Configuration);
 services.AddHandlersFromType(typeof(RegisterCustomerHandler));
 services.AddHealthChecks();
 
-// Kiota client
-services.AddKiotaClient<IdentityServerClient>(
-	builder.Configuration["Services:IdentityServer"]
-);
+// Service clients
+services.AddIdentityServiceClient(builder.Configuration);
 
 // Services
 services.AddScoped<IEmailUniquenessChecker, EmailUniquenessChecker>();

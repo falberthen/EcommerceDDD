@@ -11,10 +11,8 @@ services.AddCoreInfrastructure(builder.Configuration);
 services.AddHandlersFromType(typeof(OpenQuoteHandler));
 services.AddHealthChecks();
 
-// Kiota client
-services.AddKiotaClient<ProductCatalogClient>(
-	builder.Configuration["Services:ProductCatalog"]
-);
+// Service clients
+services.AddProductCatalogServiceClient(builder.Configuration);
 
 // Services
 services.AddScoped<ICustomerOpenQuoteChecker, CustomerOpenQuoteChecker>();

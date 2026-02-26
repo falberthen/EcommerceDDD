@@ -1,15 +1,15 @@
 namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
 
 public class PlaceOrderHandler(
-	SignalRClient signalrClient,
-	QuoteManagementClient quoteManagementClient,
+	IOrderNotificationService orderNotificationService,
+	IQuoteService quoteService,
 	IEventStoreRepository<Order> orderWriteRepository
 ) : ICommandHandler<PlaceOrder>
 {
-	private readonly SignalRClient _signalrClient = signalrClient
-		?? throw new ArgumentNullException(nameof(signalrClient));
-	private readonly QuoteManagementClient _quoteManagementClient = quoteManagementClient
-		?? throw new ArgumentNullException(nameof(quoteManagementClient));
+	private readonly IOrderNotificationService _orderNotificationService = orderNotificationService
+		?? throw new ArgumentNullException(nameof(orderNotificationService));
+	private readonly IQuoteService _quoteService = quoteService
+		?? throw new ArgumentNullException(nameof(quoteService));
 	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository
 		?? throw new ArgumentNullException(nameof(orderWriteRepository));
 
@@ -53,18 +53,14 @@ public class PlaceOrderHandler(
 
 		try
 		{
-			var request = new UpdateOrderStatusRequest()
-			{
-				CustomerId = order.CustomerId.Value,
-				OrderId = order.Id.Value,
-				OrderStatusText = order.Status.ToString(),
-				OrderStatusCode = (int)order.Status
-			};
-
-			await _signalrClient.Api.V2.Signalr.Updateorderstatus
-				.PostAsync(request, cancellationToken: cancellationToken);
+			await _orderNotificationService.UpdateOrderStatusAsync(
+				order.CustomerId.Value,
+				order.Id.Value,
+				order.Status.ToString(),
+				(int)order.Status,
+				cancellationToken);
 		}
-		catch (Microsoft.Kiota.Abstractions.ApiException)
+		catch (Exception)
 		{
 			return Result.Fail($"An error occurred when updating status for order {order.Id.Value}.");
 		}
@@ -76,9 +72,8 @@ public class PlaceOrderHandler(
 	{
 		try
 		{
-			var quoteRequestBuilder = _quoteManagementClient.Api.V2.Internal.Quotes[command.QuoteId.Value];
-			var response = await quoteRequestBuilder.Details
-				.GetAsync(cancellationToken: cancellationToken);
+			var response = await _quoteService
+				.GetQuoteDetailsAsync(command.QuoteId.Value, cancellationToken);
 
 			if (response is null)
 				return Result.Fail<QuoteViewModel>(
@@ -86,7 +81,7 @@ public class PlaceOrderHandler(
 
 			return Result.Ok(response);
 		}
-		catch (Microsoft.Kiota.Abstractions.ApiException)
+		catch (Exception)
 		{
 			return Result.Fail<QuoteViewModel>(
 				$"An error occurred when getting quote {command.QuoteId.Value}.");
@@ -97,13 +92,10 @@ public class PlaceOrderHandler(
 	{
 		try
 		{
-			var quoteRequestBuilder = _quoteManagementClient.Api.V2.Internal.Quotes[quoteId];
-			await quoteRequestBuilder.Confirm
-				.PutAsync(cancellationToken: cancellationToken);
-
+			await _quoteService.ConfirmQuoteAsync(quoteId, cancellationToken);
 			return Result.Ok();
 		}
-		catch (Microsoft.Kiota.Abstractions.ApiException)
+		catch (Exception)
 		{
 			return Result.Fail($"An error occurred when confirming quote {quoteId}.");
 		}

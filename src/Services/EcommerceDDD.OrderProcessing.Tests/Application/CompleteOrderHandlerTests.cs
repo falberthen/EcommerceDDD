@@ -36,16 +36,10 @@ public class CompleteOrderHandlerTests
 		await orderWriteRepository
 			.AppendEventsAsync(order);
 
-		// mocked kiota request
-		var signalrClient = new SignalRClient(_requestAdapter);
-		_requestAdapter.SendPrimitiveAsync<string>(
-			Arg.Any<RequestInformation>(),
-			Arg.Any<Dictionary<string, ParsableFactory<IParsable>>>(),
-			Arg.Any<CancellationToken>())
-			.Returns("Success");
+		var orderNotificationService = Substitute.For<IOrderNotificationService>();
 
 		var completeOrder = CompleteOrder.Create(order.Id, shipmentId);
-		var completeOrderHandler = new CompleteOrderHandler(signalrClient, orderWriteRepository);
+		var completeOrderHandler = new CompleteOrderHandler(orderNotificationService, orderWriteRepository);
 
 		// When
 		await completeOrderHandler.HandleAsync(completeOrder, CancellationToken.None);
@@ -62,5 +56,4 @@ public class CompleteOrderHandlerTests
 		Assert.Equal(OrderStatus.Completed, completedOrder.Status);
 	}
 
-	private IRequestAdapter _requestAdapter = Substitute.For<IRequestAdapter>();
 }

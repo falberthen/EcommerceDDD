@@ -26,10 +26,8 @@ public class ProcessOrderHandlerTests
 		var order = Order.Place(orderData);
 
 		var orderWriteRepository = new DummyEventStoreRepository<Order>();
-		var adapter = Substitute.For<IRequestAdapter>();
-		var quoteManagementClient = new QuoteManagementClient(adapter);
+		var quoteService = Substitute.For<IQuoteService>();
 
-		// return mocked view model
 		var viewModelResponse = new QuoteViewModel()
 		{
 			QuoteId = quoteId.Value,
@@ -48,19 +46,14 @@ public class ProcessOrderHandlerTests
 			}
 		};
 
-		// mocked kiota request
-		adapter.SendAsync(
-			Arg.Is<RequestInformation>(req => req.PathParameters.Values.Contains(quoteId.Value)),
-			Arg.Any<ParsableFactory<QuoteViewModel>>(),
-			Arg.Any<Dictionary<string, ParsableFactory<IParsable>>>(),
-			Arg.Any<CancellationToken>())
-		.Returns(viewModelResponse);
+		quoteService.GetQuoteDetailsAsync(quoteId.Value, Arg.Any<CancellationToken>())
+			.Returns(viewModelResponse);
 
 		await orderWriteRepository
 			.AppendEventsAsync(order);
 
 		var processOrder = ProcessOrder.Create(customerId, order.Id, quoteId);
-		var processOrderHandler = new ProcessOrderHandler(quoteManagementClient, orderWriteRepository, _eventPublisher);
+		var processOrderHandler = new ProcessOrderHandler(quoteService, orderWriteRepository, _eventPublisher);
 
 		// When
 		await processOrderHandler.HandleAsync(processOrder, CancellationToken.None);

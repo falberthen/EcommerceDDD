@@ -1,17 +1,15 @@
-using ProductItemRequest = EcommerceDDD.ServiceClients.PaymentProcessing.Models.ProductItemRequest;
-
 namespace EcommerceDDD.OrderProcessing.Application.Payments.RequestingPayment;
 
 public class RequestPaymentHandler(
-	SignalRClient signalrClient,
-	PaymentProcessingClient paymentProcessingClient,
+	IOrderNotificationService orderNotificationService,
+	IPaymentService paymentService,
 	IEventStoreRepository<Order> orderWriteRepository
 ) : ICommandHandler<RequestPayment>
 {
-	private readonly SignalRClient _signalrClient = signalrClient
-		?? throw new ArgumentNullException(nameof(signalrClient));
-	private readonly PaymentProcessingClient _paymentProcessingClient = paymentProcessingClient
-		?? throw new ArgumentNullException(nameof(paymentProcessingClient));
+	private readonly IOrderNotificationService _orderNotificationService = orderNotificationService
+		?? throw new ArgumentNullException(nameof(orderNotificationService));
+	private readonly IPaymentService _paymentService = paymentService
+		?? throw new ArgumentNullException(nameof(paymentService));
 	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository
 		?? throw new ArgumentNullException(nameof(orderWriteRepository));
 
@@ -25,33 +23,28 @@ public class RequestPaymentHandler(
 		if (order is null)
 			return Result.Fail($"Failed to find the order {command.OrderId}.");
 
-		var productItemsRequest = order.OrderLines
-			.Select(ol => new ProductItemRequest()
-			{
-				ProductId = ol.ProductItem.ProductId.Value,
-				ProductName = ol.ProductItem.ProductName,
-				Quantity = ol.ProductItem.Quantity,
-				UnitPrice = Convert.ToDouble(ol.ProductItem.UnitPrice.Amount)
-			}).ToList();
+		var productItems = order.OrderLines
+			.Select(ol => new PaymentProductItem(
+				ol.ProductItem.ProductId.Value,
+				ol.ProductItem.ProductName,
+				ol.ProductItem.Quantity,
+				Convert.ToDouble(ol.ProductItem.UnitPrice.Amount)))
+			.ToList();
 
-		var paymentResult = await RequestPaymentAsync(command, productItemsRequest, cancellationToken);
+		var paymentResult = await RequestPaymentAsync(command, productItems, cancellationToken);
 		if (paymentResult.IsFailed)
 			return paymentResult;
 
 		try
 		{
-			var request = new UpdateOrderStatusRequest()
-			{
-				CustomerId = order.CustomerId.Value,
-				OrderId = order.Id.Value,
-				OrderStatusText = order.Status.ToString(),
-				OrderStatusCode = (int)order.Status
-			};
-
-			await _signalrClient.Api.V2.Signalr.Updateorderstatus
-				.PostAsync(request, cancellationToken: cancellationToken);
+			await _orderNotificationService.UpdateOrderStatusAsync(
+				order.CustomerId.Value,
+				order.Id.Value,
+				order.Status.ToString(),
+				(int)order.Status,
+				cancellationToken);
 		}
-		catch (Microsoft.Kiota.Abstractions.ApiException)
+		catch (Exception)
 		{
 			return Result.Fail($"An error occurred when updating status for order {order.Id.Value}.");
 		}
@@ -59,27 +52,22 @@ public class RequestPaymentHandler(
 		return Result.Ok();
 	}
 
-	private async Task<Result> RequestPaymentAsync(RequestPayment command, List<ProductItemRequest> productItemsRequest,
+	private async Task<Result> RequestPaymentAsync(RequestPayment command, List<PaymentProductItem> productItems,
 		CancellationToken cancellationToken)
 	{
 		try
 		{
-			var paymentRequest = new PaymentRequest()
-			{
-				CurrencyCode = command.Currency.Code,
-				CustomerId = command.CustomerId.Value,
-				OrderId = command.OrderId.Value,
-				TotalAmount = Convert.ToDouble(command.TotalPrice.Amount),
-				ProductItems = productItemsRequest
-			};
-
-			var paymentsRequestBuilder = _paymentProcessingClient.Api.V2.Internal.Payments;
-			await paymentsRequestBuilder
-				.PostAsync(paymentRequest, cancellationToken: cancellationToken);
+			await _paymentService.RequestPaymentAsync(
+				command.CustomerId.Value,
+				command.OrderId.Value,
+				command.Currency.Code,
+				Convert.ToDouble(command.TotalPrice.Amount),
+				productItems,
+				cancellationToken);
 
 			return Result.Ok();
 		}
-		catch (Microsoft.Kiota.Abstractions.ApiException)
+		catch (Exception)
 		{
 			return Result.Fail($"An error occurred requesting payment for order {command.OrderId}.");
 		}
