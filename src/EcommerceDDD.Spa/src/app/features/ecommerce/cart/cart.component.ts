@@ -11,10 +11,9 @@ import { NotificationService } from '@core/services/notification.service';
 import { LoaderService } from '@core/services/loader.service';
 import { StoredEventService } from '@shared/services/stored-event.service';
 import { Component, DestroyRef, OnInit, ViewContainerRef, inject, output, viewChild } from '@angular/core';
-import { KiotaClientService } from '@core/services/kiota-client.service';
+import { QuoteApiService } from '@core/services/api/quote-api.service';
+import { OrderApiService } from '@core/services/api/order-api.service';
 import {
-  AddQuoteItemRequest,
-  OpenQuoteRequest,
   ProductViewModel,
   QuoteItemViewModel,
   QuoteViewModel,
@@ -38,7 +37,8 @@ export class CartComponent implements OnInit {
   private quoteNotificationService = inject(QuoteNotificationService);
   private notificationService = inject(NotificationService);
   private storedEventService = inject(StoredEventService);
-  private kiotaClientService = inject(KiotaClientService);
+  private quoteApiService = inject(QuoteApiService);
+  private orderApiService = inject(OrderApiService);
   private destroyed = false;
 
   constructor() {
@@ -86,10 +86,7 @@ export class CartComponent implements OnInit {
     try {
       this.loaderService.setLoading(true);
       const quoteId = this.quote?.quoteId!;
-      const refreshFn = () =>
-        this.kiotaClientService.client.quoteManagement.api.v2.quotes
-          .byQuoteId(quoteId)
-          .history.get();
+      const refreshFn = () => this.quoteApiService.getHistory(quoteId);
 
       await refreshFn().then((result) => {
         if (result) {
@@ -101,7 +98,7 @@ export class CartComponent implements OnInit {
         }
       });
     } catch (error) {
-      this.kiotaClientService.handleError(error);
+      this.quoteApiService.handleError(error);
     } finally {
       this.loaderService.setLoading(false);
     }
@@ -117,16 +114,14 @@ export class CartComponent implements OnInit {
         if (confirmed) {
           try {
             this.loaderService.setLoading(true);
-            await this.kiotaClientService.client.quoteManagement.api.v2.quotes
-              .byQuoteId(this.quote?.quoteId!)
-              .delete()
+            await this.quoteApiService.cancelQuote(this.quote?.quoteId!)
               .then(async () => {
                 this.reloadProductsEvent.emit();
                 await this.storedEventService.refreshCurrentViewer();
                 await this.getOpenQuote();
               });
           } catch (error) {
-            this.kiotaClientService.handleError(error);
+            this.quoteApiService.handleError(error);
           } finally {
             this.loaderService.setLoading(false);
           }
@@ -137,7 +132,7 @@ export class CartComponent implements OnInit {
   async getOpenQuote() {
     try {
       this.loaderService.setLoading(true);
-      await this.kiotaClientService.client.quoteManagement.api.v2.quotes.get().then((result) => {
+      await this.quoteApiService.getOpenQuote().then((result) => {
         if (result?.quoteId) {
           this.setQuote(result);
           this.emitQuote(result);
@@ -147,25 +142,21 @@ export class CartComponent implements OnInit {
         this.quote = undefined;
       });
     } catch (error) {
-      this.kiotaClientService.handleError(error);
+      this.quoteApiService.handleError(error);
     } finally {
       this.loaderService.setLoading(false);
     }
   }
 
   async createQuote() {
-    const request: OpenQuoteRequest = {
-      currencyCode: this.currentCurrency
-    };
-
     this.loaderService.setLoading(true);
 
     try {
-      await this.kiotaClientService.client.quoteManagement.api.v2.quotes.post(request);
+      await this.quoteApiService.createQuote(this.currentCurrency);
       await this.getOpenQuote();
 
     } catch (error) {
-      this.kiotaClientService.handleError(error);
+      this.quoteApiService.handleError(error);
     } finally {
       this.loaderService.setLoading(false);
     }
@@ -177,23 +168,16 @@ export class CartComponent implements OnInit {
         ? 1
         : Number(product.quantityAddedToCart);
 
-    const request: AddQuoteItemRequest = {
-      productId: product.productId!,
-      quantity: product.quantityAddedToCart
-    };
-
     this.loaderService.setLoading(true);
 
     try {
-      await this.kiotaClientService.client.quoteManagement.api.v2.quotes
-        .byQuoteId(this.quote?.quoteId!)
-        .items.put(request);
+      await this.quoteApiService.addItem(this.quote?.quoteId!, product.productId!, product.quantityAddedToCart);
 
       await this.getOpenQuote();
       await this.storedEventService.refreshCurrentViewer();
 
     } catch (error) {
-      this.kiotaClientService.handleError(error);
+      this.quoteApiService.handleError(error);
     } finally {
       this.loaderService.setLoading(false);
     }
@@ -206,16 +190,13 @@ export class CartComponent implements OnInit {
         if (confirmed) {
           try {
             this.loaderService.setLoading(true);
-            await this.kiotaClientService.client.quoteManagement.api.v2.quotes
-              .byQuoteId(this.quote?.quoteId!)
-              .items.byProductId(quoteItem.productId!)
-              .delete()
+            await this.quoteApiService.removeItem(this.quote?.quoteId!, quoteItem.productId!)
               .then(async () => {
                 await this.getOpenQuote();
                 await this.storedEventService.refreshCurrentViewer();
               });
           } catch (error) {
-            this.kiotaClientService.handleError(error);
+            this.quoteApiService.handleError(error);
           } finally {
             this.loaderService.setLoading(false);
           }
@@ -230,14 +211,12 @@ export class CartComponent implements OnInit {
         if (this.quote && confirmed) {
           try {
             this.loaderService.setLoading(true);
-            await this.kiotaClientService.client.orderProcessing.api.v2.orders.quote
-              .byQuoteId(this.quote.quoteId!)
-              .post();
+            await this.orderApiService.placeOrder(this.quote.quoteId!);
             this.quoteNotificationService.changeQuoteItemsCount(0);
             this.notificationService.showSuccess('Order placed with success.');
             this.router.navigate(['/orders']);
           } catch (error) {
-            this.kiotaClientService.handleError(error);
+            this.orderApiService.handleError(error);
           } finally {
             this.loaderService.setLoading(false);
           }

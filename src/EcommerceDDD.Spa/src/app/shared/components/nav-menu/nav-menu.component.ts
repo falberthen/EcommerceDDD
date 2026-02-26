@@ -13,7 +13,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LOCAL_STORAGE_ENTRIES } from '@features/ecommerce/constants/appConstants';
-import { KiotaClientService } from '@core/services/kiota-client.service';
+import { QuoteApiService } from '@core/services/api/quote-api.service';
+import { CustomerApiService } from '@core/services/api/customer-api.service';
 import { QuoteNotificationService } from '@features/ecommerce/services/quote-notification.service';
 import { CustomerDetails } from 'src/app/clients/models';
 import { CurrencyDropdownComponent } from '@features/ecommerce/currency-dropdown/currency-dropdown.component';
@@ -27,7 +28,8 @@ import { CurrencyDropdownComponent } from '@features/ecommerce/currency-dropdown
 export class NavMenuComponent implements OnInit, OnDestroy {
   private destroyRef = inject(DestroyRef);
   private authService = inject(AuthService);
-  private kiotaClientService = inject(KiotaClientService);
+  private quoteApiService = inject(QuoteApiService);
+  private customerApiService = inject(CustomerApiService);
   private tokenStorageService = inject(TokenStorageService);
   private localStorageService = inject(LocalStorageService);
   private quoteNotificationService = inject(QuoteNotificationService);
@@ -74,7 +76,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
 
   private async loadQuoteFromServer() {
     try {
-      const result = await this.kiotaClientService.client.quoteManagement.api.v2.quotes.get();
+      const result = await this.quoteApiService.getOpenQuote();
       if (result?.quoteId) {
         const count = result.items?.length ?? 0;
         this.quoteItemsCount = count;
@@ -112,8 +114,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
 
   private async loadCustomerDetails(): Promise<void> {
     try {
-      await this.kiotaClientService.client.customerManagement.api.v2.customers.details
-        .get()
+      await this.customerApiService.getCustomerDetails()
         .then((result) => {
           if (result) {
             this.customer = result;
@@ -121,7 +122,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
           }
         });
     } catch (error) {
-      this.kiotaClientService.handleError(error);
+      this.customerApiService.handleError(error);
     }
   }
 }

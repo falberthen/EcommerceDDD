@@ -8,14 +8,14 @@ import {
   LOCAL_STORAGE_ENTRIES,
   ROUTE_PATHS,
 } from '@features/ecommerce/constants/appConstants';
-import { KiotaClientService } from './kiota-client.service';
+import { AuthApiService } from './api/auth-api.service';
 import { CustomerDetails, LoginResult } from 'src/app/clients/models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private kiotaClientService = inject(KiotaClientService);
+  private authApiService = inject(AuthApiService);
   private tokenStorageToken = inject(TokenStorageService);
   private localStorageService = inject(LocalStorageService);
   private router = inject(Router);
@@ -57,10 +57,7 @@ export class AuthService {
     let isLogged = false;
     try {
       const result: LoginResult | undefined =
-        await this.kiotaClientService.anonymousClient.api.v2.accounts.login.post({
-          email,
-          password,
-        });
+        await this.authApiService.login(email, password);
       if (result?.accessToken) {
         isLogged = true;
         this.tokenStorageToken.setToken(result.accessToken);
@@ -72,7 +69,7 @@ export class AuthService {
         return isLogged;
       }
     } catch (error) {
-      this.kiotaClientService.handleError(error);
+      this.authApiService.handleError(error);
     }
 
     return isLogged;

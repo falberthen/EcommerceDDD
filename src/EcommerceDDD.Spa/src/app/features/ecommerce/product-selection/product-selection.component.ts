@@ -6,11 +6,10 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CartComponent } from '../cart/cart.component';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { LoaderService } from '@core/services/loader.service';
-import { KiotaClientService } from '@core/services/kiota-client.service';
+import { ProductCatalogApiService } from '@core/services/api/product-catalog-api.service';
 import { SortPipe } from '@core/pipes/sort.pipe';
 import { LoaderSkeletonComponent } from '@shared/components/loader-skeleton/loader-skeleton.component';
 import {
-  GetProductsRequest,
   ProductViewModel,
   QuoteItemViewModel,
   QuoteViewModel,
@@ -27,7 +26,7 @@ import { LOCAL_STORAGE_ENTRIES } from '@features/ecommerce/constants/appConstant
 })
 export class ProductSelectionComponent implements OnInit {
   protected loaderService = inject(LoaderService);
-  private kiotaClientService = inject(KiotaClientService);
+  private productCatalogApiService = inject(ProductCatalogApiService);
   private localStorageService = inject(LocalStorageService);
   private currencyNotificationService = inject(CurrencyNotificationService);
 
@@ -75,14 +74,8 @@ export class ProductSelectionComponent implements OnInit {
 
   async loadProducts() {
     try {
-      const request: GetProductsRequest = {
-        currencyCode: this.currentCurrency,
-        productIds: []
-      };
-
       this.loaderService.setLoading(true);
-      await this.kiotaClientService.client.productCatalog.api.v2.products
-        .post(request)
+      await this.productCatalogApiService.getProducts(this.currentCurrency, [])
         .then((result) => {
           if (result) {
             this.products = result;
@@ -93,7 +86,7 @@ export class ProductSelectionComponent implements OnInit {
           }
         });
     } catch (error) {
-      this.kiotaClientService.handleError(error);
+      this.productCatalogApiService.handleError(error);
     } finally {
       this.loaderService.setLoading(false);
     }
@@ -108,7 +101,7 @@ export class ProductSelectionComponent implements OnInit {
 
       await this.addQuoteItem(product);
     } catch (error) {
-      this.kiotaClientService.handleError(error);
+      this.productCatalogApiService.handleError(error);
     } finally {
       this.loaderService.setLoading(false);
     }

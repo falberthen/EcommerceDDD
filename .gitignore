@@ -348,3 +348,4 @@ healthchecksdb
 /.gitignore
 /src/EcommerceDDD.Spa/.vscode/settings.json
 /.claude/settings.local.json
+/src/.claude/settings.local.json

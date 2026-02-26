@@ -9,7 +9,7 @@ import { Component, OnInit, ViewContainerRef, inject, viewChild } from '@angular
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { LOCAL_STORAGE_ENTRIES } from '@features/ecommerce/constants/appConstants';
-import { KiotaClientService } from '@core/services/kiota-client.service';
+import { CustomerApiService } from '@core/services/api/customer-api.service';
 import { CustomerDetails, UpdateCustomerRequest } from 'src/app/clients/models';
 import { LoaderSkeletonComponent } from '@shared/components/loader-skeleton/loader-skeleton.component';
 
@@ -26,7 +26,7 @@ export class CustomerDetailsComponent implements OnInit {
   private notificationService = inject(NotificationService);
   private localStorageService = inject(LocalStorageService);
   private storedEventService = inject(StoredEventService);
-  private kiotaClientService = inject(KiotaClientService);
+  private customerApiService = inject(CustomerApiService);
 
   readonly storedEventViewerContainer = viewChild.required('storedEventViewerContainer', { read: ViewContainerRef });
 
@@ -67,15 +67,13 @@ export class CustomerDetailsComponent implements OnInit {
 
     try {
       this.loaderService.setLoading(true);
-      await this.kiotaClientService.client.customerManagement.api.v2.customers.update.put(
-        customerUpdate
-      );
+      await this.customerApiService.updateCustomer(customerUpdate);
 
       this.notificationService.showSuccess('Customer successfully updated!');
       await this.loadCustomerDetails();
       await this.storedEventService.refreshCurrentViewer();
     } catch (error) {
-      this.kiotaClientService.handleError(error);
+      this.customerApiService.handleError(error);
     } finally {
       this.loaderService.setLoading(false);
     }
@@ -84,8 +82,7 @@ export class CustomerDetailsComponent implements OnInit {
   async showCustomerStoredEvents() {
     try {
       this.loaderService.setLoading(true);
-      const refreshFn = () =>
-        this.kiotaClientService.client.customerManagement.api.v2.customers.history.get();
+      const refreshFn = () => this.customerApiService.getHistory();
 
       await refreshFn().then((result) => {
         if (result) {
@@ -97,7 +94,7 @@ export class CustomerDetailsComponent implements OnInit {
         }
       });
     } catch (error) {
-      this.kiotaClientService.handleError(error);
+      this.customerApiService.handleError(error);
     } finally {
       this.loaderService.setLoading(false);
     }
@@ -113,8 +110,7 @@ export class CustomerDetailsComponent implements OnInit {
   private async loadCustomerDetails() {
     try {
       this.loaderService.setLoading(true);
-      await this.kiotaClientService.client.customerManagement.api.v2.customers.details
-        .get()
+      await this.customerApiService.getCustomerDetails()
         .then((result) => {
           if (result) {
             this.customer = result;
@@ -122,7 +118,7 @@ export class CustomerDetailsComponent implements OnInit {
           }
         });
     } catch (error) {
-      this.kiotaClientService.handleError(error);
+      this.customerApiService.handleError(error);
     } finally {
       this.loaderService.setLoading(false);
     }
