@@ -1,13 +1,13 @@
 namespace EcommerceDDD.OrderProcessing.Application.Orders.GettingOrders;
 
 public class GetOrdersHandler(
-	QuoteManagementClient quoteManagementClient,
+	IQuoteService quoteService,
 	IQuerySession querySession,
 	IUserInfoRequester userInfoRequester
 ) : IQueryHandler<GetOrders, IReadOnlyList<OrderViewModel>>
 {
-	private readonly QuoteManagementClient _quoteManagementClient = quoteManagementClient
-		?? throw new ArgumentNullException(nameof(quoteManagementClient));
+	private readonly IQuoteService _quoteService = quoteService
+		?? throw new ArgumentNullException(nameof(quoteService));
 	private readonly IQuerySession _querySession = querySession
 		?? throw new ArgumentNullException(nameof(querySession));
 	private readonly IUserInfoRequester _userInfoRequester = userInfoRequester
@@ -95,9 +95,8 @@ public class GetOrdersHandler(
 	{
 		try
 		{
-			var quoteRequestBuilder = _quoteManagementClient.Api.V2.Internal.Quotes[orderDetails.QuoteId];
-			var response = await quoteRequestBuilder.Details
-				.GetAsync(cancellationToken: cancellationToken);
+			var response = await _quoteService
+				.GetQuoteDetailsAsync(orderDetails.QuoteId, cancellationToken);
 
 			if (response is null)
 				return Result.Fail<QuoteViewModel>(
@@ -105,7 +104,7 @@ public class GetOrdersHandler(
 
 			return Result.Ok(response);
 		}
-		catch (Microsoft.Kiota.Abstractions.ApiException)
+		catch (Exception)
 		{
 			return Result.Fail<QuoteViewModel>(
 				$"An error occurred when getting quote {orderDetails.QuoteId} for order {orderDetails.Id}.");

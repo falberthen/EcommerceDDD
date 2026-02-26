@@ -7,7 +7,7 @@ import { SignalrService } from '@core/services/signalr.service';
 import { StoredEventService } from '@shared/services/stored-event.service';
 import { ORDER_STATUS_CODES, SIGNALR } from '@features/ecommerce/constants/appConstants';
 import { LoaderService } from '@core/services/loader.service';
-import { KiotaClientService } from '@core/services/kiota-client.service';
+import { OrderApiService } from '@core/services/api/order-api.service';
 import { SortPipe } from '@core/pipes/sort.pipe';
 import { LoaderSkeletonComponent } from '@shared/components/loader-skeleton/loader-skeleton.component';
 import { OrderViewModel } from 'src/app/clients/models';
@@ -20,7 +20,7 @@ import { OrderViewModel } from 'src/app/clients/models';
   imports: [FontAwesomeModule, SortPipe, LoaderSkeletonComponent, DatePipe, NgClass],
 })
 export class OrdersComponent implements OnInit {
-  private kiotaClientService = inject(KiotaClientService);
+  private orderApiService = inject(OrderApiService);
   private authService = inject(AuthService);
   private signalrService = inject(SignalrService);
   private storedEventService = inject(StoredEventService);
@@ -55,10 +55,7 @@ export class OrdersComponent implements OnInit {
 
   async showOrderStoredEvents(orderId: string) {
     try {
-      const refreshFn = () =>
-        this.kiotaClientService.client.orderProcessing.api.v2.orders
-          .byOrderId(orderId)
-          .history.get();
+      const refreshFn = () => this.orderApiService.getOrderHistory(orderId);
 
       await refreshFn().then((result) => {
         if (result) {
@@ -70,19 +67,19 @@ export class OrdersComponent implements OnInit {
         }
       });
     } catch (error) {
-      this.kiotaClientService.handleError(error);
+      this.orderApiService.handleError(error);
     }
   }
 
   async loadOrders() {
     try {
-      await this.kiotaClientService.client.orderProcessing.api.v2.orders.get().then((result) => {
+      await this.orderApiService.getOrders().then((result) => {
         if (result) {
           this.orders = result;
         }
       });
     } catch (error) {
-      this.kiotaClientService.handleError(error);
+      this.orderApiService.handleError(error);
     }
   }
 

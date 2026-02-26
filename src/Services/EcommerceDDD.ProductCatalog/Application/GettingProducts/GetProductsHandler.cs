@@ -1,12 +1,12 @@
 namespace EcommerceDDD.ProductCatalog.Application.GettingProducts;
 
 public class GetProductsHandler(
-	InventoryManagementClient inventoryManagementClient,
+	IInventoryService inventoryService,
 	IProducts productsRepository,
 	ICurrencyConverter currencyConverter
 ) : IQueryHandler<GetProducts, IList<ProductViewModel>>
 {
-	private readonly InventoryManagementClient _inventoryManagementClient = inventoryManagementClient;
+	private readonly IInventoryService _inventoryService = inventoryService;
 	private readonly IProducts _productsRepository = productsRepository;
 	private readonly ICurrencyConverter _currencyConverter = currencyConverter;
 
@@ -60,13 +60,8 @@ public class GetProductsHandler(
 	{
 		try
 		{
-			var request = new CheckProductsInStockRequest()
-			{
-				ProductIds = productIds
-			};
-			var inventoryRequestBuilder = _inventoryManagementClient.Api.V2.Internal.Inventory;
-			var response = await inventoryRequestBuilder.CheckStockQuantity
-				.PostAsync(request, cancellationToken: cancellationToken);
+			var response = await _inventoryService
+				.CheckStockQuantityAsync(productIds, cancellationToken);
 
 			return response ?? new List<InventoryStockUnitViewModel>();
 		}

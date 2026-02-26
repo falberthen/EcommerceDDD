@@ -1,13 +1,13 @@
 namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
 
 public class ProcessOrderHandler(
-	QuoteManagementClient quoteManagementClient,
+	IQuoteService quoteService,
 	IEventStoreRepository<Order> orderWriteRepository,
 	IEventBus eventPublisher
 ) : ICommandHandler<ProcessOrder>
 {
-	private readonly QuoteManagementClient _quoteManagementClient = quoteManagementClient
-		?? throw new ArgumentNullException(nameof(quoteManagementClient));
+	private readonly IQuoteService _quoteService = quoteService
+		?? throw new ArgumentNullException(nameof(quoteService));
 	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository
 		?? throw new ArgumentNullException(nameof(orderWriteRepository));
 	private readonly IEventBus _eventPublisher = eventPublisher
@@ -66,9 +66,8 @@ public class ProcessOrderHandler(
 	{
 		try
 		{
-			var quoteRequestBuilder = _quoteManagementClient.Api.V2.Internal.Quotes[command.QuoteId.Value];
-			var response = await quoteRequestBuilder
-				.Details.GetAsync(cancellationToken: cancellationToken);
+			var response = await _quoteService
+				.GetQuoteDetailsAsync(command.QuoteId.Value, cancellationToken);
 
 			if (response is null)
 				return Result.Fail<QuoteViewModel>(
@@ -76,7 +75,7 @@ public class ProcessOrderHandler(
 
 			return Result.Ok(response);
 		}
-		catch (Microsoft.Kiota.Abstractions.ApiException)
+		catch (Exception)
 		{
 			return Result.Fail<QuoteViewModel>(
 				$"An error occurred processing order {command.OrderId}.");

@@ -1,8 +1,8 @@
 namespace EcommerceDDD.PaymentProcessing.Application.ProcessingPayment;
 
-public class CustomerCreditChecker(CustomerManagementClient customerManagementClient) : ICustomerCreditChecker
+public class CustomerCreditChecker(ICustomerManagementService customerManagementService) : ICustomerCreditChecker
 {
-	private readonly CustomerManagementClient _customerManagementClient = customerManagementClient;
+	private readonly ICustomerManagementService _customerManagementService = customerManagementService;
 
 	public async Task<bool> CheckIfCreditIsEnoughAsync(CustomerId customerId, Money totalAmount,
 		CancellationToken cancellationToken)
@@ -10,14 +10,13 @@ public class CustomerCreditChecker(CustomerManagementClient customerManagementCl
 		try
 		{
 			// Checking customer's credit
-			var customerRequestBuilder = _customerManagementClient.Api.V2.Internal.Customers[customerId.Value];
-			var response = await customerRequestBuilder
-				.Credit.GetAsync(cancellationToken: cancellationToken);
+			var creditLimit = await _customerManagementService
+				.GetCustomerCreditLimitAsync(customerId.Value, cancellationToken);
 
-			if (response is null)
+			if (creditLimit is null)
 				return false;
 
-			return totalAmount.Amount < Convert.ToDecimal(response.CreditLimit);
+			return totalAmount.Amount < creditLimit.Value;
 		}
 		catch (Exception)
 		{

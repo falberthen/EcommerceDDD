@@ -1,13 +1,13 @@
 namespace EcommerceDDD.CustomerManagement.Application.RegisteringCustomer;
 
 public class RegisterCustomerHandler(
-	IdentityServerClient identityServerClient,
+	IIdentityService identityService,
 	IEmailUniquenessChecker uniquenessChecker,
 	IEventStoreRepository<Customer> customerWriteRepository
 ) : ICommandHandler<RegisterCustomer>
 {
-	private readonly IdentityServerClient _identityServerClient = identityServerClient
-		?? throw new ArgumentNullException(nameof(_identityServerClient));
+	private readonly IIdentityService _identityService = identityService
+		?? throw new ArgumentNullException(nameof(identityService));
 	private readonly IEmailUniquenessChecker _uniquenessChecker = uniquenessChecker
 		?? throw new ArgumentNullException(nameof(uniquenessChecker));
 	private readonly IEventStoreRepository<Customer> _customerWriteRepository = customerWriteRepository
@@ -42,21 +42,16 @@ public class RegisterCustomerHandler(
 	{
 		try
 		{
-			var request = new RegisterUserRequest()
-			{
-				CustomerId = customerId.Value,
-				Email = command.Email,
-				Password = command.Password,
-				PasswordConfirm = command.PasswordConfirm,
-			};
-
-			var accountRequestBuilder = _identityServerClient.Api.V2.Accounts;
-			await accountRequestBuilder.Register
-				.PostAsync(request, cancellationToken: cancellationToken);
+			await _identityService.RegisterUserAsync(
+				customerId.Value,
+				command.Email,
+				command.Password,
+				command.PasswordConfirm,
+				cancellationToken);
 
 			return Result.Ok();
 		}
-		catch (Microsoft.Kiota.Abstractions.ApiException)
+		catch (Exception)
 		{
 			return Result.Fail("An error occurred while registering the customer.");
 		}

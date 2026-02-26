@@ -1,37 +1,26 @@
 namespace EcommerceDDD.PaymentProcessing.Infrastructure.InventoryHandling;
 
-public class ProductInventoryHandler(InventoryManagementClient inventoryManagementClient) : IProductInventoryHandler
+public class ProductInventoryHandler(IInventoryService inventoryService) : IProductInventoryHandler
 {
-	private readonly InventoryManagementClient _inventoryManagementClient = inventoryManagementClient;
+	private readonly IInventoryService _inventoryService = inventoryService;
 
 	public async Task<bool> CheckProductsInStockAsync(IReadOnlyList<ProductItem> productItems, CancellationToken cancellationToken)
 	{
-		var productIdFilter = productItems
+		var productIds = productItems
 			.Select(p => new Guid?(p.ProductId.Value))
 			.ToList();
 
-		var request = new CheckProductsInStockRequest()
-		{
-			ProductIds = productIdFilter
-		};
-
 		try
 		{
-			var inventoryRequestBuilder = _inventoryManagementClient.Api.V2.Internal.Inventory;
-			var response = await inventoryRequestBuilder
-				.CheckStockQuantity
-				.PostAsync(request, cancellationToken: cancellationToken);
+			var response = await _inventoryService
+				.CheckStockQuantityAsync(productIds, cancellationToken);
 
 			if (response is null)
 				return false;
 
-			var inventoryData = response;
-
 			bool hasOutOfStockItem = productItems.Any(item =>
 			{
-				var stock = inventoryData
-					.SingleOrDefault(p => p.ProductId == item.ProductId.Value);
-
+				var stock = response.SingleOrDefault(p => p.ProductId == item.ProductId.Value);
 				if (stock is null) return true; // treat missing as out of stock
 				return item.Quantity > stock.QuantityInStock;
 			});
@@ -46,18 +35,8 @@ public class ProductInventoryHandler(InventoryManagementClient inventoryManageme
 
 	public async Task DecreaseQuantityInStockAsync(IReadOnlyList<ProductItem> productItems, CancellationToken cancellationToken)
 	{
-		var tasks = productItems.Select(async productItem =>
-		{
-			var request = new DecreaseQuantityInStockRequest
-			{
-				DecreasedQuantity = productItem.Quantity
-			};
-
-			var inventoryRequestBuilder = _inventoryManagementClient.Api.V2.Internal.Inventory[productItem.ProductId.Value];
-			await inventoryRequestBuilder
-				.DecreaseStockQuantity
-				.PutAsync(request, cancellationToken: cancellationToken);
-		});
+		var tasks = productItems.Select(productItem =>
+			_inventoryService.DecreaseStockQuantityAsync(productItem.ProductId.Value, productItem.Quantity, cancellationToken));
 
 		await Task.WhenAll(tasks);
 	}

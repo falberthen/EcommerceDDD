@@ -1,5 +1,3 @@
-using EcommerceDDD.ProductCatalog.Application.GettingProducts;
-
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
@@ -13,10 +11,8 @@ services.AddCoreInfrastructure(builder.Configuration);
 services.AddHandlersFromType(typeof(GetProductsHandler));
 services.AddHealthChecks();
 
-// Kiota client
-services.AddKiotaClient<InventoryManagementClient>(
-	builder.Configuration["Services:InventoryManagement"]
-);
+// Service clients
+services.AddInventoryServiceClient(builder.Configuration);
 
 // Services
 services.AddScoped<IProducts, ProductRepository>();

@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '@core/services/notification.service';
 import { LoaderService } from '@core/services/loader.service';
-import { KiotaClientService } from '@core/services/kiota-client.service';
+import { CustomerApiService } from '@core/services/api/customer-api.service';
 import { RegisterCustomerRequest } from 'src/app/clients/models';
 
 @Component({
@@ -19,7 +19,7 @@ export class CustomerAccountComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   protected loaderService = inject(LoaderService);
-  private kiotaClientService = inject(KiotaClientService);
+  private customerApiService = inject(CustomerApiService);
   private notificationService = inject(NotificationService);
 
   accountForm!: FormGroup;
@@ -61,13 +61,11 @@ export class CustomerAccountComponent implements OnInit {
     };
 
     try {
-      await this.kiotaClientService.client.customerManagement.api.v2.customers.post(
-        customerRegistration
-      );
+      await this.customerApiService.registerCustomer(customerRegistration);
       this.notificationService.showSuccess('Account successfully created!');
       this.router.navigate([this.returnUrl]);
     } catch (error) {
-      this.kiotaClientService.handleError(error);
+      this.customerApiService.handleError(error);
     } finally {
       this.loaderService.setLoading(false);
     }

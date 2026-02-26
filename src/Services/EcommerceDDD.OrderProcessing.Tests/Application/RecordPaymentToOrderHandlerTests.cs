@@ -32,17 +32,11 @@ public class RecordPaymentToOrderHandlerTests
 		await orderWriteRepository
 			.AppendEventsAsync(order, CancellationToken.None);
 
-		// mocked kiota request
-		var signalRClient = new SignalRClient(_requestAdapter);
-		_requestAdapter.SendPrimitiveAsync<string>(
-			Arg.Any<RequestInformation>(),
-			Arg.Any<Dictionary<string, ParsableFactory<IParsable>>>(),
-			Arg.Any<CancellationToken>())
-			.Returns("Success");
+		var orderNotificationService = Substitute.For<IOrderNotificationService>();
 
 		var recordPaymentToOrder = RecordPayment.Create(order.Id, paymentId, totalPaid);
 		var recordPaymentToOrderHandler = new RecordPaymentHandler(
-			signalRClient, orderWriteRepository);
+			orderNotificationService, orderWriteRepository);
 
 		// When
 		await recordPaymentToOrderHandler
@@ -57,5 +51,4 @@ public class RecordPaymentToOrderHandlerTests
 		Assert.Equal(OrderStatus.Paid, paidOrder.Status);
 	}
 
-	private IRequestAdapter _requestAdapter = Substitute.For<IRequestAdapter>();
 }

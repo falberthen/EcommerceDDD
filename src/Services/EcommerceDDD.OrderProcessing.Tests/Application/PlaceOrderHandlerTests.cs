@@ -11,10 +11,9 @@ public class PlaceOrderHandlerTests
 		var currency = Currency.OfCode(Currency.USDollar.Code);
 
 		var orderWriteRepository = new DummyEventStoreRepository<Order>();
-		var signalRClient = new SignalRClient(_requestAdapter);
-		var quoteManagementClient = new QuoteManagementClient(_requestAdapter);
+		var orderNotificationService = Substitute.For<IOrderNotificationService>();
+		var quoteService = Substitute.For<IQuoteService>();
 
-		// return mocked view model
 		var viewModelResponse = new QuoteViewModel()
 		{
 			QuoteId = _quoteId.Value,
@@ -33,16 +32,11 @@ public class PlaceOrderHandlerTests
 			}
 		};
 
-		// mocked kiota request
-		_requestAdapter.SendAsync(
-			Arg.Is<RequestInformation>(req => req.PathParameters.Values.Contains(_quoteId.Value)),
-			Arg.Any<ParsableFactory<QuoteViewModel>>(),
-			Arg.Any<Dictionary<string, ParsableFactory<IParsable>>>(),
-			Arg.Any<CancellationToken>())
-		.Returns(viewModelResponse);
+		quoteService.GetQuoteDetailsAsync(_quoteId.Value, Arg.Any<CancellationToken>())
+			.Returns(viewModelResponse);
 
 		var placeOrder = PlaceOrder.Create(_quoteId);
-		var placeOrderHandler = new PlaceOrderHandler(signalRClient, quoteManagementClient, orderWriteRepository);
+		var placeOrderHandler = new PlaceOrderHandler(orderNotificationService, quoteService, orderWriteRepository);
 
 		// When
 		await placeOrderHandler.HandleAsync(placeOrder, CancellationToken.None);
@@ -60,11 +54,14 @@ public class PlaceOrderHandlerTests
 	{
 		// Given
 		var orderWriteRepository = new DummyEventStoreRepository<Order>();
-		var signalRClient = new SignalRClient(_requestAdapter);
-		var quoteManagementClient = new QuoteManagementClient(_requestAdapter);
+		var orderNotificationService = Substitute.For<IOrderNotificationService>();
+		var quoteService = Substitute.For<IQuoteService>();
+
+		quoteService.GetQuoteDetailsAsync(_quoteId.Value, Arg.Any<CancellationToken>())
+			.Returns(new QuoteViewModel { QuoteId = _quoteId.Value, Items = new List<QuoteItemViewModel>() });
 
 		var placeOrder = PlaceOrder.Create(_quoteId);
-		var placeOrderHandler = new PlaceOrderHandler(signalRClient, quoteManagementClient, orderWriteRepository);
+		var placeOrderHandler = new PlaceOrderHandler(orderNotificationService, quoteService, orderWriteRepository);
 
 		// When
 		var result = await placeOrderHandler.HandleAsync(placeOrder, CancellationToken.None);
@@ -74,5 +71,4 @@ public class PlaceOrderHandlerTests
 	}
 
 	private readonly QuoteId _quoteId = QuoteId.Of(Guid.NewGuid());
-	private IRequestAdapter _requestAdapter = Substitute.For<IRequestAdapter>();
 }

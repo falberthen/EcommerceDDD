@@ -1,12 +1,12 @@
 namespace EcommerceDDD.OrderProcessing.Application.Orders.CancelingOrder;
 
 public class CancelOrderHandler(
-	SignalRClient signalrClient,
+	IOrderNotificationService orderNotificationService,
 	IEventStoreRepository<Order> orderWriteRepository
 ) : ICommandHandler<CancelOrder>
 {
-	private readonly SignalRClient _signalrClient = signalrClient
-		?? throw new ArgumentNullException(nameof(signalrClient));
+	private readonly IOrderNotificationService _orderNotificationService = orderNotificationService
+		?? throw new ArgumentNullException(nameof(orderNotificationService));
 	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository
 		?? throw new ArgumentNullException(nameof(orderWriteRepository));
 
@@ -24,18 +24,14 @@ public class CancelOrderHandler(
 
 		try
 		{
-			var request = new UpdateOrderStatusRequest()
-			{
-				CustomerId = order.CustomerId.Value,
-				OrderId = command.OrderId.Value,
-				OrderStatusText = order.Status.ToString(),
-				OrderStatusCode = (int)order.Status
-			};
-
-			await _signalrClient.Api.V2.Signalr.Updateorderstatus
-				.PostAsync(request, cancellationToken: cancellationToken);
+			await _orderNotificationService.UpdateOrderStatusAsync(
+				order.CustomerId.Value,
+				command.OrderId.Value,
+				order.Status.ToString(),
+				(int)order.Status,
+				cancellationToken);
 		}
-		catch (Microsoft.Kiota.Abstractions.ApiException)
+		catch (Exception)
 		{
 			return Result.Fail($"An error occurred when updating status for order {command.OrderId.Value}.");
 		}

@@ -6,17 +6,15 @@ public class RegisterCustomerHandlerTests
 	public async Task Register_WithCommand_ShouldRegisterCustomer()
 	{
 		// Given
-		Guid customerId = Guid.NewGuid();
-
 		_checker.IsUniqueAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
 			.Returns(true);
 
-		var apiClient = new IdentityServerClient(_requestAdapter);
+		var identityService = Substitute.For<IIdentityService>();
 		var confirmation = _password;
 		var registerCommand = RegisterCustomer
 			.Create(_email, _password, confirmation, _name, _streetAddress, _creditLimit);
 		var commandHandler = new RegisterCustomerHandler(
-			apiClient, _checker, _dummyRepository);
+			identityService, _checker, _dummyRepository);
 
 		// When
 		await commandHandler.HandleAsync(registerCommand, CancellationToken.None);
@@ -31,16 +29,16 @@ public class RegisterCustomerHandlerTests
 	[Fact]
 	public async Task Register_WithExistingEmail_ShouldReturnFailure()
 	{
-		// Given       
+		// Given
 		_checker.IsUniqueAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
 			.Returns(false);
 
-		var apiClient = new IdentityServerClient(_requestAdapter);
+		var identityService = Substitute.For<IIdentityService>();
 		var confirmation = _password;
 		var registerCommand = RegisterCustomer
 			.Create(_email, _password, confirmation, _name, _streetAddress, _creditLimit);
 		var commandHandler = new RegisterCustomerHandler(
-			apiClient, _checker, _dummyRepository);
+			identityService, _checker, _dummyRepository);
 
 		// When
 		var result = await commandHandler.HandleAsync(registerCommand, CancellationToken.None);
@@ -55,6 +53,5 @@ public class RegisterCustomerHandlerTests
 	public const string _streetAddress = "Rue XYZ";
 	public const decimal _creditLimit = 1000;
 	private IEmailUniquenessChecker _checker = Substitute.For<IEmailUniquenessChecker>();
-	private IRequestAdapter _requestAdapter = Substitute.For<IRequestAdapter>();
 	private DummyEventStoreRepository<Customer> _dummyRepository = new DummyEventStoreRepository<Customer>();
 }
