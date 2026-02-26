@@ -2,10 +2,10 @@ namespace EcommerceDDD.ServiceClients.Extensions;
 
 public static class KiotaClientExtensions
 {
-	private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(30);
-	private const int RetryCount = 3;
-	private static readonly TimeSpan CircuitBreakerDuration = TimeSpan.FromSeconds(30);
-	private const int CircuitBreakerThreshold = 5;
+	private static readonly TimeSpan _defaultTimeout = TimeSpan.FromSeconds(30);
+	private const int _retryCount = 3;
+	private static readonly TimeSpan _circuitBreakerDuration = TimeSpan.FromSeconds(30);
+	private const int _circuitBreakerThreshold = 5;
 
 	/// <summary>
 	/// Adds a Kiota generated client to the service collection with resilience policies.
@@ -25,7 +25,7 @@ public static class KiotaClientExtensions
 		services.AddHttpClient<TClient>((serviceProvider, client) =>
 		{
 			client.BaseAddress = new Uri(baseUrl);
-			client.Timeout = DefaultTimeout;
+			client.Timeout = _defaultTimeout;
 		})
 		.AddPolicyHandler(GetRetryPolicy())
 		.AddPolicyHandler(GetCircuitBreakerPolicy())
@@ -49,6 +49,90 @@ public static class KiotaClientExtensions
 		return services;
 	}
 
+	public static IServiceCollection AddIdentityServiceClient(this IServiceCollection services, string? baseUrl)
+	{
+		services.AddKiotaClient<IdentityServerClient>(baseUrl);
+		services.AddScoped<IIdentityService, IdentityService>();
+		return services;
+	}
+
+	public static IServiceCollection AddCustomerManagementServiceClient(this IServiceCollection services, string? baseUrl)
+	{
+		services.AddKiotaClient<CustomerManagementClient>(baseUrl);
+		services.AddScoped<ICustomerManagementService, CustomerManagementService>();
+		return services;
+	}
+
+	public static IServiceCollection AddInventoryServiceClient(this IServiceCollection services, string? baseUrl)
+	{
+		services.AddKiotaClient<InventoryManagementClient>(baseUrl);
+		services.AddScoped<IInventoryService, InventoryService>();
+		return services;
+	}
+
+	public static IServiceCollection AddProductCatalogServiceClient(this IServiceCollection services, string? baseUrl)
+	{
+		services.AddKiotaClient<ProductCatalogClient>(baseUrl);
+		services.AddScoped<IProductCatalogService, ProductCatalogService>();
+		return services;
+	}
+
+	public static IServiceCollection AddQuoteServiceClient(this IServiceCollection services, string? baseUrl)
+	{
+		services.AddKiotaClient<QuoteManagementClient>(baseUrl);
+		services.AddScoped<IQuoteService, QuoteService>();
+		return services;
+	}
+
+	public static IServiceCollection AddPaymentServiceClient(this IServiceCollection services, string? baseUrl)
+	{
+		services.AddKiotaClient<PaymentProcessingClient>(baseUrl);
+		services.AddScoped<IPaymentService, PaymentService>();
+		return services;
+	}
+
+	public static IServiceCollection AddShipmentServiceClient(this IServiceCollection services, string? baseUrl)
+	{
+		services.AddKiotaClient<ShipmentProcessingClient>(baseUrl);
+		services.AddScoped<IShipmentService, ShipmentService>();
+		return services;
+	}
+
+	public static IServiceCollection AddOrderNotificationServiceClient(this IServiceCollection services, string? baseUrl)
+	{
+		services.AddKiotaClient<SignalRClient>(baseUrl);
+		services.AddScoped<IOrderNotificationService, OrderNotificationService>();
+		return services;
+	}
+
+	public static IServiceCollection AddIdentityServiceClient(this IServiceCollection services, IConfiguration configuration)
+		=> services.AddIdentityServiceClient(GetOptions(configuration).IdentityServer);
+
+	public static IServiceCollection AddCustomerManagementServiceClient(this IServiceCollection services, IConfiguration configuration)
+		=> services.AddCustomerManagementServiceClient(GetOptions(configuration).CustomerManagement);
+
+	public static IServiceCollection AddInventoryServiceClient(this IServiceCollection services, IConfiguration configuration)
+		=> services.AddInventoryServiceClient(GetOptions(configuration).InventoryManagement);
+
+	public static IServiceCollection AddProductCatalogServiceClient(this IServiceCollection services, IConfiguration configuration)
+		=> services.AddProductCatalogServiceClient(GetOptions(configuration).ProductCatalog);
+
+	public static IServiceCollection AddQuoteServiceClient(this IServiceCollection services, IConfiguration configuration)
+		=> services.AddQuoteServiceClient(GetOptions(configuration).QuoteManagement);
+
+	public static IServiceCollection AddPaymentServiceClient(this IServiceCollection services, IConfiguration configuration)
+		=> services.AddPaymentServiceClient(GetOptions(configuration).PaymentProcessing);
+
+	public static IServiceCollection AddShipmentServiceClient(this IServiceCollection services, IConfiguration configuration)
+		=> services.AddShipmentServiceClient(GetOptions(configuration).ShipmentProcessing);
+
+	public static IServiceCollection AddOrderNotificationServiceClient(this IServiceCollection services, IConfiguration configuration)
+		=> services.AddOrderNotificationServiceClient(GetOptions(configuration).SignalRClient);
+
+	private static ServiceClientsOptions GetOptions(IConfiguration configuration)
+		=> configuration.GetSection(ServiceClientsOptions.SectionName).Get<ServiceClientsOptions>()
+			?? new ServiceClientsOptions();
+
 	/// <summary>
 	/// Gets the retry policy with exponential backoff.
 	/// Retries on transient HTTP errors (5xx, 408, network failures).
@@ -58,7 +142,7 @@ public static class KiotaClientExtensions
 		return HttpPolicyExtensions
 			.HandleTransientHttpError()
 			.WaitAndRetryAsync(
-				RetryCount,
+				_retryCount,
 				retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
 	}
 
@@ -70,8 +154,6 @@ public static class KiotaClientExtensions
 	{
 		return HttpPolicyExtensions
 			.HandleTransientHttpError()
-			.CircuitBreakerAsync(
-				CircuitBreakerThreshold,
-				CircuitBreakerDuration);
+			.CircuitBreakerAsync(_circuitBreakerThreshold, _circuitBreakerDuration);
 	}
 }
