@@ -8,6 +8,7 @@ public class OrderDetailsProjection : SingleStreamProjection<OrderDetails, Guid>
         ProjectEvent<OrderProcessed>((item, @event) => item.Apply(@event));
         ProjectEvent<OrderPaid>((item, @event) => item.Apply(@event));
         ProjectEvent<OrderShipped>((item, @event) => item.Apply(@event));
+        ProjectEvent<OrderDelivered>((item, @event) => item.Apply(@event));
         ProjectEvent<OrderCanceled>((item, @event) => item.Apply(@event));
     }
 }

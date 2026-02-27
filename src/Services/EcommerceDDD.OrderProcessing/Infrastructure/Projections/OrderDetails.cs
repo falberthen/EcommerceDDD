@@ -7,7 +7,7 @@ public class OrderDetails
     public Guid CustomerId { get; set; }
     public Guid PaymentId { get; set; }
     public DateTime CreatedAt { get; set; }
-    public DateTime? CompletedAt { get; set; } = default;
+    public DateTime? DeliveredAt { get; set; } = default;
     public DateTime? ShippedAt { get; set; } = default;
     public DateTime? CanceledAt { get; set; } = default;
     public OrderStatus OrderStatus { get; set; }
@@ -44,10 +44,10 @@ public class OrderDetails
         OrderStatus = OrderStatus.Shipped;
     }
 
-    internal void Apply(OrderCompleted @event)
+    internal void Apply(OrderDelivered @event)
     {
-        CompletedAt = @event.Timestamp;
-        OrderStatus = OrderStatus.Completed;
+        DeliveredAt = @event.Timestamp;
+        OrderStatus = OrderStatus.Delivered;
     }
 
     internal void Apply(OrderCanceled @event)
