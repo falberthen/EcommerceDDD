@@ -52,4 +52,20 @@ public class OrdersController(
 			PlaceOrder.Create(QuoteId.Of(quoteId)),
 			cancellationToken
 		);
+
+	/// <summary>
+	/// Confirms delivery of a shipped order
+	/// </summary>
+	/// <param name="orderId"></param>
+	/// <param name="cancellationToken"></param>
+	/// <returns></returns>
+	[HttpPost, Route("{orderId:guid}/confirm-delivery")]
+	[Authorize(Policy = Policies.CanWrite)]
+	[ProducesResponseType(StatusCodes.Status200OK)]
+	public async Task<IActionResult> ConfirmOrderDelivery([FromRoute] Guid orderId,
+		CancellationToken cancellationToken) =>
+		await Response(
+			ConfirmDelivery.Create(OrderId.Of(orderId)),
+			cancellationToken
+		);
 }
