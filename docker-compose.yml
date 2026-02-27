@@ -348,26 +348,6 @@ services:
       ecommerceddd-apigateway:
         condition: service_healthy
 
-  # Tool for regenerating Kiota API clients (Backend & Frontend)
-  # Usage: docker compose --profile tools run regenerate-clients
-  regenerate-clients:
-    image: mcr.microsoft.com/dotnet/sdk:10.0
-    profiles: ["tools"]
-    working_dir: /src
-    volumes:
-      - ./src:/src
-      - ./scripts:/scripts
-    environment:
-      - DOTNET_NOLOGO=1
-    depends_on:
-      ecommerceddd-apigateway:
-        condition: service_healthy
-    entrypoint: >
-      bash -c "
-        dotnet tool install -g Microsoft.OpenApi.Kiota 2>/dev/null || true &&
-        export PATH=\"$$PATH:/root/.dotnet/tools\" &&
-        tr -d '\\015' < /scripts/regenerate-clients.sh | bash"
-
 networks:
   default:
     driver: bridge
