@@ -93,6 +93,16 @@
                             {{ order.statusText }}
                           </div>
                         </div>
+                        @if (order.statusCode === ORDER_STATUS_CODES.shipped) {
+                        <div class="confirm-delivery-container">
+                          <button
+                            class="btn btn-success btn-sm"
+                            (click)="confirmDelivery(order.orderId)"
+                          >
+                            Confirm Delivery
+                          </button>
+                        </div>
+                        }
                       </div>
                     </td>
                   </tr>

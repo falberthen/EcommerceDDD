@@ -26,6 +26,13 @@ export class OrderApiService {
       .post();
   }
 
+  confirmDelivery(orderId: string) {
+    return this.kiotaClientService.client
+      .orderProcessing.api.v2.orders
+      .byOrderId(orderId)
+      .confirmDelivery.post();
+  }
+
   handleError(error: unknown): void {
     this.kiotaClientService.handleError(error);
   }

@@ -11,7 +11,7 @@ export const ORDER_STATUS_CODES = {
   processed: 2,
   paid: 3,
   shipped: 4,
-  completed: 5,
+  delivered: 5,
   canceled: 0,
 };
 
