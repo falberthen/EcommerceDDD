@@ -3,4 +3,5 @@
 public static class ActivitySources
 {
 	public const string KafkaConsumer = "EcommerceDDD.Kafka.Consumer";
+	public const string OutboxWrite   = "EcommerceDDD.Outbox.Write";
 }

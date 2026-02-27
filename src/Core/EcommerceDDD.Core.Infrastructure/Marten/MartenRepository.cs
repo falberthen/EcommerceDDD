@@ -5,10 +5,12 @@ public class MartenRepository<TA>(
     ILogger<MartenRepository<TA>> logger
 ) : IEventStoreRepository<TA> where TA : class, IAggregateRoot<StronglyTypedId<Guid>>
 {
+	private static readonly ActivitySource _activitySource = new(ActivitySources.OutboxWrite);
 	private readonly IDocumentSession _documentSession = documentSession
 		?? throw new ArgumentNullException(nameof(documentSession));
 	private readonly ILogger<MartenRepository<TA>> _logger = logger
 		?? throw new ArgumentNullException(nameof(logger));
+	private Activity? _pendingOutboxActivity;
 
 	/// <summary>
 	/// Stores uncommited events from an aggregate 
@@ -24,9 +26,18 @@ public class MartenRepository<TA>(
         aggregate.ClearUncommittedEvents();
 		_documentSession.Events.Append(aggregate.Id.Value, nextVersion, events);
 
-        await _documentSession.SaveChangesAsync(cancellationToken);
-
-        return nextVersion;
+        try
+        {
+            await _documentSession.SaveChangesAsync(cancellationToken);
+            return nextVersion;
+        }
+        finally
+        {
+            // Close the outbox producer span only after the DB commit.
+            // Npgsql spans from SaveChangesAsync are children of this span.
+            _pendingOutboxActivity?.Dispose();
+            _pendingOutboxActivity = null;
+        }
     }
 
     /// <summary>
@@ -58,10 +69,23 @@ public class MartenRepository<TA>(
         if (@event is null)
             throw new ArgumentNullException(nameof(@event));
 
-        var integrationEvent = IntegrationEvent
-            .FromNotification(@event!);
+        var eventName = @event.GetType().Name;
 
-		_logger.LogInformation($"Adding integration event {@event} to outbox...", @event);
-        _documentSession.Store(integrationEvent!);        
+        // Open the producer span here so Activity.Current is this span when
+        // IntegrationEvent.FromNotification captures TraceContext = Activity.Current?.Id.
+        // The span remains open until SaveChangesAsync commits the outbox entry to the DB inside AppendEventsAsync.
+        _pendingOutboxActivity = _activitySource.StartActivity(
+            $"outbox.publish {eventName}",
+            ActivityKind.Producer);
+
+        _pendingOutboxActivity?.SetTag("messaging.system", "kafka");
+        _pendingOutboxActivity?.SetTag("messaging.destination.name", "outbox");
+        _pendingOutboxActivity?.SetTag("messaging.operation", "publish");
+        _pendingOutboxActivity?.SetTag("event.type", eventName);
+
+        var integrationEvent = IntegrationEvent.FromNotification(@event!);
+
+        _logger.LogInformation("Adding integration event {EventName} to outbox...", eventName);
+        _documentSession.Store(integrationEvent!);
     }
 }

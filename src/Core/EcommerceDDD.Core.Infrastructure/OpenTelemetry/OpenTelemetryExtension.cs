@@ -5,37 +5,31 @@ public static class OpenTelemetryExtension
     public static IServiceCollection AddOpenTelemetryObservability(
         this IServiceCollection services, string serviceName)
     {
-        services.AddOpenTelemetry()
-            .ConfigureResource(resource => resource.AddService(serviceName))
-            .WithTracing(tracing =>
-            {
-                tracing
-                    .AddAspNetCoreInstrumentation()
-                    .AddHttpClientInstrumentation()
-                    .AddSource(ActivitySources.KafkaConsumer)
-                    .AddOtlpExporter();
-            })
-            .WithMetrics(metrics =>
-            {
-                metrics
-                    .AddAspNetCoreInstrumentation()
-                    .AddHttpClientInstrumentation()
-                    .AddRuntimeInstrumentation()
-                    .AddOtlpExporter();
-            });
+        var serviceVersion = Assembly.GetEntryAssembly()?.GetName().Version?.ToString();
 
-        services.AddLogging(logging =>
-        {
-            logging.AddOpenTelemetry(otel =>
-            {
-                otel.SetResourceBuilder(ResourceBuilder.CreateDefault()
-                    .AddService(serviceName));
-                otel.IncludeFormattedMessage = true;
-                otel.IncludeScopes = true;
-                otel.ParseStateValues = true; // Parse structured state values
-                otel.AddOtlpExporter();
-            });
-        });
+        services.AddOpenTelemetry()
+            .ConfigureResource(resource => resource
+                .AddService(serviceName, serviceVersion: serviceVersion))
+            .WithTracing(tracing => tracing
+                .AddAspNetCoreInstrumentation()
+                .AddHttpClientInstrumentation()
+                .AddNpgsql()
+                .AddSource(ActivitySources.KafkaConsumer)
+                .AddSource(ActivitySources.OutboxWrite)
+                .AddOtlpExporter())
+            .WithMetrics(metrics => metrics
+                .AddAspNetCoreInstrumentation()
+                .AddHttpClientInstrumentation()
+                .AddRuntimeInstrumentation()
+                .AddOtlpExporter())
+            .WithLogging(
+                logging => logging.AddOtlpExporter(),
+                options =>
+                {
+                    options.IncludeFormattedMessage = true;
+                    options.IncludeScopes = true;
+                    options.ParseStateValues = true;
+                });
 
         return services;
     }
