@@ -178,15 +178,13 @@ The app will be available at `http://localhost:4200`.
 
 ### Advanced: Regenerating Kiota Clients
 
-If you want to regenerate all typed HTTP clients, after containers are running:
+Tool services are defined in `docker-compose.override.yml`, which Docker Compose loads automatically alongside `docker-compose.yml`. After the main stack is running, use one of the commands below:
 
-```bash
-docker-compose --profile tools run regenerate-clients
-```
-
-This generates:
-- **Backend clients (C#):** `ServiceClients/Kiota/`
-- **Single Frontend client (TypeScript):** `EcommerceDDD.Spa/src/app/clients/`
+| Command | What it generates |
+| --- | --- |
+| `docker compose --profile tools run regenerate-clients` | Both backend and frontend clients |
+| `docker compose --profile tools run regenerate-backend-clients` | Backend C# clients only (`ServiceClients/Kiota/`) |
+| `docker compose --profile tools run regenerate-frontend-clients` | Frontend TypeScript client only (`EcommerceDDD.Spa/src/app/clients/`) |
 
 ---
 
