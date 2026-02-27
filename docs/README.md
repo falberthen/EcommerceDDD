@@ -2,11 +2,10 @@
 
 An experimental full-stack application showcasing cutting-edge technologies and architectural patterns for building scalable e-commerce systems.
 
-![.NET](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet) ![Angular](https://img.shields.io/badge/Angular-21-DD0031?logo=angular)  ![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker)
+![.NET](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet) ![Angular](https://img.shields.io/badge/Angular-21-DD0031?logo=angular)  ![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-![Build](https://github.com/falberthen/ecommerceddd/actions/workflows/ecommerceddd-build.yml/badge.svg)
+![Build](https://github.com/falberthen/ecommerceddd/actions/workflows/ecommerceddd-build.yml/badge.svg) ![GitHub Issues](https://img.shields.io/github/issues/falberthen/ecommerceddd)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ⭐ **If you find this project useful, please consider giving it a star!** It helps others discover the project. ![GitHub Stars](https://img.shields.io/github/stars/falberthen/ecommerceddd?style=social&logo=github)
 
@@ -188,6 +187,13 @@ docker-compose --profile tools run regenerate-clients
 This generates:
 - **Backend clients (C#):** `ServiceClients/Kiota/`
 - **Single Frontend client (TypeScript):** `EcommerceDDD.Spa/src/app/clients/`
+
+---
+
+## 📧 Support & Contributing
+
+- **Issues**: Report bugs or request features via [GitHub Issues](https://github.com/falberthen/EcommerceDDD/issues).
+- **Contributing**: Contributions are welcome! Please read [CONTRIBUTING.md](https://github.com/falberthen/EcommerceDDD/tree/master/docs/CONTRIBUTING.md) before submitting PRs.
 
 ---
 

@@ -158,20 +158,15 @@ public class KafkaConsumer : IEventConsumer
 					BootstrapServers = _config.ConnectionString,
 					AutoOffsetReset = AutoOffsetReset.Earliest,
 					EnableAutoCommit = false,
-					AllowAutoCreateTopics = true, // Changed to true for better resilience
+					AllowAutoCreateTopics = true,
 					MaxPollIntervalMs = 300000,
-					SessionTimeoutMs = 30000, // Increased timeout
+					SessionTimeoutMs = 30000,
 					EnablePartitionEof = true,
-					// Explicitly configure security to use plaintext
 					SecurityProtocol = SecurityProtocol.Plaintext,
-					// Disable SSL certificate verification
 					SslEndpointIdentificationAlgorithm = SslEndpointIdentificationAlgorithm.None,
 					EnableSslCertificateVerification = false,
-					// Add reconnect settings
 					SocketTimeoutMs = 60000,
 					SocketKeepaliveEnable = true,
-					// Better error handling
-					Debug = "broker,topic,msg"
 				};
 
 				_consumer = new ConsumerBuilder<string, string>(consumerConfig)
@@ -267,7 +262,11 @@ public class KafkaConsumer : IEventConsumer
 				links: links);
 			activity?.SetTag("messaging.system", "kafka");
 			activity?.SetTag("messaging.destination", result.Topic);
+			activity?.SetTag("messaging.operation", "receive");
+			activity?.SetTag("messaging.kafka.consumer_group", _config.Group);
 			activity?.SetTag("messaging.kafka.partition", result.Partition.Value);
+			activity?.SetTag("messaging.kafka.message_offset", result.Offset.Value);
+			activity?.SetTag("messaging.message_id", result.Message.Key);
 
 			// Deserialize the domain event from the raw outbox payload
 			var messageBytes = Encoding.UTF8.GetBytes(result.Message.Value);

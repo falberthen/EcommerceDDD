@@ -49,6 +49,7 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.15.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.0" />
     <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.0" />
+    <PackageVersion Include="Npgsql.OpenTelemetry" Version="10.0.1" />
   </ItemGroup>
   <ItemGroup Label="Code Analysis">
     <PackageVersion Include="Microsoft.CodeAnalysis.Common" Version="5.0.0" />
