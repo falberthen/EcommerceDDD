@@ -109,7 +109,7 @@ public class OrderEventsTests
 	}
 
 	[Fact]
-	public void CompletingOrder_WithAllFlowSteps_ShouldApplyOrderCompletedEvent()
+	public void DeliveringOrder_WithAllFlowSteps_ShouldApplyOrderDeliveredEvent()
 	{
 		// Given
 		var totalPaid = Money.Of(100, Currency.USDollar.Code);
@@ -131,12 +131,12 @@ public class OrderEventsTests
 		order.RecordShipment(_shipmentId);
 
 		// When
-		order.Complete(_shipmentId);
+		order.Deliver(_shipmentId);
 
 		// Then
-		var @event = order.GetUncommittedEvents().LastOrDefault() as OrderCompleted;
+		var @event = order.GetUncommittedEvents().LastOrDefault() as OrderDelivered;
 		Assert.NotNull(@event);
-		Assert.IsType<OrderCompleted>(@event);
+		Assert.IsType<OrderDelivered>(@event);
 	}
 
 	[Fact]

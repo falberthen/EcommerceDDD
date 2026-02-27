@@ -1,16 +1,16 @@
-namespace EcommerceDDD.OrderProcessing.Application.Orders.CompletingOrder;
+namespace EcommerceDDD.OrderProcessing.Application.Orders.ConfirmingDelivery;
 
-public class CompleteOrderHandler(
+public class ConfirmDeliveryHandler(
 	IOrderNotificationService orderNotificationService,
 	IEventStoreRepository<Order> orderWriteRepository
-) : ICommandHandler<CompleteOrder>
+) : ICommandHandler<ConfirmDelivery>
 {
 	private readonly IOrderNotificationService _orderNotificationService = orderNotificationService
 		?? throw new ArgumentNullException(nameof(orderNotificationService));
 	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository
 		?? throw new ArgumentNullException(nameof(orderWriteRepository));
 
-	public async Task<Result> HandleAsync(CompleteOrder command, CancellationToken cancellationToken)
+	public async Task<Result> HandleAsync(ConfirmDelivery command, CancellationToken cancellationToken)
 	{
 		var order = await _orderWriteRepository
 			.FetchStreamAsync(command.OrderId.Value, cancellationToken: cancellationToken);
@@ -18,7 +18,10 @@ public class CompleteOrderHandler(
 		if (order is null)
 			return Result.Fail($"Failed to find the order {command.OrderId}.");
 
-		order.Complete(command.ShipmentId);
+		if (order.ShipmentId is null)
+			return Result.Fail($"Order {command.OrderId} has no associated shipment.");
+
+		order.Deliver(order.ShipmentId);
 
 		await _orderWriteRepository
 			.AppendEventsAsync(order, cancellationToken: cancellationToken);
