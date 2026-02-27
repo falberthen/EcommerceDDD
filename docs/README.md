@@ -12,15 +12,15 @@ An experimental full-stack application showcasing cutting-edge technologies and 
 <br/>
 
 <p align="center">
-  <img src="images/ecommerceddd-1.gif" width="600" alt="Demo 1"/>
+  <img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/images/ecommerceddd-1.gif" width="600" alt="Demo 1"/>
 </p>
 
 <p align="center">
-  <img src="images/ecommerceddd-2.gif" width="600" alt="Demo 2"/>
+  <img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/images/ecommerceddd-2.gif" width="600" alt="Demo 2"/>
 </p>
 
 <p align="center">
-  <img src="images/ecommerceddd-3.gif" width="600" alt="Demo 3"/>
+  <img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/imagesimages/ecommerceddd-3.gif" width="600" alt="Demo 3"/>
 </p>
 
 ---
@@ -30,13 +30,13 @@ An experimental full-stack application showcasing cutting-edge technologies and 
 ### High-Level Overview
 
 <p align="center">
-  <img src="images/EcommerceDDD-hl-architecture.png" alt="High-Level Architecture"/>
+  <img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/images/EcommerceDDD-hl-architecture.png" alt="High-Level Architecture"/>
 </p>
 
 ### Detailed Architecture
 
 <p align="center">
-  <img src="images/EcommerceDDD-detailed-architecture.png" alt="Detailed Architecture"/>
+  <img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/images/EcommerceDDD-detailed-architecture.png" alt="Detailed Architecture"/>
 </p>
 
 ---
