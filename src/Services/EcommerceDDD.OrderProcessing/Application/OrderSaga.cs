@@ -73,7 +73,7 @@ public class OrderSaga(
 	}
 
 	/// <summary>
-	/// Completing order
+	/// Recording shipment — order awaits customer delivery confirmation
 	/// </summary>
 	/// <param name="@integrationEvent"></param>
 	/// <param name="cancellationToken"></param>
@@ -81,18 +81,11 @@ public class OrderSaga(
 	public async Task HandleAsync(ShipmentFinalized @integrationEvent,
 		CancellationToken cancellationToken)
 	{
-		// recording shipment
+		// recording shipment; delivery must be confirmed by the customer
 		var recordShipmentCommand = RecordShipment.Create(
 			OrderId.Of(@integrationEvent.OrderId),
 			ShipmentId.Of(@integrationEvent.ShipmentId));
 		await _commandBus
 			.SendAsync(recordShipmentCommand, cancellationToken);
-
-		// completing order
-		var completeOrderCommand = CompleteOrder.Create(
-			OrderId.Of(@integrationEvent.OrderId),
-			ShipmentId.Of(@integrationEvent.ShipmentId));
-		await _commandBus
-			.SendAsync(completeOrderCommand, cancellationToken);
 	}
 }
