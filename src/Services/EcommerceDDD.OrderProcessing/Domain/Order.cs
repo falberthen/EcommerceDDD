@@ -9,7 +9,7 @@ public class Order : AggregateRoot<OrderId>
     public DateTime CreatedAt { get; private set; }
     public DateTime? ShippedAt { get; private set; }
     public DateTime? CanceledAt { get; private set; }
-    public DateTime? CompletedAt { get; private set; }
+    public DateTime? DeliveredAt { get; private set; }
     public IReadOnlyList<OrderLine> OrderLines => _orderLines;
     public Money TotalPrice { get; private set; }
     public OrderStatus Status { get; private set; }
@@ -88,12 +88,12 @@ public class Order : AggregateRoot<OrderId>
         Apply(@event);
     }
 
-    public void Complete(ShipmentId shipmentId)
+    public void Deliver(ShipmentId shipmentId)
     {
         if (Status != OrderStatus.Shipped)
-            throw new DomainException("The order must be shipped before completed.");
+            throw new DomainException("The order must be shipped before delivered.");
 
-        var @event = new OrderCompleted(
+        var @event = new OrderDelivered(
             Id.Value,
             shipmentId.Value);
 
@@ -103,7 +103,7 @@ public class Order : AggregateRoot<OrderId>
 
     public void Cancel(OrderCancellationReason cancellationReason)
     {
-        if (Status == OrderStatus.Completed || Status == OrderStatus.Canceled)
+        if (Status == OrderStatus.Delivered || Status == OrderStatus.Canceled)
             throw new DomainException("The order cannot be cancelled at this point.");
 
         var @event = new OrderCanceled(
@@ -164,11 +164,10 @@ public class Order : AggregateRoot<OrderId>
         Status = OrderStatus.Paid;
     }
 
-    private void Apply(OrderCompleted @event)
+    private void Apply(OrderDelivered @event)
     {
-        Status = OrderStatus.Completed;
-        ShipmentId = ShipmentId.Of(@event.ShipmentId);
-        CompletedAt = @event.Timestamp;
+        Status = OrderStatus.Delivered;
+        DeliveredAt = @event.Timestamp;
     }
 
     private void Apply(OrderCanceled @event)
@@ -180,6 +179,7 @@ public class Order : AggregateRoot<OrderId>
     private void Apply(OrderShipped @event)
     {
         Status = OrderStatus.Shipped;
+        ShipmentId = ShipmentId.Of(@event.ShipmentId);
         ShippedAt = @event.Timestamp;
     }
 
