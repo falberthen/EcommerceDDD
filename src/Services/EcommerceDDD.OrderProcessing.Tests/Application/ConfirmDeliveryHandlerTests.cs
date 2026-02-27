@@ -1,9 +1,11 @@
+using EcommerceDDD.OrderProcessing.Application.Orders.ConfirmingDelivery;
+
 namespace EcommerceDDD.OrderProcessing.Tests.Application;
 
-public class CompleteOrderHandlerTests
+public class ConfirmDeliveryHandlerTests
 {
 	[Fact]
-	public async Task CompleteOrder_WithCommand_ShouldCompleteOrder()
+	public async Task ConfirmDelivery_WithCommand_ShouldDeliverOrder()
 	{
 		// Given
 		var quoteId = QuoteId.Of(Guid.NewGuid());
@@ -38,11 +40,11 @@ public class CompleteOrderHandlerTests
 
 		var orderNotificationService = Substitute.For<IOrderNotificationService>();
 
-		var completeOrder = CompleteOrder.Create(order.Id, shipmentId);
-		var completeOrderHandler = new CompleteOrderHandler(orderNotificationService, orderWriteRepository);
+		var confirmDelivery = ConfirmDelivery.Create(order.Id);
+		var confirmDeliveryHandler = new ConfirmDeliveryHandler(orderNotificationService, orderWriteRepository);
 
 		// When
-		await completeOrderHandler.HandleAsync(completeOrder, CancellationToken.None);
+		await confirmDeliveryHandler.HandleAsync(confirmDelivery, CancellationToken.None);
 
 		// Then
 		var completedOrder = orderWriteRepository.AggregateStream.First().Aggregate;
@@ -53,7 +55,6 @@ public class CompleteOrderHandlerTests
 		Assert.Equal(completedOrder.PaymentId, paymentId);
 		Assert.Equal(completedOrder.ShipmentId, shipmentId);
 		Assert.Equal(completedOrder.OrderLines.Count, quoteItems.Count);
-		Assert.Equal(OrderStatus.Completed, completedOrder.Status);
+		Assert.Equal(OrderStatus.Delivered, completedOrder.Status);
 	}
-
 }

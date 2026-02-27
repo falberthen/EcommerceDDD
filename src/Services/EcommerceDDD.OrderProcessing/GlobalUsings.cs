@@ -14,7 +14,7 @@ global using EcommerceDDD.Core.Validation;
 global using EcommerceDDD.OrderProcessing.Application;
 global using EcommerceDDD.OrderProcessing.Application.GettingOrderEventHistory;
 global using EcommerceDDD.OrderProcessing.Application.Orders.CancelingOrder;
-global using EcommerceDDD.OrderProcessing.Application.Orders.CompletingOrder;
+global using EcommerceDDD.OrderProcessing.Application.Orders.ConfirmingDelivery;
 global using EcommerceDDD.OrderProcessing.Application.Orders.GettingOrders;
 global using EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
 global using EcommerceDDD.OrderProcessing.Application.Orders.ProcessingOrder;

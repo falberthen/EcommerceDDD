@@ -14,7 +14,7 @@ public class OrderEventHistoryTransform : EventProjection
     public OrderEventHistory Transform(JasperFx.Events.IEvent<OrderShipped> @event) =>
         OrderEventHistory.Create(@event, @event.Data.OrderId);
 
-    public OrderEventHistory Transform(JasperFx.Events.IEvent<OrderCompleted> @event) =>
+    public OrderEventHistory Transform(JasperFx.Events.IEvent<OrderDelivered> @event) =>
         OrderEventHistory.Create(@event, @event.Data.OrderId);
 
     public OrderEventHistory Transform(JasperFx.Events.IEvent<OrderCanceled> @event) =>

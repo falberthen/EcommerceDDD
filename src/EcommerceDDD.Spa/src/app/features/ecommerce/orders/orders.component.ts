@@ -30,6 +30,7 @@ export class OrdersComponent implements OnInit {
 
   faList = faList;
   orders: OrderViewModel[] = [];
+  readonly ORDER_STATUS_CODES = ORDER_STATUS_CODES;
 
   async ngOnInit() {
     await this.loadOrders();
@@ -95,8 +96,8 @@ export class OrdersComponent implements OnInit {
         return 'shipped';
       case ORDER_STATUS_CODES.canceled:
         return 'canceled';
-      case ORDER_STATUS_CODES.completed:
-        return 'completed';
+      case ORDER_STATUS_CODES.delivered:
+        return 'delivered';
       default:
         return '';
     }
@@ -118,6 +119,14 @@ export class OrdersComponent implements OnInit {
 
     if (conn.state === 'Connected') {
       conn.invoke('JoinCustomerToGroup', this.authService.currentCustomer!.id);
+    }
+  }
+
+  async confirmDelivery(orderId: string) {
+    try {
+      await this.orderApiService.confirmDelivery(orderId);
+    } catch (error) {
+      this.orderApiService.handleError(error);
     }
   }
 

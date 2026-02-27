@@ -1,5 +1,5 @@
 namespace EcommerceDDD.OrderProcessing.Domain.Events;
 
-public record OrderCompleted(
+public record OrderDelivered(
     Guid OrderId,
     Guid ShipmentId) : DomainEvent;

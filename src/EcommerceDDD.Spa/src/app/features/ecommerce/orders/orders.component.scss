@@ -49,13 +49,18 @@
           .shipped {
             color: rgb(7, 73, 195);
           }
-          .completed {
+          .delivered {
             color: green;
           }
           .canceled {
             color: rgb(255, 0, 0);
           }
         }
+      }
+      .confirm-delivery-container {
+        text-align: center;
+        margin-top: 15px;
+        margin-bottom: 10px;
       }
       .text-right {
         text-align: right;
