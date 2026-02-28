@@ -43,6 +43,7 @@ public class PlaceOrderHandler(
 			orderItems);
 
 		var order = Order.Place(orderData);
+		Activity.Current?.SetTag("order.id", order.Id.Value.ToString());
 
 		var orderPlacedEvent = order.GetUncommittedEvents()
 			.OfType<OrderPlaced>().FirstOrDefault();

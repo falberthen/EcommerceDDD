@@ -12,6 +12,7 @@ public class RecordShipmentHandler(
 
 	public async Task<Result> HandleAsync(RecordShipment command, CancellationToken cancellationToken)
 	{
+		Activity.Current?.SetTag("order.id", command.OrderId.Value.ToString());
 		await Task.Delay(TimeSpan.FromSeconds(5));
 
 		var order = await _orderWriteRepository
@@ -19,6 +20,9 @@ public class RecordShipmentHandler(
 
 		if (order is null)
 			return Result.Fail($"Failed to find the order {command.OrderId}.");
+
+		if (order.Status == OrderStatus.Shipped)
+			return Result.Ok();
 
 		order.RecordShipment(command.ShipmentId);
 		await _orderWriteRepository

@@ -45,3 +45,4 @@ global using Newtonsoft.Json;
 global using System.Collections.Immutable;
 global using System.ComponentModel;
 global using System.ComponentModel.DataAnnotations;
+global using System.Diagnostics;
