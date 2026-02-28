@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewContainerRef, inject, viewChild } from '@angular/core';
 import { NgClass, DatePipe } from '@angular/common';
-import { faList } from '@fortawesome/free-solid-svg-icons';
+import { faList, faDiagramProject } from '@fortawesome/free-solid-svg-icons';
+import { environment } from '@environments/environment';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AuthService } from '@core/services/auth.service';
 import { SignalrService } from '@core/services/signalr.service';
@@ -29,6 +30,7 @@ export class OrdersComponent implements OnInit {
   readonly storedEventViewerContainer = viewChild.required('storedEventViewerContainer', { read: ViewContainerRef });
 
   faList = faList;
+  faDiagramProject = faDiagramProject;
   orders: OrderViewModel[] = [];
   readonly ORDER_STATUS_CODES = ORDER_STATUS_CODES;
 
@@ -52,6 +54,11 @@ export class OrdersComponent implements OnInit {
     const guidParts = guid.split('-');
     const firstPart = guidParts[0];
     return firstPart.toUpperCase();
+  }
+
+  getAspireTraceUrl(orderId: string): string {
+    const filter = encodeURIComponent(`order.id:equals:${orderId}`);
+    return `${environment.aspireDashboardUrl}/traces?filters=${filter}`;
   }
 
   async showOrderStoredEvents(orderId: string) {

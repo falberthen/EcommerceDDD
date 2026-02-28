@@ -65,6 +65,12 @@
       .text-right {
         text-align: right;
       }
+      .order-header-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
     }
   }
   .no-orders-message {
