@@ -16,6 +16,7 @@ public class ProcessShipmentHandler(
 		if (shipment is null)
 			return Result.Fail($"The shipment {command.ShipmentId} was not found.");
 
+		Activity.Current?.SetTag("order.id", shipment.OrderId.Value.ToString());
 		try
 		{
 			shipment.Complete();

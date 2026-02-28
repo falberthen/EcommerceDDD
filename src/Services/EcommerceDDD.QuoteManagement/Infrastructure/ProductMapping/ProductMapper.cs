@@ -19,7 +19,7 @@ public class ProductMapper(IProductCatalogService productCatalogService) : IProd
 
 			return Result.Ok<IEnumerable<ProductViewModel>>(response);
 		}
-		catch (Microsoft.Kiota.Abstractions.ApiException)
+		catch (Exception)
 		{
 			return Result.Fail<IEnumerable<ProductViewModel>>("An error occurred requesting products from catalog.");
 		}

@@ -14,6 +14,7 @@ public static class OpenTelemetryExtension
                 .AddAspNetCoreInstrumentation()
                 .AddHttpClientInstrumentation()
                 .AddNpgsql()
+                .AddSource(ActivitySources.CommandBus)
                 .AddSource(ActivitySources.KafkaConsumer)
                 .AddSource(ActivitySources.OutboxWrite)
                 .AddOtlpExporter())

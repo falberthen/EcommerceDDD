@@ -10,6 +10,7 @@ public class RequestPaymentHandler(
 
 	public async Task<Result> HandleAsync(RequestPayment command, CancellationToken cancellationToken)
     {
+        Activity.Current?.SetTag("order.id", command.OrderId.Value.ToString());
         var paymentData = new PaymentData(
             command.CustomerId,
             command.OrderId,

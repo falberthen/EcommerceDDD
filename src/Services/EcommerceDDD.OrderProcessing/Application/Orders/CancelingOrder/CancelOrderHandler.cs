@@ -12,11 +12,15 @@ public class CancelOrderHandler(
 
 	public async Task<Result> HandleAsync(CancelOrder command, CancellationToken cancellationToken)
 	{
+		Activity.Current?.SetTag("order.id", command.OrderId.Value.ToString());
 		var order = await _orderWriteRepository
 			.FetchStreamAsync(command.OrderId.Value, cancellationToken: cancellationToken);
 
 		if (order is null)
 			return Result.Fail($"Failed to find the order {command.OrderId}.");
+
+		if (order.Status == OrderStatus.Canceled)
+			return Result.Ok();
 
 		order.Cancel(command.CancellationReason);
 		await _orderWriteRepository

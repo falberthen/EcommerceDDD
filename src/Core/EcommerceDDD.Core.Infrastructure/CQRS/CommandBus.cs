@@ -5,6 +5,8 @@ public class CommandBus(
 	ILogger<CommandBus> logger
 ) : ICommandBus
 {
+	private static readonly ActivitySource _activitySource = new(ActivitySources.CommandBus);
+
 	public async Task<Result> SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken)
 		where TCommand : ICommand
 	{
@@ -14,6 +16,26 @@ public class CommandBus(
 		dynamic? handler = serviceProvider.GetService(handlerType)
 			?? throw new InvalidOperationException($"Handler for command {command.GetType().Name} not registered.");
 
-		return await handler.HandleAsync((dynamic)command, cancellationToken);
+		using var activity = _activitySource.StartActivity(command.GetType().Name, ActivityKind.Internal);
+
+		Result result;
+		try
+		{
+			result = await handler.HandleAsync((dynamic)command, cancellationToken);
+		}
+		catch (Exception ex)
+		{
+			activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+			activity?.AddException(ex);
+			throw;
+		}
+
+		if (result.IsFailed)
+		{
+			var message = result.Errors.FirstOrDefault()?.Message;
+			activity?.SetStatus(ActivityStatusCode.Error, message);
+		}
+
+		return result;
 	}
 }

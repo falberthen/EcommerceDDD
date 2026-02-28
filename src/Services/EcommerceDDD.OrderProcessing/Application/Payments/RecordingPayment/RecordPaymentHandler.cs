@@ -12,6 +12,7 @@ public class RecordPaymentHandler(
 
 	public async Task<Result> HandleAsync(RecordPayment command, CancellationToken cancellationToken)
 	{
+		Activity.Current?.SetTag("order.id", command.OrderId.Value.ToString());
 		await Task.Delay(TimeSpan.FromSeconds(5));
 
 		var order = await _orderWriteRepository
@@ -19,6 +20,9 @@ public class RecordPaymentHandler(
 
 		if (order is null)
 			return Result.Fail($"Failed to find the order {command.OrderId}.");
+
+		if (order.Status == OrderStatus.Paid)
+			return Result.Ok();
 
 		order.RecordPayment(command.PaymentId, command.TotalPaid);
 
