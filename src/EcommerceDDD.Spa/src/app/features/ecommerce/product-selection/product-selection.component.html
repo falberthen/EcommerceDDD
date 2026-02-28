@@ -1,4 +1,8 @@
 <div class="product-selection-container">
+  <!-- Stored Event Viewer container-->
+  <div class="stored-event-viewer-container">
+    <template #storedEventViewerContainer></template>
+  </div>
   <div class="product-list-container">
     <div class="product-list">
       @if (loaderService.loading() && products.length == 0) {
@@ -20,12 +24,22 @@
             <div class="col-12">
               <div class="card product-container">
                 <div class="card-body">
-                  <h3
-                    class="card-title product-title"
-                    title="{{ product.name }}"
-                  >
-                    {{ product.name }}
-                  </h3>
+                  <div class="d-flex justify-content-between align-items-start">
+                    <h3
+                      class="card-title product-title"
+                      title="{{ product.name }}"
+                    >
+                      {{ product.name }}
+                    </h3>
+                    <a
+                      class="nav-link text-secondary underlineHover"
+                      style="cursor: pointer; white-space: nowrap"
+                      (click)="showInventoryHistory(product)"
+                    >
+                      <fa-icon [icon]="faList"></fa-icon>
+                      Stock Events
+                    </a>
+                  </div>
                   <span class="product-price">
                     <span class="currency-symbol">
                       {{ product.currencySymbol }}</span

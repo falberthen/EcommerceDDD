@@ -1,12 +1,14 @@
-import { Component, OnInit, inject, viewChild } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, inject, viewChild } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { faList, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CartComponent } from '../cart/cart.component';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { LoaderService } from '@core/services/loader.service';
 import { ProductCatalogApiService } from '@core/services/api/product-catalog-api.service';
+import { InventoryApiService } from '@core/services/api/inventory-api.service';
+import { StoredEventService } from '@shared/services/stored-event.service';
 import { SortPipe } from '@core/pipes/sort.pipe';
 import { LoaderSkeletonComponent } from '@shared/components/loader-skeleton/loader-skeleton.component';
 import {
@@ -30,12 +32,17 @@ export class ProductSelectionComponent implements OnInit {
   private localStorageService = inject(LocalStorageService);
   private currencyNotificationService = inject(CurrencyNotificationService);
 
+  private inventoryApiService = inject(InventoryApiService);
+  private storedEventService = inject(StoredEventService);
+
   readonly cart = viewChild.required<CartComponent>('cart');
+  readonly storedEventViewerContainer = viewChild.required('storedEventViewerContainer', { read: ViewContainerRef });
   currentCurrency!: string;
   customerId!: string;
   products: ProductViewModel[] = [];
   searchTerm = '';
   faPlusCircle = faPlusCircle;
+  faList = faList;
 
   get filteredProducts(): ProductViewModel[] {
     if (!this.searchTerm.trim()) return this.products;
@@ -122,6 +129,25 @@ export class ProductSelectionComponent implements OnInit {
       await this.cart().addQuoteItem(product);
     } finally {
       this.loaderService.setLoading(false);
+    }
+  }
+
+  async showInventoryHistory(product: ProductViewModel) {
+    try {
+      const productId = product.productId!.toString();
+      const refreshFn = () => this.inventoryApiService.getInventoryHistory(productId);
+
+      await refreshFn().then((result) => {
+        if (result) {
+          this.storedEventService.showStoredEvents(
+            this.storedEventViewerContainer(),
+            result,
+            refreshFn
+          );
+        }
+      });
+    } catch (error) {
+      this.inventoryApiService.handleError(error);
     }
   }
 
