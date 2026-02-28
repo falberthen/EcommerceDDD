@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.OrderProcessing.Application;
+namespace EcommerceDDD.OrderProcessing.Application;
 
 public class OrderSaga(
 	ICommandBus commandBus
@@ -12,9 +12,6 @@ public class OrderSaga(
 	/// <summary>
 	/// Processing placed order
 	/// </summary>
-	/// <param name="@domainEvent"></param>
-	/// <param name="cancellationToken"></param>
-	/// <returns></returns>
 	public async Task HandleAsync(OrderPlaced @domainEvent,
 		CancellationToken cancellationToken)
 	{
@@ -24,16 +21,14 @@ public class OrderSaga(
 			QuoteId.Of(@domainEvent.QuoteId)
 		);
 
-		await _commandBus
+		var result = await _commandBus
 			.SendAsync(processOrderCommand, cancellationToken);
+		ThrowIfFailed(result);
 	}
 
 	/// <summary>
 	/// Requesting payment
 	/// </summary>
-	/// <param name="@domainEvent"></param>
-	/// <param name="cancellationToken"></param>
-	/// <returns></returns>
 	public async Task HandleAsync(OrderProcessed @domainEvent,
 		CancellationToken cancellationToken)
 	{
@@ -43,49 +38,54 @@ public class OrderSaga(
 			Money.Of(@domainEvent.TotalPrice, @domainEvent.CurrencyCode),
 			Currency.OfCode(@domainEvent.CurrencyCode));
 
-		await _commandBus
+		var result = await _commandBus
 			.SendAsync(requestPaymentCommand, cancellationToken);
+		ThrowIfFailed(result);
 	}
 
 	/// <summary>
-	/// Requesting shipment
+	/// Requesting shipment — RecordPayment is idempotent, so retries are safe
 	/// </summary>
-	/// <param name="@integrationEvent"></param>
-	/// <param name="cancellationToken"></param>
-	/// <returns></returns>
 	public async Task HandleAsync(PaymentFinalized @integrationEvent,
 		CancellationToken cancellationToken)
 	{
-		// recording payment        
 		var recordPaymentCommand = RecordPayment.Create(
 			OrderId.Of(@integrationEvent.OrderId),
 			PaymentId.Of(@integrationEvent.PaymentId),
 			Money.Of(@integrationEvent.TotalAmount,
 				@integrationEvent.CurrencyCode));
-		await _commandBus
-			.SendAsync(recordPaymentCommand, cancellationToken);
 
-		// requesting shipment        
+		var recordResult = await _commandBus
+			.SendAsync(recordPaymentCommand, cancellationToken);
+		ThrowIfFailed(recordResult);
+
 		var requestShipmentCommand = RequestShipment.Create(
 			OrderId.Of(@integrationEvent.OrderId));
-		await _commandBus
+
+		var shipmentResult = await _commandBus
 			.SendAsync(requestShipmentCommand, cancellationToken);
+		ThrowIfFailed(shipmentResult);
 	}
 
 	/// <summary>
 	/// Recording shipment — order awaits customer delivery confirmation
 	/// </summary>
-	/// <param name="@integrationEvent"></param>
-	/// <param name="cancellationToken"></param>
-	/// <returns></returns>
 	public async Task HandleAsync(ShipmentFinalized @integrationEvent,
 		CancellationToken cancellationToken)
 	{
-		// recording shipment; delivery must be confirmed by the customer
 		var recordShipmentCommand = RecordShipment.Create(
 			OrderId.Of(@integrationEvent.OrderId),
 			ShipmentId.Of(@integrationEvent.ShipmentId));
-		await _commandBus
+
+		var result = await _commandBus
 			.SendAsync(recordShipmentCommand, cancellationToken);
+		ThrowIfFailed(result);
+	}
+
+	private static void ThrowIfFailed(Result result)
+	{
+		if (result.IsFailed)
+			throw new InvalidOperationException(
+				result.Errors.FirstOrDefault()?.Message ?? "Saga step failed.");
 	}
 }

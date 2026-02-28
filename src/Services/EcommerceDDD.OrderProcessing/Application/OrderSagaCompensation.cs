@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.OrderProcessing.Application;
+namespace EcommerceDDD.OrderProcessing.Application;
 
 /// <summary>
 /// Handles compensation events for OrderSaga
@@ -13,7 +13,7 @@ public class OrderSagaCompensation(
 {
 	private readonly ICommandBus _commandBus = commandBus;
 
-	public Task HandleAsync(PaymentFailed @integrationEvent,
+	public async Task HandleAsync(PaymentFailed @integrationEvent,
 		CancellationToken cancellationToken)
 	{
 		// Payment failed due to issues
@@ -21,7 +21,8 @@ public class OrderSagaCompensation(
 			OrderId.Of(@integrationEvent.OrderId),
 			OrderCancellationReason.PaymentFailed);
 
-		return _commandBus.SendAsync(command, cancellationToken);
+		var result = await _commandBus.SendAsync(command, cancellationToken);
+		ThrowIfFailed(result);
 	}
 
 	public async Task HandleAsync(CustomerReachedCreditLimit @integrationEvent,
@@ -32,10 +33,11 @@ public class OrderSagaCompensation(
 			OrderId.Of(@integrationEvent.OrderId),
 			OrderCancellationReason.CustomerReachedCreditLimit);
 
-		await _commandBus.SendAsync(command, cancellationToken);
+		var result = await _commandBus.SendAsync(command, cancellationToken);
+		ThrowIfFailed(result);
 	}
 
-	public Task HandleAsync(ShipmentFailed @integrationEvent,
+	public async Task HandleAsync(ShipmentFailed @integrationEvent,
 		CancellationToken cancellationToken)
 	{
 		// Shipment failed due to issues
@@ -43,7 +45,8 @@ public class OrderSagaCompensation(
 			OrderId.Of(@integrationEvent.OrderId),
 			OrderCancellationReason.ShipmentFailed);
 
-		return _commandBus.SendAsync(command, cancellationToken);
+		var result = await _commandBus.SendAsync(command, cancellationToken);
+		ThrowIfFailed(result);
 	}
 
 	public async Task HandleAsync(ProductWasOutOfStock @integrationEvent,
@@ -54,7 +57,8 @@ public class OrderSagaCompensation(
 			OrderId.Of(@integrationEvent.OrderId),
 			OrderCancellationReason.ProductWasOutOfStock);
 
-		await _commandBus.SendAsync(command, cancellationToken);
+		var result = await _commandBus.SendAsync(command, cancellationToken);
+		ThrowIfFailed(result);
 	}
 
 	public async Task HandleAsync(OrderCanceled @integrationEvent,
@@ -66,7 +70,15 @@ public class OrderSagaCompensation(
 				PaymentId.Of(@integrationEvent.PaymentId!.Value),
 				PaymentCancellationReason.OrderCanceled);
 
-			await _commandBus.SendAsync(command, cancellationToken);
+			var result = await _commandBus.SendAsync(command, cancellationToken);
+			ThrowIfFailed(result);
 		}
+	}
+
+	private static void ThrowIfFailed(Result result)
+	{
+		if (result.IsFailed)
+			throw new InvalidOperationException(
+				result.Errors.FirstOrDefault()?.Message ?? "Saga compensation step failed.");
 	}
 }
