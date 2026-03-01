@@ -20,7 +20,7 @@ An experimental full-stack application showcasing cutting-edge technologies and 
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/imagesimages/ecommerceddd-3.gif" width="600" alt="Demo 3"/>
+  <img src="https://raw.githubusercontent.com/falberthen/EcommerceDDD/master/images/ecommerceddd-3.gif" width="600" alt="Demo 3"/>
 </p>
 
 ---
