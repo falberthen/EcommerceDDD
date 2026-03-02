@@ -1,0 +1,44 @@
+name: Cypress E2E Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        working-directory: src/EcommerceDDD.Spa
+        run: npm ci
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: src/EcommerceDDD.Spa
+          start: npm start -- --host 0.0.0.0
+          wait-on: 'http://localhost:4200'
+          wait-on-timeout: 180
+          # Because we're using mocks in the tests, we don't necessarily need the full backend running.
+          # But we still need the Angular app to be served.
+          browser: chrome
+        env:
+          CYPRESS_baseUrl: http://localhost:4200
+
+      - name: Upload Cypress screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-screenshots
+          path: src/EcommerceDDD.Spa/cypress/screenshots
+          if-no-files-found: ignore
