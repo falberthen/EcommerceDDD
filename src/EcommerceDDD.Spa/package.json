@@ -6,7 +6,9 @@
     "build": "ng build",
     "build-watch": "ng build --watch --configuration development",
     "test": "jest --coverage",
-    "test-watch": "jest --watchAll"
+    "test-watch": "jest --watchAll",
+    "e2e": "ng e2e",
+    "cypress:run": "cypress run"
   },
   "private": true,
   "dependencies": {
@@ -20,7 +22,7 @@
     "@angular/router": "~21.1.3",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
-    "@microsoft/kiota-bundle": "^1.0.0-preview.99",    
+    "@microsoft/kiota-bundle": "^1.0.0-preview.99",
     "@microsoft/signalr": "^7.0.5",
     "@ng-bootstrap/ng-bootstrap": "^20.0.0",
     "@popperjs/core": "^2.11.8",
@@ -34,6 +36,7 @@
     "@angular-devkit/build-angular": "^21.1.3",
     "@angular/cli": "^21.1.3",
     "@angular/compiler-cli": "~21.1.3",
+    "@cypress/schematic": "^5.0.0",
     "@fortawesome/angular-fontawesome": "^4.0.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^20.18.0",
@@ -41,6 +44,7 @@
     "jest-environment-jsdom": "^30.2.0",
     "jest-preset-angular": "^16.0.0",
     "ts-jest": "^29.4.6",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "cypress": "15.11.0"
   }
 }

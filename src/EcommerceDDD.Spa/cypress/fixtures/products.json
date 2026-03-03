@@ -1,0 +1,24 @@
+[
+  {
+    "productId": "p1",
+    "name": "MacBook Pro",
+    "description": "Powerful laptop",
+    "price": 1999.99,
+    "currencySymbol": "$",
+    "category": "Electronics",
+    "imageUrl": "https://example.com/macbook.jpg",
+    "quantityInStock": 100,
+    "quantityAddedToCart": 0
+  },
+  {
+    "productId": "p2",
+    "name": "iPhone 15",
+    "description": "Latest smartphone",
+    "price": 999.99,
+    "currencySymbol": "$",
+    "category": "Electronics",
+    "imageUrl": "https://example.com/iphone.jpg",
+    "quantityInStock": 50,
+    "quantityAddedToCart": 0
+  }
+]
