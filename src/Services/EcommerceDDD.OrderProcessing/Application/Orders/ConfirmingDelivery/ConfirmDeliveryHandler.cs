@@ -12,7 +12,6 @@ public class ConfirmDeliveryHandler(
 
 	public async Task<Result> HandleAsync(ConfirmDelivery command, CancellationToken cancellationToken)
 	{
-		Activity.Current?.SetTag("order.id", command.OrderId.Value.ToString());
 		var order = await _orderWriteRepository
 			.FetchStreamAsync(command.OrderId.Value, cancellationToken: cancellationToken);
 

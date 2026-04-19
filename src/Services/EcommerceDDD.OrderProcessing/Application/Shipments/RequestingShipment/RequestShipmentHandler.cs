@@ -12,7 +12,6 @@ public class RequestShipmentHandler(
 
 	public async Task<Result> HandleAsync(RequestShipment command, CancellationToken cancellationToken)
 	{
-		Activity.Current?.SetTag("order.id", command.OrderId.Value.ToString());
 		var order = await _orderWriteRepository
 			.FetchStreamAsync(command.OrderId.Value, cancellationToken: cancellationToken);
 
