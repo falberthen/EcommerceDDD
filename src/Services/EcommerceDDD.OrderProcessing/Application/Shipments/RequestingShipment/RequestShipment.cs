@@ -1,6 +1,6 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Application.Shipments.RequestingShipment;
 
-public record class RequestShipment : ICommand
+public record class RequestShipment : ICommand, ITraceable
 {
     public OrderId OrderId { get; private set; }
 
@@ -11,6 +11,9 @@ public record class RequestShipment : ICommand
 
         return new RequestShipment(orderId);
     }
+
+    public IEnumerable<KeyValuePair<string, string>> GetSpanTags() =>
+        [new("order.id", OrderId.Value.ToString())];
 
     private RequestShipment(OrderId orderId) => OrderId = orderId;
 }

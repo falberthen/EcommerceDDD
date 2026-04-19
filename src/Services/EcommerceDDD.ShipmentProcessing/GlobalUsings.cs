@@ -7,6 +7,7 @@ global using EcommerceDDD.Core.Exceptions;
 global using EcommerceDDD.Core.Infrastructure.Extensions;
 global using EcommerceDDD.Core.Infrastructure.Identity;
 global using EcommerceDDD.Core.Infrastructure.Marten;
+global using EcommerceDDD.Core.Infrastructure.OpenTelemetry;
 global using EcommerceDDD.Core.Infrastructure.Outbox;
 global using EcommerceDDD.Core.Infrastructure.WebApi;
 global using EcommerceDDD.Core.Persistence;
