@@ -1,6 +1,6 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Application.Payments.RecordingPayment;
 
-public record class RecordPayment : ICommand
+public record class RecordPayment : ICommand, ITraceable
 {
 	public OrderId OrderId { get; private set; }
 	public PaymentId PaymentId { get; private set; }
@@ -20,6 +20,9 @@ public record class RecordPayment : ICommand
 
 		return new RecordPayment(orderId, paymentId, totalPaid);
 	}
+
+	public IEnumerable<KeyValuePair<string, string>> GetSpanTags() =>
+		[new("order.id", OrderId.Value.ToString())];
 
 	private RecordPayment(
 		OrderId orderId,

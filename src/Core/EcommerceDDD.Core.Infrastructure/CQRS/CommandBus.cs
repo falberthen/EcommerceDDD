@@ -18,6 +18,10 @@ public class CommandBus(
 
 		using var activity = _activitySource.StartActivity(command.GetType().Name, ActivityKind.Internal);
 
+		if (activity is not null && command is ITraceable traceable)
+			foreach (var tag in traceable.GetSpanTags())
+				activity.SetTag(tag.Key, tag.Value);
+
 		Result result;
 		try
 		{

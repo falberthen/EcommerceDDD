@@ -12,7 +12,6 @@ public class RecordPaymentHandler(
 
 	public async Task<Result> HandleAsync(RecordPayment command, CancellationToken cancellationToken)
 	{
-		Activity.Current?.SetTag("order.id", command.OrderId.Value.ToString());
 		await Task.Delay(TimeSpan.FromSeconds(5));
 
 		var order = await _orderWriteRepository

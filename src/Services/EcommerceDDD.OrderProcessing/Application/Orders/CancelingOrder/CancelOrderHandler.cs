@@ -12,7 +12,6 @@ public class CancelOrderHandler(
 
 	public async Task<Result> HandleAsync(CancelOrder command, CancellationToken cancellationToken)
 	{
-		Activity.Current?.SetTag("order.id", command.OrderId.Value.ToString());
 		var order = await _orderWriteRepository
 			.FetchStreamAsync(command.OrderId.Value, cancellationToken: cancellationToken);
 

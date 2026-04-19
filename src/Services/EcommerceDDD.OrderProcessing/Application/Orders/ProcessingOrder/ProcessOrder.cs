@@ -1,6 +1,6 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Application.Orders.ProcessingOrder;
 
-public record class ProcessOrder : ICommand
+public record class ProcessOrder : ICommand, ITraceable
 {
 	public CustomerId CustomerId { get; private set; }
 	public OrderId OrderId { get; private set; }
@@ -20,6 +20,9 @@ public record class ProcessOrder : ICommand
 
 		return new ProcessOrder(customerId, orderId, quoteId);
 	}
+
+	public IEnumerable<KeyValuePair<string, string>> GetSpanTags() =>
+		[new("order.id", OrderId.Value.ToString())];
 
 	private ProcessOrder(
 		CustomerId customerId,
