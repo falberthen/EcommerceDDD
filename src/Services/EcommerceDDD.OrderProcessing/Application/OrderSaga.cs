@@ -1,6 +1,9 @@
 namespace EcommerceDDD.OrderProcessing.Application;
 
-public class OrderSaga(
+/// <summary>
+/// Handles successful events
+/// </summary>
+public partial class OrderSaga(
 	ICommandBus commandBus
 ) : IEventHandler<OrderPlaced>,
 	IEventHandler<OrderProcessed>,
