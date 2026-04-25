@@ -78,10 +78,10 @@ public class MartenRepository<TA>(
             $"outbox.publish {eventName}",
             ActivityKind.Producer);
 
-        _pendingOutboxActivity?.SetTag("messaging.system", "kafka");
-        _pendingOutboxActivity?.SetTag("messaging.destination.name", "outbox");
-        _pendingOutboxActivity?.SetTag("messaging.operation", "publish");
-        _pendingOutboxActivity?.SetTag("event.type", eventName);
+        _pendingOutboxActivity?.SetTag(MessagingAttributes.AttributeMessagingSystem, MessagingAttributes.MessagingSystemValues.Kafka);
+        _pendingOutboxActivity?.SetTag(MessagingAttributes.AttributeMessagingDestinationName, TelemetryTags.DestinationValues.Outbox);
+        _pendingOutboxActivity?.SetTag(MessagingAttributes.AttributeMessagingOperationType, MessagingAttributes.MessagingOperationTypeValues.Send);
+        _pendingOutboxActivity?.SetTag(TelemetryTags.EventType, eventName);
 
         var integrationEvent = IntegrationEvent.FromNotification(@event!);
 

@@ -1,6 +1,4 @@
-﻿using Confluent.Kafka.Admin;
-
-namespace EcommerceDDD.Core.Infrastructure.Kafka.Consumer;
+﻿namespace EcommerceDDD.Core.Infrastructure.Kafka.Consumer;
 
 public class KafkaConsumer : IEventConsumer
 {
@@ -260,13 +258,13 @@ public class KafkaConsumer : IEventConsumer
 				parentContext: default,
 				tags: null,
 				links: links);
-			activity?.SetTag("messaging.system", "kafka");
-			activity?.SetTag("messaging.destination", result.Topic);
-			activity?.SetTag("messaging.operation", "receive");
-			activity?.SetTag("messaging.kafka.consumer_group", _config.Group);
-			activity?.SetTag("messaging.kafka.partition", result.Partition.Value);
-			activity?.SetTag("messaging.kafka.message_offset", result.Offset.Value);
-			activity?.SetTag("messaging.message_id", result.Message.Key);
+			activity?.SetTag(MessagingAttributes.AttributeMessagingSystem, MessagingAttributes.MessagingSystemValues.Kafka);
+			activity?.SetTag(MessagingAttributes.AttributeMessagingDestinationName, result.Topic);
+			activity?.SetTag(MessagingAttributes.AttributeMessagingOperationType, MessagingAttributes.MessagingOperationTypeValues.Receive);
+			activity?.SetTag(MessagingAttributes.AttributeMessagingConsumerGroupName, _config.Group);
+			activity?.SetTag(MessagingAttributes.AttributeMessagingDestinationPartitionId, result.Partition.Value);
+			activity?.SetTag(MessagingAttributes.AttributeMessagingKafkaOffset, result.Offset.Value);
+			activity?.SetTag(MessagingAttributes.AttributeMessagingKafkaMessageKey, result.Message.Key);
 
 			// Deserialize the domain event from the raw outbox payload
 			var messageBytes = Encoding.UTF8.GetBytes(result.Message.Value);
@@ -312,7 +310,7 @@ public class KafkaConsumer : IEventConsumer
 	private async Task EnsureTopicsExistAsync()
 	{
 		if (_config is null)
-			throw new InvalidOperationException(nameof(Config));
+			throw new InvalidOperationException("Kafka consumer config is not initialized.");
 
 		try
 		{

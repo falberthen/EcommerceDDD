@@ -15,8 +15,8 @@ public record class CancelOrder : ICommand, ITraceable
 		return new CancelOrder(orderId, CancellationReason);
 	}
 
-	public IEnumerable<KeyValuePair<string, string>> GetSpanTags() =>
-		[new("order.id", OrderId.Value.ToString())];
+	public IEnumerable<KeyValuePair<string, object>> GetSpanTags() =>
+		[new(TelemetryTags.OrderId, OrderId.Value)];
 
 	private CancelOrder(
 		OrderId orderId,

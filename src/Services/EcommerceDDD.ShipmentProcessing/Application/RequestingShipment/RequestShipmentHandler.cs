@@ -19,6 +19,6 @@ public class RequestShipmentHandler(
 			.AppendEventsAsync(shipment, cancellationToken);
 
         return await _commandBus
-			.SendAsync(ProcessShipment.Create(shipment.Id), cancellationToken);
+			.SendAsync(ProcessShipment.Create(shipment.Id, command.OrderId), cancellationToken);
     }
 }

@@ -18,7 +18,6 @@ public class ProcessPaymentHandler(
 		if (payment is null)
 			return Result.Fail($"Payment {command.PaymentId} was not found.");
 
-		Activity.Current?.SetTag("order.id", payment.OrderId.Value.ToString());
 		try
 		{
 			if (!await _creditChecker
