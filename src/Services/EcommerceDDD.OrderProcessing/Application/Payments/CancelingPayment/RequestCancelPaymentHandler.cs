@@ -12,6 +12,7 @@ public class RequestCancelPaymentHandler(
 		try
 		{
 			await _paymentService.CancelPaymentAsync(
+				command.OrderId.Value,
 				command.PaymentId.Value,
 				(int)command.PaymentCancellationReason,
 				cancellationToken);
