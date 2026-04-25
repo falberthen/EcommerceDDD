@@ -12,6 +12,8 @@ namespace EcommerceDDD.ServiceClients.PaymentProcessing.Models
     public partial class CancelPaymentRequest : IParsable
     #pragma warning restore CS1591
     {
+        /// <summary>The orderId property</summary>
+        public Guid? OrderId { get; set; }
         /// <summary>The paymentCancellationReason property</summary>
         public int? PaymentCancellationReason { get; set; }
         /// <summary>
@@ -32,6 +34,7 @@ namespace EcommerceDDD.ServiceClients.PaymentProcessing.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
+                { "orderId", n => { OrderId = n.GetGuidValue(); } },
                 { "paymentCancellationReason", n => { PaymentCancellationReason = n.GetIntValue(); } },
             };
         }
@@ -42,6 +45,7 @@ namespace EcommerceDDD.ServiceClients.PaymentProcessing.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
+            writer.WriteGuidValue("orderId", OrderId);
             writer.WriteIntValue("paymentCancellationReason", PaymentCancellationReason);
         }
     }

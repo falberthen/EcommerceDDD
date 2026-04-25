@@ -1,8 +1,8 @@
 {
-  "descriptionHash": "D22D911A753B7710B7C0B35653FBDFCE6E9466AC28F81FCE0C9712CF5CD3006E234BAE3832A14B7FBB7302D03DA48942EE26BA0F16752F275BB3242BFDEF339C",
+  "descriptionHash": "C2A822961512D24CE6F8BBAABC2BA2B47C50E77ACC9F8F5EF4DE4EE0EC889BB0FC1A637DBF58EB910D6CE2174D86711D68D5D01C663C75281F58606422D34FD0",
   "descriptionLocation": "http://ecommerceddd-payment-processing/swagger/v2/swagger.json",
   "lockFileVersion": "1.0.0",
-  "kiotaVersion": "1.30.0",
+  "kiotaVersion": "1.31.1",
   "clientClassName": "PaymentProcessingClient",
   "typeAccessModifier": "Public",
   "clientNamespaceName": "EcommerceDDD.ServiceClients.PaymentProcessing",
