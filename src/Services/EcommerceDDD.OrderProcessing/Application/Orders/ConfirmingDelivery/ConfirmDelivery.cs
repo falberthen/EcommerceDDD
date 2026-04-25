@@ -12,8 +12,8 @@ public record class ConfirmDelivery : ICommand, ITraceable
 		return new ConfirmDelivery(orderId);
 	}
 
-	public IEnumerable<KeyValuePair<string, string>> GetSpanTags() =>
-		[new("order.id", OrderId.Value.ToString())];
+	public IEnumerable<KeyValuePair<string, object>> GetSpanTags() =>
+		[new(TelemetryTags.OrderId, OrderId.Value)];
 
 	private ConfirmDelivery(OrderId orderId)
 	{

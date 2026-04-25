@@ -28,7 +28,7 @@ public class ProcessPaymentHandlerTests
 			.Returns(Task.FromResult(true));
 
 		// When
-		var processPayment = ProcessPayment.Create(payment.Id);
+		var processPayment = ProcessPayment.Create(payment.Id, orderId);
 		var processPaymentHandler = new ProcessPaymentHandler(
 			_productInventoryHandler, _customerCreditChecker, paymentWriteRepository);
 		await processPaymentHandler.HandleAsync(processPayment, CancellationToken.None);
@@ -68,7 +68,7 @@ public class ProcessPaymentHandlerTests
 			.CheckProductsInStockAsync(Arg.Any<IReadOnlyList<ProductItem>>(), CancellationToken.None)
 			.Returns(Task.FromResult(true));
 
-		var processPayment = ProcessPayment.Create(payment.Id);
+		var processPayment = ProcessPayment.Create(payment.Id, orderId);
 		var processPaymentHandler = new ProcessPaymentHandler(
 			_productInventoryHandler, _customerCreditChecker, paymentWriteRepository);
 

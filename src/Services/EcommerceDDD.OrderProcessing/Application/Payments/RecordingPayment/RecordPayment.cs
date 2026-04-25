@@ -21,8 +21,8 @@ public record class RecordPayment : ICommand, ITraceable
 		return new RecordPayment(orderId, paymentId, totalPaid);
 	}
 
-	public IEnumerable<KeyValuePair<string, string>> GetSpanTags() =>
-		[new("order.id", OrderId.Value.ToString())];
+	public IEnumerable<KeyValuePair<string, object>> GetSpanTags() =>
+		[new(TelemetryTags.OrderId, OrderId.Value)];
 
 	private RecordPayment(
 		OrderId orderId,

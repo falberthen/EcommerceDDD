@@ -21,7 +21,7 @@ public class ShipPackageHandlerTests
         var shipment = shipmentWriteRepository.AggregateStream.First().Aggregate;
         Assert.NotNull(shipment);
 
-        var shipPackage = ProcessShipment.Create(shipment.Id);
+        var shipPackage = ProcessShipment.Create(shipment.Id, orderId);
         var shipPackageHandler = new ProcessShipmentHandler(shipmentWriteRepository);
 
         // When

@@ -17,8 +17,8 @@ public record class RequestShipment : ICommand, ITraceable
 		return new RequestShipment(orderId, productItems);
 	}
 
-	public IEnumerable<KeyValuePair<string, string>> GetSpanTags() =>
-		[new("order.id", OrderId.Value.ToString())];
+	public IEnumerable<KeyValuePair<string, object>> GetSpanTags() =>
+		[new(TelemetryTags.OrderId, OrderId.Value)];
 
 	private RequestShipment(
 		OrderId orderId,

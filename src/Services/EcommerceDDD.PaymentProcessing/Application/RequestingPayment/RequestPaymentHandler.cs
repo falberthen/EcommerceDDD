@@ -22,6 +22,6 @@ public class RequestPaymentHandler(
 			.AppendEventsAsync(payment, cancellationToken);
 
         return await _commandBus.SendAsync(
-            ProcessPayment.Create(payment.Id), cancellationToken);
+            ProcessPayment.Create(payment.Id, command.OrderId), cancellationToken);
     }
 }
