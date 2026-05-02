@@ -1,3 +1,6 @@
+include:
+  - docker-compose.infra.yml
+
 x-dotnet-service: &dotnet-service
   environment:
     ASPNETCORE_ENVIRONMENT: '${ASPNETCORE_ENVIRONMENT:-Development}'
@@ -12,112 +15,6 @@ x-dotnet-service: &dotnet-service
   restart: on-failure
 
 services:
-  postgres:
-    image: postgres:18
-    container_name: postgresql
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: P@55w0rd
-    command: >
-      postgres -c wal_level=logical -c max_wal_senders=5 -c max_replication_slots=5
-    ports:
-      - '5432:5432'
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-    volumes:
-      - postgres:/var/lib/postgresql
-      - './scripts/db_init.sql:/docker-entrypoint-initdb.d/db_init.sql'
-    restart: on-failure
-
-  kafka:
-    image: confluentinc/cp-kafka:7.8.0
-    ports:
-      - '29092:29092'
-      - '9092:9092'
-    environment:
-      KAFKA_NODE_ID: 1
-      KAFKA_PROCESS_ROLES: 'broker,controller'
-      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:9093'
-      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
-      KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
-      KAFKA_LISTENERS: 'PLAINTEXT://kafka:29092,CONTROLLER://kafka:9093,PLAINTEXT_HOST://0.0.0.0:9092'
-      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:29092,PLAINTEXT_HOST://kafka:9092'
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
-      CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-      KAFKA_LOG_DIRS: /var/lib/kafka/data
-      KAFKA_LOG_RETENTION_HOURS: 168
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
-      KAFKA_LOG_CLEANUP_POLICY: delete
-      KAFKA_REPLICA_FETCH_MAX_BYTES: 104857600
-      KAFKA_REPLICA_SOCKET_TIMEOUT_MS: 300000
-    healthcheck:
-      test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "kafka:29092"]
-      interval: 20s
-      timeout: 10s
-      retries: 5
-      start_period: 40s
-    volumes:
-      - kafka-data:/var/lib/kafka/data
-    restart: always
-
-  kafka-ui:
-    image: provectuslabs/kafka-ui:latest
-    ports:
-      - '8080:8080'
-    environment:
-      KAFKA_CLUSTERS_0_NAME: local
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: 'kafka:29092'
-    restart: on-failure
-    depends_on:
-      kafka:
-        condition: service_healthy
-
-  connect:
-    image: debezium/connect:2.5
-    ports:
-      - '8083:8083'
-    environment:
-      BOOTSTRAP_SERVERS: 'kafka:29092'
-      GROUP_ID: 1
-      CONFIG_STORAGE_TOPIC: CONNECT_CONFIGS
-      OFFSET_STORAGE_TOPIC: CONNECT_OFFSETS
-      STATUS_STORAGE_TOPIC: CONNECT_STATUSES
-    healthcheck:
-      test: curl --fail http://localhost:8083/ || exit 1
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 40s
-    volumes:
-      - debezium-data:/kafka/data
-    restart: always
-    depends_on:
-      postgres:
-        condition: service_healthy
-      kafka:
-        condition: service_healthy
-
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    environment:
-      PGADMIN_DEFAULT_EMAIL: '${PGADMIN_DEFAULT_EMAIL:-pgadmintest@pgadmin.org}'
-      PGADMIN_DEFAULT_PASSWORD: '${PGADMIN_DEFAULT_PASSWORD:-@dm1n}'
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-    volumes:
-      - pgadmin:/var/lib/pgadmin
-    ports:
-      - '8081:80'
-    restart: on-failure
-    depends_on:
-      postgres:
-        condition: service_started
-
   # Crosscutting
   ecommerceddd-identityserver:
     <<: *dotnet-service
@@ -325,15 +222,6 @@ services:
       ecommerceddd-identityserver:
         condition: service_started
 
-  # Observability
-  aspire-dashboard:
-    image: mcr.microsoft.com/dotnet/aspire-dashboard:9.1
-    ports:
-      - '18888:18888'
-    environment:
-      DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS: 'true'
-    restart: on-failure
-
   # Frontend SPA (Angular)
   # Usage: docker compose --profile frontend up
   ecommerceddd-spa:
@@ -347,16 +235,3 @@ services:
     depends_on:
       ecommerceddd-apigateway:
         condition: service_healthy
-
-networks:
-  default:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.28.0.0/16
-
-volumes:
-  postgres:
-  kafka-data:
-  pgadmin:
-  debezium-data:
