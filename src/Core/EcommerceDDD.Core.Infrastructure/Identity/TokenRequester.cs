@@ -13,23 +13,33 @@ public class TokenRequester(
 	private readonly IMemoryCache _cache = cache;
 	private readonly IHttpContextAccessor _contextAccessor = httpContextAccessor;
 
+	// Static so all transient instances share one lock (TokenRequester is registered as Transient).
+	private static readonly SemaphoreSlim _refreshLock = new(1, 1);
+
 	private const string _applicationKey = "application_token";
 	private const string _userAccessTokenKey = "access_token";
 
-	// Caching application token
 	public async Task<TokenResponse?> GetApplicationTokenAsync()
 	{
-		TokenResponse? tokenResponse = default!;
-		var isStoredToken = _cache.TryGetValue(_applicationKey, out tokenResponse);
+		// Fast path: valid token already cached.
+		if (_cache.TryGetValue(_applicationKey, out TokenResponse? tokenResponse))
+			return tokenResponse;
 
-		if (!isStoredToken)
-			tokenResponse = await RequestApplicationTokenAsync(_tokenIssuerSettings)
-				?? throw new InvalidOperationException("No active HttpContext found.");
+		// Slow path: serialize concurrent refreshes so only one thread hits IdentityServer.
+		await _refreshLock.WaitAsync();
+		try
+		{
+			// Double-check after acquiring the lock — another thread may have populated the cache.
+			if (_cache.TryGetValue(_applicationKey, out tokenResponse))
+				return tokenResponse;
 
-		if (isStoredToken && IsTokenExpired(tokenResponse!))
-			tokenResponse = await RequestApplicationTokenAsync(_tokenIssuerSettings);
-
-		return tokenResponse;
+			return await RequestApplicationTokenAsync(_tokenIssuerSettings)
+				?? throw new InvalidOperationException("Failed to acquire application token.");
+		}
+		finally
+		{
+			_refreshLock.Release();
+		}
 	}
 
 	public async Task<TokenResponse?> GetUserTokenFromCredentialsAsync(string userName, string password)
@@ -74,19 +84,17 @@ public class TokenRequester(
 			});
 
 		if (tokenResponse.HttpStatusCode == System.Net.HttpStatusCode.OK)
-			_cache.Set(_applicationKey, tokenResponse);
+		{
+			var options = new MemoryCacheEntryOptions();
+			if (!string.IsNullOrEmpty(tokenResponse.AccessToken))
+			{
+				var jwt = new JwtSecurityTokenHandler().ReadJwtToken(tokenResponse.AccessToken);
+				// Evict 60 s before the token actually expires to avoid clock-skew rejections.
+				options.SetAbsoluteExpiration(jwt.ValidTo.AddSeconds(-60));
+			}
+			_cache.Set(_applicationKey, tokenResponse, options);
+		}
 
 		return tokenResponse;
-	}
-
-	private bool IsTokenExpired(TokenResponse tokenResponse)
-	{
-		var tokenHandler = new JwtSecurityTokenHandler();
-		var jwtSecurityToken = tokenHandler.ReadJwtToken(tokenResponse.AccessToken);
-
-		if (jwtSecurityToken.ValidTo < DateTime.UtcNow.AddSeconds(10))
-			return true;
-
-		return false;
 	}
 }
