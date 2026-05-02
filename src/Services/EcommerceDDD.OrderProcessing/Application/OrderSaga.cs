@@ -1,7 +1,12 @@
 namespace EcommerceDDD.OrderProcessing.Application;
 
 /// <summary>
-/// Handles successful events
+/// Coordinates the order fulfilment SAGA, acting as a Process Manager.
+/// Happy path:  OrderPlaced → ProcessOrder → OrderProcessed → RequestPayment
+///              → PaymentFinalized → RecordPayment + RequestShipment
+///              → ShipmentFinalized → RecordShipment
+/// Compensation: PaymentFailed | CreditLimitReached | OutOfStock | ShipmentFailed → CancelOrder
+///              → OrderCanceled (if paid) → RequestCancelPayment
 /// </summary>
 public partial class OrderSaga(
 	ICommandBus commandBus
