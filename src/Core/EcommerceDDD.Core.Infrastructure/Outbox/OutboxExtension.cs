@@ -16,6 +16,7 @@ public static class OutboxExtension
             services.Configure<DebeziumSettings>(debeziumSettings);
             services.TryAddSingleton<IDebeziumConnectorSetup, DebeziumConnectorSetup>();
             services.AddHostedService<DebeziumBackgroundWorker>();
+            services.AddHostedService<OutboxCleanupWorker>();
         }
 
         return services;

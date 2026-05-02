@@ -22,7 +22,7 @@ public static class MessagingAttributes
 	public const string AttributeMessagingConsumerGroupName = "messaging.consumer.group.name";
 
 	/// <summary>The offset of a record in the corresponding Kafka partition.</summary>
-	public const string AttributeMessagingKafkaOffset = "messaging.kafka.offset";
+	public const string AttributeMessagingKafkaOffset = "messaging.kafka.message.offset";
 
 	/// <summary>The Kafka message key (partition routing key; not a unique message id).</summary>
 	public const string AttributeMessagingKafkaMessageKey = "messaging.kafka.message.key";

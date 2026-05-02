@@ -24,7 +24,8 @@ public class TokenRequesterTests
 		_options.Value.Returns(new TokenIssuerSettings() { Authority = _url.AbsoluteUri });
 
 		var tokenRequester = new TokenRequester(
-			_cache, _contextAccessor,
+			_cache, 
+			_contextAccessor,
 			_options,
 			_httpClientFactory);
 
