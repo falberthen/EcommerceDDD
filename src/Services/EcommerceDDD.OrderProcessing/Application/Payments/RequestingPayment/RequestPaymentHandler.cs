@@ -23,6 +23,10 @@ public class RequestPaymentHandler(
 		if (order is null)
 			return Result.Fail($"Failed to find the order {command.OrderId}.");
 
+		// Idempotency: payment already requested/recorded in a prior (retried) saga step.
+		if (order.Status != OrderStatus.Processed)
+			return Result.Ok();
+
 		var productItems = order.OrderLines
 			.Select(ol => new PaymentProductItem(
 				ol.ProductItem.ProductId.Value,

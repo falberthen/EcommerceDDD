@@ -18,6 +18,10 @@ public class RequestShipmentHandler(
 		if (order is null)
 			return Result.Fail($"Failed to find the order {command.OrderId}.");
 
+		// Idempotency: shipment already requested/recorded in a prior (retried) saga step.
+		if (order.Status != OrderStatus.Paid)
+			return Result.Ok();
+
 		var productItems = order.OrderLines
 			.Select(ol => new ShipmentProductItem(
 				ol.ProductItem.ProductId.Value,
