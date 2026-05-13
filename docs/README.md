@@ -7,7 +7,9 @@ An experimental full-stack application showcasing cutting-edge technologies and 
 ![Build](https://github.com/falberthen/ecommerceddd/actions/workflows/ecommerceddd-build.yml/badge.svg) ![GitHub Issues](https://img.shields.io/github/issues/falberthen/ecommerceddd)
 
 
-⭐ **If you find this project useful, please consider giving it a star!** It helps others discover the project. ![GitHub Stars](https://img.shields.io/github/stars/falberthen/ecommerceddd?style=social&logo=github)
+⭐ **If you find this project useful, please consider giving it a star!** It helps others discover the project.  
+
+[![GitHub stars](https://img.shields.io/github/stars/falberthen/EcommerceDDD?style=social)](https://github.com/falberthen/EcommerceDDD/stargazers)
 
 <br/>
 
