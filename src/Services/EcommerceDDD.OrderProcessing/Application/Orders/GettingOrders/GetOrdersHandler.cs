@@ -15,7 +15,7 @@ public class GetOrdersHandler(
 
 	public async Task<Result<IReadOnlyList<OrderViewModel>>> HandleAsync(GetOrders query, CancellationToken cancellationToken)
 	{
-		var userInfo = await _userInfoRequester.RequestUserInfoAsync();
+		var userInfo = _userInfoRequester.GetCurrentUser();
 
 		var orders = await _querySession.Query<OrderDetails>()
 			.Where(o => o.CustomerId == userInfo!.CustomerId)

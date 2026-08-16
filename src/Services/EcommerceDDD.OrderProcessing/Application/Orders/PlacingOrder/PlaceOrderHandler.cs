@@ -3,7 +3,8 @@ namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
 public class PlaceOrderHandler(
 	IOrderNotificationService orderNotificationService,
 	IQuoteService quoteService,
-	IEventStoreRepository<Order> orderWriteRepository
+	IEventStoreRepository<Order> orderWriteRepository,
+	IUserInfoRequester userInfoRequester
 ) : ICommandHandler<PlaceOrder>
 {
 	private readonly IOrderNotificationService _orderNotificationService = orderNotificationService
@@ -12,6 +13,8 @@ public class PlaceOrderHandler(
 		?? throw new ArgumentNullException(nameof(quoteService));
 	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository
 		?? throw new ArgumentNullException(nameof(orderWriteRepository));
+	private readonly IUserInfoRequester _userInfoRequester = userInfoRequester
+		?? throw new ArgumentNullException(nameof(userInfoRequester));
 
 	public async Task<Result> HandleAsync(PlaceOrder command, CancellationToken cancellationToken)
 	{
@@ -20,6 +23,12 @@ public class PlaceOrderHandler(
 			return Result.Fail(quoteResult.Errors);
 
 		var quote = quoteResult.Value!;
+
+		// The order is placed for the quote's owner, so the quote must belong to the caller.
+		var ownershipResult = _userInfoRequester
+			.EnsureCurrentCustomerOwns(quote.CustomerId!.Value);
+		if (ownershipResult.IsFailed)
+			return ownershipResult;
 
 		if (!quote.Items!.Any())
 			return Result.Fail("No quote items found for customer.");

@@ -2,13 +2,16 @@ namespace EcommerceDDD.OrderProcessing.Application.Orders.ConfirmingDelivery;
 
 public class ConfirmDeliveryHandler(
 	IOrderNotificationService orderNotificationService,
-	IEventStoreRepository<Order> orderWriteRepository
+	IEventStoreRepository<Order> orderWriteRepository,
+	IUserInfoRequester userInfoRequester
 ) : ICommandHandler<ConfirmDelivery>
 {
 	private readonly IOrderNotificationService _orderNotificationService = orderNotificationService
 		?? throw new ArgumentNullException(nameof(orderNotificationService));
 	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository
 		?? throw new ArgumentNullException(nameof(orderWriteRepository));
+	private readonly IUserInfoRequester _userInfoRequester = userInfoRequester
+		?? throw new ArgumentNullException(nameof(userInfoRequester));
 
 	public async Task<Result> HandleAsync(ConfirmDelivery command, CancellationToken cancellationToken)
 	{
@@ -17,6 +20,11 @@ public class ConfirmDeliveryHandler(
 
 		if (order is null)
 			return Result.Fail($"Failed to find the order {command.OrderId}.");
+
+		var ownershipResult = _userInfoRequester
+			.EnsureCurrentCustomerOwns(order.CustomerId.Value);
+		if (ownershipResult.IsFailed)
+			return ownershipResult;
 
 		if (order.ShipmentId is null)
 			return Result.Fail($"Order {command.OrderId} has no associated shipment.");
