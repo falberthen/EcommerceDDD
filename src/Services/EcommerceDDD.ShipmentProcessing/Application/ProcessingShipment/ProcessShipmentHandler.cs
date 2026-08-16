@@ -14,7 +14,7 @@ public class ProcessShipmentHandler(
 				.FetchStreamAsync(command.ShipmentId.Value, cancellationToken: cancellationToken);
 
 		if (shipment is null)
-			return Result.Fail($"The shipment {command.ShipmentId} was not found.");
+			return Result.Fail($"The shipment {command.ShipmentId.Value} was not found.");
 
 		try
 		{

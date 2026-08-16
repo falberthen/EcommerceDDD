@@ -16,7 +16,7 @@ public class ProcessPaymentHandler(
 			.FetchStreamAsync(command.PaymentId.Value, cancellationToken: cancellationToken);
 
 		if (payment is null)
-			return Result.Fail($"Payment {command.PaymentId} was not found.");
+			return Result.Fail($"Payment {command.PaymentId.Value} was not found.");
 
 		try
 		{
