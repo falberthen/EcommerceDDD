@@ -1,6 +1,6 @@
 namespace EcommerceDDD.SignalR.API.Controllers;
 
-[Authorize]
+[Authorize(Roles = Roles.M2MAccess)] 
 [ApiController]
 [ApiVersion(ApiVersions.V2)]
 [Route("api/v{version:apiVersion}/signalr")]

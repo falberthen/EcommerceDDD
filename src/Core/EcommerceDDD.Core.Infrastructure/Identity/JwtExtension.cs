@@ -33,4 +33,33 @@ public static class JwtExtension
 
 		return services;
 	}
+
+	/// <summary>
+	/// Accepts the access token from the "access_token" query string for the given hub path.
+	/// A browser cannot set an Authorization header on the WebSocket handshake, so the SignalR
+	/// client sends it as a query-string parameter instead.
+	/// </summary>
+	public static IServiceCollection AddHubQueryStringAuthentication(this IServiceCollection services,
+		string hubPath)
+	{
+		if (string.IsNullOrWhiteSpace(hubPath))
+			throw new ArgumentNullException(nameof(hubPath));
+
+		services.Configure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, options =>
+			options.Events = new JwtBearerEvents
+			{
+				OnMessageReceived = context =>
+				{
+					var accessToken = context.Request.Query["access_token"];
+
+					if (!string.IsNullOrEmpty(accessToken)
+						&& context.HttpContext.Request.Path.StartsWithSegments(hubPath))
+						context.Token = accessToken;
+
+					return Task.CompletedTask;
+				}
+			});
+
+		return services;
+	}
 }
