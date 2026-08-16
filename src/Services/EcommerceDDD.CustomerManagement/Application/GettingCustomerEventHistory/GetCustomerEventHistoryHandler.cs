@@ -13,7 +13,7 @@ public class GetCustomerEventHistoryHandler(
 	public async Task<Result<IReadOnlyList<CustomerEventHistory>>> HandleAsync(GetCustomerEventHistory query,
 		CancellationToken cancellationToken)
 	{
-		UserInfo? userInfo = await _userInfoRequester.RequestUserInfoAsync();
+		UserInfo? userInfo = _userInfoRequester.GetCurrentUser();
 
 		if (userInfo is null)
 			return Result.Fail<IReadOnlyList<CustomerEventHistory>>(

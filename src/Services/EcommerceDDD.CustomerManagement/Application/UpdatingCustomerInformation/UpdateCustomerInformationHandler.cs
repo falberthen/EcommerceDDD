@@ -8,15 +8,14 @@ public class UpdateCustomerInformationHandler(
 {
 	private readonly IEventStoreRepository<Customer> _customerWriteRepository = customerWriteRepository
 		?? throw new ArgumentNullException(nameof(customerWriteRepository));
-	private IUserInfoRequester _userInfoRequester { get; set; } = userInfoRequester
+	private readonly IUserInfoRequester _userInfoRequester = userInfoRequester
 		?? throw new ArgumentNullException(nameof(userInfoRequester));
 	private readonly IQuerySession _querySession = querySession
 		?? throw new ArgumentNullException(nameof(querySession));
 
 	public async Task<Result> HandleAsync(UpdateCustomerInformation command, CancellationToken cancellationToken)
     {
-		UserInfo? response = await _userInfoRequester
-			.RequestUserInfoAsync();
+		UserInfo? response = _userInfoRequester.GetCurrentUser();
 
 		var customerDetails = _querySession.Query<CustomerDetails>()
 			.FirstOrDefault(c => c.Id == response!.CustomerId);
