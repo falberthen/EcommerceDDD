@@ -349,3 +349,9 @@ healthchecksdb
 /src/EcommerceDDD.Spa/.vscode/settings.json
 /.claude/settings.local.json
 /src/.claude/settings.local.json
+
+# Development signing key generated at startup by AddDeveloperSigningCredential.
+# Contains the RSA private key, so it must never be committed.
+tempkey.jwk
+/src/Crosscutting/EcommerceDDD.IdentityServer/tempkey.jwk
+/src/Crosscutting/EcommerceDDD.IdentityServer/tempkey.jwk
