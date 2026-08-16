@@ -48,14 +48,13 @@ public class MartenRepository<TA>(
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public async Task<TA> FetchStreamAsync(Guid id, int? version = null, CancellationToken cancellationToken = default)
+    public async Task<TA?> FetchStreamAsync(Guid id, int? version = null, CancellationToken cancellationToken = default)
     {
         var aggregate = await _documentSession.Events.AggregateStreamAsync<TA>(
 			id, version ?? 0, 
 			token: cancellationToken
 		);
-        return aggregate ?? 
-			throw new InvalidOperationException($"No aggregate found with id {id}.");
+		return aggregate;
     }
 
     /// <summary>

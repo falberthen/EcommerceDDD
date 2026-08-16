@@ -3,6 +3,7 @@ namespace EcommerceDDD.Core.Infrastructure.WebApi;
 [ProducesErrorResponseType(typeof(ProblemDetails))]
 [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
 [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
 [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
 [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status422UnprocessableEntity)]
 [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
@@ -51,6 +52,14 @@ public class CustomControllerBase : ControllerBase
 	protected virtual IActionResult MapFailure(IResultBase result)
 	{
 		var firstMessage = result.Errors.FirstOrDefault()?.Message ?? "Unexpected error.";
+
+		// 403 - Authenticated, but the resource belongs to someone else
+		if (result.Errors.OfType<ForbiddenError>().Any())
+		{
+			return this.ForbiddenProblem(
+				detail: firstMessage,
+				title: "Forbidden");
+		}
 
 		// 404 - Not found
 		if (result.Errors.OfType<RecordNotFoundError>().Any())

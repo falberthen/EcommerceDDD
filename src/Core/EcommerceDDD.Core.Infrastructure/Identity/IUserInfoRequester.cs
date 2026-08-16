@@ -1,6 +1,6 @@
-﻿namespace EcommerceDDD.Core.Infrastructure.Identity;
+namespace EcommerceDDD.Core.Infrastructure.Identity;
 
 public interface IUserInfoRequester
 {
-	Task<UserInfo?> RequestUserInfoAsync();
+	UserInfo GetCurrentUser();
 }
