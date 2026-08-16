@@ -10,6 +10,7 @@ services.AddEndpointsApiExplorer();
 services.AddCoreInfrastructure(builder.Configuration);
 services.AddHealthChecks();
 services.AddSignalR();
+services.AddHubQueryStringAuthentication(HubPaths.OrderStatushub);
 
 // Order status updater
 services.AddScoped<IOrderStatusUpdater, OrderStatusUpdater>();

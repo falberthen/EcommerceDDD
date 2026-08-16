@@ -40,8 +40,17 @@ public class ConfirmDeliveryHandlerTests
 
 		var orderNotificationService = Substitute.For<IOrderNotificationService>();
 
+		var userInfoRequester = Substitute.For<IUserInfoRequester>();
+		userInfoRequester.GetCurrentUser()
+			.Returns(new UserInfo()
+			{
+				UserId = Guid.NewGuid().ToString(),
+				CustomerId = customerId.Value
+			});
+
 		var confirmDelivery = ConfirmDelivery.Create(order.Id);
-		var confirmDeliveryHandler = new ConfirmDeliveryHandler(orderNotificationService, orderWriteRepository);
+		var confirmDeliveryHandler = new ConfirmDeliveryHandler(orderNotificationService,
+			orderWriteRepository, userInfoRequester);
 
 		// When
 		await confirmDeliveryHandler.HandleAsync(confirmDelivery, CancellationToken.None);

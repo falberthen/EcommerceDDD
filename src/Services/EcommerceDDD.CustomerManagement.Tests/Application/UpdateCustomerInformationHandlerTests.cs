@@ -33,12 +33,12 @@ public class UpdateCustomerInformationHandlerTests
 		_querySession.Query<CustomerDetails>().Returns(martenQueryable);
 
 		// mock for user info requester
-		_userInfoRequester.RequestUserInfoAsync()
-			.Returns(Task.FromResult(new UserInfo()
+		_userInfoRequester.GetCurrentUser()
+			.Returns(new UserInfo()
 			{
 				UserId = Guid.NewGuid().ToString(),
 				CustomerId = customer.Id.Value
-			}));
+			});
 
 		var updateCommand = UpdateCustomerInformation
 			.Create("New Name", "New Address", creditLimit);

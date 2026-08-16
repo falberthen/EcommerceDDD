@@ -124,8 +124,8 @@ export class OrdersComponent implements OnInit {
       }
     }
 
-    if (conn.state === 'Connected') {
-      conn.invoke('JoinCustomerToGroup', this.authService.currentCustomer!.id);
+    if (conn.state === 'Connected') {      
+      conn.invoke('JoinCustomerToGroup');
     }
   }
 
