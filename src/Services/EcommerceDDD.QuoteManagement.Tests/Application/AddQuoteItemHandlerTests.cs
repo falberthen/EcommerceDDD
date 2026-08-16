@@ -26,7 +26,7 @@ public class AddQuoteItemHandlerTests
 		await quoteWriteRepository.AppendEventsAsync(quote);
 
 		var addQuoteItem = AddQuoteItem.Create(quote.Id, _productId, _productQuantity);
-		var addQuoteItemHandler = new AddQuoteItemHandler(quoteWriteRepository, _productMapper);
+		var addQuoteItemHandler = new AddQuoteItemHandler(quoteWriteRepository, _productMapper, _userInfoRequester);
 
 		// When
 		await addQuoteItemHandler.HandleAsync(addQuoteItem, CancellationToken.None);
@@ -60,7 +60,7 @@ public class AddQuoteItemHandlerTests
 		await quoteWriteRepository.AppendEventsAsync(quote);
 
 		var addQuoteItem = AddQuoteItem.Create(quote.Id, _productId, _productQuantity);
-		var addQuoteItemHandler = new AddQuoteItemHandler(quoteWriteRepository, _productMapper);
+		var addQuoteItemHandler = new AddQuoteItemHandler(quoteWriteRepository, _productMapper, _userInfoRequester);
 		await addQuoteItemHandler.HandleAsync(addQuoteItem, CancellationToken.None);
 
 		var productNewQuantity = 12;
@@ -82,4 +82,13 @@ public class AddQuoteItemHandlerTests
 	private CustomerId _customerId = CustomerId.Of(Guid.NewGuid());
 	private ProductId _productId = ProductId.Of(Guid.NewGuid());
 	private IProductMapper _productMapper = Substitute.For<IProductMapper>();
+	private IUserInfoRequester _userInfoRequester = Substitute.For<IUserInfoRequester>();
+
+	public AddQuoteItemHandlerTests() =>
+		_userInfoRequester.GetCurrentUser()
+			.Returns(new UserInfo()
+			{
+				UserId = Guid.NewGuid().ToString(),
+				CustomerId = _customerId.Value
+			});
 }

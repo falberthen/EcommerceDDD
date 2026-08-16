@@ -8,14 +8,13 @@ public class GetCustomerOpenQuoteHandler(
 {
 	private readonly IQuerySession _querySession = querySession;
 	private readonly IProductMapper _productMapper = productMapper;
-	private IUserInfoRequester _userInfoRequester { get; set; } = userInfoRequester
+	private readonly IUserInfoRequester _userInfoRequester = userInfoRequester
 		?? throw new ArgumentNullException(nameof(userInfoRequester));
 
 	public async Task<Result<QuoteViewModel>> HandleAsync(GetCustomerOpenQuote query, CancellationToken cancellationToken)
     {
 		CustomerId customerId = default!;
-		UserInfo? userInfo = await _userInfoRequester
-			.RequestUserInfoAsync();
+		UserInfo? userInfo = _userInfoRequester.GetCurrentUser();
 
 		customerId = CustomerId.Of(userInfo!.CustomerId);
 

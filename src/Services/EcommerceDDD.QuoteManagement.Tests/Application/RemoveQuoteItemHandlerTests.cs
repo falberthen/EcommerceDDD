@@ -19,13 +19,21 @@ public class RemoveQuoteItemHandlerTests
 		var quoteWriteRepository = new DummyEventStoreRepository<Quote>();
 		await quoteWriteRepository.AppendEventsAsync(quote);
 
+		var userInfoRequester = Substitute.For<IUserInfoRequester>();
+		userInfoRequester.GetCurrentUser()
+			.Returns(new UserInfo()
+			{
+				UserId = Guid.NewGuid().ToString(),
+				CustomerId = customerId.Value
+			});
+
 		var command = RemoveQuoteItem.Create(quote.Id, productId);
-		var commandHandler = new RemoveQuoteItemHandler(quoteWriteRepository);
+		var commandHandler = new RemoveQuoteItemHandler(quoteWriteRepository, userInfoRequester);
 
 		// When
 		await commandHandler.HandleAsync(command, CancellationToken.None);
 
-		// Then        
+		// Then
 		var storedQuote = quoteWriteRepository.AggregateStream.First().Aggregate;
 		Assert.NotNull(storedQuote);
 		Assert.Empty(storedQuote.Items);

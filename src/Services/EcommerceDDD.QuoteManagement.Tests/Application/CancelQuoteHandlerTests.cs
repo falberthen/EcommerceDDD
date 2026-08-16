@@ -9,12 +9,12 @@ public class CancelQuoteHandlerTests
 		Guid customerId = Guid.NewGuid();
 		var quoteWriteRepository = new DummyEventStoreRepository<Quote>();
 
-		_userInfoRequester.RequestUserInfoAsync()
-			.Returns(Task.FromResult(new UserInfo()
+		_userInfoRequester.GetCurrentUser()
+			.Returns(new UserInfo()
 			{
 				UserId = Guid.NewGuid().ToString(),
 				CustomerId = customerId
-			}));
+			});
 
 		var openCommand = OpenQuote.Create(_currency);
 		var openCommandHandler = new OpenQuoteHandler(_userInfoRequester,
@@ -23,7 +23,7 @@ public class CancelQuoteHandlerTests
 
 		var quote = quoteWriteRepository.AggregateStream.First().Aggregate;
 		var cancelCommand = CancelQuote.Create(quote.Id);
-		var cancelCommandHandler = new CancelQuoteHandler(quoteWriteRepository);
+		var cancelCommandHandler = new CancelQuoteHandler(quoteWriteRepository, _userInfoRequester);
 
 		// When
 		await cancelCommandHandler.HandleAsync(cancelCommand, CancellationToken.None);

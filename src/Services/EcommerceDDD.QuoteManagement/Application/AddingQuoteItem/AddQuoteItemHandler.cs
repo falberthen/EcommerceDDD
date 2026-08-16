@@ -2,11 +2,14 @@ namespace EcommerceDDD.QuoteManagement.Application.AddingQuoteItem;
 
 public class AddQuoteItemHandler(
     IEventStoreRepository<Quote> quoteWriteRepository,
-    IProductMapper productMapper
+    IProductMapper productMapper,
+    IUserInfoRequester userInfoRequester
 ) : ICommandHandler<AddQuoteItem>
 {
 	private readonly IEventStoreRepository<Quote> _quoteWriteRepository = quoteWriteRepository;
 	private readonly IProductMapper _productMapper = productMapper;
+	private readonly IUserInfoRequester _userInfoRequester = userInfoRequester
+		?? throw new ArgumentNullException(nameof(userInfoRequester));
 
 	public async Task<Result> HandleAsync(AddQuoteItem command, CancellationToken cancellationToken)
     {
@@ -14,7 +17,12 @@ public class AddQuoteItemHandler(
 			.FetchStreamAsync(command.QuoteId.Value, cancellationToken: cancellationToken);
 
         if (quote is null)
-            return Result.Fail($"The quote {command.QuoteId} was not found.");
+            return Result.Fail($"The quote {command.QuoteId.Value} was not found.");
+
+		var ownershipResult = _userInfoRequester
+			.EnsureCurrentCustomerOwns(quote.CustomerId.Value);
+		if (ownershipResult.IsFailed)
+			return ownershipResult;
 
         var currency = Currency.OfCode(quote.Currency.Code);
         var productDataResult = await _productMapper

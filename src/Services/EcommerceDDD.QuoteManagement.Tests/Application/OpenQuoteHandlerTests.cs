@@ -9,12 +9,12 @@ public class OpenQuoteHandlerTests
 		var customerId = CustomerId.Of(Guid.NewGuid());
 		var quoteWriteRepository = new DummyEventStoreRepository<Quote>();
 
-		_userInfoRequester.RequestUserInfoAsync()
-			.Returns(Task.FromResult(new UserInfo()
+		_userInfoRequester.GetCurrentUser()
+			.Returns(new UserInfo()
 			{
 				UserId = Guid.NewGuid().ToString(),
 				CustomerId = customerId.Value
-			}));
+			});
 
 		var currency = Currency.OfCode(Currency.USDollar.Code);
 		var command = OpenQuote.Create(currency);

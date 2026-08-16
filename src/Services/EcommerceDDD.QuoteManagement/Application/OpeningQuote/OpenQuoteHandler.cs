@@ -11,8 +11,7 @@ public class OpenQuoteHandler(
 
 	public async Task<Result> HandleAsync(OpenQuote command, CancellationToken cancellationToken)
     {
-		UserInfo? userInfo = await userInfoRequester
-			.RequestUserInfoAsync();
+		UserInfo? userInfo = userInfoRequester.GetCurrentUser();
 
 		if (userInfo is null)
 			return Result.Fail($"The was an issue loading quote for the customer.");
