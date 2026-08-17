@@ -1,4 +1,6 @@
-﻿namespace EcommerceDDD.IdentityServer.Configurations;
+﻿using Secret = Duende.IdentityServer.Models.Secret;
+
+namespace EcommerceDDD.IdentityServer.Configurations;
 
 public class IdentityConfiguration
 {
@@ -72,7 +74,7 @@ public class IdentityConfiguration
 					_deleteScope
 				},
 				AlwaysIncludeUserClaimsInIdToken = true,
-				AccessTokenLifetime = 86400
+				AccessTokenLifetime = 14400
 			},
 
             // Machine to machine client
@@ -94,7 +96,7 @@ public class IdentityConfiguration
 					_writeScope,
 					_deleteScope
 				},
-				AccessTokenLifetime = 86400,
+				AccessTokenLifetime = 3600,
 				Claims = new List<ClientClaim>
 				{
 					new ClientClaim(JwtClaimTypes.Role, Roles.M2MAccess)
