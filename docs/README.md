@@ -122,6 +122,7 @@ Microservices communicate directly using **Kiota-generated typed HTTP clients**.
 | Entity Framework Core | 10.0.3 |
 | Npgsql (PostgreSQL) | 10.0.0 |
 | Duende IdentityServer | 7.4.6 |
+| ASP.NET Data Protection | 10.0.3 |
 | Polly | 8.6.5 |
 | Microsoft Kiota | 1.21.2 |
 | OpenTelemetry | 1.15.0 |

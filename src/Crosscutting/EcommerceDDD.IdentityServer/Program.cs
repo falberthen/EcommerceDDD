@@ -42,9 +42,15 @@ builder.Services.AddAuthorization(options =>
     options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
 });
 
+builder.Services.AddDataProtection()
+    .PersistKeysToDbContext<IdentityApplicationDbContext>();
+
 builder.Services.AddIdentityServer(opt =>
-    opt.IssuerUri = tokenIssuerSettings.GetValue<string>("Authority"))
-    .AddDeveloperSigningCredential() // without a certificate, for dev only
+	{
+		opt.IssuerUri = tokenIssuerSettings.GetValue<string>("Authority");
+
+		opt.KeyManagement.Enabled = true;
+	})
     .AddOperationalStore(options =>
     {
         options.ConfigureDbContext = b =>

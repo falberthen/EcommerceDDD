@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup Label="Authentication and Identity">
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.3" />
+    <PackageVersion Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="10.0.3" />
     <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.3" />
     <PackageVersion Include="Duende.IdentityServer" Version="7.4.6" />
     <PackageVersion Include="Duende.IdentityServer.AspNetIdentity" Version="7.4.6" />
