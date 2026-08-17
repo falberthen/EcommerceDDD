@@ -1,9 +1,10 @@
 ﻿namespace EcommerceDDD.IdentityServer.Database;
 
-public class IdentityApplicationDbContext : IdentityDbContext<ApplicationUser>
+public class IdentityApplicationDbContext(
+	DbContextOptions<IdentityApplicationDbContext> options)
+	: IdentityDbContext<ApplicationUser>(options), IDataProtectionKeyContext
 {
-	public IdentityApplicationDbContext(DbContextOptions<IdentityApplicationDbContext> options)
-		: base(options) {}
+	public DbSet<DataProtectionKey> DataProtectionKeys => Set<DataProtectionKey>();
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
