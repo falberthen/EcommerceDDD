@@ -25,3 +25,4 @@ global using Microsoft.Kiota.Abstractions.Authentication;
 global using Microsoft.Kiota.Http.HttpClientLibrary;
 global using Polly;
 global using Polly.Extensions.Http;
+global using Wolverine;
