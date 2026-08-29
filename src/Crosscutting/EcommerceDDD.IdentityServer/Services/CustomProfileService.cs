@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.IdentityServer.Services;
+namespace EcommerceDDD.IdentityServer.Services;
 
 public class CustomProfileService(
 	UserManager<ApplicationUser> userMgr,
@@ -12,15 +12,24 @@ public class CustomProfileService(
 	private readonly RoleManager<IdentityRole> _roleMgr = roleMgr
 		?? throw new ArgumentNullException(nameof(roleMgr));
 
-	public async Task GetProfileDataAsync(ProfileDataRequestContext context)
-	{
+	public async Task GetProfileDataAsync(ProfileDataRequestContext context,
+		CancellationToken cancellationToken = default)
+	{		
+		cancellationToken.ThrowIfCancellationRequested();
+
 		string sub = context.Subject.GetSubjectId();
-		ApplicationUser user = await _userMgr.FindByIdAsync(sub);
+		ApplicationUser? user = await _userMgr.FindByIdAsync(sub);
+
+		if (user is null)
+			return;
+
 		ClaimsPrincipal userClaims = await _userClaimsPrincipalFactory.CreateAsync(user);
 
 		List<Claim> claims = userClaims.Claims.ToList();
 		claims = claims.Where(claim => context.RequestedClaimTypes.Contains(claim.Type)).ToList();
-		claims.Add(new Claim(JwtClaimTypes.Email, user.Email));
+
+		if (!string.IsNullOrEmpty(user.Email))
+			claims.Add(new Claim(JwtClaimTypes.Email, user.Email));
 
 		if (_userMgr.SupportsUserRole)
 		{
@@ -30,7 +39,7 @@ public class CustomProfileService(
 				claims.Add(new Claim(JwtClaimTypes.Role, rolename));
 				if (_roleMgr.SupportsRoleClaims)
 				{
-					IdentityRole role = await _roleMgr.FindByNameAsync(rolename);
+					IdentityRole? role = await _roleMgr.FindByNameAsync(rolename);
 					if (role != null)
 					{
 						claims.AddRange(await _roleMgr.GetClaimsAsync(role));
@@ -42,10 +51,13 @@ public class CustomProfileService(
 		context.IssuedClaims = claims;
 	}
 
-	public async Task IsActiveAsync(IsActiveContext context)
+	public async Task IsActiveAsync(IsActiveContext context,
+		CancellationToken cancellationToken = default)
 	{
+		cancellationToken.ThrowIfCancellationRequested();
+
 		string sub = context.Subject.GetSubjectId();
-		ApplicationUser user = await _userMgr.FindByIdAsync(sub);
-		context.IsActive = user != null;
+		ApplicationUser? user = await _userMgr.FindByIdAsync(sub);
+		context.IsActive = user is not null;
 	}
 }
