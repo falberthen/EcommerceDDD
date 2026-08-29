@@ -1,6 +1,6 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Infrastructure.Projections;
 
-public class OrderEventHistoryTransform : EventProjection
+public partial class OrderEventHistoryTransform : EventProjection
 {
     public OrderEventHistory Transform(JasperFx.Events.IEvent<OrderPlaced> @event) =>
         OrderEventHistory.Create(@event, @event.Data.OrderId);

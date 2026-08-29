@@ -1,4 +1,5 @@
-﻿namespace EcommerceDDD.InventoryManagement.Tests.Application;
+﻿using System.Linq.Expressions;
+namespace EcommerceDDD.InventoryManagement.Tests.Application;
 
 public class IncreaseQuantityInStockHandlerTests
 {
@@ -20,8 +21,9 @@ public class IncreaseQuantityInStockHandlerTests
 		};
 
 		var querySessionMock = Substitute.For<IQuerySessionWrapper>();
-		querySessionMock.Query<InventoryStockUnitDetails>()
-			.Returns(new List<InventoryStockUnitDetails> { inventoryStockUnitDetails }.AsQueryable());
+		querySessionMock.QueryFirstOrDefaultAsync<InventoryStockUnitDetails>(
+			Arg.Any<Expression<Func<InventoryStockUnitDetails, bool>>>(), Arg.Any<CancellationToken>())
+			.Returns(inventoryStockUnitDetails);
 
 		_inventoryStockUnitRepository.FetchStreamAsync(inventoryStockUnit.Id.Value)
 			.Returns(inventoryStockUnit);

@@ -2,14 +2,11 @@
 
 namespace EcommerceDDD.PaymentProcessing.Infrastructure.Projections;
 
-public class PaymentDetailsProjection : SingleStreamProjection<PaymentDetails, Guid>
+public partial class PaymentDetailsProjection : SingleStreamProjection<PaymentDetails, Guid>
 {
-    public PaymentDetailsProjection()
-    {
-        ProjectEvent<PaymentCreated>((item, @event) => item.Apply(@event));
-        ProjectEvent<PaymentCompleted>((item, @event) => item.Apply(@event));
-        ProjectEvent<PaymentCanceled>((item, @event) => item.Apply(@event));
-    }
+    public static void Apply(PaymentDetails item, PaymentCreated @event) => item.Apply(@event);
+    public static void Apply(PaymentDetails item, PaymentCompleted @event) => item.Apply(@event);
+    public static void Apply(PaymentDetails item, PaymentCanceled @event) => item.Apply(@event);
 }
 
 //https://martendb.io/events/projections/aggregate-projections.html#aggregate-by-stream

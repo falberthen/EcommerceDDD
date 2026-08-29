@@ -1,4 +1,4 @@
-global using Asp.Versioning;
+﻿global using Asp.Versioning;
 global using Confluent.Kafka;
 global using Confluent.Kafka.Admin;
 global using Duende.IdentityModel;
@@ -26,6 +26,7 @@ global using EcommerceDDD.Core.Validation;
 global using FluentResults;
 global using JasperFx;
 global using Marten;
+global using Marten.Newtonsoft;
 global using Microsoft.AspNetCore.Authentication;
 global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.AspNetCore.Authorization;
@@ -57,3 +58,4 @@ global using System.Net.Mime;
 global using System.Reflection;
 global using System.Security.Claims;
 global using System.Text;
+global using Weasel.Core;

@@ -1,4 +1,4 @@
-using EcommerceDDD.InventoryManagement.Application.IncreaseQuantityInStock;
+﻿using EcommerceDDD.InventoryManagement.Application.IncreaseQuantityInStock;
 
 namespace EcommerceDDD.InventoryManagement.Application.DecreasingQuantityInStock;
 
@@ -12,9 +12,8 @@ public class IncreaseQuantityInStockHandler(
 
 	public async Task<Result> HandleAsync(IncreaseStockQuantity command, CancellationToken cancellationToken)
     {
-        var existingEntry = _querySession.Query<InventoryStockUnitDetails>()
-            .Where(x => x.ProductId == command.ProductId.Value)
-            .FirstOrDefault();
+        var existingEntry = await _querySession.QueryFirstOrDefaultAsync<InventoryStockUnitDetails>(
+            x => x.ProductId == command.ProductId.Value, cancellationToken);
 
         if (existingEntry is null)
             return Result.Fail($"The product {command.ProductId.Value} was not found in the inventory.");

@@ -1,6 +1,6 @@
 ﻿namespace EcommerceDDD.InventoryManagement.Infrastructure.Projections;
 
-public class InventoryStockUnitEventHistoryTransform : EventProjection
+public partial class InventoryStockUnitEventHistoryTransform : EventProjection
 {
     public InventoryStockUnitEventHistory Transform(JasperFx.Events.IEvent<UnitEnteredInStock> @event) =>
         InventoryStockUnitEventHistory.Create(@event, @event.Data.InventoryStockUnitId);

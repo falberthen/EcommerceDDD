@@ -16,6 +16,7 @@
   <ItemGroup>
 	<PackageReference Include="FluentResults" />
 	<PackageReference Include="Marten" />
+	<PackageReference Include="Marten.Newtonsoft" />
 	<PackageReference Include="Newtonsoft.Json" />
 
 	<PackageReference Include="NSubstitute" />

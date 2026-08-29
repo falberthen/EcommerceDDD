@@ -53,7 +53,7 @@ public sealed class Customer : AggregateRoot<CustomerId>
         Apply(@event);
     }
 
-    private void Apply(CustomerRegistered @event)
+    public void Apply(CustomerRegistered @event)
     {
         Id = CustomerId.Of(@event.CustomerId);
         Email = @event.Email;
@@ -63,7 +63,7 @@ public sealed class Customer : AggregateRoot<CustomerId>
         RegisteredAt = @event.Timestamp;
     }
 
-    private void Apply(CustomerUpdated @event)
+    public void Apply(CustomerUpdated @event)
     {
         Name = @event.Name;
         ShippingAddress = Address.FromStreetAddress(@event.ShippingAddress);
