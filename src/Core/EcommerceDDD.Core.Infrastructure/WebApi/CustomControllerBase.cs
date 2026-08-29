@@ -7,42 +7,35 @@ namespace EcommerceDDD.Core.Infrastructure.WebApi;
 [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
 [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status422UnprocessableEntity)]
 [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+[ApiController]
 public class CustomControllerBase : ControllerBase
 {
-	private readonly ICommandBus? _commandBus;
-	private readonly IQueryBus? _queryBus;
+	private readonly IMessageBus? _bus;
 
 	public CustomControllerBase(){}
 
-	protected CustomControllerBase(ICommandBus commandBus, IQueryBus queryBus)
-	{
-		_commandBus = commandBus ?? throw new ArgumentNullException(nameof(commandBus));
-		_queryBus = queryBus ?? throw new ArgumentNullException(nameof(queryBus));
-	}
+	protected CustomControllerBase(IMessageBus bus)
+		=> _bus = bus ?? throw new ArgumentNullException(nameof(bus));
 
 	/// <summary>
-	/// Executes a query through the query bus and maps FluentResults failures to HTTP ProblemDetails.
+	/// Executes a query through Wolverine and maps FluentResults failures to HTTP ProblemDetails.
 	/// </summary>
 	protected async Task<IActionResult> Response<TResult>(
 		IQuery<TResult> query,
 		CancellationToken cancellationToken)
 	{
-		EnsureQueryBus();
-
-		var result = await _queryBus!.SendAsync(query, cancellationToken);
+		var result = await Bus.InvokeAsync<Result<TResult>>(query, cancellationToken);
 		return result.IsFailed ? MapFailure(result) : Ok(result.Value);
 	}
 
 	/// <summary>
-	/// Executes a command through the command bus and maps FluentResults failures to HTTP ProblemDetails.
+	/// Executes a command through Wolverine and maps FluentResults failures to HTTP ProblemDetails.
 	/// </summary>
 	protected async Task<IActionResult> Response(
 		ICommand command,
 		CancellationToken cancellationToken)
 	{
-		EnsureCommandBus();
-
-		var result = await _commandBus!.SendAsync(command, cancellationToken);
+		var result = await Bus.InvokeAsync<Result>(command, cancellationToken);
 		return result.IsFailed ? MapFailure(result) : Ok();
 	}
 
@@ -93,23 +86,7 @@ public class CustomControllerBase : ControllerBase
 			title: "Internal server error");
 	}
 
-	private void EnsureCommandBus()
-	{
-		if (_commandBus is null)
-		{
-			throw new InvalidOperationException(
-				$"{nameof(CustomControllerBase)} command helper was used, but no {nameof(ICommandBus)} was provided. " +
-				"Use the CQRS constructor or avoid calling Response(ICommand, ...).");
-		}
-	}
-
-	private void EnsureQueryBus()
-	{
-		if (_queryBus is null)
-		{
-			throw new InvalidOperationException(
-				$"{nameof(CustomControllerBase)} query helper was used, but no {nameof(IQueryBus)} was provided. " +
-				"Use the CQRS constructor or avoid calling Response(IQuery<T>, ...).");
-		}
-	}
+	private IMessageBus Bus => _bus ?? throw new InvalidOperationException(
+		$"{nameof(CustomControllerBase)} was built without an {nameof(IMessageBus)}. " +
+		"Use the CQRS constructor, or do not call Response(...).");
 }

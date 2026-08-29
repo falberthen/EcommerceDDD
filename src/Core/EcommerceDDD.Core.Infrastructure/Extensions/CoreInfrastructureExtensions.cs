@@ -3,10 +3,27 @@
 public static class CoreInfrastructureExtensions
 {
 	public static IServiceCollection AddCoreInfrastructure(this IServiceCollection services,
-		IConfiguration configuration)
+		IConfiguration configuration,
+		Action<WolverineOptions>? configureWolverine = null)
 	{
 		if (configuration is null)
 			throw new ArgumentNullException(nameof(configuration));
+
+		// Wolverine owns command/query/event dispatch. Handler discovery is conventional,
+		// so it scans the entry assembly of whichever service is bootstrapping.
+		services.AddWolverine(options =>
+		{
+			var applicationAssembly = Assembly.GetEntryAssembly();
+			if (applicationAssembly is not null)
+				options.ApplicationAssembly = applicationAssembly;
+
+			// Note 1: Wolverine 6 defaults ServiceLocationPolicy to NotAllowed. Services that consume the
+			// Kiota clients opt into service location via EcommerceDDD.ServiceClients.Extensions.UseServiceClientServiceLocation().
+
+			// Note 2: A command's [Audit]-marked OrderId is written onto Wolverine's handler
+			// span natively as the "order.id" tag the SPA deep-links on.
+			configureWolverine?.Invoke(options);
+		});
 
 		services
 			.AddMemoryCache()
@@ -14,9 +31,6 @@ public static class CoreInfrastructureExtensions
 			// Exception handling
 			.AddExceptionHandler<GlobalExceptionHandler>()
 			.AddProblemDetails()
-			// CQRS
-			.AddScoped<ICommandBus, CommandBus>()
-			.AddScoped<IQueryBus, QueryBus>()
 			// Identity
 			.AddJwtAuthentication(configuration)
 			.AddScoped<IUserInfoRequester, UserInfoRequester>()
@@ -26,57 +40,11 @@ public static class CoreInfrastructureExtensions
 			.AddSwagger(configuration)
 			// Testing
 			.AddScoped<IEventStoreRepository<DummyAggregateRoot>,
-				DummyEventStoreRepository<DummyAggregateRoot>>()
-			// EventBus
-			.TryAddSingleton<IEventBus, EventPublisher>();
+				DummyEventStoreRepository<DummyAggregateRoot>>();
 
 		// OpenTelemetry
 		var serviceName = Assembly.GetEntryAssembly()?.GetName().Name ?? "Unknown";
 		services.AddOpenTelemetryObservability(serviceName);
-
-		return services;
-	}
-
-	public static IServiceCollection AddHandlersFromType(this IServiceCollection services, Type type)
-	{
-		Assembly assembly = type.Assembly;
-		Type[] assemblyTypes = assembly.GetTypes() ??
-			throw new ArgumentNullException(nameof(type));
-
-		foreach (var assemblyType in assemblyTypes)
-		{
-			if (assemblyType.IsAbstract || assemblyType.IsInterface)
-				continue;
-
-			var interfaces = assemblyType.GetInterfaces();
-			foreach (var @interface in interfaces)
-			{
-				if (!@interface.IsGenericType)
-					continue;
-
-				Type interfaceDefinition = @interface.GetGenericTypeDefinition();
-
-				if (interfaceDefinition == typeof(IEventHandler<>))
-				{
-					var handledType = @interface.GenericTypeArguments[0];
-					var handlerType = typeof(IEventHandler<>).MakeGenericType(handledType);
-					services.AddScoped(handlerType, assemblyType);
-				}
-				else if (interfaceDefinition == typeof(IQueryHandler<,>))
-				{
-					var handledType = @interface.GenericTypeArguments[0];
-					var responseType = @interface.GenericTypeArguments[1];
-					var handlerType = typeof(IQueryHandler<,>).MakeGenericType(handledType, responseType);
-					services.AddScoped(handlerType, assemblyType);
-				}
-				else if (interfaceDefinition == typeof(ICommandHandler<>))
-				{
-					var handledType = @interface.GenericTypeArguments[0];
-					var handlerType = typeof(ICommandHandler<>).MakeGenericType(handledType);
-					services.AddScoped(handlerType, assemblyType);
-				}
-			}
-		}
 
 		return services;
 	}
