@@ -49,7 +49,7 @@ public class Shipment : AggregateRoot<ShipmentId>
         Apply(@event);
     }
 
-    private void Apply(ShipmentCreated @event)
+    public void Apply(ShipmentCreated @event)
     {
         Id = ShipmentId.Of(@event.ShipmentId);
         OrderId = OrderId.Of(@event.OrderId);
@@ -61,13 +61,13 @@ public class Shipment : AggregateRoot<ShipmentId>
         Status = ShipmentStatus.Pending;
     }
 
-    private void Apply(PackageShipped @event)
+    public void Apply(PackageShipped @event)
     {
         Status = ShipmentStatus.Shipped;
         ShippedAt = @event.Timestamp;
     }
 
-    private void Apply(ShipmentCanceled @event)
+    public void Apply(ShipmentCanceled @event)
     {
         Status = ShipmentStatus.Canceled;
         CanceledAt = @event.Timestamp;

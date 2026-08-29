@@ -1,3 +1,5 @@
+﻿using EcommerceDDD.Core.Infrastructure.Marten;
+using System.Linq.Expressions;
 namespace EcommerceDDD.CustomerManagement.Tests.Application;
 
 public class UpdateCustomerInformationHandlerTests
@@ -30,7 +32,9 @@ public class UpdateCustomerInformationHandlerTests
 		martenQueryable.Expression.Returns(customerDetailsList.Expression);
 		martenQueryable.ElementType.Returns(customerDetailsList.ElementType);
 		martenQueryable.GetEnumerator().Returns(customerDetailsList.GetEnumerator());
-		_querySession.Query<CustomerDetails>().Returns(martenQueryable);
+		_querySession.QueryFirstOrDefaultAsync<CustomerDetails>(
+			Arg.Any<Expression<Func<CustomerDetails, bool>>>(), Arg.Any<CancellationToken>())
+			.Returns(customerDetails);
 
 		// mock for user info requester
 		_userInfoRequester.GetCurrentUser()
@@ -57,5 +61,5 @@ public class UpdateCustomerInformationHandlerTests
 	}
 
 	private IUserInfoRequester _userInfoRequester = Substitute.For<IUserInfoRequester>();
-	private IQuerySession _querySession = Substitute.For<IQuerySession>();
+	private IQuerySessionWrapper _querySession = Substitute.For<IQuerySessionWrapper>();
 }

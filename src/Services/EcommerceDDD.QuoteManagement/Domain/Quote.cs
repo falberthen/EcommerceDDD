@@ -94,7 +94,7 @@ public class Quote : AggregateRoot<QuoteId>
         Apply(@event);
     }
 
-    private void Apply(QuoteOpen @event)
+    public void Apply(QuoteOpen @event)
     {
         Id = QuoteId.Of(@event.QuoteId);
         Status = QuoteStatus.Open;
@@ -104,7 +104,7 @@ public class Quote : AggregateRoot<QuoteId>
         _quoteItems = new List<QuoteItem>();
     }
 
-    private void Apply(QuoteItemAdded @event)
+    public void Apply(QuoteItemAdded @event)
     {
         ProductItem productItem = new ProductItem(
             ProductId.Of(@event.ProductId),
@@ -115,7 +115,7 @@ public class Quote : AggregateRoot<QuoteId>
         _quoteItems.Add(QuoteItem.Create(productItem));
     }
 
-    private void Apply(QuoteItemQuantityChanged @event)
+    public void Apply(QuoteItemQuantityChanged @event)
     {
         var quoteItem = Items.FirstOrDefault(p => 
             p.ProductItem.ProductId == ProductId.Of(@event.ProductId));
@@ -123,7 +123,7 @@ public class Quote : AggregateRoot<QuoteId>
         quoteItem!.ChangeQuantity(@event.Quantity);
     }
 
-    private void Apply(QuoteItemRemoved @event)
+    public void Apply(QuoteItemRemoved @event)
     {
         var quoteItem = Items.First(p => 
             p.ProductItem.ProductId == ProductId.Of(@event.ProductId));
@@ -131,13 +131,13 @@ public class Quote : AggregateRoot<QuoteId>
         Items.Remove(quoteItem);
     }
 
-    private void Apply(QuoteCanceled @event)
+    public void Apply(QuoteCanceled @event)
     {
         Status = QuoteStatus.Cancelled;
         CanceledAt = @event.Timestamp;
     }
 
-    private void Apply(QuoteConfirmed @event)
+    public void Apply(QuoteConfirmed @event)
     {
         Status = QuoteStatus.Confirmed;
         ConfirmedAt = @event.Timestamp;

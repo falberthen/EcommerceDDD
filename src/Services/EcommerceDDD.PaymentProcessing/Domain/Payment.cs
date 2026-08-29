@@ -57,7 +57,7 @@ public class Payment : AggregateRoot<PaymentId>
         Apply(@event);
     }
 
-    private void Apply(PaymentCreated @event)
+    public void Apply(PaymentCreated @event)
     {
         Status = PaymentStatus.Pending;
         Id = PaymentId.Of(@event.PaymentId);
@@ -73,13 +73,13 @@ public class Payment : AggregateRoot<PaymentId>
         CreatedAt = @event.Timestamp;
     }
 
-    private void Apply(PaymentCompleted @event)
+    public void Apply(PaymentCompleted @event)
     {
         Status = PaymentStatus.Completed;
         CompletedAt = @event.Timestamp;
     }
 
-    private void Apply(PaymentCanceled @event)
+    public void Apply(PaymentCanceled @event)
     {
         Status = PaymentStatus.Canceled;
         CanceledAt = @event.Timestamp;

@@ -39,16 +39,16 @@ public class InventoryStockUnit : AggregateRoot<InventoryStockUnitId>
         Apply(@event);
     }
 
-    private void Apply(UnitEnteredInStock @event)
+    public void Apply(UnitEnteredInStock @event)
     {
         Id = InventoryStockUnitId.Of(@event.InventoryStockUnitId);
         ProductId = ProductId.Of(@event.ProductId);
         Quantity = @event.InitialQuantity;
     }
 
-    private void Apply(StockQuantityDecreased @event) => Quantity -= @event.QuantityDecreased;
+    public void Apply(StockQuantityDecreased @event) => Quantity -= @event.QuantityDecreased;
 
-    private void Apply(StockQuantityIncreased @event) => Quantity += @event.QuantityIncreased;
+    public void Apply(StockQuantityIncreased @event) => Quantity += @event.QuantityIncreased;
 
     private InventoryStockUnit(ProductId productId, int initialQuantity)
     {

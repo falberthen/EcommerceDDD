@@ -1,8 +1,8 @@
-namespace EcommerceDDD.CustomerManagement.Application.UpdatingCustomerInformation;
+﻿namespace EcommerceDDD.CustomerManagement.Application.UpdatingCustomerInformation;
 
 public class UpdateCustomerInformationHandler(
 	IUserInfoRequester userInfoRequester,
-	IQuerySession querySession,
+	IQuerySessionWrapper querySession,
 	IEventStoreRepository<Customer> customerWriteRepository
 ) : ICommandHandler<UpdateCustomerInformation>
 {
@@ -10,15 +10,15 @@ public class UpdateCustomerInformationHandler(
 		?? throw new ArgumentNullException(nameof(customerWriteRepository));
 	private readonly IUserInfoRequester _userInfoRequester = userInfoRequester
 		?? throw new ArgumentNullException(nameof(userInfoRequester));
-	private readonly IQuerySession _querySession = querySession
+	private readonly IQuerySessionWrapper _querySession = querySession
 		?? throw new ArgumentNullException(nameof(querySession));
 
 	public async Task<Result> HandleAsync(UpdateCustomerInformation command, CancellationToken cancellationToken)
     {
 		UserInfo? response = _userInfoRequester.GetCurrentUser();
 
-		var customerDetails = _querySession.Query<CustomerDetails>()
-			.FirstOrDefault(c => c.Id == response!.CustomerId);
+		var customerDetails = await _querySession.QueryFirstOrDefaultAsync<CustomerDetails>(
+			c => c.Id == response!.CustomerId, cancellationToken);
 
 		if (customerDetails is null)
 			return Result.Fail("Customer not found.");

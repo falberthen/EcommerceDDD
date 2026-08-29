@@ -132,7 +132,7 @@ public class Order : AggregateRoot<OrderId>
         return orderLines;
     }
 
-    private void Apply(OrderPlaced @event)
+    public void Apply(OrderPlaced @event)
     {
 		Status = OrderStatus.Placed;
 		Id = OrderId.Of(@event.OrderId);
@@ -141,7 +141,7 @@ public class Order : AggregateRoot<OrderId>
         CreatedAt = @event.Timestamp;
     }
 
-    private void Apply(OrderProcessed @event)
+    public void Apply(OrderProcessed @event)
     {
 		Status = OrderStatus.Processed;
 		TotalPrice = Money.Of(@event.TotalPrice, @event.CurrencyCode);
@@ -158,25 +158,25 @@ public class Order : AggregateRoot<OrderId>
             .ToList();
     }
 
-    private void Apply(OrderPaid @event)
+    public void Apply(OrderPaid @event)
     {
         PaymentId = PaymentId.Of(@event.PaymentId);
         Status = OrderStatus.Paid;
     }
 
-    private void Apply(OrderDelivered @event)
+    public void Apply(OrderDelivered @event)
     {
         Status = OrderStatus.Delivered;
         DeliveredAt = @event.Timestamp;
     }
 
-    private void Apply(OrderCanceled @event)
+    public void Apply(OrderCanceled @event)
     {
         Status = OrderStatus.Canceled;
         CanceledAt = @event.Timestamp;
     }
 
-    private void Apply(OrderShipped @event)
+    public void Apply(OrderShipped @event)
     {
         Status = OrderStatus.Shipped;
         ShipmentId = ShipmentId.Of(@event.ShipmentId);
