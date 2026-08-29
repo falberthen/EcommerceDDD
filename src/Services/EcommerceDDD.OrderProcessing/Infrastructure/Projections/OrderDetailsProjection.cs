@@ -1,16 +1,13 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Infrastructure.Projections;
 
-public class OrderDetailsProjection : SingleStreamProjection<OrderDetails, Guid>
+public partial class OrderDetailsProjection : SingleStreamProjection<OrderDetails, Guid>
 {
-    public OrderDetailsProjection()
-    {
-        ProjectEvent<OrderPlaced>((item, @event) => item.Apply(@event));
-        ProjectEvent<OrderProcessed>((item, @event) => item.Apply(@event));
-        ProjectEvent<OrderPaid>((item, @event) => item.Apply(@event));
-        ProjectEvent<OrderShipped>((item, @event) => item.Apply(@event));
-        ProjectEvent<OrderDelivered>((item, @event) => item.Apply(@event));
-        ProjectEvent<OrderCanceled>((item, @event) => item.Apply(@event));
-    }
+    public static void Apply(OrderDetails item, OrderPlaced @event) => item.Apply(@event);
+    public static void Apply(OrderDetails item, OrderProcessed @event) => item.Apply(@event);
+    public static void Apply(OrderDetails item, OrderPaid @event) => item.Apply(@event);
+    public static void Apply(OrderDetails item, OrderShipped @event) => item.Apply(@event);
+    public static void Apply(OrderDetails item, OrderDelivered @event) => item.Apply(@event);
+    public static void Apply(OrderDetails item, OrderCanceled @event) => item.Apply(@event);
 }
 
 //https://martendb.io/events/projections/aggregate-projections.html#aggregate-by-stream
