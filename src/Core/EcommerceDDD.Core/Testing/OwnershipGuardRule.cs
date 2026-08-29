@@ -31,6 +31,7 @@ public static class OwnershipGuardRule
 
 		return applicationAssembly.GetTypes()
 			.Where(type => type is { IsClass: true, IsAbstract: false })
+			.Where(type => type.Name.EndsWith("Handler", StringComparison.Ordinal))
 			.Where(type => !exemptHandlers.Contains(type))
 			.Where(handler => GetHandledMessages(handler)
 				.Any(message => CarriesOwnedResourceId(message, ownedResourceIdTypes)))
@@ -40,16 +41,15 @@ public static class OwnershipGuardRule
 			.ToList();
 	}
 
+	/// <summary>
+	/// The message a handler handles is the first parameter of its handling method.	
+	/// </summary>
 	private static IEnumerable<Type> GetHandledMessages(Type handler) =>
-		handler.GetInterfaces()
-			.Where(contract => contract.IsGenericType)
-			.Where(contract =>
-			{
-				var definition = contract.GetGenericTypeDefinition();
-				return definition == typeof(ICommandHandler<>)
-					|| definition == typeof(IQueryHandler<,>);
-			})
-			.Select(contract => contract.GenericTypeArguments[0]);
+		handler.GetMethods(BindingFlags.Public | BindingFlags.Instance)
+			.Where(method => method.Name is "HandleAsync" or "Handle")
+			.Select(method => method.GetParameters().FirstOrDefault()?.ParameterType)
+			.Where(parameterType => parameterType is not null)
+			.Select(parameterType => parameterType!);
 
 	private static bool CarriesOwnedResourceId(Type message, IReadOnlyCollection<Type> ownedResourceIdTypes) =>
 		message.GetProperties(BindingFlags.Public | BindingFlags.Instance)

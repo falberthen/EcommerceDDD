@@ -17,7 +17,7 @@ public class DummyEventStoreRepository<TA> : IEventStoreRepository<TA>
         return await Task.FromResult(nextVersion);
     }
 
-    public void AppendToOutbox(INotification @event) { }    
+    public Task AppendToOutboxAsync(INotification @event) => Task.CompletedTask;
 
     public Task<TA> FetchStreamAsync(Guid id, int? version = null, CancellationToken cancellationToken = default) 
 		=> Task.FromResult(AggregateStream.FirstOrDefault(c=>c.Stream == id)?.Aggregate!);

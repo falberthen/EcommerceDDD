@@ -8,7 +8,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Confluent.Kafka" />
 		<PackageReference Include="Duende.IdentityServer" />
 		<PackageReference Include="Duende.IdentityServer.AspNetIdentity" />
 		<PackageReference Include="Duende.IdentityServer.EntityFramework" />
@@ -30,6 +29,9 @@
 		<PackageReference Include="Scrutor" />
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" />
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
+		<PackageReference Include="WolverineFx" />
+		<PackageReference Include="WolverineFx.RuntimeCompilation" />
+		<PackageReference Include="WolverineFx.Marten" />
 	</ItemGroup>
 
 	<ItemGroup>
