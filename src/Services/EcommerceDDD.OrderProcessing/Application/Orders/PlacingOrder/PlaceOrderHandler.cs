@@ -5,7 +5,7 @@ public class PlaceOrderHandler(
 	IQuoteService quoteService,
 	IEventStoreRepository<Order> orderWriteRepository,
 	IUserInfoRequester userInfoRequester
-) : ICommandHandler<PlaceOrder>
+)
 {
 	private readonly IOrderNotificationService _orderNotificationService = orderNotificationService
 		?? throw new ArgumentNullException(nameof(orderNotificationService));
@@ -52,11 +52,13 @@ public class PlaceOrderHandler(
 			orderItems);
 
 		var order = Order.Place(orderData);
-		Activity.Current?.SetTag(TelemetryTags.OrderId, order.Id.Value);
+		// "order.id" is the key the SPA's Aspire trace deep-link filters on. Elsewhere
+		// Wolverine's [Audit] on a command's OrderId writes it; PlaceOrder has no id yet.
+		Activity.Current?.SetTag("order.id", order.Id.Value);
 
 		var orderPlacedEvent = order.GetUncommittedEvents()
 			.OfType<OrderPlaced>().FirstOrDefault();
-		_orderWriteRepository.AppendToOutbox(orderPlacedEvent!);
+		await _orderWriteRepository.AppendToOutboxAsync(orderPlacedEvent!);
 
 		await _orderWriteRepository
 			.AppendEventsAsync(order, cancellationToken);

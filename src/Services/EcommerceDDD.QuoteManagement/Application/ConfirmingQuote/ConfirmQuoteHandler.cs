@@ -2,7 +2,7 @@ namespace EcommerceDDD.QuoteManagement.Application.ConfirmingQuote;
 
 public class ConfirmQuoteHandler(
     IEventStoreRepository<Quote> quoteWriteRepository
-) : ICommandHandler<ConfirmQuote>
+)
 {
 	private readonly IEventStoreRepository<Quote> _quoteWriteRepository = quoteWriteRepository;
 

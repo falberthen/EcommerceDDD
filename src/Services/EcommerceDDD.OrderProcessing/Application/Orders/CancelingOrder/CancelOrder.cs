@@ -1,7 +1,8 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Application.Orders.CancelingOrder;
 
-public record class CancelOrder : ICommand, ITraceable
+public record class CancelOrder : ICommand
 {
+	[Audit]
 	public OrderId OrderId { get; private set; }
 	public OrderCancellationReason CancellationReason { get; private set; }
 
@@ -14,9 +15,6 @@ public record class CancelOrder : ICommand, ITraceable
 
 		return new CancelOrder(orderId, CancellationReason);
 	}
-
-	public IEnumerable<KeyValuePair<string, object>> GetSpanTags() =>
-		[new(TelemetryTags.OrderId, OrderId.Value)];
 
 	private CancelOrder(
 		OrderId orderId,

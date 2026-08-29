@@ -4,7 +4,7 @@ namespace EcommerceDDD.ShipmentProcessing.Application.ProcessingPayment.Integrat
 
 public class ProcessShipmentHandler(
 	IEventStoreRepository<Shipment> shipmentWriteRepository
-) : ICommandHandler<ProcessShipment>
+)
 {
 	private readonly IEventStoreRepository<Shipment> _shipmentWriteRepository = shipmentWriteRepository;
 
@@ -20,7 +20,7 @@ public class ProcessShipmentHandler(
 		{
 			shipment.Complete();
 
-			_shipmentWriteRepository.AppendToOutbox(
+			await _shipmentWriteRepository.AppendToOutboxAsync(
 				new ShipmentFinalized(
 					shipment.Id.Value,
 					shipment.OrderId.Value,
@@ -35,7 +35,7 @@ public class ProcessShipmentHandler(
 		{
 			shipment.Cancel(ShipmentCancellationReason.ProcessmentError);
 
-			_shipmentWriteRepository.AppendToOutbox(
+			await _shipmentWriteRepository.AppendToOutboxAsync(
 				new ShipmentFailed(shipment.Id.Value, shipment.OrderId.Value));
 
 			await _shipmentWriteRepository

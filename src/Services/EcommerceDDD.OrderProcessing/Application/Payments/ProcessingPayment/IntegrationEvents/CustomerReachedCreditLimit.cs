@@ -1,5 +1,6 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Application.Payments.ProcessingPayment.IntegrationEvents;
 
+[MessageIdentity(nameof(CustomerReachedCreditLimit))]
 public class CustomerReachedCreditLimit : IntegrationEvent
 {
     public Guid OrderId { get; private set; }

@@ -14,8 +14,12 @@ public abstract class StronglyTypedId<T> : ValueObject<StronglyTypedId<T>>
 		Value = value;
 	}
 
-	public override int GetHashCode() 
+	public override int GetHashCode()
 		=> EqualityComparer<T>.Default.GetHashCode(Value);
+
+	// Stringifies to the wrapped value so [Audit] / logging / OpenTelemetry tags
+	// carry the raw id rather than the type name.
+	public override string ToString() => Value?.ToString() ?? string.Empty;
 
 	public static bool operator ==(StronglyTypedId<T>? left, StronglyTypedId<T>? right) 
 		=> Equals(left, right);

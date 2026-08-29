@@ -5,9 +5,8 @@ namespace EcommerceDDD.ProductCatalog.API.Controllers;
 [ApiVersion(ApiVersions.V2)]
 [Route("api/v{version:apiVersion}/products")]
 public class ProductsController(
-	ICommandBus commandBus,
-	IQueryBus queryBus
-) : CustomControllerBase(commandBus, queryBus)
+	IMessageBus bus
+) : CustomControllerBase(bus)
 {
 	[HttpPost]
 	[Authorize(Roles = Roles.Customer + "," + Roles.M2MAccess, Policy = Policies.CanRead)]

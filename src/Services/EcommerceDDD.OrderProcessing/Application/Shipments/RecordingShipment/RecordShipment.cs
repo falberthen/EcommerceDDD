@@ -1,7 +1,8 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Application.Shipments.RecordingShipment;
 
-public record class RecordShipment : ICommand, ITraceable
+public record class RecordShipment : ICommand
 {
+	[Audit]
 	public OrderId OrderId { get; private set; }
 	public ShipmentId ShipmentId { get; private set; }
 
@@ -16,9 +17,6 @@ public record class RecordShipment : ICommand, ITraceable
 
 		return new RecordShipment(orderId, shipmentId);
 	}
-
-	public IEnumerable<KeyValuePair<string, object>> GetSpanTags() =>
-		[new(TelemetryTags.OrderId, OrderId.Value)];
 
 	private RecordShipment(
 		OrderId orderId,

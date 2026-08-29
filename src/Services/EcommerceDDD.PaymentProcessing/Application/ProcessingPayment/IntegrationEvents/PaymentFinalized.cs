@@ -1,5 +1,6 @@
 ﻿namespace EcommerceDDD.PaymentProcessing.Application.ProcessingPayment.IntegrationEvents;
 
+[MessageIdentity(nameof(PaymentFinalized))]
 public class PaymentFinalized : IntegrationEvent
 {
     public Guid PaymentId { get; }

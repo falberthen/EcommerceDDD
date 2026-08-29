@@ -3,7 +3,7 @@ namespace EcommerceDDD.QuoteManagement.Application.CancelingQuote;
 public class CancelQuoteHandler(
 	IEventStoreRepository<Quote> quoteWriteRepository,
 	IUserInfoRequester userInfoRequester
-) : ICommandHandler<CancelQuote>
+)
 {
 	private readonly IEventStoreRepository<Quote> _quoteWriteRepository = quoteWriteRepository;
 	private readonly IUserInfoRequester _userInfoRequester = userInfoRequester

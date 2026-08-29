@@ -19,7 +19,7 @@ public static class MartenConfigExtension
         if (string.IsNullOrEmpty(martenConfig?.WriteSchema))
             throw new ArgumentNullException("EventStore writeSchema is missing");
 
-        services.AddMarten(options =>
+        var martenConfiguration = services.AddMarten(options =>
         {
             options.Connection(connectionString);
             options.AutoCreateSchemaObjects = AutoCreate.All;
@@ -31,14 +31,13 @@ public static class MartenConfigExtension
             if (!string.IsNullOrEmpty(martenConfig.ReadSchema))
                 options.DatabaseSchemaName = martenConfig.ReadSchema;
 
-            // outbox
-            options.Schema.For<IntegrationEvent>()
-                .DatabaseSchemaName("public")
-                .DocumentAlias("outboxmessages");
-
             // Custom store options
             configureOptions?.Invoke(options);
         }).UseLightweightSessions();
+
+        // Wolverine's inbox/outbox tables live in the same database, created by Marten's
+        // schema management. MartenRepository takes IMartenOutbox and this registration is what supplies it.
+        martenConfiguration.IntegrateWithWolverine();
 
 		// Wrapper for IQuerySession 
 		services.AddScoped<IQuerySessionWrapper, QuerySessionWrapper>();

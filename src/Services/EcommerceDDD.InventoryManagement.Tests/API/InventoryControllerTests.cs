@@ -4,8 +4,8 @@ public class InventoryControllerTests
 {
     public InventoryControllerTests()
     {
-        _inventoryController = new InventoryController(_commandBus, _queryBus);
-		_inventoryInternalController = new InventoryInternalController(_commandBus, _queryBus);
+        _inventoryController = new InventoryController(_bus);
+		_inventoryInternalController = new InventoryInternalController(_bus);
 	}
 
     [Fact]
@@ -32,7 +32,7 @@ public class InventoryControllerTests
             )
         };
 
-        _queryBus.SendAsync(Arg.Any<GetInventoryStockUnitEventHistory>(), CancellationToken.None)
+        _bus.InvokeAsync<Result<IReadOnlyList<InventoryStockUnitEventHistory>>>(Arg.Any<GetInventoryStockUnitEventHistory>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
             .Returns(Result.Ok<IReadOnlyList<InventoryStockUnitEventHistory>>(expectedData));
 
         // When
@@ -55,7 +55,7 @@ public class InventoryControllerTests
 			DecreasedQuantity = 3
 		};
 
-		_commandBus.SendAsync(Arg.Any<DecreaseStockQuantity>(), CancellationToken.None)
+		_bus.InvokeAsync<Result>(Arg.Any<DecreaseStockQuantity>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
 			.Returns(Result.Ok());
 
 		// When
@@ -82,8 +82,8 @@ public class InventoryControllerTests
 			InventoryStockUnitViewModel(inventoryStockUnitId, pid, quantityInStock)
 		).ToList();
 
-		_queryBus.SendAsync(Arg.Any<CheckProductsInStock>(), Arg.Any<CancellationToken>())
-			.Returns(Result.Ok<IList<InventoryStockUnitViewModel>>(expectedData));
+		_bus.InvokeAsync<Result<IReadOnlyList<InventoryStockUnitViewModel>>>(Arg.Any<CheckProductsInStock>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
+			.Returns(Result.Ok<IReadOnlyList<InventoryStockUnitViewModel>>(expectedData));
 
 		// When
 		var response = await _inventoryInternalController
@@ -95,8 +95,7 @@ public class InventoryControllerTests
 	}
 	#endregion
 
-	private ICommandBus _commandBus = Substitute.For<ICommandBus>();
-    private IQueryBus _queryBus = Substitute.For<IQueryBus>();
+	private IMessageBus _bus = Substitute.For<IMessageBus>();
     private InventoryController _inventoryController;
 	private InventoryInternalController _inventoryInternalController;
 }

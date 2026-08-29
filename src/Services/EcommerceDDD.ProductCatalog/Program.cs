@@ -7,8 +7,12 @@ services.AddApiVersioning(ApiVersions.V2);
 builder.AddDatabaseSetup();
 services.AddControllers();
 services.AddEndpointsApiExplorer();
-services.AddCoreInfrastructure(builder.Configuration);
-services.AddHandlersFromType(typeof(GetProductsHandler));
+services.AddCoreInfrastructure(builder.Configuration, options =>
+{
+	options.UseServiceClientServiceLocation();
+	// EF Core registers DbContextOptions as an opaque Scoped factory that codegen can't inline.
+	options.CodeGeneration.AlwaysUseServiceLocationFor<ProductsDbContext>();
+});
 services.AddHealthChecks();
 
 // Service clients

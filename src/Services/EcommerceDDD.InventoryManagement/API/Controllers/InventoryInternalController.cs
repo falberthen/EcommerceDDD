@@ -5,9 +5,8 @@ namespace EcommerceDDD.InventoryManagement.API.Controllers;
 [ApiVersion(ApiVersions.V2)]
 [Route("api/v{version:apiVersion}/internal/inventory")]
 public class InventoryInternalController(
-	ICommandBus commandBus,
-	IQueryBus queryBus
-) : CustomControllerBase(commandBus, queryBus)
+	IMessageBus bus
+) : CustomControllerBase(bus)
 {
 	/// <summary>
 	/// Checks the quantity of a given stock unit in stock

@@ -2,7 +2,7 @@ namespace EcommerceDDD.InventoryManagement.Application.GettingInventoryStockUnit
 
 public class GetInventoryStockUnitEventHistoryHandler(
     IQuerySession querySession
-) : IQueryHandler<GetInventoryStockUnitEventHistory, IReadOnlyList<InventoryStockUnitEventHistory>>
+)
 {
     private readonly IQuerySession _querySession = querySession
 		?? throw new ArgumentNullException(nameof(querySession));

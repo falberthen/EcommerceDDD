@@ -3,7 +3,7 @@ namespace EcommerceDDD.CustomerManagement.Application.GettingCustomerEventHistor
 public class GetCustomerEventHistoryHandler(
 	IUserInfoRequester userInfoRequester,
 	IQuerySession querySession
-) : IQueryHandler<GetCustomerEventHistory, IReadOnlyList<CustomerEventHistory>>
+)
 {
 	private readonly IQuerySession _querySession = querySession
 		?? throw new ArgumentNullException(nameof(querySession));

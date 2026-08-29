@@ -5,5 +5,5 @@ public interface IEventStoreRepository<TA>
 {
 	Task<long> AppendEventsAsync(TA aggregate, CancellationToken cancellationToken = default);
 	Task<TA?> FetchStreamAsync(Guid id, int? version = null, CancellationToken cancellationToken = default);
-	void AppendToOutbox(INotification @event);
+	Task AppendToOutboxAsync(INotification @event);
 }

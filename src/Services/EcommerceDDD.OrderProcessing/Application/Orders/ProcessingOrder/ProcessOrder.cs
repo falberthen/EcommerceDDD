@@ -1,8 +1,9 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Application.Orders.ProcessingOrder;
 
-public record class ProcessOrder : ICommand, ITraceable
+public record class ProcessOrder : ICommand
 {
 	public CustomerId CustomerId { get; private set; }
+	[Audit]
 	public OrderId OrderId { get; private set; }
 	public QuoteId QuoteId { get; private set; }
 
@@ -20,9 +21,6 @@ public record class ProcessOrder : ICommand, ITraceable
 
 		return new ProcessOrder(customerId, orderId, quoteId);
 	}
-
-	public IEnumerable<KeyValuePair<string, object>> GetSpanTags() =>
-		[new(TelemetryTags.OrderId, OrderId.Value)];
 
 	private ProcessOrder(
 		CustomerId customerId,

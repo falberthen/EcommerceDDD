@@ -1,6 +1,6 @@
 ﻿namespace EcommerceDDD.Core.Testing;
 
-public class DummyQueryHandler(IEventStoreRepository<DummyAggregateRoot> repository) : IQueryHandler<DummyQuery, DummyAggregateRoot>
+public class DummyQueryHandler(IEventStoreRepository<DummyAggregateRoot> repository)
 {
     private readonly IEventStoreRepository<DummyAggregateRoot> _eventStoreRepository = repository
 		?? throw new ArgumentNullException(nameof(repository));

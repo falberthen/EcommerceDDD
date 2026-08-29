@@ -16,7 +16,7 @@ public class ShipPackageHandlerTests
         var shipmentWriteRepository = new DummyEventStoreRepository<Shipment>();
 
         var requestShipment = RequestShipment.Create(orderId, productItems);
-        var requestShipmentHandler = new RequestShipmentHandler(_commandBus, shipmentWriteRepository);
+        var requestShipmentHandler = new RequestShipmentHandler(_bus, shipmentWriteRepository);
         await requestShipmentHandler.HandleAsync(requestShipment, CancellationToken.None);
         var shipment = shipmentWriteRepository.AggregateStream.First().Aggregate;
         Assert.NotNull(shipment);
@@ -37,5 +37,5 @@ public class ShipPackageHandlerTests
 		Assert.Equal(ShipmentStatus.Shipped, shipment.Status);
 	}
 
-	private ICommandBus _commandBus = Substitute.For<ICommandBus>();    
+	private IMessageBus _bus = Substitute.For<IMessageBus>();    
 }

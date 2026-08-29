@@ -4,7 +4,7 @@ public class GetOrdersHandler(
 	IQuoteService quoteService,
 	IQuerySession querySession,
 	IUserInfoRequester userInfoRequester
-) : IQueryHandler<GetOrders, IReadOnlyList<OrderViewModel>>
+)
 {
 	private readonly IQuoteService _quoteService = quoteService
 		?? throw new ArgumentNullException(nameof(quoteService));

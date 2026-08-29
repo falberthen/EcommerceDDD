@@ -4,7 +4,7 @@ public class ConfirmDeliveryHandler(
 	IOrderNotificationService orderNotificationService,
 	IEventStoreRepository<Order> orderWriteRepository,
 	IUserInfoRequester userInfoRequester
-) : ICommandHandler<ConfirmDelivery>
+)
 {
 	private readonly IOrderNotificationService _orderNotificationService = orderNotificationService
 		?? throw new ArgumentNullException(nameof(orderNotificationService));

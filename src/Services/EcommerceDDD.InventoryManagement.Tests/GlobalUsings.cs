@@ -1,5 +1,3 @@
-global using EcommerceDDD.Core.CQRS.CommandHandling;
-global using EcommerceDDD.Core.CQRS.QueryHandling;
 global using EcommerceDDD.Core.Exceptions;
 global using EcommerceDDD.Core.Infrastructure.Marten;
 global using EcommerceDDD.Core.Persistence;
@@ -18,3 +16,4 @@ global using Microsoft.AspNetCore.Mvc;
 global using NSubstitute;
 global using System.Linq.Expressions;
 global using Xunit;
+global using Wolverine;

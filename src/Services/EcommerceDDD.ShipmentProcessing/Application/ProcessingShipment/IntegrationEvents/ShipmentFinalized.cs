@@ -1,5 +1,6 @@
 ﻿namespace EcommerceDDD.ShipmentProcessing.Application.ProcessingShipment.IntegrationEvents;
 
+[MessageIdentity(nameof(ShipmentFinalized))]
 public class ShipmentFinalized : IntegrationEvent
 {
     public Guid ShipmentId { get; private set; }

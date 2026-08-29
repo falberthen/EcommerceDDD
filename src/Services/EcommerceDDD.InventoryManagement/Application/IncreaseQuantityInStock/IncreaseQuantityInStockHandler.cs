@@ -5,7 +5,7 @@ namespace EcommerceDDD.InventoryManagement.Application.DecreasingQuantityInStock
 public class IncreaseQuantityInStockHandler(
 	IQuerySessionWrapper querySession,
     IEventStoreRepository<InventoryStockUnit> inventoryStockUnitWriteRepository
-) : ICommandHandler<IncreaseStockQuantity>
+)
 {
 	private readonly IQuerySessionWrapper _querySession = querySession;
 	private readonly IEventStoreRepository<InventoryStockUnit> _inventoryStockUnitWriteRepository = inventoryStockUnitWriteRepository;

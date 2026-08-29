@@ -19,7 +19,7 @@ public class CancelOrderHandlerTests
 		var orderNotificationService = Substitute.For<IOrderNotificationService>();
 
 		var cancelOrder = CancelOrder.Create(order.Id, OrderCancellationReason.CanceledByCustomer);
-		var cancelOrderHandler = new CancelOrderHandler(orderNotificationService, orderWriteRepository);
+		var cancelOrderHandler = new CancelOrderHandler(orderNotificationService, orderWriteRepository, Substitute.For<IMessageBus>());
 
 		// When
 		await cancelOrderHandler.HandleAsync(cancelOrder, CancellationToken.None);

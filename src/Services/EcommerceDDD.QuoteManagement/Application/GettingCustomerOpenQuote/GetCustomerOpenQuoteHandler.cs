@@ -4,7 +4,7 @@ public class GetCustomerOpenQuoteHandler(
 	IUserInfoRequester userInfoRequester,
 	IQuerySession querySession,
     IProductMapper productMapper
-) : IQueryHandler<GetCustomerOpenQuote, QuoteViewModel>
+)
 {
 	private readonly IQuerySession _querySession = querySession;
 	private readonly IProductMapper _productMapper = productMapper;

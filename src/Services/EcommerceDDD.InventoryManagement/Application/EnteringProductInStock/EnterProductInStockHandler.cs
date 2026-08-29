@@ -3,7 +3,7 @@ namespace EcommerceDDD.InventoryManagement.Application.EnteringProductInStock;
 public class EnterProductInStockHandler(
 	IQuerySessionWrapper querySession,
 	IEventStoreRepository<InventoryStockUnit> inventoryStockUnitWriteRepository
-) : ICommandHandler<EnterProductInStock>
+)
 {
 	private readonly IQuerySessionWrapper _querySession = querySession;
 	private readonly IEventStoreRepository<InventoryStockUnit> _inventoryStockUnitWriteRepository = inventoryStockUnitWriteRepository;

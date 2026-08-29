@@ -118,6 +118,7 @@ Microservices communicate directly using **Kiota-generated typed HTTP clients**.
 | Koalesce | 1.0.0-beta.10 |
 | Ocelot | 25.0.0 |
 | Marten | 9.30.0 |
+| WolverineFx (Marten + Kafka) | 6.30.3 |
 | Confluent Kafka | 2.15.0 |
 | Entity Framework Core | 10.0.11 |
 | Npgsql (PostgreSQL) | 10.0.3 |

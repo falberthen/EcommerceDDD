@@ -15,7 +15,7 @@ public class RequestShipmentHandlerTests
 
         var shipmentWriteRepository = new DummyEventStoreRepository<Shipment>();
         var requestShipment = RequestShipment.Create(orderId, productItems);
-        var requestShipmentHandler = new RequestShipmentHandler(_commandBus, shipmentWriteRepository);
+        var requestShipmentHandler = new RequestShipmentHandler(_bus, shipmentWriteRepository);
 
         // When
         await requestShipmentHandler.HandleAsync(requestShipment, CancellationToken.None);
@@ -30,5 +30,5 @@ public class RequestShipmentHandlerTests
 		Assert.Equal(ShipmentStatus.Pending, shipment.Status);
 	}
 
-    private ICommandBus _commandBus = Substitute.For<ICommandBus>();    
+    private IMessageBus _bus = Substitute.For<IMessageBus>();    
 }

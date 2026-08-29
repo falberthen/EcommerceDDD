@@ -4,8 +4,8 @@ public class CustomersControllerTests
 {
 	public CustomersControllerTests()
 	{
-		_customersController = new CustomersController(_commandBus, _queryBus);
-		_customersInternalController = new CustomersInternalController(_commandBus, _queryBus);
+		_customersController = new CustomersController(_bus);
+		_customersInternalController = new CustomersInternalController(_bus);
 	}
 
 	[Fact]
@@ -31,7 +31,7 @@ public class CustomersControllerTests
 			)
 		};
 
-		_queryBus.SendAsync(Arg.Any<GetCustomerEventHistory>(), CancellationToken.None)
+		_bus.InvokeAsync<Result<IReadOnlyList<CustomerEventHistory>>>(Arg.Any<GetCustomerEventHistory>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
 			.Returns(Result.Ok<IReadOnlyList<CustomerEventHistory>>(expectedData));
 
 		// When
@@ -56,7 +56,7 @@ public class CustomersControllerTests
 			CreditLimit = 1000
 		};
 
-		_commandBus.SendAsync(Arg.Any<RegisterCustomer>(), Arg.Any<CancellationToken>())
+		_bus.InvokeAsync<Result>(Arg.Any<RegisterCustomer>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
 			.Returns(Result.Ok());
 
 		// When
@@ -79,7 +79,7 @@ public class CustomersControllerTests
 			CreditLimit = 1000m
 		};
 
-		_commandBus.SendAsync(Arg.Any<UpdateCustomerInformation>(), Arg.Any<CancellationToken>())
+		_bus.InvokeAsync<Result>(Arg.Any<UpdateCustomerInformation>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
 			.Returns(Result.Ok());
 
 		// When
@@ -105,7 +105,7 @@ public class CustomersControllerTests
 			CreditLimit = 1000
 		};
 
-		_queryBus.SendAsync(Arg.Any<GetCustomerDetailsById>(), CancellationToken.None)
+		_bus.InvokeAsync<Result<CustomerDetails>>(Arg.Any<GetCustomerDetailsById>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
 			.Returns(Result.Ok<CustomerDetails>(expectedData));
 
 		// When
@@ -128,7 +128,7 @@ public class CustomersControllerTests
 			10000
 		);
 
-		_queryBus.SendAsync(Arg.Any<GetCreditLimit>(), CancellationToken.None)
+		_bus.InvokeAsync<Result<CreditLimitModel>>(Arg.Any<GetCreditLimit>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
 			.Returns(Result.Ok<CreditLimitModel>(expectedData));
 
 		// When
@@ -144,6 +144,5 @@ public class CustomersControllerTests
 
 	private CustomersController _customersController;
 	private CustomersInternalController _customersInternalController;
-	private ICommandBus _commandBus = Substitute.For<ICommandBus>();
-	private IQueryBus _queryBus = Substitute.For<IQueryBus>();
+	private IMessageBus _bus = Substitute.For<IMessageBus>();
 }

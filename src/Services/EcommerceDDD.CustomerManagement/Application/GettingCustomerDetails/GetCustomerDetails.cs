@@ -1,4 +1,6 @@
-﻿namespace EcommerceDDD.CustomerManagement.Application.GettingCustomerDetails;
+﻿using EcommerceDDD.Core.CQRS;
+
+namespace EcommerceDDD.CustomerManagement.Application.GettingCustomerDetails;
 
 public record class GetCustomerDetails : IQuery<CustomerDetails>
 {

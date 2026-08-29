@@ -1,5 +1,3 @@
-global using EcommerceDDD.Core.CQRS.CommandHandling;
-global using EcommerceDDD.Core.CQRS.QueryHandling;
 global using EcommerceDDD.Core.Infrastructure.Identity;
 global using EcommerceDDD.Core.Testing;
 global using EcommerceDDD.CustomerManagement.API.Controllers;
@@ -24,3 +22,4 @@ global using System.Linq;
 global using System.Threading;
 global using System.Threading.Tasks;
 global using Xunit;
+global using Wolverine;

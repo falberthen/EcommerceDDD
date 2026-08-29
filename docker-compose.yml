@@ -165,8 +165,6 @@ services:
         condition: service_healthy
       kafka:
         condition: service_healthy
-      connect:
-        condition: service_healthy
       ecommerceddd-product-catalog:
         condition: service_started
       ecommerceddd-identityserver:
@@ -190,8 +188,6 @@ services:
         condition: service_healthy
       kafka:
         condition: service_healthy
-      connect:
-        condition: service_healthy
       ecommerceddd-product-catalog:
         condition: service_started
       ecommerceddd-identityserver:
@@ -214,8 +210,6 @@ services:
       postgres:
         condition: service_healthy
       kafka:
-        condition: service_healthy
-      connect:
         condition: service_healthy
       ecommerceddd-product-catalog:
         condition: service_started

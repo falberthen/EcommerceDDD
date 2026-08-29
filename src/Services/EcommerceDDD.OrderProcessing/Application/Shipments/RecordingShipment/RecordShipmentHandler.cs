@@ -3,7 +3,7 @@ namespace EcommerceDDD.OrderProcessing.Application.Shipments.RecordingShipment;
 public class RecordShipmentHandler(
 	IOrderNotificationService orderNotificationService,
 	IEventStoreRepository<Order> orderWriteRepository
-) : ICommandHandler<RecordShipment>
+)
 {
 	private readonly IOrderNotificationService _orderNotificationService = orderNotificationService
 		?? throw new ArgumentNullException(nameof(orderNotificationService));

@@ -4,7 +4,7 @@ public class UpdateCustomerInformationHandler(
 	IUserInfoRequester userInfoRequester,
 	IQuerySessionWrapper querySession,
 	IEventStoreRepository<Customer> customerWriteRepository
-) : ICommandHandler<UpdateCustomerInformation>
+)
 {
 	private readonly IEventStoreRepository<Customer> _customerWriteRepository = customerWriteRepository
 		?? throw new ArgumentNullException(nameof(customerWriteRepository));

@@ -2,15 +2,15 @@ namespace EcommerceDDD.InventoryManagement.Application.CheckingQuantityInStock;
 
 public class CheckProductsInStockHandler(
 	IQuerySessionWrapper querySession
-) : IQueryHandler<CheckProductsInStock, IList<InventoryStockUnitViewModel>>
+)
 {
     private readonly IQuerySessionWrapper _querySession = querySession;
 
-    public async Task<Result<IList<InventoryStockUnitViewModel>>> HandleAsync(CheckProductsInStock query,
+    public async Task<Result<IReadOnlyList<InventoryStockUnitViewModel>>> HandleAsync(CheckProductsInStock query,
         CancellationToken cancellationToken)
     {
         if (!query.ProductIds.Any())
-            return Result.Fail<IList<InventoryStockUnitViewModel>>("The list of Products to check cannot be empty.");
+            return Result.Fail<IReadOnlyList<InventoryStockUnitViewModel>>("The list of Products to check cannot be empty.");
 
         var viewModels = new List<InventoryStockUnitViewModel>();
 
@@ -27,6 +27,6 @@ public class CheckProductsInStockHandler(
                 inventoryStockUnit.QuantityInStock));
         }
 
-        return Result.Ok<IList<InventoryStockUnitViewModel>>(viewModels);
+        return Result.Ok<IReadOnlyList<InventoryStockUnitViewModel>>(viewModels);
     }
 }
