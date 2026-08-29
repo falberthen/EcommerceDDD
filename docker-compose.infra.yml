@@ -65,31 +65,6 @@ services:
       kafka:
         condition: service_healthy
 
-  connect:
-    image: debezium/connect:2.5
-    ports:
-      - '8083:8083'
-    environment:
-      BOOTSTRAP_SERVERS: 'kafka:29092'
-      GROUP_ID: 1
-      CONFIG_STORAGE_TOPIC: CONNECT_CONFIGS
-      OFFSET_STORAGE_TOPIC: CONNECT_OFFSETS
-      STATUS_STORAGE_TOPIC: CONNECT_STATUSES
-    healthcheck:
-      test: curl --fail http://localhost:8083/ || exit 1
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 40s
-    volumes:
-      - debezium-data:/kafka/data
-    restart: always
-    depends_on:
-      postgres:
-        condition: service_healthy
-      kafka:
-        condition: service_healthy
-
   pgadmin:
     image: dpage/pgadmin4:latest
     environment:
@@ -124,4 +99,3 @@ volumes:
   postgres:
   kafka-data:
   pgadmin:
-  debezium-data:
