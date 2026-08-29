@@ -3,70 +3,36 @@ namespace EcommerceDDD.OrderProcessing.Application;
 /// <summary>
 /// Handles failure/compensation events
 /// </summary>
-public partial class OrderSaga :
-	IEventHandler<PaymentFailed>,
-	IEventHandler<CustomerReachedCreditLimit>,
-	IEventHandler<ShipmentFailed>,
-	IEventHandler<ProductWasOutOfStock>,
-	IEventHandler<OrderCanceled>
+public partial class OrderSaga
 {
-	public async Task HandleAsync(PaymentFailed @integrationEvent,
-		CancellationToken cancellationToken)
-	{
-		var command = CancelOrder.Create(
+	public CancelOrder Handle(PaymentFailed @integrationEvent) =>
+		CancelOrder.Create(
 			OrderId.Of(@integrationEvent.OrderId),
 			OrderCancellationReason.PaymentFailed);
 
-		var result = await _commandBus.SendAsync(command, cancellationToken);
-		ThrowIfFailed(result);
-	}
-
-	public async Task HandleAsync(CustomerReachedCreditLimit @integrationEvent,
-		CancellationToken cancellationToken)
-	{
-		var command = CancelOrder.Create(
+	public CancelOrder Handle(CustomerReachedCreditLimit @integrationEvent) =>
+		CancelOrder.Create(
 			OrderId.Of(@integrationEvent.OrderId),
 			OrderCancellationReason.CustomerReachedCreditLimit);
 
-		var result = await _commandBus.SendAsync(command, cancellationToken);
-		ThrowIfFailed(result);
-	}
-
-	public async Task HandleAsync(ShipmentFailed @integrationEvent,
-		CancellationToken cancellationToken)
-	{
-		var command = CancelOrder.Create(
+	public CancelOrder Handle(ShipmentFailed @integrationEvent) =>
+		CancelOrder.Create(
 			OrderId.Of(@integrationEvent.OrderId),
 			OrderCancellationReason.ShipmentFailed);
 
-		var result = await _commandBus.SendAsync(command, cancellationToken);
-		ThrowIfFailed(result);
-	}
-
-	public async Task HandleAsync(ProductWasOutOfStock @integrationEvent,
-		CancellationToken cancellationToken)
-	{
-		var command = CancelOrder.Create(
+	public CancelOrder Handle(ProductWasOutOfStock @integrationEvent) =>
+		CancelOrder.Create(
 			OrderId.Of(@integrationEvent.OrderId),
 			OrderCancellationReason.ProductWasOutOfStock);
 
-		var result = await _commandBus.SendAsync(command, cancellationToken);
-		ThrowIfFailed(result);
-	}
-
-	public async Task HandleAsync(OrderCanceled @integrationEvent,
-		CancellationToken cancellationToken)
-	{
-		// If the order was already paid before cancellation, ask payment service to cancel the payment
-		if (!@integrationEvent.PaymentId.HasValue)
-			return;
-
-		var command = RequestCancelPayment.Create(
-			OrderId.Of(@integrationEvent.OrderId),
-			PaymentId.Of(@integrationEvent.PaymentId.Value),
-			PaymentCancellationReason.OrderCanceled);
-
-		var result = await _commandBus.SendAsync(command, cancellationToken);
-		ThrowIfFailed(result);
-	}
+	/// <summary>
+	/// If the order was already paid before cancellation, ask the payment service to cancel the payment.
+	/// </summary>
+	public RequestCancelPayment? Handle(OrderCanceled @domainEvent) =>
+		@domainEvent.PaymentId is null
+			? null
+			: RequestCancelPayment.Create(
+				OrderId.Of(@domainEvent.OrderId),
+				PaymentId.Of(@domainEvent.PaymentId.Value),
+				PaymentCancellationReason.OrderCanceled);
 }
