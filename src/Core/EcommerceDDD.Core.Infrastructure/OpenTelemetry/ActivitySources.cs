@@ -2,7 +2,6 @@
 
 public static class ActivitySources
 {
-	public const string CommandBus    = "EcommerceDDD.CommandBus";
-	public const string KafkaConsumer = "EcommerceDDD.Kafka.Consumer";
-	public const string OutboxWrite   = "EcommerceDDD.Outbox.Write";
+	/// <summary>Wolverine's own source: the outbox, broker and handler spans.</summary>
+	public const string Wolverine = "Wolverine";
 }
