@@ -5,9 +5,8 @@ namespace EcommerceDDD.CustomerManagement.API.Controllers;
 [ApiVersion(ApiVersions.V2)]
 [Route("api/v{version:apiVersion}/customers")]
 public class CustomersController(
-	ICommandBus commandBus,
-	IQueryBus queryBus
-) : CustomControllerBase(commandBus, queryBus)
+	IMessageBus bus
+) : CustomControllerBase(bus)
 {
 	/// <summary>
 	/// Register a new customer

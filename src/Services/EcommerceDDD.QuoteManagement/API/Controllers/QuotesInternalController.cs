@@ -5,9 +5,8 @@ namespace EcommerceDDD.QuoteManagement.API.Controllers;
 [ApiVersion(ApiVersions.V2)]
 [Route("api/v{version:apiVersion}/internal/quotes")]
 public class QuotesInternalController(
-	ICommandBus commandBus,
-	IQueryBus queryBus
-) : CustomControllerBase(commandBus, queryBus)
+	IMessageBus bus
+) : CustomControllerBase(bus)
 {
 	/// <summary>
 	/// Confirms a quote

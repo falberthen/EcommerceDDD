@@ -2,7 +2,7 @@ namespace EcommerceDDD.OrderProcessing.Application.Payments.CancelingPayment;
 
 public class RequestCancelPaymentHandler(
 	IPaymentService paymentService
-) : ICommandHandler<RequestCancelPayment>
+)
 {
 	private readonly IPaymentService _paymentService = paymentService
 		?? throw new ArgumentNullException(nameof(paymentService));

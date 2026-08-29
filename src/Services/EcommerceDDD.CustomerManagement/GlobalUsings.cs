@@ -1,6 +1,4 @@
 global using Asp.Versioning;
-global using EcommerceDDD.Core.CQRS.CommandHandling;
-global using EcommerceDDD.Core.CQRS.QueryHandling;
 global using EcommerceDDD.Core.Domain;
 global using EcommerceDDD.Core.Exceptions;
 global using EcommerceDDD.Core.Infrastructure.Extensions;
@@ -30,3 +28,5 @@ global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.AspNetCore.Mvc;
 global using Newtonsoft.Json;
 global using System.ComponentModel.DataAnnotations;
+global using Wolverine;
+global using EcommerceDDD.Core.CQRS;

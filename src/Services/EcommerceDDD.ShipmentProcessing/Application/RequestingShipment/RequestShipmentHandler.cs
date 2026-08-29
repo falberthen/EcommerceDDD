@@ -3,11 +3,11 @@ using EcommerceDDD.ShipmentProcessing.Application.ProcessingShipment;
 namespace EcommerceDDD.ShipmentProcessing.Application.RequestingShipment;
 
 public class RequestShipmentHandler(
-	ICommandBus commandBus,
+	IMessageBus bus,
 	IEventStoreRepository<Shipment> shipmentWriteRepository
-) : ICommandHandler<RequestShipment>
+)
 {
-	private readonly ICommandBus _commandBus = commandBus;
+	private readonly IMessageBus _bus = bus;
 	private readonly IEventStoreRepository<Shipment> _shipmentWriteRepository = shipmentWriteRepository;
 
 	public async Task<Result> HandleAsync(RequestShipment command, CancellationToken cancellationToken)
@@ -18,7 +18,7 @@ public class RequestShipmentHandler(
         await _shipmentWriteRepository
 			.AppendEventsAsync(shipment, cancellationToken);
 
-        return await _commandBus
-			.SendAsync(ProcessShipment.Create(shipment.Id, command.OrderId), cancellationToken);
+        return await _bus
+			.InvokeAsync<Result>(ProcessShipment.Create(shipment.Id, command.OrderId), cancellationToken);
     }
 }

@@ -4,21 +4,21 @@ public class GetProductsHandler(
 	IInventoryService inventoryService,
 	IProducts productsRepository,
 	ICurrencyConverter currencyConverter
-) : IQueryHandler<GetProducts, IList<ProductViewModel>>
+)
 {
 	private readonly IInventoryService _inventoryService = inventoryService;
 	private readonly IProducts _productsRepository = productsRepository;
 	private readonly ICurrencyConverter _currencyConverter = currencyConverter;
 
-	public async Task<Result<IList<ProductViewModel>>> HandleAsync(GetProducts query, CancellationToken cancellationToken)
+	public async Task<Result<IReadOnlyList<ProductViewModel>>> HandleAsync(GetProducts query, CancellationToken cancellationToken)
 	{
 		if (string.IsNullOrEmpty(query.CurrencyCode))
-			return Result.Fail<IList<ProductViewModel>>("Currency code cannot be empty.");
+			return Result.Fail<IReadOnlyList<ProductViewModel>>("Currency code cannot be empty.");
 
 		var productsViewModel = new List<ProductViewModel>();
 		var products = query.ProductIds.Count == 0
 			? await _productsRepository.ListAll(cancellationToken)
-			: await _productsRepository.GetByIds(query.ProductIds, cancellationToken);
+			: await _productsRepository.GetByIds(query.ProductIds.ToList(), cancellationToken);
 
 		// Getting stock quantity
 		var productIds = products.Select(x =>
@@ -52,7 +52,7 @@ public class GetProductsHandler(
 			));
 		}
 
-		return Result.Ok<IList<ProductViewModel>>(productsViewModel);
+		return Result.Ok<IReadOnlyList<ProductViewModel>>(productsViewModel);
 	}
 
 	private async Task<List<InventoryStockUnitViewModel>> GetProductsFromInventoryAsync(List<Guid?> productIds,

@@ -3,7 +3,7 @@ namespace EcommerceDDD.OrderProcessing.Application.Shipments.RequestingShipment;
 public class RequestShipmentHandler(
 	IShipmentService shipmentService,
 	IEventStoreRepository<Order> orderWriteRepository
-) : ICommandHandler<RequestShipment>
+)
 {
 	private readonly IShipmentService _shipmentService = shipmentService
 		?? throw new ArgumentNullException(nameof(shipmentService));

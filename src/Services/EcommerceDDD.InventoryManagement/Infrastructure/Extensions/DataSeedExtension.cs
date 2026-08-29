@@ -14,8 +14,8 @@ public static class DataSeedExtension
 			.GetService<IServiceScopeFactory>()!
 			.CreateScope() ?? throw new NullReferenceException("Can't create scope factory.");
 
-		var commandBus = serviceScope.ServiceProvider
-			.GetRequiredService<ICommandBus>();
+		var messageBus = serviceScope.ServiceProvider
+			.GetRequiredService<IMessageBus>();
 
 		try
 		{
@@ -27,7 +27,7 @@ public static class DataSeedExtension
 				.ToList();
 
 			var command = EnterProductInStock.Create(productQuantities);
-			await commandBus.SendAsync(command, CancellationToken.None);
+			await messageBus.InvokeAsync<Result>(command, CancellationToken.None);
 
 			Console.WriteLine($"Inventory seeded successfully with {productQuantities.Count} products.");
 		}

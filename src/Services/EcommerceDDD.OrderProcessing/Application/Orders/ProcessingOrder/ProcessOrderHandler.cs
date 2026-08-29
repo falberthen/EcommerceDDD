@@ -3,15 +3,15 @@ namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
 public class ProcessOrderHandler(
 	IQuoteService quoteService,
 	IEventStoreRepository<Order> orderWriteRepository,
-	IEventBus eventPublisher
-) : ICommandHandler<ProcessOrder>
+	IMessageBus messageBus
+)
 {
 	private readonly IQuoteService _quoteService = quoteService
 		?? throw new ArgumentNullException(nameof(quoteService));
 	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository
 		?? throw new ArgumentNullException(nameof(orderWriteRepository));
-	private readonly IEventBus _eventPublisher = eventPublisher
-		?? throw new ArgumentNullException(nameof(eventPublisher));
+	private readonly IMessageBus _messageBus = messageBus
+		?? throw new ArgumentNullException(nameof(messageBus));
 
 	public async Task<Result> HandleAsync(ProcessOrder command, CancellationToken cancellationToken)
 	{
@@ -37,7 +37,7 @@ public class ProcessOrderHandler(
 				order.TotalPrice.Currency.Code,
 				order.TotalPrice.Amount);
 
-			await _eventPublisher.PublishEventAsync(retryEvent, cancellationToken);
+			await _messageBus.PublishAsync(retryEvent);
 			return Result.Ok();
 		}
 
@@ -79,8 +79,7 @@ public class ProcessOrderHandler(
 		await _orderWriteRepository
 			.AppendEventsAsync(order, cancellationToken);
 
-		await _eventPublisher
-			.PublishEventAsync(orderProcessedEvent!, cancellationToken);
+		await _messageBus.PublishAsync(orderProcessedEvent!);
 
 		return Result.Ok();
 	}

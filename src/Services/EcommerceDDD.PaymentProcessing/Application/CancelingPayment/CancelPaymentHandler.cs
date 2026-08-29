@@ -1,6 +1,6 @@
 namespace EcommerceDDD.PaymentProcessing.Application.CancelingPayment;
 
-public class CancelPaymentHandler(IEventStoreRepository<Payment> paymentWriteRepository) : ICommandHandler<CancelPayment>
+public class CancelPaymentHandler(IEventStoreRepository<Payment> paymentWriteRepository)
 {
 	private readonly IEventStoreRepository<Payment> _paymentWriteRepository = paymentWriteRepository;
 

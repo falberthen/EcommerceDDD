@@ -2,13 +2,16 @@ namespace EcommerceDDD.OrderProcessing.Application.Orders.CancelingOrder;
 
 public class CancelOrderHandler(
 	IOrderNotificationService orderNotificationService,
-	IEventStoreRepository<Order> orderWriteRepository
-) : ICommandHandler<CancelOrder>
+	IEventStoreRepository<Order> orderWriteRepository,
+	IMessageBus messageBus
+)
 {
 	private readonly IOrderNotificationService _orderNotificationService = orderNotificationService
 		?? throw new ArgumentNullException(nameof(orderNotificationService));
 	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository
 		?? throw new ArgumentNullException(nameof(orderWriteRepository));
+	private readonly IMessageBus _messageBus = messageBus
+		?? throw new ArgumentNullException(nameof(messageBus));
 
 	public async Task<Result> HandleAsync(CancelOrder command, CancellationToken cancellationToken)
 	{
@@ -22,8 +25,16 @@ public class CancelOrderHandler(
 			return Result.Ok();
 
 		order.Cancel(command.CancellationReason);
+
+		var orderCanceledEvent = order.GetUncommittedEvents()
+			.OfType<OrderCanceled>()
+			.FirstOrDefault();
+
 		await _orderWriteRepository
 			.AppendEventsAsync(order, cancellationToken: cancellationToken);
+
+		// Lets the saga cancel the payment when the order had already been paid
+		await _messageBus.PublishAsync(orderCanceledEvent!);
 
 		try
 		{

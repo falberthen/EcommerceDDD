@@ -1,6 +1,6 @@
 namespace EcommerceDDD.CustomerManagement.Application.GettingCreditLimit;
 
-public class GetCreditLimitHandler(IQuerySession querySession) : IQueryHandler<GetCreditLimit, CreditLimitModel>
+public class GetCreditLimitHandler(IQuerySession querySession)
 {
     private readonly IQuerySession _querySession = querySession
 		?? throw new ArgumentNullException(nameof(querySession));

@@ -3,7 +3,7 @@ namespace EcommerceDDD.OrderProcessing.Application.GettingOrderEventHistory;
 public class GetOrderEventHistoryHandler(
     IQuerySession querySession,
     IUserInfoRequester userInfoRequester
-) : IQueryHandler<GetOrderEventHistory, IReadOnlyList<OrderEventHistory>>
+)
 {
 	private readonly IQuerySession _querySession = querySession;
 	private readonly IUserInfoRequester _userInfoRequester = userInfoRequester

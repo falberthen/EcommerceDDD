@@ -3,7 +3,7 @@ namespace EcommerceDDD.QuoteManagement.Application.GettingQuoteHistory;
 public class GetQuoteEventHistoryHandler(
 	IQuerySession querySession,
 	IUserInfoRequester userInfoRequester
-) : IQueryHandler<GetQuoteEventHistory, IReadOnlyList<QuoteEventHistory>>
+)
 {
     private readonly IQuerySession _querySession = querySession;
 	private readonly IUserInfoRequester _userInfoRequester = userInfoRequester

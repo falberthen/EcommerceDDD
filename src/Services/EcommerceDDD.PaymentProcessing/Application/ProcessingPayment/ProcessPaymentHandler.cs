@@ -4,7 +4,7 @@ public class ProcessPaymentHandler(
 	IProductInventoryHandler productInventoryHandler,
 	ICustomerCreditChecker creditChecker,
 	IEventStoreRepository<Payment> paymentWriteRepository
-) : ICommandHandler<ProcessPayment>
+)
 {
 	private readonly ICustomerCreditChecker _creditChecker = creditChecker;
 	private readonly IProductInventoryHandler _productInventoryHandler = productInventoryHandler;
@@ -40,7 +40,7 @@ public class ProcessPaymentHandler(
 
 			payment.Complete();
 
-			_paymentWriteRepository.AppendToOutbox(
+			await _paymentWriteRepository.AppendToOutboxAsync(
 			   new PaymentFinalized(
 				   payment.Id.Value,
 				   payment.OrderId.Value,
@@ -57,7 +57,7 @@ public class ProcessPaymentHandler(
 		{
 			payment.Cancel(PaymentCancellationReason.ProcessmentError);
 
-			_paymentWriteRepository.AppendToOutbox(
+			await _paymentWriteRepository.AppendToOutboxAsync(
 				new PaymentFailed(
 					payment.Id.Value,
 					payment.OrderId.Value,
@@ -78,12 +78,12 @@ public class ProcessPaymentHandler(
 
 		if (reason == PaymentCancellationReason.CustomerReachedCreditLimit)
 		{
-			_paymentWriteRepository.AppendToOutbox(
+			await _paymentWriteRepository.AppendToOutboxAsync(
 				new CustomerReachedCreditLimit(payment.OrderId.Value));
 		}
 		if (reason == PaymentCancellationReason.ProductOutOfStock)
 		{
-			_paymentWriteRepository.AppendToOutbox(
+			await _paymentWriteRepository.AppendToOutboxAsync(
 				new ProductWasOutOfStock(payment.OrderId.Value));
 		}
 

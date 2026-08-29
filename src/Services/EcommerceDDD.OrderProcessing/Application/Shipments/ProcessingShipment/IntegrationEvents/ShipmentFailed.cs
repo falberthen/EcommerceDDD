@@ -1,5 +1,6 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Application.Shipments.ProcessingShipment.IntegrationEvents;
 
+[MessageIdentity(nameof(ShipmentFailed))]
 public class ShipmentFailed(
     Guid shippingId,
     Guid orderId) : IntegrationEvent

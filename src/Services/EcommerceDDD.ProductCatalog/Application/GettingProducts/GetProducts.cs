@@ -1,13 +1,13 @@
 ﻿namespace EcommerceDDD.ProductCatalog.Application.Products.GettingProducts;
 
-public record class GetProducts : IQuery<IList<ProductViewModel>>
+public record class GetProducts : IQuery<IReadOnlyList<ProductViewModel>>
 {
     public string CurrencyCode { get; private set; }
-    public IList<ProductId> ProductIds { get; private set; }
+    public IReadOnlyList<ProductId> ProductIds { get; private set; }
 
     public static GetProducts Create(
         string currencyCode,
-        IList<ProductId> productIds)
+        IReadOnlyList<ProductId> productIds)
     {
         if (string.IsNullOrEmpty(currencyCode))
             throw new ArgumentNullException(nameof(currencyCode));
@@ -17,7 +17,7 @@ public record class GetProducts : IQuery<IList<ProductViewModel>>
 
     private GetProducts(
         string currencyCode,
-        IList<ProductId> productIds)
+        IReadOnlyList<ProductId> productIds)
     {
         CurrencyCode = currencyCode;
         ProductIds = productIds;

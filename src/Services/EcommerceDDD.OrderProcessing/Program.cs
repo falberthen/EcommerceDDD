@@ -6,8 +6,26 @@ services.AddApiVersioning(ApiVersions.V2);
 
 services.AddControllers();
 services.AddEndpointsApiExplorer();
-services.AddCoreInfrastructure(builder.Configuration);
-services.AddHandlersFromType(typeof(OrderSaga));
+services.AddCoreInfrastructure(builder.Configuration, options =>
+{
+	options.UseServiceClientServiceLocation();
+
+	// OrderSaga is a Wolverine saga rather than a *Handler, so name it explicitly.
+	options.Discovery.IncludeType<OrderSaga>();
+
+	options.UseKafka(builder.Configuration["Kafka:ConnectionString"]!)
+		.AutoProvision();
+
+	// OrderPlaced still crosses the broker: an explicit subscription wins over
+	// Wolverine's local routing, so it is not also handled in-process.
+	options.PublishMessage<OrderPlaced>()
+		.ToKafkaTopic("orders")
+		.UseDurableOutbox();
+
+	options.ListenToKafkaTopic("orders").UseDurableInbox();
+	options.ListenToKafkaTopic("payments").UseDurableInbox();
+	options.ListenToKafkaTopic("shipments").UseDurableInbox();
+});
 services.AddHealthChecks();
 
 // Service clients
@@ -20,9 +38,6 @@ services.AddOrderNotificationServiceClient(builder.Configuration);
 services.AddScoped<IEventStoreRepository<Order>, MartenRepository<Order>>();
 services.AddMarten(builder.Configuration, options =>
 	options.ConfigureProjections());
-
-// Kafka
-services.AddKafkaConsumerAndDebezium(builder.Configuration);
 
 // Policies
 services.AddAuthorization(options =>

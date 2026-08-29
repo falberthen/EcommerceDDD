@@ -1,12 +1,12 @@
 ﻿namespace EcommerceDDD.InventoryManagement.Application.CheckingQuantityInStock;
 
-public record class CheckProductsInStock : IQuery<IList<InventoryStockUnitViewModel>>
+public record class CheckProductsInStock : IQuery<IReadOnlyList<InventoryStockUnitViewModel>>
 {
-    public IList<ProductId> ProductIds { get; private set; }
+	public IReadOnlyList<ProductId> ProductIds { get; private set; }
 
-    public static CheckProductsInStock Create(
-        IList<ProductId> productIds) => new CheckProductsInStock(productIds);
+	public static CheckProductsInStock Create(
+		IReadOnlyList<ProductId> productIds) => new CheckProductsInStock(productIds);
 
-    private CheckProductsInStock(
-        IList<ProductId> productIds) => ProductIds = productIds;
+	private CheckProductsInStock(
+		IReadOnlyList<ProductId> productIds) => ProductIds = productIds;
 }

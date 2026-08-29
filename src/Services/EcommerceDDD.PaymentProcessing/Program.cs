@@ -6,8 +6,18 @@ services.AddApiVersioning(ApiVersions.V2);
 
 services.AddControllers();
 services.AddEndpointsApiExplorer();
-services.AddCoreInfrastructure(builder.Configuration);
-services.AddHandlersFromType(typeof(RequestPaymentHandler));
+services.AddCoreInfrastructure(builder.Configuration, options =>
+{
+    options.UseServiceClientServiceLocation();
+
+    options.UseKafka(builder.Configuration["Kafka:ConnectionString"]!)
+        .AutoProvision();
+
+    options.PublishMessage<PaymentFinalized>().ToKafkaTopic("payments").UseDurableOutbox();
+    options.PublishMessage<PaymentFailed>().ToKafkaTopic("payments").UseDurableOutbox();
+    options.PublishMessage<CustomerReachedCreditLimit>().ToKafkaTopic("payments").UseDurableOutbox();
+    options.PublishMessage<ProductWasOutOfStock>().ToKafkaTopic("payments").UseDurableOutbox();
+});
 services.AddHealthChecks();
 
 // Service clients
@@ -18,9 +28,6 @@ services.AddCustomerManagementServiceClient(builder.Configuration);
 services.AddScoped<ICustomerCreditChecker, CustomerCreditChecker>();
 services.AddScoped<IProductInventoryHandler, ProductInventoryHandler>();
 services.AddScoped<IEventStoreRepository<Payment>, MartenRepository<Payment>>();
-
-// Outbox with Debezium
-services.ConfigureDebezium(builder.Configuration);
 
 // Marten
 services.AddMarten(builder.Configuration, options =>

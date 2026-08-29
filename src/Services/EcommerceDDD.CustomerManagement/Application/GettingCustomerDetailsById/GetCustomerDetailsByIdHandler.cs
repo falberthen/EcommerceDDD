@@ -1,7 +1,7 @@
 namespace EcommerceDDD.CustomerManagement.Api.Application.GettingCustomerDetailsById;
 
 public class GetCustomerDetailsByIdHandler(
-    IQuerySession querySession) : IQueryHandler<GetCustomerDetailsById, CustomerDetails>
+    IQuerySession querySession)
 {
     private readonly IQuerySession _querySession = querySession
 		?? throw new ArgumentNullException(nameof(querySession));

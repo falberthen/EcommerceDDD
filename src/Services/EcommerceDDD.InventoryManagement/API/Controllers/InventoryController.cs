@@ -5,9 +5,8 @@ namespace EcommerceDDD.InventoryManagement.API.Controllers;
 [ApiVersion(ApiVersions.V2)]
 [Route("api/v{version:apiVersion}/inventory")]
 public class InventoryController(
-	ICommandBus commandBus,
-	IQueryBus queryBus
-) : CustomControllerBase(commandBus, queryBus)
+	IMessageBus bus
+) : CustomControllerBase(bus)
 {
 	/// <summary>
 	/// Get inventory stock unit event history

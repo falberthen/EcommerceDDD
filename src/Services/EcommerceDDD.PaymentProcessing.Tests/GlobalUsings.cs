@@ -1,7 +1,3 @@
-global using FluentResults;
-global using EcommerceDDD.Core.CQRS;
-global using EcommerceDDD.Core.CQRS.CommandHandling;
-global using EcommerceDDD.Core.CQRS.QueryHandling;
 global using EcommerceDDD.Core.Testing;
 global using EcommerceDDD.PaymentProcessing.API.Controllers;
 global using EcommerceDDD.PaymentProcessing.API.Controllers.Requests;
@@ -10,6 +6,8 @@ global using EcommerceDDD.PaymentProcessing.Application.ProcessingPayment;
 global using EcommerceDDD.PaymentProcessing.Application.RequestingPayment;
 global using EcommerceDDD.PaymentProcessing.Domain;
 global using EcommerceDDD.PaymentProcessing.Domain.Events;
+global using FluentResults;
 global using Microsoft.AspNetCore.Mvc;
 global using NSubstitute;
+global using Wolverine;
 global using Xunit;

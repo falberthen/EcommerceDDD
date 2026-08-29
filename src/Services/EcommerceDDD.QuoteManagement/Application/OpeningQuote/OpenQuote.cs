@@ -1,4 +1,6 @@
-﻿namespace EcommerceDDD.QuoteManagement.Application.OpeningQuote;
+﻿using EcommerceDDD.Core.CQRS;
+
+namespace EcommerceDDD.QuoteManagement.Application.OpeningQuote;
 
 public record class OpenQuote : ICommand
 {

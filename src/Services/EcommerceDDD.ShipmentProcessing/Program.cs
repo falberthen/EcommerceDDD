@@ -7,15 +7,18 @@ services.AddApiVersioning(ApiVersions.V2);
 services.AddHttpClient();
 services.AddControllers();
 services.AddEndpointsApiExplorer();
-services.AddCoreInfrastructure(builder.Configuration);
-services.AddHandlersFromType(typeof(RequestShipmentHandler));
+services.AddCoreInfrastructure(builder.Configuration, options =>
+{
+    options.UseKafka(builder.Configuration["Kafka:ConnectionString"]!)
+        .AutoProvision();
+
+    options.PublishMessage<ShipmentFinalized>().ToKafkaTopic("shipments").UseDurableOutbox();
+    options.PublishMessage<ShipmentFailed>().ToKafkaTopic("shipments").UseDurableOutbox();
+});
 services.AddHealthChecks();
 
 // Services
 services.AddScoped<IEventStoreRepository<Shipment>, MartenRepository<Shipment>>();
-
-// Outbox with Debezium
-services.ConfigureDebezium(builder.Configuration);
 
 // Marten
 services.AddMarten(builder.Configuration, options =>

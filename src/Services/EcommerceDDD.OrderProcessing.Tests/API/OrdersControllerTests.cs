@@ -4,8 +4,7 @@ public class OrdersControllerTests
 {
     public OrdersControllerTests()
     {
-        _ordersController = new OrdersController(
-            _commandBus, _queryBus);
+        _ordersController = new OrdersController(_bus);
     }
 
     [Fact]
@@ -40,7 +39,7 @@ public class OrdersControllerTests
             }
         };
 
-        _queryBus.SendAsync(Arg.Any<GetOrders>(), Arg.Any<CancellationToken>())
+        _bus.InvokeAsync<Result<IReadOnlyList<OrderViewModel>>>(Arg.Any<GetOrders>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
             .Returns(Result.Ok<IReadOnlyList<OrderViewModel>>(expectedData));
 
         // When
@@ -75,7 +74,7 @@ public class OrdersControllerTests
             )
         };
 
-        _queryBus.SendAsync(Arg.Any<GetOrderEventHistory>(), CancellationToken.None)
+        _bus.InvokeAsync<Result<IReadOnlyList<OrderEventHistory>>>(Arg.Any<GetOrderEventHistory>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
             .Returns(Result.Ok<IReadOnlyList<OrderEventHistory>>(expectedData));
 
         // When
@@ -93,7 +92,7 @@ public class OrdersControllerTests
         Guid customerId = Guid.NewGuid();
         Guid quoteId = Guid.NewGuid();
 
-        _commandBus.SendAsync(Arg.Any<PlaceOrder>(), CancellationToken.None)
+        _bus.InvokeAsync<Result>(Arg.Any<PlaceOrder>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
             .Returns(Result.Ok());
 
         // When
@@ -104,7 +103,6 @@ public class OrdersControllerTests
 		Assert.IsType<OkResult>(response);
     }
 
-    private ICommandBus _commandBus = Substitute.For<ICommandBus>();
-    private IQueryBus _queryBus = Substitute.For<IQueryBus>();
+    private IMessageBus _bus = Substitute.For<IMessageBus>();
     private OrdersController _ordersController;
 }

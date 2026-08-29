@@ -4,7 +4,7 @@ public class AddQuoteItemHandler(
     IEventStoreRepository<Quote> quoteWriteRepository,
     IProductMapper productMapper,
     IUserInfoRequester userInfoRequester
-) : ICommandHandler<AddQuoteItem>
+)
 {
 	private readonly IEventStoreRepository<Quote> _quoteWriteRepository = quoteWriteRepository;
 	private readonly IProductMapper _productMapper = productMapper;

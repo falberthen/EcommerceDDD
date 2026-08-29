@@ -53,7 +53,7 @@ public class ProcessOrderHandlerTests
 			.AppendEventsAsync(order);
 
 		var processOrder = ProcessOrder.Create(customerId, order.Id, quoteId);
-		var processOrderHandler = new ProcessOrderHandler(quoteService, orderWriteRepository, _eventPublisher);
+		var processOrderHandler = new ProcessOrderHandler(quoteService, orderWriteRepository, _messageBus);
 
 		// When
 		await processOrderHandler.HandleAsync(processOrder, CancellationToken.None);
@@ -66,6 +66,6 @@ public class ProcessOrderHandlerTests
 		Assert.Equal(OrderStatus.Processed, placedOrder.Status);
 	}
 
-	private IEventBus _eventPublisher = Substitute.For<IEventBus>();
+	private IMessageBus _messageBus = Substitute.For<IMessageBus>();
 
 }

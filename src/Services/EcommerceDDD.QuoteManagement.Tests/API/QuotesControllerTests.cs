@@ -4,8 +4,8 @@ public class QuotesControllerTests
 {
 	public QuotesControllerTests()
 	{
-		_quotesController = new QuotesController(_commandBus, _queryBus);
-		_quotesInternalController = new QuotesInternalController(_commandBus, _queryBus);
+		_quotesController = new QuotesController(_bus);
+		_quotesInternalController = new QuotesInternalController(_bus);
 	}
 
 	[Fact]
@@ -31,7 +31,7 @@ public class QuotesControllerTests
 			)
 		};
 
-		_queryBus.SendAsync(Arg.Any<GetQuoteEventHistory>(), CancellationToken.None)
+		_bus.InvokeAsync<Result<IReadOnlyList<QuoteEventHistory>>>(Arg.Any<GetQuoteEventHistory>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
 			.Returns(Result.Ok<IReadOnlyList<QuoteEventHistory>>(expectedData));
 
 		// When
@@ -48,7 +48,7 @@ public class QuotesControllerTests
 	public async Task OpenCustomerQuote_WithOpenQuoteRequest_ShouldOpeQuoteForCustomer()
 	{
 		// Given
-		_commandBus.SendAsync(Arg.Any<OpenQuote>(), CancellationToken.None)
+		_bus.InvokeAsync<Result>(Arg.Any<OpenQuote>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
 			.Returns(Result.Ok());
 
 		var request = new OpenQuoteRequest()
@@ -70,7 +70,7 @@ public class QuotesControllerTests
 		// Given
 		Guid quoteId = Guid.NewGuid();
 
-		_commandBus.SendAsync(Arg.Any<AddQuoteItem>(), CancellationToken.None)
+		_bus.InvokeAsync<Result>(Arg.Any<AddQuoteItem>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
 			.Returns(Result.Ok());
 
 		var request = new AddQuoteItemRequest()
@@ -94,7 +94,7 @@ public class QuotesControllerTests
 		Guid quoteId = Guid.NewGuid();
 		Guid productId = Guid.NewGuid();
 
-		_commandBus.SendAsync(Arg.Any<RemoveQuoteItem>(), CancellationToken.None)
+		_bus.InvokeAsync<Result>(Arg.Any<RemoveQuoteItem>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
 			.Returns(Result.Ok());
 
 		// When
@@ -111,7 +111,7 @@ public class QuotesControllerTests
 		// Given
 		Guid quoteId = Guid.NewGuid();
 
-		_commandBus.SendAsync(Arg.Any<CancelQuote>(), CancellationToken.None)
+		_bus.InvokeAsync<Result>(Arg.Any<CancelQuote>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
 			.Returns(Result.Ok());
 
 		// When
@@ -129,7 +129,7 @@ public class QuotesControllerTests
 		// Given
 		Guid quoteId = Guid.NewGuid();
 
-		_commandBus.SendAsync(Arg.Any<ConfirmQuote>(), CancellationToken.None)
+		_bus.InvokeAsync<Result>(Arg.Any<ConfirmQuote>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
 			.Returns(Result.Ok());
 
 		// When
@@ -141,8 +141,7 @@ public class QuotesControllerTests
 	}
 	#endregion
 
-	private ICommandBus _commandBus = Substitute.For<ICommandBus>();
-	private IQueryBus _queryBus = Substitute.For<IQueryBus>();
+	private IMessageBus _bus = Substitute.For<IMessageBus>();
 	private QuotesController _quotesController;
 	private QuotesInternalController _quotesInternalController;
 }

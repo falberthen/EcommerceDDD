@@ -4,9 +4,7 @@ public class PaymentsControllerTests
 {    
     public PaymentsControllerTests()
     {
-        _paymentsController = new PaymentsController(
-            _commandBus,
-            _queryBus);
+        _paymentsController = new PaymentsController(_bus);
     }
 
     [Fact]
@@ -17,7 +15,7 @@ public class PaymentsControllerTests
         Guid orderId = Guid.NewGuid();
 		Guid productId = Guid.NewGuid();
 
-		_commandBus.SendAsync(Arg.Any<RequestPayment>(), Arg.Any<CancellationToken>())
+		_bus.InvokeAsync<Result>(Arg.Any<RequestPayment>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
 			.Returns(Task.FromResult(Result.Ok()));
 
         var request = new PaymentRequest()
@@ -44,7 +42,6 @@ public class PaymentsControllerTests
 		Assert.IsType<OkResult>(response);
     }
 
-    private ICommandBus _commandBus = Substitute.For<ICommandBus>();
-    private IQueryBus _queryBus = Substitute.For<IQueryBus>();
+    private IMessageBus _bus = Substitute.For<IMessageBus>();
     private PaymentsController _paymentsController;
 }

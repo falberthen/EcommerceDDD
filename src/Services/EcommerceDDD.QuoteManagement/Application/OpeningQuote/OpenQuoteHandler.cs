@@ -4,7 +4,7 @@ public class OpenQuoteHandler(
 	IUserInfoRequester userInfoRequester,
 	IEventStoreRepository<Quote> quoteWriteRepository,
     ICustomerOpenQuoteChecker customerOpenQuoteChecker
-) : ICommandHandler<OpenQuote>
+)
 {
 	private readonly IEventStoreRepository<Quote> _quoteWriteRepository = quoteWriteRepository;
 	private readonly ICustomerOpenQuoteChecker _customerOpenQuoteChecker = customerOpenQuoteChecker;

@@ -4,7 +4,7 @@ public class RegisterCustomerHandler(
 	IIdentityService identityService,
 	IEmailUniquenessChecker uniquenessChecker,
 	IEventStoreRepository<Customer> customerWriteRepository
-) : ICommandHandler<RegisterCustomer>
+)
 {
 	private readonly IIdentityService _identityService = identityService
 		?? throw new ArgumentNullException(nameof(identityService));

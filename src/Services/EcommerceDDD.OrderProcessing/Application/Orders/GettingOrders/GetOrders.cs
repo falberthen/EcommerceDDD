@@ -2,10 +2,10 @@
 
 public record class GetOrders : IQuery<IReadOnlyList<OrderViewModel>>
 {
-    public static GetOrders Create()
-    {
-        return new GetOrders();
-    }
+	public static GetOrders Create()
+	{
+		return new GetOrders();
+	}
 
-    private GetOrders() {}
+	private GetOrders() { }
 }

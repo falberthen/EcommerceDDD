@@ -1,6 +1,3 @@
-global using EcommerceDDD.Core.CQRS.CommandHandling;
-global using EcommerceDDD.Core.CQRS.QueryHandling;
-global using EcommerceDDD.Core.EventBus;
 global using EcommerceDDD.Core.Exceptions;
 global using EcommerceDDD.Core.Infrastructure.Identity;
 global using EcommerceDDD.Core.Testing;
@@ -29,4 +26,5 @@ global using System.Collections.Generic;
 global using System.Linq;
 global using System.Threading;
 global using System.Threading.Tasks;
+global using Wolverine;
 global using Xunit;

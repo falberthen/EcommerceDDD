@@ -1,8 +1,9 @@
 ﻿namespace EcommerceDDD.PaymentProcessing.Application.RequestingPayment;
 
-public record class RequestPayment : ICommand, ITraceable
+public record class RequestPayment : ICommand
 {
 	public CustomerId CustomerId { get; private set; }
+	[Audit]
 	public OrderId OrderId { get; private set; }
 	public Money TotalAmount { get; private set; }
 	public Currency Currency { get; private set; }
@@ -28,9 +29,6 @@ public record class RequestPayment : ICommand, ITraceable
 
 		return new RequestPayment(customerId, orderId, totalPrice, currency, productItems);
 	}
-
-	public IEnumerable<KeyValuePair<string, object>> GetSpanTags() =>
-		[new(TelemetryTags.OrderId, OrderId.Value)];
 
 	private RequestPayment(
 		CustomerId customerId,

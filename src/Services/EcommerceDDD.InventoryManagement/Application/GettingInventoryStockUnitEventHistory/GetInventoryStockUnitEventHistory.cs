@@ -1,4 +1,6 @@
-﻿namespace EcommerceDDD.InventoryManagement.Application.GettingInventoryStockUnitEventHistory;
+﻿using EcommerceDDD.Core.CQRS;
+
+namespace EcommerceDDD.InventoryManagement.Application.GettingInventoryStockUnitEventHistory;
 
 public record class GetInventoryStockUnitEventHistory : IQuery<IReadOnlyList<InventoryStockUnitEventHistory>>
 {

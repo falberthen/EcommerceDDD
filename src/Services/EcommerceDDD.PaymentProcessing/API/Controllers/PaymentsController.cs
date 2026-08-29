@@ -5,9 +5,8 @@ namespace EcommerceDDD.PaymentProcessing.API.Controllers;
 [ApiVersion(ApiVersions.V2)]
 [Route("api/v{version:apiVersion}/internal/payments")]
 public class PaymentsController(
-	ICommandBus commandBus,
-	IQueryBus queryBus
-) : CustomControllerBase(commandBus, queryBus)
+	IMessageBus bus
+) : CustomControllerBase(bus)
 {
 	[HttpPost]
 	[Authorize(Policy = Policies.CanWrite)]

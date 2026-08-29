@@ -4,9 +4,7 @@ public class ProductsControllerTests
 {
     public ProductsControllerTests()
     {
-        _productsController = new ProductsController(
-            _commandBus,
-            _queryBus);
+        _productsController = new ProductsController(_bus);
     }
 
 	[Fact]
@@ -28,8 +26,8 @@ public class ProductsControllerTests
 				_productQuantity)
 		};
 
-		_queryBus.SendAsync(Arg.Any<GetProducts>(), CancellationToken.None)
-			.Returns(Result.Ok<IList<ProductViewModel>>(expectedData));
+		_bus.InvokeAsync<Result<IReadOnlyList<ProductViewModel>>>(Arg.Any<GetProducts>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
+			.Returns(Result.Ok<IReadOnlyList<ProductViewModel>>(expectedData));
 
 		var request = new GetProductsRequest
 		{
@@ -64,8 +62,8 @@ public class ProductsControllerTests
 				_productQuantity)
 		};
 
-        _queryBus.SendAsync(Arg.Any<GetProducts>(), CancellationToken.None)
-            .Returns(Result.Ok<IList<ProductViewModel>>(expectedData));
+        _bus.InvokeAsync<Result<IReadOnlyList<ProductViewModel>>>(Arg.Any<GetProducts>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
+            .Returns(Result.Ok<IReadOnlyList<ProductViewModel>>(expectedData));
 
         var request = new GetProductsRequest()
         {
@@ -85,7 +83,6 @@ public class ProductsControllerTests
 	private const string _productName = "Product XYZ";
 	private decimal _productPrice = 100;
 	private Currency _currency = Currency.OfCode(Currency.USDollar.Code);
-	private ICommandBus _commandBus = Substitute.For<ICommandBus>();
-    private IQueryBus _queryBus = Substitute.For<IQueryBus>();
+	private IMessageBus _bus = Substitute.For<IMessageBus>();
     private ProductsController _productsController;
 }

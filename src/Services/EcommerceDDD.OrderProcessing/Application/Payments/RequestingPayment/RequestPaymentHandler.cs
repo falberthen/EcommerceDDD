@@ -4,7 +4,7 @@ public class RequestPaymentHandler(
 	IOrderNotificationService orderNotificationService,
 	IPaymentService paymentService,
 	IEventStoreRepository<Order> orderWriteRepository
-) : ICommandHandler<RequestPayment>
+)
 {
 	private readonly IOrderNotificationService _orderNotificationService = orderNotificationService
 		?? throw new ArgumentNullException(nameof(orderNotificationService));

@@ -6,8 +6,8 @@ services.AddApiVersioning(ApiVersions.V2);
 
 services.AddControllers();
 services.AddEndpointsApiExplorer();
-services.AddCoreInfrastructure(builder.Configuration);
-services.AddHandlersFromType(typeof(RegisterCustomerHandler));
+services.AddCoreInfrastructure(builder.Configuration,
+	options => options.UseServiceClientServiceLocation());
 services.AddHealthChecks();
 
 // Service clients

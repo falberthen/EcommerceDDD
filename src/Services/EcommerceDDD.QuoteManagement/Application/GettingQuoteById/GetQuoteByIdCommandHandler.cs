@@ -3,7 +3,7 @@ namespace EcommerceDDD.QuoteManagement.Application.GettingQuoteById;
 public class GetQuoteByIdCommandHandler(
 	IQuerySession querySession,
 	IProductMapper productMapper
-) : IQueryHandler<GetQuoteById, QuoteViewModel>
+)
 {
 	private readonly IQuerySession _querySession = querySession;
 	private readonly IProductMapper _productMapper = productMapper;

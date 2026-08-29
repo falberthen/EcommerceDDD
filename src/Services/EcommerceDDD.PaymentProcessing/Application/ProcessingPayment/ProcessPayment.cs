@@ -1,8 +1,9 @@
 namespace EcommerceDDD.PaymentProcessing.Application.ProcessingPayment;
 
-public record class ProcessPayment : ICommand, ITraceable
+public record class ProcessPayment : ICommand
 {
 	public PaymentId PaymentId { get; private set; }
+	[Audit]
 	public OrderId OrderId { get; private set; }
 
 	public static ProcessPayment Create(PaymentId paymentId, OrderId orderId)
@@ -14,9 +15,6 @@ public record class ProcessPayment : ICommand, ITraceable
 
 		return new ProcessPayment(paymentId, orderId);
 	}
-
-	public IEnumerable<KeyValuePair<string, object>> GetSpanTags() =>
-		[new(TelemetryTags.OrderId, OrderId.Value)];
 
 	private ProcessPayment(PaymentId paymentId, OrderId orderId)
 	{

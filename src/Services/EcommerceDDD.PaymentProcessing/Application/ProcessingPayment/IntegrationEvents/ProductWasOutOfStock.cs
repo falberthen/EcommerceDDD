@@ -1,5 +1,6 @@
 ﻿namespace EcommerceDDD.PaymentProcessing.Application.ProcessingPayment.IntegrationEvents;
 
+[MessageIdentity(nameof(ProductWasOutOfStock))]
 public class ProductWasOutOfStock : IntegrationEvent
 {
     public Guid OrderId { get; private set; }

@@ -3,7 +3,7 @@
 public class GetCustomerDetailsHandler(
 	IUserInfoRequester userInfoRequester,
 	IQuerySessionWrapper querySession
-) : IQueryHandler<GetCustomerDetails, CustomerDetails>
+)
 {
 	private readonly IQuerySessionWrapper _querySession = querySession
 		?? throw new ArgumentNullException(nameof(querySession));

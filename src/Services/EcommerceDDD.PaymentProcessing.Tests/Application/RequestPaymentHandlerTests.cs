@@ -19,7 +19,7 @@ public class RequestPaymentHandlerTests
 		var paymentWriteRepository = new DummyEventStoreRepository<Payment>();
 
         var requestPayment = RequestPayment.Create(customerId, orderId, totalAmount, currency, productItems);
-        var requestPaymentHandler = new RequestPaymentHandler(_commandBus, paymentWriteRepository);
+        var requestPaymentHandler = new RequestPaymentHandler(_bus, paymentWriteRepository);
 
         // When
         await requestPaymentHandler.HandleAsync(requestPayment, CancellationToken.None);
@@ -34,5 +34,5 @@ public class RequestPaymentHandlerTests
 		Assert.Equal(PaymentStatus.Pending, payment.Status);
 	}
 
-    private ICommandBus _commandBus = Substitute.For<ICommandBus>();
+    private IMessageBus _bus = Substitute.For<IMessageBus>();
 }

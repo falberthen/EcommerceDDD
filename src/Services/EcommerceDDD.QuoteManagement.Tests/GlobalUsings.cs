@@ -1,5 +1,3 @@
-global using EcommerceDDD.Core.CQRS.CommandHandling;
-global using EcommerceDDD.Core.CQRS.QueryHandling;
 global using EcommerceDDD.Core.Exceptions;
 global using EcommerceDDD.Core.Infrastructure.Identity;
 global using EcommerceDDD.Core.Testing;
@@ -17,4 +15,5 @@ global using EcommerceDDD.ServiceClients.ProductCatalog.Models;
 global using FluentResults;
 global using Microsoft.AspNetCore.Mvc;
 global using NSubstitute;
+global using Wolverine;
 global using Xunit;

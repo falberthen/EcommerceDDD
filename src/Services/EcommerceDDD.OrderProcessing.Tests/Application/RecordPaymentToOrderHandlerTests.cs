@@ -36,7 +36,7 @@ public class RecordPaymentToOrderHandlerTests
 
 		var recordPaymentToOrder = RecordPayment.Create(order.Id, paymentId, totalPaid);
 		var recordPaymentToOrderHandler = new RecordPaymentHandler(
-			orderNotificationService, orderWriteRepository);
+			orderNotificationService, orderWriteRepository, Substitute.For<IMessageBus>());
 
 		// When
 		await recordPaymentToOrderHandler

@@ -1,5 +1,6 @@
 ﻿namespace EcommerceDDD.OrderProcessing.Application.Payments.ProcessingPayment.IntegrationEvents;
 
+[MessageIdentity(nameof(PaymentFailed))]
 public class PaymentFailed(
     Guid paymentId,
     Guid orderId,
