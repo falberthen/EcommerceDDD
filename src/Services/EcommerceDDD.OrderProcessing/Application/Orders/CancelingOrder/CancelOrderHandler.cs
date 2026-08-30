@@ -16,7 +16,7 @@ public class CancelOrderHandler(
 	public async Task<Result> HandleAsync(CancelOrder command, CancellationToken cancellationToken)
 	{
 		var order = await _orderWriteRepository
-			.FetchStreamAsync(command.OrderId.Value, cancellationToken: cancellationToken);
+			.FetchForWritingAsync(command.OrderId.Value, cancellationToken: cancellationToken);
 
 		if (order is null)
 			return Result.Fail($"Failed to find the order {command.OrderId}.");
@@ -31,7 +31,7 @@ public class CancelOrderHandler(
 			.FirstOrDefault();
 
 		await _orderWriteRepository
-			.AppendEventsAsync(order, cancellationToken: cancellationToken);
+			.AppendEventsAndCommitAsync(order, cancellationToken: cancellationToken);
 
 		// Lets the saga cancel the payment when the order had already been paid
 		await _messageBus.PublishAsync(orderCanceledEvent!);

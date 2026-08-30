@@ -9,7 +9,7 @@ public class ConfirmQuoteHandler(
 	public async Task<Result> HandleAsync(ConfirmQuote command, CancellationToken cancellationToken)
     {
         var quote = await _quoteWriteRepository
-			.FetchStreamAsync(command.QuoteId.Value, cancellationToken: cancellationToken);
+			.FetchForWritingAsync(command.QuoteId.Value, cancellationToken: cancellationToken);
 
         if (quote is null)
             return Result.Fail($"The quote {command.QuoteId} not found.");
@@ -17,7 +17,7 @@ public class ConfirmQuoteHandler(
         quote.Confirm();
 
         await _quoteWriteRepository
-			.AppendEventsAsync(quote, cancellationToken);
+			.AppendEventsAndCommitAsync(quote, cancellationToken);
 
         return Result.Ok();
     }

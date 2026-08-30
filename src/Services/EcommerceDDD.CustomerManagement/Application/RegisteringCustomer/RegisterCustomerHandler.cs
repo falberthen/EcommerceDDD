@@ -32,7 +32,7 @@ public class RegisterCustomerHandler(
 			return registerResult;
 
 		await _customerWriteRepository
-			.AppendEventsAsync(customer, cancellationToken);
+			.AppendEventsAndCommitAsync(customer, cancellationToken);
 
 		return Result.Ok();
 	}

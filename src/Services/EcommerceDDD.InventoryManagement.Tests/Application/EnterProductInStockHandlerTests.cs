@@ -29,7 +29,7 @@ public class EnterProductInStockHandlerTests
 
 		// Then
 		await _inventoryStockUnitRepository.Received(productIdsQuantities.Count)
-			.AppendEventsAsync(Arg.Is<InventoryStockUnit>(unit =>
+			.AppendEventsAndCommitAsync(Arg.Is<InventoryStockUnit>(unit =>
 				productIdsQuantities.Any(tuple => tuple.Item1 == unit.ProductId)),
 				Arg.Any<CancellationToken>());
 	}

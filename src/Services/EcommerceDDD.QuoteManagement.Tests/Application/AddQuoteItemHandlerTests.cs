@@ -23,7 +23,7 @@ public class AddQuoteItemHandlerTests
 		var quote = Quote.OpenQuoteForCustomer(_customerId, _currency);
 
 		var quoteWriteRepository = new DummyEventStoreRepository<Quote>();
-		await quoteWriteRepository.AppendEventsAsync(quote);
+		await quoteWriteRepository.AppendEventsAndCommitAsync(quote);
 
 		var addQuoteItem = AddQuoteItem.Create(quote.Id, _productId, _productQuantity);
 		var addQuoteItemHandler = new AddQuoteItemHandler(quoteWriteRepository, _productMapper, _userInfoRequester);
@@ -57,7 +57,7 @@ public class AddQuoteItemHandlerTests
 		var quote = Quote.OpenQuoteForCustomer(_customerId, _currency);
 
 		var quoteWriteRepository = new DummyEventStoreRepository<Quote>();
-		await quoteWriteRepository.AppendEventsAsync(quote);
+		await quoteWriteRepository.AppendEventsAndCommitAsync(quote);
 
 		var addQuoteItem = AddQuoteItem.Create(quote.Id, _productId, _productQuantity);
 		var addQuoteItemHandler = new AddQuoteItemHandler(quoteWriteRepository, _productMapper, _userInfoRequester);

@@ -16,7 +16,7 @@ public class RequestShipmentHandler(
         var shipment = Shipment.Create(shipmentData);
 
         await _shipmentWriteRepository
-			.AppendEventsAsync(shipment, cancellationToken);
+			.AppendEventsAndCommitAsync(shipment, cancellationToken);
 
         return await _bus
 			.InvokeAsync<Result>(ProcessShipment.Create(shipment.Id, command.OrderId), cancellationToken);

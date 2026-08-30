@@ -18,7 +18,7 @@ public class DecreaseStockQuantityHandler(
 
 		Guid inventoryStockUnitId = query.Id;
 		var inventoryStockUnit = await _inventoryStockUnitWriteRepository
-			.FetchStreamAsync(inventoryStockUnitId, cancellationToken: cancellationToken);
+			.FetchForWritingAsync(inventoryStockUnitId, cancellationToken: cancellationToken);
 
 		if (inventoryStockUnit is null)
 			return Result.Fail($"The inventory stock unit {inventoryStockUnitId} was not found.");
@@ -26,7 +26,7 @@ public class DecreaseStockQuantityHandler(
 		inventoryStockUnit.DecreaseStockQuantity(command.QuantityDecreased);
 
 		await _inventoryStockUnitWriteRepository
-			.AppendEventsAsync(inventoryStockUnit);
+			.AppendEventsAndCommitAsync(inventoryStockUnit);
 
 		return Result.Ok();
 	}
