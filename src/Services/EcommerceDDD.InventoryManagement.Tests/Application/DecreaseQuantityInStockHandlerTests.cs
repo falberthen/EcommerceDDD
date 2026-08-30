@@ -21,7 +21,7 @@ public class DecreaseQuantityInStockHandlerTests
 			.Returns(existingEntry);
 
 		var inventoryStockUnit = InventoryStockUnit.EnterStockUnit(ProductId.Of(productId), 10);
-		_inventoryStockUnitRepository.FetchStreamAsync(existingEntry.Id)
+		_inventoryStockUnitRepository.FetchForWritingAsync(existingEntry.Id)
 			.Returns(inventoryStockUnit);
 
 		var handler = new DecreaseStockQuantityHandler(querySessionMock, _inventoryStockUnitRepository);

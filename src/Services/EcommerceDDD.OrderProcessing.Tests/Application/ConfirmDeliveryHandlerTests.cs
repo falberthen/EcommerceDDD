@@ -36,7 +36,7 @@ public class ConfirmDeliveryHandlerTests
 
 		var orderWriteRepository = new DummyEventStoreRepository<Order>();
 		await orderWriteRepository
-			.AppendEventsAsync(order);
+			.AppendEventsAndCommitAsync(order);
 
 		var orderNotificationService = Substitute.For<IOrderNotificationService>();
 

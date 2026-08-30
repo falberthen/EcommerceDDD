@@ -18,7 +18,7 @@ public class ProcessPaymentHandlerTests
 		var payment = Payment.Create(new PaymentData(customerId, orderId, totalAmount, productItems));
 
 		var paymentWriteRepository = new DummyEventStoreRepository<Payment>();
-		await paymentWriteRepository.AppendEventsAsync(payment);
+		await paymentWriteRepository.AppendEventsAndCommitAsync(payment);
 
 		_customerCreditChecker.
 			CheckIfCreditIsEnoughAsync(Arg.Any<CustomerId>(), Arg.Any<Money>(), CancellationToken.None)
@@ -59,7 +59,7 @@ public class ProcessPaymentHandlerTests
 		var payment = Payment.Create(new PaymentData(customerId, orderId, totalAmount, productItems));
 
 		var paymentWriteRepository = new DummyEventStoreRepository<Payment>();
-		await paymentWriteRepository.AppendEventsAsync(payment);
+		await paymentWriteRepository.AppendEventsAndCommitAsync(payment);
 
 		_customerCreditChecker
 			.CheckIfCreditIsEnoughAsync(Arg.Any<CustomerId>(), Arg.Any<Money>(), CancellationToken.None)

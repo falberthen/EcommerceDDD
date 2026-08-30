@@ -16,7 +16,7 @@ public class ProcessOrderHandler(
 	public async Task<Result> HandleAsync(ProcessOrder command, CancellationToken cancellationToken)
 	{
 		var order = await _orderWriteRepository
-			.FetchStreamAsync(command.OrderId.Value, cancellationToken: cancellationToken);
+			.FetchForWritingAsync(command.OrderId.Value, cancellationToken: cancellationToken);
 
 		if (order is null)
 			return Result.Fail($"Order {command.OrderId} not found.");
@@ -77,7 +77,7 @@ public class ProcessOrderHandler(
 		   .FirstOrDefault();
 
 		await _orderWriteRepository
-			.AppendEventsAsync(order, cancellationToken);
+			.AppendEventsAndCommitAsync(order, cancellationToken);
 
 		await _messageBus.PublishAsync(orderProcessedEvent!);
 

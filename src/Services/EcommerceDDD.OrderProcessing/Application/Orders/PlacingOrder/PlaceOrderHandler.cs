@@ -1,4 +1,4 @@
-namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
+﻿namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
 
 public class PlaceOrderHandler(
 	IOrderNotificationService orderNotificationService,
@@ -58,10 +58,8 @@ public class PlaceOrderHandler(
 
 		var orderPlacedEvent = order.GetUncommittedEvents()
 			.OfType<OrderPlaced>().FirstOrDefault();
-		await _orderWriteRepository.AppendToOutboxAsync(orderPlacedEvent!);
-
 		await _orderWriteRepository
-			.AppendEventsAsync(order, cancellationToken);
+			.AppendEventsAndCommitAsync(order, cancellationToken, orderPlacedEvent!);
 
 		try
 		{

@@ -26,7 +26,7 @@ public class EnterProductInStockHandler(
 					productQuantity.Item1, productQuantity.Item2);
 
 				await _inventoryStockUnitWriteRepository
-					.AppendEventsAsync(inventoryStockUnit);
+					.AppendEventsAndCommitAsync(inventoryStockUnit);
 			}
 		}
 

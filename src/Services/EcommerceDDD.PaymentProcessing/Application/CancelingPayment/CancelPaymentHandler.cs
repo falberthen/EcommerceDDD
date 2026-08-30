@@ -7,7 +7,7 @@ public class CancelPaymentHandler(IEventStoreRepository<Payment> paymentWriteRep
 	public async Task<Result> HandleAsync(CancelPayment command, CancellationToken cancellationToken)
     {
         var payment = await _paymentWriteRepository
-			.FetchStreamAsync(command.PaymentId.Value, cancellationToken: cancellationToken);
+			.FetchForWritingAsync(command.PaymentId.Value, cancellationToken: cancellationToken);
 
         if (payment is null)
             return Result.Fail($"Failed to find the payment {command.PaymentId}.");
@@ -15,7 +15,7 @@ public class CancelPaymentHandler(IEventStoreRepository<Payment> paymentWriteRep
         // Canceling payment
         payment.Cancel(command.PaymentCancellationReason);
         await _paymentWriteRepository
-			.AppendEventsAsync(payment, cancellationToken);
+			.AppendEventsAndCommitAsync(payment, cancellationToken);
 
         return Result.Ok();
     }

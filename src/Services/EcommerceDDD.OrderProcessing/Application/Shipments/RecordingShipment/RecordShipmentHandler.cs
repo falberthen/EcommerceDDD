@@ -15,7 +15,7 @@ public class RecordShipmentHandler(
 		await Task.Delay(TimeSpan.FromSeconds(5));
 
 		var order = await _orderWriteRepository
-			.FetchStreamAsync(command.OrderId.Value, cancellationToken: cancellationToken);
+			.FetchForWritingAsync(command.OrderId.Value, cancellationToken: cancellationToken);
 
 		if (order is null)
 			return Result.Fail($"Failed to find the order {command.OrderId}.");
@@ -25,7 +25,7 @@ public class RecordShipmentHandler(
 
 		order.RecordShipment(command.ShipmentId);
 		await _orderWriteRepository
-			.AppendEventsAsync(order, cancellationToken);
+			.AppendEventsAndCommitAsync(order, cancellationToken);
 
 		try
 		{

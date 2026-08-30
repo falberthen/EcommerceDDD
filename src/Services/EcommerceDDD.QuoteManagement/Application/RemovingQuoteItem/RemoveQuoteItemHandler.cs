@@ -12,7 +12,7 @@ public class RemoveQuoteItemHandler(
 	public async Task<Result> HandleAsync(RemoveQuoteItem command, CancellationToken cancellationToken)
 	{
 		var quote = await _quoteWriteRepository
-			.FetchStreamAsync(command.QuoteId.Value, cancellationToken: cancellationToken);
+			.FetchForWritingAsync(command.QuoteId.Value, cancellationToken: cancellationToken);
 
 		if (quote is null)
 			return Result.Fail($"The quote {command.QuoteId} not found.");
@@ -25,7 +25,7 @@ public class RemoveQuoteItemHandler(
 		quote.RemoveItem(command.ProductId);
 
 		await _quoteWriteRepository
-			.AppendEventsAsync(quote, cancellationToken);
+			.AppendEventsAndCommitAsync(quote, cancellationToken);
 
 		return Result.Ok();
 	}

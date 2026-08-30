@@ -19,7 +19,7 @@ public class RequestPaymentHandler(
         var payment = Payment.Create(paymentData);
 
         await _paymentWriteRepository
-			.AppendEventsAsync(payment, cancellationToken);
+			.AppendEventsAndCommitAsync(payment, cancellationToken);
 
         return await _bus.InvokeAsync<Result>(
             ProcessPayment.Create(payment.Id, command.OrderId), cancellationToken);

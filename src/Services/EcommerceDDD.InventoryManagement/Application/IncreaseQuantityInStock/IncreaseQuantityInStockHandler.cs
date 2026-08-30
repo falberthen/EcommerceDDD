@@ -20,7 +20,7 @@ public class IncreaseQuantityInStockHandler(
 
         Guid inventoryStockUnitId = existingEntry.Id;
 		var inventoryStockUnit = await _inventoryStockUnitWriteRepository
-			.FetchStreamAsync(inventoryStockUnitId, cancellationToken: cancellationToken);
+			.FetchForWritingAsync(inventoryStockUnitId, cancellationToken: cancellationToken);
 
 		if (inventoryStockUnit is null)
             return Result.Fail($"The inventory stock unit {inventoryStockUnitId} was not found.");
@@ -28,7 +28,7 @@ public class IncreaseQuantityInStockHandler(
         inventoryStockUnit.IncreaseStockQuantity(command.QuantityIncreased);
 
         await _inventoryStockUnitWriteRepository
-			.AppendEventsAsync(inventoryStockUnit, cancellationToken: cancellationToken);
+			.AppendEventsAndCommitAsync(inventoryStockUnit, cancellationToken: cancellationToken);
 
 		return Result.Ok();
     }

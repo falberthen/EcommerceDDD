@@ -14,7 +14,7 @@ public class AddQuoteItemHandler(
 	public async Task<Result> HandleAsync(AddQuoteItem command, CancellationToken cancellationToken)
     {
         var quote = await _quoteWriteRepository
-			.FetchStreamAsync(command.QuoteId.Value, cancellationToken: cancellationToken);
+			.FetchForWritingAsync(command.QuoteId.Value, cancellationToken: cancellationToken);
 
         if (quote is null)
             return Result.Fail($"The quote {command.QuoteId.Value} was not found.");
@@ -46,7 +46,7 @@ public class AddQuoteItemHandler(
 		quote.AddItem(quotetemData);
 
 		await _quoteWriteRepository
-			.AppendEventsAsync(quote, cancellationToken);
+			.AppendEventsAndCommitAsync(quote, cancellationToken);
 
         return Result.Ok();
     }

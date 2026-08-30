@@ -26,7 +26,7 @@ public class OpenQuoteHandler(
         var quote = Quote.OpenQuoteForCustomer(customerId, command.Currency);
 
         await _quoteWriteRepository
-			.AppendEventsAsync(quote, cancellationToken);
+			.AppendEventsAndCommitAsync(quote, cancellationToken);
 
         return Result.Ok();
     }

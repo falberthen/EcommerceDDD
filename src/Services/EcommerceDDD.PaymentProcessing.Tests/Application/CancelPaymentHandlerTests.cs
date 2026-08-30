@@ -18,7 +18,7 @@ public class CancelPaymentHandlerTests
 		var payment = Payment.Create(new PaymentData(customerId, orderId, totalAmount, productItems));
 
         var paymentWriteRepository = new DummyEventStoreRepository<Payment>();
-        await paymentWriteRepository.AppendEventsAsync(payment);
+        await paymentWriteRepository.AppendEventsAndCommitAsync(payment);
 
         var cancelPayment = CancelPayment.Create(orderId, payment.Id, (int)PaymentCancellationReason.OrderCanceled);
         var cancelPaymentHandler = new CancelPaymentHandler(paymentWriteRepository);

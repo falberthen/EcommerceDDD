@@ -16,7 +16,7 @@ public class ConfirmQuoteHandlerTests
 			Money.Of(10, currency.Code), productQuantity));
 
 		var quoteWriteRepository = new DummyEventStoreRepository<Quote>();
-		await quoteWriteRepository.AppendEventsAsync(quote);
+		await quoteWriteRepository.AppendEventsAndCommitAsync(quote);
 
 		var confirmQuote = ConfirmQuote.Create(quote.Id);
 		var confirmQuoteHandler = new ConfirmQuoteHandler(quoteWriteRepository);
@@ -38,7 +38,7 @@ public class ConfirmQuoteHandlerTests
 		var quote = Quote.OpenQuoteForCustomer(customerId, currency);
 		var quoteWriteRepository = new DummyEventStoreRepository<Quote>();
 
-		await quoteWriteRepository.AppendEventsAsync(quote);
+		await quoteWriteRepository.AppendEventsAndCommitAsync(quote);
 		var confirmQuote = ConfirmQuote.Create(quote.Id);
 		var confirmQuoteHandler = new ConfirmQuoteHandler(quoteWriteRepository);
 

@@ -8,7 +8,7 @@ public class DummyCommandHandler(IEventStoreRepository<DummyAggregateRoot> repos
 	public async Task<Result> HandleAsync(DummyCommand command, CancellationToken cancellationToken)
 	{
 		var aggregate = new DummyAggregateRoot(command.Id);
-		await _eventStoreRepository.AppendEventsAsync(aggregate);
+		await _eventStoreRepository.AppendEventsAndCommitAsync(aggregate);
 		return Result.Ok();
 	}
 }

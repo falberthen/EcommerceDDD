@@ -13,7 +13,7 @@ public class CommandHandlerTests
 		await commandHandler.HandleAsync(command, CancellationToken.None);
 
 		// Then
-		await _repository.Received(1).AppendEventsAsync(
+		await _repository.Received(1).AppendEventsAndCommitAsync(
 			Arg.Is<DummyAggregateRoot>(aggregate => aggregate.Id.Value == command.Id.Value),
 			Arg.Any<CancellationToken>());
 	}

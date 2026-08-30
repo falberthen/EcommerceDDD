@@ -50,7 +50,7 @@ public class ProcessOrderHandlerTests
 			.Returns(viewModelResponse);
 
 		await orderWriteRepository
-			.AppendEventsAsync(order);
+			.AppendEventsAndCommitAsync(order);
 
 		var processOrder = ProcessOrder.Create(customerId, order.Id, quoteId);
 		var processOrderHandler = new ProcessOrderHandler(quoteService, orderWriteRepository, _messageBus);

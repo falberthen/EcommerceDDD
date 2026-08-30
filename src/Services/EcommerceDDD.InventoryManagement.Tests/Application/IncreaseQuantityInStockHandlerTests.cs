@@ -25,7 +25,7 @@ public class IncreaseQuantityInStockHandlerTests
 			Arg.Any<Expression<Func<InventoryStockUnitDetails, bool>>>(), Arg.Any<CancellationToken>())
 			.Returns(inventoryStockUnitDetails);
 
-		_inventoryStockUnitRepository.FetchStreamAsync(inventoryStockUnit.Id.Value)
+		_inventoryStockUnitRepository.FetchForWritingAsync(inventoryStockUnit.Id.Value)
 			.Returns(inventoryStockUnit);
 
 		var increaseQuantityInStockHandler = new IncreaseQuantityInStockHandler(

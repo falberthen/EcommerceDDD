@@ -13,56 +13,66 @@ public class MartenRepository<TA>(
 	private readonly ILogger<MartenRepository<TA>> _logger = logger
 		?? throw new ArgumentNullException(nameof(logger));
 
-	/// <summary>
-	/// Stores uncommited events from an aggregate 
-	/// </summary>
-	/// <param name="aggregate"></param>
-	/// <param name="cancellationToken"></param>
-	/// <returns></returns>
-	public async Task<long> AppendEventsAsync(TA aggregate, CancellationToken cancellationToken = default)
+	private readonly Dictionary<Guid, IEventStream<TA>> _streams = new();
+
+	public async Task<long> AppendEventsAndCommitAsync(TA aggregate, CancellationToken cancellationToken = default,
+		params INotification[] integrationEvents)
     {
         var events = aggregate.GetUncommittedEvents().ToArray();
-        var nextVersion = aggregate.Version + events.Length;
-
         aggregate.ClearUncommittedEvents();
-		_documentSession.Events.Append(aggregate.Id.Value, nextVersion, events);
+
+        long version;
+        if (_streams.TryGetValue(aggregate.Id.Value, out var stream))
+        {
+            // FetchForWriting handed us this stream: append through it so Marten
+            // keeps the optimistic concurrency check it staged on the session.
+            stream.AppendMany(events);
+
+            // Calculating version.
+            version = stream.CurrentVersion.GetValueOrDefault();
+        }
+        else
+        {
+            _documentSession.Events.StartStream<TA>(aggregate.Id.Value, events);
+            version = events.Length;
+        }
+
+        await StageIntegrationEventsAsync(integrationEvents);
 
         await _documentSession.SaveChangesAsync(cancellationToken);
-        return nextVersion;
+        return version;
+    }
+
+    public async Task<TA?> FetchForWritingAsync(Guid id, int? version = null, CancellationToken cancellationToken = default)
+    {
+        var stream = version.HasValue
+            ? await _documentSession.Events.FetchForWriting<TA>(id, version.Value, cancellationToken)
+            : await _documentSession.Events.FetchForWriting<TA>(id, cancellationToken);
+
+        if (stream?.Aggregate is null) return null;
+        _streams[id] = stream;
+        return stream.Aggregate;
     }
 
     /// <summary>
-    /// Fetch domain events from the stream
+    /// Writes the outgoing messages into the same session that holds the aggregate's events,
+    /// so the caller's SaveChangesAsync commits both or neither. Wolverine's durability agent
+    /// relays them to Kafka after the commit and carries the trace context across the hop on its own. 
     /// </summary>
-    /// <param name="id"></param>
-    /// <param name="version"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    /// <exception cref="InvalidOperationException"></exception>
-    public async Task<TA?> FetchStreamAsync(Guid id, int? version = null, CancellationToken cancellationToken = default)
+    private async Task StageIntegrationEventsAsync(INotification[] integrationEvents)
     {
-        var aggregate = await _documentSession.Events.AggregateStreamAsync<TA>(
-			id, version ?? 0, 
-			token: cancellationToken
-		);
-		return aggregate;
-    }
+        if (integrationEvents.Length == 0)
+            return;
 
-    /// <summary>
-    /// Stages an integration event in Wolverine's durable outbox.
-    /// Wolverine's durability agent relays it to Kafka afterwards
-    /// and carries the trace context across the hop on its own.
-    /// </summary>
-    /// <param name="event"></param>
-    /// <exception cref="ArgumentNullException"></exception>
-    public async Task AppendToOutboxAsync(INotification @event)
-    {
-        if (@event is null)
-            throw new ArgumentNullException(nameof(@event));
+        if (Array.Exists(integrationEvents, e => e is null))
+            throw new ArgumentException("Integration events cannot be null.", nameof(integrationEvents));
 
         _outbox.Enroll(_documentSession);
 
-        _logger.LogInformation("Adding integration event {EventName} to outbox...", @event.GetType().Name);
-        await _outbox.PublishAsync(@event);
+        foreach (var @event in integrationEvents)
+        {
+            _logger.LogInformation("Adding integration event {EventName} to outbox...", @event.GetType().Name);
+            await _outbox.PublishAsync(@event);
+        }
     }
 }

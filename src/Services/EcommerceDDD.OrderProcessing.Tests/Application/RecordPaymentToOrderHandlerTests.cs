@@ -30,7 +30,7 @@ public class RecordPaymentToOrderHandlerTests
 
 		var orderWriteRepository = new DummyEventStoreRepository<Order>();
 		await orderWriteRepository
-			.AppendEventsAsync(order, CancellationToken.None);
+			.AppendEventsAndCommitAsync(order, CancellationToken.None);
 
 		var orderNotificationService = Substitute.For<IOrderNotificationService>();
 

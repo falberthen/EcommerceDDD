@@ -17,7 +17,7 @@ public class RemoveQuoteItemHandlerTests
 			Money.Of(10, currency.Code), productQuantity));
 
 		var quoteWriteRepository = new DummyEventStoreRepository<Quote>();
-		await quoteWriteRepository.AppendEventsAsync(quote);
+		await quoteWriteRepository.AppendEventsAndCommitAsync(quote);
 
 		var userInfoRequester = Substitute.For<IUserInfoRequester>();
 		userInfoRequester.GetCurrentUser()

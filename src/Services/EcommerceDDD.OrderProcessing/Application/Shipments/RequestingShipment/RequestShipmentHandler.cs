@@ -13,7 +13,7 @@ public class RequestShipmentHandler(
 	public async Task<Result> HandleAsync(RequestShipment command, CancellationToken cancellationToken)
 	{
 		var order = await _orderWriteRepository
-			.FetchStreamAsync(command.OrderId.Value, cancellationToken: cancellationToken);
+			.FetchForWritingAsync(command.OrderId.Value, cancellationToken: cancellationToken);
 
 		if (order is null)
 			return Result.Fail($"Failed to find the order {command.OrderId}.");
