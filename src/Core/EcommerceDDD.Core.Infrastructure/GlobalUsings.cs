@@ -12,6 +12,7 @@ global using EcommerceDDD.Core.Testing;
 global using EcommerceDDD.Core.Validation;
 global using FluentResults;
 global using JasperFx;
+global using JasperFx.Events;
 global using Marten;
 global using Marten.Newtonsoft;
 global using Microsoft.AspNetCore.Authentication;

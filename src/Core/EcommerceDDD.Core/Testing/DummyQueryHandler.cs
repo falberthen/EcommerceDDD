@@ -9,7 +9,7 @@ public class DummyQueryHandler(IEventStoreRepository<DummyAggregateRoot> reposit
 	{
 		var aggregate = new DummyAggregateRoot(query.Id);
 		aggregate.DoSomething();
-		await _eventStoreRepository.AppendEventsAsync(aggregate);
+		await _eventStoreRepository.AppendEventsAndCommitAsync(aggregate);
 
 		return Result.Ok(aggregate);
 	}
