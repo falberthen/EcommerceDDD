@@ -1,4 +1,4 @@
-namespace EcommerceDDD.PaymentProcessing.Application.ProcessingPayment;
+﻿namespace EcommerceDDD.PaymentProcessing.Application.ProcessingPayment;
 
 public class ProcessPaymentHandler(
 	IProductInventoryHandler productInventoryHandler,
@@ -13,81 +13,57 @@ public class ProcessPaymentHandler(
 	public async Task<Result> HandleAsync(ProcessPayment command, CancellationToken cancellationToken)
 	{
 		var payment = await _paymentWriteRepository
-			.FetchStreamAsync(command.PaymentId.Value, cancellationToken: cancellationToken);
+			.FetchForWritingAsync(command.PaymentId.Value, cancellationToken: cancellationToken);
 
 		if (payment is null)
 			return Result.Fail($"Payment {command.PaymentId.Value} was not found.");
+
+		INotification integrationEvent;
+		var result = Result.Ok();
 
 		try
 		{
 			if (!await _creditChecker
 				.CheckIfCreditIsEnoughAsync(payment.CustomerId, payment.TotalAmount, cancellationToken))
 			{
-				await CancelPaymentAsync(payment, PaymentCancellationReason.CustomerReachedCreditLimit, cancellationToken);
-				return Result.Ok();
+				payment.Cancel(PaymentCancellationReason.CustomerReachedCreditLimit);
+				integrationEvent = new CustomerReachedCreditLimit(payment.OrderId.Value);
 			}
-
-			bool allProductsAreAvailable = await _productInventoryHandler
-				.CheckProductsInStockAsync(payment.ProductItems, cancellationToken);
-			if (!allProductsAreAvailable)
+			else if (!await _productInventoryHandler
+				.CheckProductsInStockAsync(payment.ProductItems, cancellationToken))
 			{
-				await CancelPaymentAsync(payment, PaymentCancellationReason.ProductOutOfStock, cancellationToken);
-				return Result.Ok();
+				payment.Cancel(PaymentCancellationReason.ProductOutOfStock);
+				integrationEvent = new ProductWasOutOfStock(payment.OrderId.Value);
 			}
+			else
+			{
+				await _productInventoryHandler
+					.DecreaseQuantityInStockAsync(payment.ProductItems, cancellationToken);
 
-			await _productInventoryHandler
-				.DecreaseQuantityInStockAsync(payment.ProductItems, cancellationToken);
-
-			payment.Complete();
-
-			await _paymentWriteRepository.AppendToOutboxAsync(
-			   new PaymentFinalized(
-				   payment.Id.Value,
-				   payment.OrderId.Value,
-				   payment.TotalAmount.Amount,
-				   payment.TotalAmount.Currency.Code,
-				   payment.CompletedAt!.Value));
-
-			await _paymentWriteRepository
-				.AppendEventsAsync(payment, cancellationToken);
-
-			return Result.Ok();
+				payment.Complete();
+				integrationEvent = new PaymentFinalized(
+					payment.Id.Value,
+					payment.OrderId.Value,
+					payment.TotalAmount.Amount,
+					payment.TotalAmount.Currency.Code,
+					payment.CompletedAt!.Value);
+			}
 		}
 		catch (Exception)
 		{
 			payment.Cancel(PaymentCancellationReason.ProcessmentError);
+			integrationEvent = new PaymentFailed(
+				payment.Id.Value,
+				payment.OrderId.Value,
+				payment.TotalAmount.Amount,
+				payment.TotalAmount.Currency.Code);
 
-			await _paymentWriteRepository.AppendToOutboxAsync(
-				new PaymentFailed(
-					payment.Id.Value,
-					payment.OrderId.Value,
-					payment.TotalAmount.Amount,
-					payment.TotalAmount.Currency.Code));
-
-			await _paymentWriteRepository
-				.AppendEventsAsync(payment, cancellationToken);
-
-			return Result.Fail($"An unexpected error occurred processing payment {command.PaymentId}.");
-		}
-	}
-
-	private async Task CancelPaymentAsync(Payment payment, PaymentCancellationReason reason,
-		CancellationToken cancellationToken)
-	{
-		payment.Cancel(reason);
-
-		if (reason == PaymentCancellationReason.CustomerReachedCreditLimit)
-		{
-			await _paymentWriteRepository.AppendToOutboxAsync(
-				new CustomerReachedCreditLimit(payment.OrderId.Value));
-		}
-		if (reason == PaymentCancellationReason.ProductOutOfStock)
-		{
-			await _paymentWriteRepository.AppendToOutboxAsync(
-				new ProductWasOutOfStock(payment.OrderId.Value));
+			result = Result.Fail($"An unexpected error occurred processing payment {command.PaymentId}.");
 		}
 
 		await _paymentWriteRepository
-			.AppendEventsAsync(payment, cancellationToken);
+			.AppendEventsAndCommitAsync(payment, cancellationToken, integrationEvent);
+
+		return result;
 	}
 }

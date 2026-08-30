@@ -1,6 +1,4 @@
-using EcommerceDDD.ShipmentProcessing.Application.ProcessingShipment;
-
-namespace EcommerceDDD.ShipmentProcessing.Application.ProcessingPayment.IntegrationEvents;
+﻿namespace EcommerceDDD.ShipmentProcessing.Application.ProcessingShipment;
 
 public class ProcessShipmentHandler(
 	IEventStoreRepository<Shipment> shipmentWriteRepository
@@ -11,37 +9,34 @@ public class ProcessShipmentHandler(
 	public async Task<Result> HandleAsync(ProcessShipment command, CancellationToken cancellationToken)
 	{
 		var shipment = await _shipmentWriteRepository
-				.FetchStreamAsync(command.ShipmentId.Value, cancellationToken: cancellationToken);
+				.FetchForWritingAsync(command.ShipmentId.Value, cancellationToken: cancellationToken);
 
 		if (shipment is null)
 			return Result.Fail($"The shipment {command.ShipmentId.Value} was not found.");
 
+		INotification integrationEvent;
+		var result = Result.Ok();
+		
 		try
 		{
 			shipment.Complete();
 
-			await _shipmentWriteRepository.AppendToOutboxAsync(
-				new ShipmentFinalized(
-					shipment.Id.Value,
-					shipment.OrderId.Value,
-					shipment.ShippedAt!.Value));
-
-			await _shipmentWriteRepository
-				.AppendEventsAsync(shipment, cancellationToken);
-
-			return Result.Ok();
+			integrationEvent = new ShipmentFinalized(
+				shipment.Id.Value,
+				shipment.OrderId.Value,
+				shipment.ShippedAt!.Value);
 		}
 		catch (Exception)
 		{
 			shipment.Cancel(ShipmentCancellationReason.ProcessmentError);
+			integrationEvent = new ShipmentFailed(shipment.Id.Value, shipment.OrderId.Value);
 
-			await _shipmentWriteRepository.AppendToOutboxAsync(
-				new ShipmentFailed(shipment.Id.Value, shipment.OrderId.Value));
-
-			await _shipmentWriteRepository
-				.AppendEventsAsync(shipment, cancellationToken);
-
-			return Result.Fail($"An unexpected error occurred processing shipment {command.ShipmentId}.");
+			result = Result.Fail($"An unexpected error occurred processing shipment {command.ShipmentId}.");
 		}
+
+		await _shipmentWriteRepository
+			.AppendEventsAndCommitAsync(shipment, cancellationToken, integrationEvent);
+
+		return result;
 	}
 }
