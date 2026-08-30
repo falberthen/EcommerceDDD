@@ -13,39 +13,42 @@ public class MartenRepository<TA>(
 	private readonly ILogger<MartenRepository<TA>> _logger = logger
 		?? throw new ArgumentNullException(nameof(logger));
 
-	/// <summary>
-	/// Stores uncommited events from an aggregate 
-	/// </summary>
-	/// <param name="aggregate"></param>
-	/// <param name="cancellationToken"></param>
-	/// <returns></returns>
+	private readonly Dictionary<Guid, IEventStream<TA>> _streams = new();
+
 	public async Task<long> AppendEventsAsync(TA aggregate, CancellationToken cancellationToken = default)
     {
         var events = aggregate.GetUncommittedEvents().ToArray();
-        var nextVersion = aggregate.Version + events.Length;
-
         aggregate.ClearUncommittedEvents();
-		_documentSession.Events.Append(aggregate.Id.Value, nextVersion, events);
+
+        long version;
+        if (_streams.TryGetValue(aggregate.Id.Value, out var stream))
+        {
+            // FetchForWriting handed us this stream: append through it so Marten
+            // keeps the optimistic concurrency check it staged on the session.
+            stream.AppendMany(events);
+
+            // Calculating version.
+            version = stream.CurrentVersion.GetValueOrDefault();
+        }
+        else
+        {
+            _documentSession.Events.StartStream<TA>(aggregate.Id.Value, events);
+            version = events.Length;
+        }
 
         await _documentSession.SaveChangesAsync(cancellationToken);
-        return nextVersion;
+        return version;
     }
 
-    /// <summary>
-    /// Fetch domain events from the stream
-    /// </summary>
-    /// <param name="id"></param>
-    /// <param name="version"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    /// <exception cref="InvalidOperationException"></exception>
     public async Task<TA?> FetchStreamAsync(Guid id, int? version = null, CancellationToken cancellationToken = default)
     {
-        var aggregate = await _documentSession.Events.AggregateStreamAsync<TA>(
-			id, version ?? 0, 
-			token: cancellationToken
-		);
-		return aggregate;
+        var stream = version.HasValue
+            ? await _documentSession.Events.FetchForWriting<TA>(id, version.Value, cancellationToken)
+            : await _documentSession.Events.FetchForWriting<TA>(id, cancellationToken);
+
+        if (stream?.Aggregate is null) return null;
+        _streams[id] = stream;
+        return stream.Aggregate;
     }
 
     /// <summary>
