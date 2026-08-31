@@ -16,13 +16,7 @@ services.AddCoreInfrastructure(builder.Configuration, options =>
 	options.UseKafka(builder.Configuration["Kafka:ConnectionString"]!)
 		.AutoProvision();
 
-	// OrderPlaced still crosses the broker: an explicit subscription wins over
-	// Wolverine's local routing, so it is not also handled in-process.
-	options.PublishMessage<OrderPlaced>()
-		.ToKafkaTopic("orders")
-		.UseDurableOutbox();
-
-	options.ListenToKafkaTopic("orders").UseDurableInbox();
+	// payment and shipment integration events cross the broker.
 	options.ListenToKafkaTopic("payments").UseDurableInbox();
 	options.ListenToKafkaTopic("shipments").UseDurableInbox();
 });

@@ -4,7 +4,8 @@ public class PlaceOrderHandler(
 	IOrderNotificationService orderNotificationService,
 	IQuoteService quoteService,
 	IEventStoreRepository<Order> orderWriteRepository,
-	IUserInfoRequester userInfoRequester
+	IUserInfoRequester userInfoRequester,
+	IMessageBus messageBus
 )
 {
 	private readonly IOrderNotificationService _orderNotificationService = orderNotificationService
@@ -15,6 +16,8 @@ public class PlaceOrderHandler(
 		?? throw new ArgumentNullException(nameof(orderWriteRepository));
 	private readonly IUserInfoRequester _userInfoRequester = userInfoRequester
 		?? throw new ArgumentNullException(nameof(userInfoRequester));
+	private readonly IMessageBus _messageBus = messageBus
+		?? throw new ArgumentNullException(nameof(messageBus));
 
 	public async Task<Result> HandleAsync(PlaceOrder command, CancellationToken cancellationToken)
 	{
@@ -58,8 +61,12 @@ public class PlaceOrderHandler(
 
 		var orderPlacedEvent = order.GetUncommittedEvents()
 			.OfType<OrderPlaced>().FirstOrDefault();
+
 		await _orderWriteRepository
-			.AppendEventsAndCommitAsync(order, cancellationToken, orderPlacedEvent!);
+			.AppendEventsAndCommitAsync(order, cancellationToken);
+
+		// Lets the saga start the order fulfilment
+		await _messageBus.PublishAsync(orderPlacedEvent!);
 
 		try
 		{
