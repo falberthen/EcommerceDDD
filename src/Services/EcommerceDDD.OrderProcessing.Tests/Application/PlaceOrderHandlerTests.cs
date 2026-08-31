@@ -37,7 +37,7 @@ public class PlaceOrderHandlerTests
 
 		var placeOrder = PlaceOrder.Create(_quoteId);
 		var placeOrderHandler = new PlaceOrderHandler(orderNotificationService, quoteService,
-			orderWriteRepository, GivenCurrentCustomer(customerId.Value));
+			orderWriteRepository, GivenCurrentCustomer(customerId.Value), Substitute.For<IMessageBus>());
 
 		// When
 		await placeOrderHandler.HandleAsync(placeOrder, CancellationToken.None);
@@ -81,7 +81,7 @@ public class PlaceOrderHandlerTests
 
 		var placeOrder = PlaceOrder.Create(_quoteId);
 		var placeOrderHandler = new PlaceOrderHandler(orderNotificationService, quoteService,
-			orderWriteRepository, GivenCurrentCustomer(currentCustomerId));
+			orderWriteRepository, GivenCurrentCustomer(currentCustomerId), Substitute.For<IMessageBus>());
 
 		// When
 		var result = await placeOrderHandler.HandleAsync(placeOrder, CancellationToken.None);
@@ -111,7 +111,7 @@ public class PlaceOrderHandlerTests
 
 		var placeOrder = PlaceOrder.Create(_quoteId);
 		var placeOrderHandler = new PlaceOrderHandler(orderNotificationService, quoteService,
-			orderWriteRepository, GivenCurrentCustomer(customerId));
+			orderWriteRepository, GivenCurrentCustomer(customerId), Substitute.For<IMessageBus>());
 
 		// When
 		var result = await placeOrderHandler.HandleAsync(placeOrder, CancellationToken.None);
