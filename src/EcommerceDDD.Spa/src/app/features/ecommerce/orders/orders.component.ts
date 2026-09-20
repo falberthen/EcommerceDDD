@@ -32,6 +32,7 @@ export class OrdersComponent implements OnInit {
   faList = faList;
   faDiagramProject = faDiagramProject;
   orders: OrderViewModel[] = [];
+  protected loaded = false;
   readonly ORDER_STATUS_CODES = ORDER_STATUS_CODES;
 
   async ngOnInit() {
@@ -85,6 +86,7 @@ export class OrdersComponent implements OnInit {
         if (result) {
           this.orders = result;
         }
+        this.loaded = true;
       });
     } catch (error) {
       this.orderApiService.handleError(error);

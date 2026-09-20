@@ -23,6 +23,16 @@ export class ApiErrorParserService {
     const status = error.status;
     const payload = error.error;
 
+    // Gateway QoS returns 502/503/504 with no ProblemDetails body; Kiota has no error
+    // class for them, so surface a friendly message instead of its raw status text.
+    if (status === 502 || status === 503 || status === 504) {
+      return {
+        status,
+        messages: ['The service is temporarily unavailable. Please try again shortly.'],
+        raw: error,
+      };
+    }
+
     // 1) ValidationProblemDetails or validation dictionary (highest priority)
     // Example:
     // { errors: { email: ["Invalid email"], password: ["Required"] } }
@@ -65,6 +75,16 @@ export class ApiErrorParserService {
       e?.statusCode ??
       e?.status ??
       e?.response?.status;
+
+    // Gateway QoS returns 502/503/504 with no ProblemDetails body; Kiota has no error
+    // class for them, so surface a friendly message instead of its raw status text.
+    if (status === 502 || status === 503 || status === 504) {
+      return {
+        status,
+        messages: ['The service is temporarily unavailable. Please try again shortly.'],
+        raw: error,
+      };
+    }
 
     // 1) Validation dictionary on root object (some generated error classes may expose "errors" directly)
     const validationFromRoot = this.extractValidationDictionary(e);
