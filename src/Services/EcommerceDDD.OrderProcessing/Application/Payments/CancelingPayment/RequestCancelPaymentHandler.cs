@@ -9,19 +9,12 @@ public class RequestCancelPaymentHandler(
 
 	public async Task<Result> HandleAsync(RequestCancelPayment command, CancellationToken cancellationToken)
 	{
-		try
-		{
-			await _paymentService.CancelPaymentAsync(
-				command.OrderId.Value,
-				command.PaymentId.Value,
-				(int)command.PaymentCancellationReason,
-				cancellationToken);
+		await _paymentService.CancelPaymentAsync(
+			command.OrderId.Value,
+			command.PaymentId.Value,
+			(int)command.PaymentCancellationReason,
+			cancellationToken);
 
-			return Result.Ok();
-		}
-		catch (Exception)
-		{
-			return Result.Fail($"An error occurred requesting cancelling payment {command.PaymentId.Value}.");
-		}
+		return Result.Ok();
 	}
 }

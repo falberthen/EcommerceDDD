@@ -36,7 +36,7 @@ public class PaymentService(PaymentProcessingClient paymentProcessingClient) : I
 			PaymentCancellationReason = cancellationReason
 		};
 
-		await _paymentProcessingClient.Api.V2.Internal.Payments[paymentId]
-			.DeleteAsync(request, cancellationToken: cancellationToken);
+		await _paymentProcessingClient.Api.V2.Internal.Payments[paymentId].Cancel
+			.PostAsync(request, cancellationToken: cancellationToken);
 	}
 }

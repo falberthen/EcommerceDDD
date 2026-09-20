@@ -156,7 +156,7 @@ public class OrderEventsTests
 		var order = Order.Place(orderData);
 
 		// When
-		order.Cancel(OrderCancellationReason.CanceledByCustomer);
+		order.Cancel(OrderCancellationReason.ShipmentNotDelivered);
 
 		// Then
 		var @event = order.GetUncommittedEvents().LastOrDefault() as OrderCanceled;

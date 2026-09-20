@@ -12,6 +12,8 @@ namespace EcommerceDDD.ServiceClients.ShipmentProcessing.Models
     public partial class ShipOrderRequest : IParsable
     #pragma warning restore CS1591
     {
+        /// <summary>The customerId property</summary>
+        public Guid? CustomerId { get; set; }
         /// <summary>The orderId property</summary>
         public Guid? OrderId { get; set; }
         /// <summary>The productItems property</summary>
@@ -40,6 +42,7 @@ namespace EcommerceDDD.ServiceClients.ShipmentProcessing.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
+                { "customerId", n => { CustomerId = n.GetGuidValue(); } },
                 { "orderId", n => { OrderId = n.GetGuidValue(); } },
                 { "productItems", n => { ProductItems = n.GetCollectionOfObjectValues<global::EcommerceDDD.ServiceClients.ShipmentProcessing.Models.ProductItemRequest>(global::EcommerceDDD.ServiceClients.ShipmentProcessing.Models.ProductItemRequest.CreateFromDiscriminatorValue)?.AsList(); } },
             };
@@ -51,6 +54,7 @@ namespace EcommerceDDD.ServiceClients.ShipmentProcessing.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
+            writer.WriteGuidValue("customerId", CustomerId);
             writer.WriteGuidValue("orderId", OrderId);
             writer.WriteCollectionOfObjectValues<global::EcommerceDDD.ServiceClients.ShipmentProcessing.Models.ProductItemRequest>("productItems", ProductItems);
         }

@@ -86,21 +86,13 @@ public class ProcessOrderHandler(
 
 	private async Task<Result<QuoteViewModel>> GetQuoteAsync(ProcessOrder command, CancellationToken cancellationToken)
 	{
-		try
-		{
-			var response = await _quoteService
-				.GetQuoteDetailsAsync(command.QuoteId.Value, cancellationToken);
+		var response = await _quoteService
+			.GetQuoteDetailsAsync(command.QuoteId.Value, cancellationToken);
 
-			if (response is null)
-				return Result.Fail<QuoteViewModel>(
-					new RecordNotFoundError($"Quote data not found."));
-
-			return Result.Ok(response);
-		}
-		catch (Exception)
-		{
+		if (response is null)
 			return Result.Fail<QuoteViewModel>(
-				$"An error occurred processing order {command.OrderId}.");
-		}
+				new RecordNotFoundError($"Quote data not found."));
+
+		return Result.Ok(response);
 	}
 }

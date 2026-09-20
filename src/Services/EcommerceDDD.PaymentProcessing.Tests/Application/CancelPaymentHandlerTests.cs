@@ -21,12 +21,12 @@ public class CancelPaymentHandlerTests
         await paymentWriteRepository.AppendEventsAndCommitAsync(payment);
 
         var cancelPayment = CancelPayment.Create(orderId, payment.Id, (int)PaymentCancellationReason.OrderCanceled);
-        var cancelPaymentHandler = new CancelPaymentHandler(paymentWriteRepository);
+        var cancelPaymentHandler = new CancelPaymentHandler(paymentWriteRepository, _productInventoryHandler);
 
         // When
         await cancelPaymentHandler.HandleAsync(cancelPayment, CancellationToken.None);
 
-        // Then        
+        // Then
 		Assert.NotNull(payment);
 		Assert.Equal(payment.OrderId, orderId);
 		Assert.NotNull(payment.CreatedAt);
@@ -34,5 +34,42 @@ public class CancelPaymentHandlerTests
 		Assert.NotNull(payment.CanceledAt);
 		Assert.Equal(payment.TotalAmount.Amount, totalAmount.Amount);
 		Assert.Equal(PaymentStatus.Canceled, payment.Status);
+
+		// A payment that never completed never decremented stock: nothing to put back.
+		await _productInventoryHandler.DidNotReceive()
+			.IncreaseQuantityInStockAsync(Arg.Any<IReadOnlyList<ProductItem>>(), Arg.Any<CancellationToken>());
 	}
+
+	[Fact]
+	public async Task CancelPayment_WhenPaymentWasCompleted_ShouldRestock()
+	{
+		// Given
+		var orderId = OrderId.Of(Guid.NewGuid());
+		var customerId = CustomerId.Of(Guid.NewGuid());
+		var currency = Currency.OfCode(Currency.USDollar.Code);
+		var totalAmount = Money.Of(100, currency.Code);
+		var productItems = new List<ProductItem>() {
+			new ProductItem(ProductId.Of(Guid.NewGuid()), 5),
+			new ProductItem(ProductId.Of(Guid.NewGuid()), 1),
+			new ProductItem(ProductId.Of(Guid.NewGuid()), 1)
+		};
+		var payment = Payment.Create(new PaymentData(customerId, orderId, totalAmount, productItems));
+		payment.Complete();
+
+		var paymentWriteRepository = new DummyEventStoreRepository<Payment>();
+		await paymentWriteRepository.AppendEventsAndCommitAsync(payment);
+
+		var cancelPayment = CancelPayment.Create(orderId, payment.Id, (int)PaymentCancellationReason.OrderCanceled);
+		var cancelPaymentHandler = new CancelPaymentHandler(paymentWriteRepository, _productInventoryHandler);
+
+		// When
+		await cancelPaymentHandler.HandleAsync(cancelPayment, CancellationToken.None);
+
+		// Then
+		Assert.Equal(PaymentStatus.Canceled, payment.Status);
+		await _productInventoryHandler.Received(1)
+			.IncreaseQuantityInStockAsync(payment.ProductItems, Arg.Any<CancellationToken>());
+	}
+
+	private readonly IProductInventoryHandler _productInventoryHandler = Substitute.For<IProductInventoryHandler>();
 }

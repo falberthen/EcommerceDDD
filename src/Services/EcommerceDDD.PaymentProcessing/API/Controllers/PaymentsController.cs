@@ -28,8 +28,8 @@ public class PaymentsController(
 			cancellationToken
 		);
 
-	[HttpDelete("{paymentId:guid}")]
-	[Authorize(Policy = Policies.CanDelete)]
+	[HttpPost("{paymentId:guid}/cancel")]
+	[Authorize(Policy = Policies.CanWrite)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	public async Task<IActionResult> Cancel([FromRoute] Guid paymentId, [FromBody] CancelPaymentRequest request,
 		CancellationToken cancellationToken) =>

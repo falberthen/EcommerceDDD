@@ -9,13 +9,18 @@ services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddCoreInfrastructure(builder.Configuration, options =>
 {
+    options.UseServiceClientServiceLocation();
+
     options.UseKafka(builder.Configuration["Kafka:ConnectionString"]!)
         .AutoProvision();
 
     options.PublishMessage<ShipmentFinalized>().ToKafkaTopic("shipments").UseDurableOutbox();
-    options.PublishMessage<ShipmentFailed>().ToKafkaTopic("shipments").UseDurableOutbox();
+    options.PublishMessage<ShipmentNotDelivered>().ToKafkaTopic("shipments").UseDurableOutbox();
 });
 services.AddHealthChecks();
+
+// Service clients
+services.AddCustomerManagementServiceClient(builder.Configuration);
 
 // Services
 services.AddScoped<IEventStoreRepository<Shipment>, MartenRepository<Shipment>>();

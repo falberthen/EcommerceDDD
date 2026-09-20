@@ -20,8 +20,8 @@ public class ProcessPaymentHandlerTests
 		var paymentWriteRepository = new DummyEventStoreRepository<Payment>();
 		await paymentWriteRepository.AppendEventsAndCommitAsync(payment);
 
-		_customerCreditChecker.
-			CheckIfCreditIsEnoughAsync(Arg.Any<CustomerId>(), Arg.Any<Money>(), CancellationToken.None)
+		_customerStoreCreditChecker.
+			CheckIfStoreCreditIsEnoughAsync(Arg.Any<CustomerId>(), Arg.Any<Money>(), CancellationToken.None)
 		   .Returns(Task.FromResult(true));
 		_productInventoryHandler
 			.CheckProductsInStockAsync(Arg.Any<IReadOnlyList<ProductItem>>(), CancellationToken.None)
@@ -30,7 +30,7 @@ public class ProcessPaymentHandlerTests
 		// When
 		var processPayment = ProcessPayment.Create(payment.Id, orderId);
 		var processPaymentHandler = new ProcessPaymentHandler(
-			_productInventoryHandler, _customerCreditChecker, paymentWriteRepository);
+			_productInventoryHandler, _customerStoreCreditChecker, paymentWriteRepository);
 		await processPaymentHandler.HandleAsync(processPayment, CancellationToken.None);
 
 		// Then
@@ -44,7 +44,7 @@ public class ProcessPaymentHandlerTests
 	}
 
 	[Fact]
-	public async Task ProcessPayment_WithoutEnoughCredit_CancelPayment()
+	public async Task ProcessPayment_WithoutEnoughStoreCredit_CancelPayment()
 	{
 		// Given
 		var orderId = OrderId.Of(Guid.NewGuid());
@@ -61,8 +61,8 @@ public class ProcessPaymentHandlerTests
 		var paymentWriteRepository = new DummyEventStoreRepository<Payment>();
 		await paymentWriteRepository.AppendEventsAndCommitAsync(payment);
 
-		_customerCreditChecker
-			.CheckIfCreditIsEnoughAsync(Arg.Any<CustomerId>(), Arg.Any<Money>(), CancellationToken.None)
+		_customerStoreCreditChecker
+			.CheckIfStoreCreditIsEnoughAsync(Arg.Any<CustomerId>(), Arg.Any<Money>(), CancellationToken.None)
 		   .Returns(Task.FromResult(false));
 		_productInventoryHandler
 			.CheckProductsInStockAsync(Arg.Any<IReadOnlyList<ProductItem>>(), CancellationToken.None)
@@ -70,7 +70,7 @@ public class ProcessPaymentHandlerTests
 
 		var processPayment = ProcessPayment.Create(payment.Id, orderId);
 		var processPaymentHandler = new ProcessPaymentHandler(
-			_productInventoryHandler, _customerCreditChecker, paymentWriteRepository);
+			_productInventoryHandler, _customerStoreCreditChecker, paymentWriteRepository);
 
 		// When
 		await processPaymentHandler.HandleAsync(processPayment, CancellationToken.None);
@@ -86,6 +86,6 @@ public class ProcessPaymentHandlerTests
 		Assert.Equal(PaymentStatus.Canceled, payment.Status);
 	}
 
-	private ICustomerCreditChecker _customerCreditChecker = Substitute.For<ICustomerCreditChecker>();
+	private ICustomerStoreCreditChecker _customerStoreCreditChecker = Substitute.For<ICustomerStoreCreditChecker>();
 	private IProductInventoryHandler _productInventoryHandler = Substitute.For<IProductInventoryHandler>();
 }

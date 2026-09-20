@@ -35,9 +35,13 @@ public class RequestPaymentHandler(
 				Convert.ToDouble(ol.ProductItem.UnitPrice.Amount)))
 			.ToList();
 
-		var paymentResult = await RequestPaymentAsync(command, productItems, cancellationToken);
-		if (paymentResult.IsFailed)
-			return paymentResult;
+		await _paymentService.RequestPaymentAsync(
+			command.CustomerId.Value,
+			command.OrderId.Value,
+			command.Currency.Code,
+			Convert.ToDouble(command.TotalPrice.Amount),
+			productItems,
+			cancellationToken);
 
 		try
 		{
@@ -54,26 +58,5 @@ public class RequestPaymentHandler(
 		}
 
 		return Result.Ok();
-	}
-
-	private async Task<Result> RequestPaymentAsync(RequestPayment command, List<PaymentProductItem> productItems,
-		CancellationToken cancellationToken)
-	{
-		try
-		{
-			await _paymentService.RequestPaymentAsync(
-				command.CustomerId.Value,
-				command.OrderId.Value,
-				command.Currency.Code,
-				Convert.ToDouble(command.TotalPrice.Amount),
-				productItems,
-				cancellationToken);
-
-			return Result.Ok();
-		}
-		catch (Exception)
-		{
-			return Result.Fail($"An error occurred requesting payment for order {command.OrderId}.");
-		}
 	}
 }

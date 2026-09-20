@@ -5,25 +5,20 @@ namespace EcommerceDDD.OrderProcessing.Application;
 /// </summary>
 public partial class OrderSaga
 {
-	public CancelOrder Handle(PaymentFailed @integrationEvent) =>
+	public CancelOrder Handle(CustomerReachedStoreCreditLimit @integrationEvent) =>
 		CancelOrder.Create(
 			OrderId.Of(@integrationEvent.OrderId),
-			OrderCancellationReason.PaymentFailed);
-
-	public CancelOrder Handle(CustomerReachedCreditLimit @integrationEvent) =>
-		CancelOrder.Create(
-			OrderId.Of(@integrationEvent.OrderId),
-			OrderCancellationReason.CustomerReachedCreditLimit);
-
-	public CancelOrder Handle(ShipmentFailed @integrationEvent) =>
-		CancelOrder.Create(
-			OrderId.Of(@integrationEvent.OrderId),
-			OrderCancellationReason.ShipmentFailed);
+			OrderCancellationReason.CustomerReachedStoreCreditLimit);
 
 	public CancelOrder Handle(ProductWasOutOfStock @integrationEvent) =>
 		CancelOrder.Create(
 			OrderId.Of(@integrationEvent.OrderId),
 			OrderCancellationReason.ProductWasOutOfStock);
+
+	public CancelOrder Handle(ShipmentNotDelivered @integrationEvent) =>
+		CancelOrder.Create(
+			OrderId.Of(@integrationEvent.OrderId),
+			OrderCancellationReason.ShipmentNotDelivered);
 
 	/// <summary>
 	/// If the order was already paid before cancellation, ask the payment service to cancel the payment.

@@ -43,4 +43,23 @@ public class InventoryInternalController(
 			),
 			cancellationToken
 		);
+
+	/// <summary>
+	/// Increases the quantity of a given stock unit (e.g. restock after a canceled/undeliverable order)
+	/// </summary>
+	/// <param name="productId"></param>
+	/// <param name="request"></param>
+	/// <returns></returns>
+	[HttpPut("{productId:guid}/increase-stock-quantity")]
+	[Authorize(Policy = Policies.CanWrite)]
+	[ProducesResponseType(StatusCodes.Status200OK)]
+	public async Task<IActionResult> IncreaseQuantity([FromRoute] Guid productId,
+		[FromBody] IncreaseQuantityInStockRequest request,
+		CancellationToken cancellationToken) =>
+		await Response(
+			IncreaseStockQuantity.Create(
+				ProductId.Of(productId), request.IncreasedQuantity
+			),
+			cancellationToken
+		);
 }

@@ -30,14 +30,9 @@ public class RequestShipmentHandler(
 				Convert.ToDouble(ol.ProductItem.UnitPrice.Amount)))
 			.ToList();
 
-		try
-		{
-			await _shipmentService.RequestShipmentAsync(order.Id.Value, productItems, cancellationToken);
-			return Result.Ok();
-		}
-		catch (Exception)
-		{
-			return Result.Fail("An error occurred requesting shipping order.");
-		}
+		// Let transient failures throw so Wolverine retries and dead-letters instead of stranding the order.
+		await _shipmentService
+			.RequestShipmentAsync(order.Id.Value, order.CustomerId.Value, productItems, cancellationToken);
+		return Result.Ok();
 	}
 }
