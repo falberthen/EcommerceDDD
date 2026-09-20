@@ -23,17 +23,17 @@ public class CustomersInternalController(
 			);
 
 	/// <summary>
-	/// Get customer available credit limit
+	/// Get customer store credit
 	/// </summary>
 	/// <param name="customerId"></param>
 	/// <returns></returns>
 	[HttpGet, Route("{customerId:guid}/credit")]
 	[Authorize(Policy = Policies.CanRead)]
-	[ProducesResponseType(typeof(CreditLimitModel), StatusCodes.Status200OK)]
-	public async Task<IActionResult> GetCustomerCreditLimit([FromRoute] Guid customerId,
+	[ProducesResponseType(typeof(StoreCreditModel), StatusCodes.Status200OK)]
+	public async Task<IActionResult> GetCustomerStoreCredit([FromRoute] Guid customerId,
 		CancellationToken cancellationToken) =>
 			await Response(
-				GetCreditLimit.Create(CustomerId.Of(customerId)),
+				GetStoreCredit.Create(CustomerId.Of(customerId)),
 				cancellationToken
 			);
 }

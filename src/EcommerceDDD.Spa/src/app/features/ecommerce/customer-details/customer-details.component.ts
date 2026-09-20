@@ -17,7 +17,7 @@ import { LoaderSkeletonComponent } from '@shared/components/loader-skeleton/load
   selector: 'app-customer-details',
   templateUrl: './customer-details.component.html',
   styleUrls: ['./customer-details.component.scss'],
-  
+
   imports: [FontAwesomeModule, ReactiveFormsModule, LoaderSkeletonComponent, RouterModule, CommonModule],
 })
 export class CustomerDetailsComponent implements OnInit {
@@ -40,7 +40,7 @@ export class CustomerDetailsComponent implements OnInit {
       this.customerDetailsForm = this.formBuilder.group({
         name: [this.customer.name, Validators.required],
         shippingAddress: [this.customer.shippingAddress, Validators.required],
-        creditLimit: [this.customer.creditLimit, Validators.required],
+        storeCredit: [this.customer.storeCredit, Validators.required],
       });
     }
   }
@@ -62,7 +62,7 @@ export class CustomerDetailsComponent implements OnInit {
     const customerUpdate : UpdateCustomerRequest = {
       name: this.f.name.value,
       shippingAddress: this.f.shippingAddress.value,
-      creditLimit: this.f.creditLimit.value
+      storeCredit: this.f.storeCredit.value
     }
 
     try {

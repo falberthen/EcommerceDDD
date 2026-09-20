@@ -9,10 +9,10 @@ public class CustomerTests
         string email = "email@test.com";
         string name = "UserTest";
         string shippingAddress = "Rue XYZ";
-        decimal creditLimit = 1000;
+        decimal storeCredit = 1000;
 
 		var customerData = new CustomerData(
-			email, name, shippingAddress, creditLimit
+			email, name, shippingAddress, storeCredit
 		);
 
 		// When
@@ -24,7 +24,7 @@ public class CustomerTests
         Assert.Equal(customer.Email, email);
 		Assert.Equal(customer.Name, name);
 		Assert.Equal(customer.ShippingAddress, Address.FromStreetAddress(shippingAddress));
-		Assert.Equal(customer.CreditLimit, CreditLimit.Create(creditLimit));
+		Assert.Equal(customer.StoreCredit, StoreCredit.Create(storeCredit));
     }
 
     [Fact]
@@ -34,21 +34,21 @@ public class CustomerTests
         string email = "email@test.com";
         string name = "UserTest";
         string shippingAddress = "Rue XYZ";
-        decimal creditLimit = 1000;
+        decimal storeCredit = 1000;
 
 		var customerData = new CustomerData(
-			email, name, shippingAddress, creditLimit
+			email, name, shippingAddress, storeCredit
 		);
 		var customer = Customer.Create(customerData);
 
         var newName = "UserTestUpdated";
         var newShippingAddress = "Rue X";
-        var newCreditLimit = 2000;
+        var newStoreCredit = 2000;
         customerData = customerData with 
         { 
             Name = newName,
             ShippingAddress = newShippingAddress,
-            CreditLimit = newCreditLimit
+            StoreCredit = newStoreCredit
         };
 
         // When
@@ -60,6 +60,6 @@ public class CustomerTests
 		Assert.Equal(customer.Email, email);
 		Assert.Equal(customer.Name, newName);
 		Assert.Equal(customer.ShippingAddress, Address.FromStreetAddress(newShippingAddress));
-		Assert.Equal(customer.CreditLimit, CreditLimit.Create(newCreditLimit));
+		Assert.Equal(customer.StoreCredit, StoreCredit.Create(newStoreCredit));
 	}
 }

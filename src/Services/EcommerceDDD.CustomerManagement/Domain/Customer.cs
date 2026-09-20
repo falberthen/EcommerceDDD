@@ -5,13 +5,13 @@ public sealed class Customer : AggregateRoot<CustomerId>
     public string Name { get; private set; }
     public string Email { get; private set; }
     public Address ShippingAddress { get; private set; }
-    public CreditLimit CreditLimit { get; private set; }
+    public StoreCredit StoreCredit { get; private set; }
     public DateTime RegisteredAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
 
     public static Customer Create(CustomerData customerData)
     {
-        var (Email, Name, ShippingAddress, CreditLimit) = customerData
+        var (Email, Name, ShippingAddress, StoreCredit) = customerData
             ?? throw new ArgumentNullException(nameof(customerData));
 
         if (string.IsNullOrWhiteSpace(Email))
@@ -23,15 +23,15 @@ public sealed class Customer : AggregateRoot<CustomerId>
         if (string.IsNullOrWhiteSpace(ShippingAddress))
             throw new DomainException("Customer shipping address cannot be null or whitespace.");
 
-        if (CreditLimit <= 0)
-            throw new DomainException("Customer available credit limit must be greater than 0.");
+        if (StoreCredit <= 0)
+            throw new DomainException("Customer available store credit must be greater than 0.");
 
         return new Customer(customerData);
     }
 
     public void UpdateInformation(CustomerData customerData)
     {
-        var (Email, Name, ShippingAddress, CreditLimit) = customerData
+        var (Email, Name, ShippingAddress, StoreCredit) = customerData
             ?? throw new ArgumentNullException(nameof(customerData));
 
         if (string.IsNullOrWhiteSpace(customerData.Name))
@@ -40,14 +40,14 @@ public sealed class Customer : AggregateRoot<CustomerId>
         if (string.IsNullOrWhiteSpace(ShippingAddress))
             throw new DomainException("Customer shipping address cannot be null or whitespace.");
 
-        if (CreditLimit <= 0)
-            throw new DomainException("Available credit limit must be greater than 0.");
+        if (StoreCredit <= 0)
+            throw new DomainException("Available store credit must be greater than 0.");
 
         var @event = new CustomerUpdated(
             Id.Value,
             Name,
             ShippingAddress,
-            CreditLimit);
+			StoreCredit);
 
         AppendEvent(@event);
         Apply(@event);
@@ -59,7 +59,7 @@ public sealed class Customer : AggregateRoot<CustomerId>
         Email = @event.Email;
         Name = @event.Name;
         ShippingAddress = Address.FromStreetAddress(@event.ShippingAddress);
-        CreditLimit = CreditLimit.Create(@event.CreditLimit);
+		StoreCredit = StoreCredit.Create(@event.StoreCredit);
         RegisteredAt = @event.Timestamp;
     }
 
@@ -67,7 +67,7 @@ public sealed class Customer : AggregateRoot<CustomerId>
     {
         Name = @event.Name;
         ShippingAddress = Address.FromStreetAddress(@event.ShippingAddress);
-        CreditLimit = CreditLimit.Create(@event.CreditLimit);
+		StoreCredit = StoreCredit.Create(@event.StoreCredit);
         UpdatedAt = @event.Timestamp;
     }
 
@@ -78,7 +78,7 @@ public sealed class Customer : AggregateRoot<CustomerId>
             customerData.Name,
             customerData.Email,
             customerData.ShippingAddress,
-            customerData.CreditLimit);
+            customerData.StoreCredit);
 
         AppendEvent(@event);
         Apply(@event);

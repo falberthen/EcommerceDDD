@@ -5,4 +5,4 @@ public record class CustomerRegistered(
     string Name,
     string Email,
     string ShippingAddress,
-    decimal CreditLimit) : DomainEvent;
+    decimal StoreCredit) : DomainEvent;

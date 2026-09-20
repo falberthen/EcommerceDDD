@@ -64,20 +64,20 @@
             }
           </div>
           <div class="form-group mt-3">
-            <label for="creditLimit" class="form-label col-lg-12"
-              >Credit limit</label
+            <label for="storeCredit" class="form-label col-lg-12"
+              >Store credit</label
             >
             <input
               type="text"
-              id="creditLimit"
-              name="creditLimit"
+              id="storeCredit"
+              name="storeCredit"
               class="form-control credit-limit-field"
-              formControlName="creditLimit"
-              placeholder="Limit of credit"
-              [ngClass]="{ 'is-invalid': isFieldInvalid('creditLimit') }"
+              formControlName="storeCredit"
+              placeholder="Store credit"
+              [ngClass]="{ 'is-invalid': isFieldInvalid('storeCredit') }"
             />
-            @if (isFieldInvalid('creditLimit')) {
-            <div class="invalid-feedback">Credit Limit is required</div>
+            @if (isFieldInvalid('storeCredit')) {
+            <div class="invalid-feedback">Store Credit is required</div>
             }
           </div>
         </form>
