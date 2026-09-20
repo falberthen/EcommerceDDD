@@ -39,6 +39,7 @@
     <PackageVersion Include="WolverineFx.RuntimeCompilation" Version="6.30.3" />
     <PackageVersion Include="WolverineFx.Marten" Version="6.30.3" />
     <PackageVersion Include="WolverineFx.Kafka" Version="6.30.3" />
+    <PackageVersion Include="WolverineFx.Http" Version="6.30.3" />
   </ItemGroup>
   <ItemGroup Label="Resilience and DI">
     <PackageVersion Include="Polly" Version="8.7.0" />
