@@ -22,6 +22,13 @@ public static class CoreInfrastructureExtensions
 
 			// Note 2: A command's [Audit]-marked OrderId is written onto Wolverine's handler
 			// span natively as the "order.id" tag the SPA deep-links on.
+			// Transient failures retry with backoff; exhausting the attempts dead-letters the
+			// message instead of dropping it silently. Applies to every service.
+			options.Policies.OnAnyException()
+				.RetryWithCooldown(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(5));
+
+			options.DefaultSerializer = new NewtonsoftMessageSerializer();
+
 			configureWolverine?.Invoke(options);
 		});
 
