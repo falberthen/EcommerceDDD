@@ -21,6 +21,7 @@ services.AddCoreInfrastructure(builder.Configuration, options =>
 	options.ListenToKafkaTopic("shipments").UseDurableInbox();
 });
 services.AddHealthChecks();
+services.AddWolverineHttp();
 
 // Service clients
 services.AddPaymentServiceClient(builder.Configuration);
@@ -50,6 +51,13 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+// Wolverine's built-in dead-letter admin (query/replay/delete by id), behind auth.
+app.MapGroup("")
+	.RequireAuthorization(Policies.CanWrite)
+	.MapDeadLettersEndpoints()
+	.ExcludeFromDescription();
+
 app.UseHealthChecks();
 
 await app.RunAsync();
