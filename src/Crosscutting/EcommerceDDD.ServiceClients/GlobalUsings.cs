@@ -3,6 +3,7 @@ global using EcommerceDDD.ServiceClients.Configuration;
 global using EcommerceDDD.ServiceClients.CustomerManagement;
 global using EcommerceDDD.ServiceClients.IdentityServer;
 global using EcommerceDDD.ServiceClients.InventoryManagement;
+global using EcommerceDDD.ServiceClients.InventoryManagement.Models;
 global using EcommerceDDD.ServiceClients.PaymentProcessing;
 global using EcommerceDDD.ServiceClients.PaymentProcessing.Models;
 global using EcommerceDDD.ServiceClients.ProductCatalog;

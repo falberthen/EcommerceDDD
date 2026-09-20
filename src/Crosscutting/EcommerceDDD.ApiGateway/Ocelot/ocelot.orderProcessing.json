@@ -10,9 +10,19 @@
           "Port": 80
         }
       ],
-      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE", "POST" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "PUT",
+        "DELETE",
+        "POST"
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
+      },
+      "QoSOptions": {
+        "Timeout": 3000,
+        "MinimumThroughput": 3,
+        "BreakDuration": 10000
       }
     }
   ]

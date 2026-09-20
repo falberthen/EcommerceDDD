@@ -11,5 +11,5 @@ public record class UpdateCustomerRequest
     public string ShippingAddress { get; init; }
 
     [Required(ErrorMessage = "The {0} field is required.")]
-    public decimal CreditLimit { get; init; }
+    public decimal StoreCredit { get; init; }
 }

@@ -1,0 +1,42 @@
+# Kiota client regeneration tools
+# Loaded automatically by Docker Compose alongside docker-compose.yml — no extra flags needed.
+# Requires the main stack to be running: docker compose up -d
+#
+# Usage:
+#   docker compose --profile tools run regenerate-clients          # backend + frontend
+#   docker compose --profile tools run regenerate-backend-clients  # backend only (C#)
+#   docker compose --profile tools run regenerate-frontend-clients # frontend only (TypeScript)
+
+x-kiota-tool: &kiota-tool
+  image: mcr.microsoft.com/dotnet/sdk:10.0
+  profiles: ["tools"]
+  working_dir: /src
+  volumes:
+    - ./src:/src
+    - ./scripts:/scripts
+  environment:
+    - DOTNET_NOLOGO=1
+    # Pin to the version the committed clients were generated with, to avoid regeneration churn.
+    - KIOTA_VERSION=1.30.0
+
+services:
+  regenerate-clients:
+    <<: *kiota-tool
+    entrypoint: >
+      bash -c "
+        dotnet tool install -g Microsoft.OpenApi.Kiota --version $$KIOTA_VERSION 2>/dev/null || true &&
+        bash /scripts/regenerate-clients.sh all"
+
+  regenerate-backend-clients:
+    <<: *kiota-tool
+    entrypoint: >
+      bash -c "
+        dotnet tool install -g Microsoft.OpenApi.Kiota --version $$KIOTA_VERSION 2>/dev/null || true &&
+        bash /scripts/regenerate-clients.sh backend"
+
+  regenerate-frontend-clients:
+    <<: *kiota-tool
+    entrypoint: >
+      bash -c "
+        dotnet tool install -g Microsoft.OpenApi.Kiota --version $$KIOTA_VERSION 2>/dev/null || true &&
+        bash /scripts/regenerate-clients.sh frontend"

@@ -53,7 +53,7 @@ public class CustomersControllerTests
 			Password = "p4$$w0rd",
 			PasswordConfirm = "p4$$w0rd",
 			ShippingAddress = "Infinite loop street",
-			CreditLimit = 1000
+			StoreCredit = 1000
 		};
 
 		_bus.InvokeAsync<Result>(Arg.Any<RegisterCustomer>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
@@ -76,7 +76,7 @@ public class CustomersControllerTests
 		{
 			Name = "CustomerX",
 			ShippingAddress = "Infinite loop street",
-			CreditLimit = 1000m
+			StoreCredit = 1000m
 		};
 
 		_bus.InvokeAsync<Result>(Arg.Any<UpdateCustomerInformation>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
@@ -102,7 +102,7 @@ public class CustomersControllerTests
 			Email = "customer@test.com",
 			Name = "CustomerX",
 			ShippingAddress = "Infinite loop street",
-			CreditLimit = 1000
+			StoreCredit = 1000
 		};
 
 		_bus.InvokeAsync<Result<CustomerDetails>>(Arg.Any<GetCustomerDetailsById>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
@@ -118,26 +118,26 @@ public class CustomersControllerTests
 	}
 
 	[Fact]
-	public async Task GetCustomerCreditLimit_WithCustomerId_ShouldReturnCreditLimitModel()
+	public async Task GetCustomerStoreCredit_WithCustomerId_ShouldReturnStoreCreditModel()
 	{
 		// Given
 		var customerId = Guid.NewGuid();
-		var expectedData = new CreditLimitModel
+		var expectedData = new StoreCreditModel
 		(
 			customerId,
 			10000
 		);
 
-		_bus.InvokeAsync<Result<CreditLimitModel>>(Arg.Any<GetCreditLimit>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
-			.Returns(Result.Ok<CreditLimitModel>(expectedData));
+		_bus.InvokeAsync<Result<StoreCreditModel>>(Arg.Any<GetStoreCredit>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
+			.Returns(Result.Ok<StoreCreditModel>(expectedData));
 
 		// When
 		var response = await _customersInternalController
-			.GetCustomerCreditLimit(customerId, CancellationToken.None);
+			.GetCustomerStoreCredit(customerId, CancellationToken.None);
 
 		// Then
 		var okResult = Assert.IsType<OkObjectResult>(response);
-		Assert.IsAssignableFrom<CreditLimitModel>(okResult.Value);
+		Assert.IsAssignableFrom<StoreCreditModel>(okResult.Value);
 	}
 
 	#endregion

@@ -196,9 +196,9 @@ export function createValidationProblemDetailsFromDiscriminatorValue(parseNode: 
 }
 export interface CustomerDetails extends Parsable {
     /**
-     * The creditLimit property
+     * The storeCredit property
      */
-    creditLimit?: number | null;
+    storeCredit?: number | null;
     /**
      * The email property
      */
@@ -258,7 +258,7 @@ export function deserializeIntoAddQuoteItemRequest(addQuoteItemRequest: Partial<
 // @ts-ignore
 export function deserializeIntoCustomerDetails(customerDetails: Partial<CustomerDetails> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
-        "creditLimit": n => { customerDetails.creditLimit = n.getNumberValue(); },
+        "storeCredit": n => { customerDetails.storeCredit = n.getNumberValue(); },
         "email": n => { customerDetails.email = n.getStringValue(); },
         "id": n => { customerDetails.id = n.getGuidValue(); },
         "name": n => { customerDetails.name = n.getStringValue(); },
@@ -482,7 +482,7 @@ export function deserializeIntoQuoteViewModel(quoteViewModel: Partial<QuoteViewM
 // @ts-ignore
 export function deserializeIntoRegisterCustomerRequest(registerCustomerRequest: Partial<RegisterCustomerRequest> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
-        "creditLimit": n => { registerCustomerRequest.creditLimit = n.getNumberValue(); },
+        "storeCredit": n => { registerCustomerRequest.storeCredit = n.getNumberValue(); },
         "email": n => { registerCustomerRequest.email = n.getStringValue(); },
         "name": n => { registerCustomerRequest.name = n.getStringValue(); },
         "password": n => { registerCustomerRequest.password = n.getStringValue(); },
@@ -498,7 +498,7 @@ export function deserializeIntoRegisterCustomerRequest(registerCustomerRequest: 
 // @ts-ignore
 export function deserializeIntoUpdateCustomerRequest(updateCustomerRequest: Partial<UpdateCustomerRequest> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
-        "creditLimit": n => { updateCustomerRequest.creditLimit = n.getNumberValue(); },
+        "storeCredit": n => { updateCustomerRequest.storeCredit = n.getNumberValue(); },
         "name": n => { updateCustomerRequest.name = n.getStringValue(); },
         "shippingAddress": n => { updateCustomerRequest.shippingAddress = n.getStringValue(); },
     }
@@ -813,9 +813,9 @@ export interface QuoteViewModel extends Parsable {
 }
 export interface RegisterCustomerRequest extends Parsable {
     /**
-     * The creditLimit property
+     * The storeCredit property
      */
-    creditLimit?: number | null;
+    storeCredit?: number | null;
     /**
      * The email property
      */
@@ -858,7 +858,7 @@ export function serializeAddQuoteItemRequest(writer: SerializationWriter, addQuo
 // @ts-ignore
 export function serializeCustomerDetails(writer: SerializationWriter, customerDetails: Partial<CustomerDetails> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
     if (!customerDetails || isSerializingDerivedType) { return; }
-    writer.writeNumberValue("creditLimit", customerDetails.creditLimit);
+    writer.writeNumberValue("storeCredit", customerDetails.storeCredit);
     writer.writeStringValue("email", customerDetails.email);
     writer.writeGuidValue("id", customerDetails.id);
     writer.writeStringValue("name", customerDetails.name);
@@ -1082,7 +1082,7 @@ export function serializeQuoteViewModel(writer: SerializationWriter, quoteViewMo
 // @ts-ignore
 export function serializeRegisterCustomerRequest(writer: SerializationWriter, registerCustomerRequest: Partial<RegisterCustomerRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
     if (!registerCustomerRequest || isSerializingDerivedType) { return; }
-    writer.writeNumberValue("creditLimit", registerCustomerRequest.creditLimit);
+    writer.writeNumberValue("storeCredit", registerCustomerRequest.storeCredit);
     writer.writeStringValue("email", registerCustomerRequest.email);
     writer.writeStringValue("name", registerCustomerRequest.name);
     writer.writeStringValue("password", registerCustomerRequest.password);
@@ -1098,7 +1098,7 @@ export function serializeRegisterCustomerRequest(writer: SerializationWriter, re
 // @ts-ignore
 export function serializeUpdateCustomerRequest(writer: SerializationWriter, updateCustomerRequest: Partial<UpdateCustomerRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
     if (!updateCustomerRequest || isSerializingDerivedType) { return; }
-    writer.writeNumberValue("creditLimit", updateCustomerRequest.creditLimit);
+    writer.writeNumberValue("storeCredit", updateCustomerRequest.storeCredit);
     writer.writeStringValue("name", updateCustomerRequest.name);
     writer.writeStringValue("shippingAddress", updateCustomerRequest.shippingAddress);
 }
@@ -1132,9 +1132,9 @@ export function serializeValidationProblemDetails_errors(writer: SerializationWr
 }
 export interface UpdateCustomerRequest extends Parsable {
     /**
-     * The creditLimit property
+     * The storeCredit property
      */
-    creditLimit?: number | null;
+    storeCredit?: number | null;
     /**
      * The name property
      */

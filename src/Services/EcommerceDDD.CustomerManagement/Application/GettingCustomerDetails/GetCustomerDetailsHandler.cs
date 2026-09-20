@@ -27,7 +27,7 @@ public class GetCustomerDetailsHandler(
 		details.Email = customer.Email;
 		details.Name = customer.Name;
 		details.ShippingAddress = customer.ShippingAddress;
-		details.CreditLimit = customer.CreditLimit;
+		details.StoreCredit = customer.StoreCredit;
 
 		return Result.Ok(details);
 	}

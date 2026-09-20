@@ -11,6 +11,7 @@ global using EcommerceDDD.InventoryManagement.API.Controllers.Requests;
 global using EcommerceDDD.InventoryManagement.Application.CheckingQuantityInStock;
 global using EcommerceDDD.InventoryManagement.Application.DecreasingQuantityInStock;
 global using EcommerceDDD.InventoryManagement.Application.EnteringProductInStock;
+global using EcommerceDDD.InventoryManagement.Application.IncreaseQuantityInStock;
 global using EcommerceDDD.InventoryManagement.Application.GettingInventoryStockUnitEventHistory;
 global using EcommerceDDD.InventoryManagement.Domain;
 global using EcommerceDDD.InventoryManagement.Domain.Events;

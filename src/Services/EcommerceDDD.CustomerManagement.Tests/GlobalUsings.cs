@@ -2,7 +2,7 @@ global using EcommerceDDD.Core.Infrastructure.Identity;
 global using EcommerceDDD.Core.Testing;
 global using EcommerceDDD.CustomerManagement.API.Controllers;
 global using EcommerceDDD.CustomerManagement.API.Controllers.Requests;
-global using EcommerceDDD.CustomerManagement.Application.GettingCreditLimit;
+global using EcommerceDDD.CustomerManagement.Application.GettingStoreCredit;
 global using EcommerceDDD.CustomerManagement.Application.GettingCustomerDetailsById;
 global using EcommerceDDD.CustomerManagement.Application.GettingCustomerEventHistory;
 global using EcommerceDDD.CustomerManagement.Application.RegisteringCustomer;

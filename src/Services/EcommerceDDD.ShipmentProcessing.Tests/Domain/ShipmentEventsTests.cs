@@ -9,7 +9,7 @@ public class ShipmentEventsTests
     {
         // Given
         var orderId = OrderId.Of(Guid.NewGuid());
-        var shipmentData = new ShipmentData(orderId, _productItems);
+        var shipmentData = new ShipmentData(orderId, "123 Main St", _productItems);
 
         // When
         var shipment = Shipment.Create(shipmentData);
@@ -25,7 +25,7 @@ public class ShipmentEventsTests
     {
         // Given
         var orderId = OrderId.Of(Guid.NewGuid());
-        var shipmentData = new ShipmentData(orderId, _productItems);
+        var shipmentData = new ShipmentData(orderId, "123 Main St", _productItems);
         var shipment = Shipment.Create(shipmentData);
 
         // When

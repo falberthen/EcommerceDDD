@@ -12,7 +12,7 @@ public class RegisterCustomerHandlerTests
 		var identityService = Substitute.For<IIdentityService>();
 		var confirmation = _password;
 		var registerCommand = RegisterCustomer
-			.Create(_email, _password, confirmation, _name, _streetAddress, _creditLimit);
+			.Create(_email, _password, confirmation, _name, _streetAddress, _storeCredit);
 		var commandHandler = new RegisterCustomerHandler(
 			identityService, _checker, _dummyRepository);
 
@@ -36,7 +36,7 @@ public class RegisterCustomerHandlerTests
 		var identityService = Substitute.For<IIdentityService>();
 		var confirmation = _password;
 		var registerCommand = RegisterCustomer
-			.Create(_email, _password, confirmation, _name, _streetAddress, _creditLimit);
+			.Create(_email, _password, confirmation, _name, _streetAddress, _storeCredit);
 		var commandHandler = new RegisterCustomerHandler(
 			identityService, _checker, _dummyRepository);
 
@@ -51,7 +51,7 @@ public class RegisterCustomerHandlerTests
 	public const string _name = "UserTest";
 	public const string _password = "p4ssw0rd";
 	public const string _streetAddress = "Rue XYZ";
-	public const decimal _creditLimit = 1000;
+	public const decimal _storeCredit = 1000;
 	private IEmailUniquenessChecker _checker = Substitute.For<IEmailUniquenessChecker>();
 	private DummyEventStoreRepository<Customer> _dummyRepository = new DummyEventStoreRepository<Customer>();
 }

@@ -1,12 +1,12 @@
 ﻿namespace EcommerceDDD.PaymentProcessing.Application.ProcessingPayment.IntegrationEvents;
 
-[MessageIdentity(nameof(CustomerReachedCreditLimit))]
-public class CustomerReachedCreditLimit : IntegrationEvent
+[MessageIdentity(nameof(CustomerReachedStoreCreditLimit))]
+public class CustomerReachedStoreCreditLimit : IntegrationEvent
 {
     public Guid OrderId { get; private set; }
     public DateTime CheckedAt { get; private set; }
 
-    public CustomerReachedCreditLimit(Guid orderId)
+    public CustomerReachedStoreCreditLimit(Guid orderId)
     {
         OrderId = orderId;
         CheckedAt = DateTime.UtcNow;

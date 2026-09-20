@@ -14,8 +14,7 @@ services.AddCoreInfrastructure(builder.Configuration, options =>
         .AutoProvision();
 
     options.PublishMessage<PaymentFinalized>().ToKafkaTopic("payments").UseDurableOutbox();
-    options.PublishMessage<PaymentFailed>().ToKafkaTopic("payments").UseDurableOutbox();
-    options.PublishMessage<CustomerReachedCreditLimit>().ToKafkaTopic("payments").UseDurableOutbox();
+    options.PublishMessage<CustomerReachedStoreCreditLimit>().ToKafkaTopic("payments").UseDurableOutbox();
     options.PublishMessage<ProductWasOutOfStock>().ToKafkaTopic("payments").UseDurableOutbox();
 });
 services.AddHealthChecks();
@@ -25,7 +24,7 @@ services.AddInventoryServiceClient(builder.Configuration);
 services.AddCustomerManagementServiceClient(builder.Configuration);
 
 // Services
-services.AddScoped<ICustomerCreditChecker, CustomerCreditChecker>();
+services.AddScoped<ICustomerStoreCreditChecker, CustomerStoreCreditChecker>();
 services.AddScoped<IProductInventoryHandler, ProductInventoryHandler>();
 services.AddScoped<IEventStoreRepository<Payment>, MartenRepository<Payment>>();
 

@@ -47,3 +47,4 @@ global using System.Diagnostics;
 global using Wolverine;
 global using Wolverine.Attributes;
 global using Wolverine.Kafka;
+global using Wolverine.Http;

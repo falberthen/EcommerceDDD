@@ -13,6 +13,7 @@ public class ShipmentsControllerTests
         // Given
         Guid orderId = Guid.NewGuid();
         Guid productId = Guid.NewGuid();
+		Guid customerId = Guid.NewGuid();
 
         _bus.InvokeAsync<Result>(Arg.Any<RequestShipment>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())
 			.Returns(Task.FromResult(Result.Ok()));
@@ -20,6 +21,7 @@ public class ShipmentsControllerTests
         var request = new ShipOrderRequest()
         {
             OrderId = orderId,
+			CustomerId = customerId,
             ProductItems = new List<ProductItemRequest>
             {
                 new ProductItemRequest(

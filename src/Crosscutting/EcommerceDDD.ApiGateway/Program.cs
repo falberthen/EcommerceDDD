@@ -24,7 +24,7 @@ services.AddHealthChecks();
 services.AddSignalR();
 services.AddSwaggerGen();
 services.AddSwagger(builder.Configuration);
-services.AddOcelot(builder.Configuration);
+services.AddOcelot(builder.Configuration).AddQualityOfService();
 
 // Register CORS
 const string corsPolicy = "CorsPolicy";

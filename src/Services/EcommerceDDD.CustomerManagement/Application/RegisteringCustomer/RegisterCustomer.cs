@@ -7,7 +7,7 @@ public record class RegisterCustomer : ICommand
 	public string PasswordConfirm { get; private set; }
 	public string Name { get; private set; }
 	public string ShippingAddress { get; private set; }
-	public decimal CreditLimit { get; private set; }
+	public decimal StoreCredit { get; private set; }
 
 	public static RegisterCustomer Create(
 		string email,
@@ -15,7 +15,7 @@ public record class RegisterCustomer : ICommand
 		string passwordConfirm,
 		string name,
 		string shippingAddress,
-		decimal creditLimit)
+		decimal storeCredit)
 	{
 		if (string.IsNullOrEmpty(email))
 			throw new ArgumentNullException(nameof(email));
@@ -27,15 +27,15 @@ public record class RegisterCustomer : ICommand
 			throw new ArgumentNullException(nameof(name));
 		if (string.IsNullOrEmpty(shippingAddress))
 			throw new ArgumentNullException(nameof(shippingAddress));
-		if (creditLimit <= 0)
-			throw new ArgumentOutOfRangeException(nameof(creditLimit));
+		if (storeCredit <= 0)
+			throw new ArgumentOutOfRangeException(nameof(storeCredit));
 
 		return new RegisterCustomer(email,
 			password,
 			passwordConfirm,
 			name,
 			shippingAddress,
-			creditLimit);
+			storeCredit);
 	}
 
 	private RegisterCustomer(
@@ -44,13 +44,13 @@ public record class RegisterCustomer : ICommand
 		string passwordConfirm,
 		string name,
 		string shippingAddress,
-		decimal creditLimit)
+		decimal storeCredit)
 	{
 		Email = email;
 		Password = password;
 		PasswordConfirm = passwordConfirm;
 		Name = name;
 		ShippingAddress = shippingAddress;
-		CreditLimit = creditLimit;
+		StoreCredit = storeCredit;
 	}
 }

@@ -23,7 +23,7 @@ public class RegisterCustomerHandler(
 			command.Email,
 			command.Name,
 			command.ShippingAddress,
-			command.CreditLimit);
+			command.StoreCredit);
 
 		var customer = Customer.Create(customerData);
 

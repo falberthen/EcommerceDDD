@@ -11,7 +11,7 @@ import { RegisterCustomerRequest } from 'src/app/clients/models';
   selector: 'app-customer-account',
   templateUrl: './customer-account.component.html',
   styleUrls: ['./customer-account.component.scss'],
-  
+
   imports: [ReactiveFormsModule, RouterModule, CommonModule],
 })
 export class CustomerAccountComponent implements OnInit {
@@ -29,10 +29,10 @@ export class CustomerAccountComponent implements OnInit {
     this.accountForm = this.formBuilder.group({
       email: ['', Validators.required],
       name: ['', Validators.required],
-      shippingAddress: ['404 Rue Infinite Loop', Validators.required],
+      shippingAddress: ['202 Infinite Loop Street', Validators.required],
       password: ['', Validators.required],
       passwordConfirm: ['', Validators.required],
-      creditLimit: ['10000', Validators.required],
+      storeCredit: ['10000', Validators.required],
     });
 
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
@@ -57,7 +57,7 @@ export class CustomerAccountComponent implements OnInit {
       shippingAddress: this.f.shippingAddress.value,
       password: this.f.password.value,
       passwordConfirm: this.f.passwordConfirm.value,
-      creditLimit: this.f.creditLimit.value,
+      storeCredit: this.f.storeCredit.value,
     };
 
     try {

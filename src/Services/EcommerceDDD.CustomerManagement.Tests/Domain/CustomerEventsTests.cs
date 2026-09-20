@@ -7,7 +7,7 @@ public class CustomerEventsTests
     {
 		// Given
 		var customerData = new CustomerData(
-			_email, _name, _address, _creditLimit
+			_email, _name, _address, _storeCredit
 		);
 
         // When
@@ -24,7 +24,7 @@ public class CustomerEventsTests
     {
 		// Given
 		var customerData = new CustomerData(
-			_email, _name, _address, _creditLimit
+			_email, _name, _address, _storeCredit
 		);
 		var customer = Customer.Create(customerData);
 
@@ -40,5 +40,5 @@ public class CustomerEventsTests
 	private const string _email = "email@test.com";
     private const string _name = "UserTest";
     private const string _address = "Rue XYZ";
-    private const decimal _creditLimit = 1000;
+    private const decimal _storeCredit = 1000;
 }

@@ -16,6 +16,7 @@ public class ShipmentsController(
 		await Response(
 			RequestShipment.Create(
 				OrderId.Of(request.OrderId),
+				request.CustomerId,
 				request.ProductItems.Select(p =>
 					new ProductItem(
 						ProductId.Of(p.ProductId),

@@ -8,7 +8,7 @@ global using EcommerceDDD.Core.Infrastructure.WebApi;
 global using EcommerceDDD.Core.Persistence;
 global using EcommerceDDD.Core.Validation;
 global using EcommerceDDD.CustomerManagement.API.Controllers.Requests;
-global using EcommerceDDD.CustomerManagement.Application.GettingCreditLimit;
+global using EcommerceDDD.CustomerManagement.Application.GettingStoreCredit;
 global using EcommerceDDD.CustomerManagement.Application.GettingCustomerDetails;
 global using EcommerceDDD.CustomerManagement.Application.GettingCustomerDetailsById;
 global using EcommerceDDD.CustomerManagement.Application.GettingCustomerEventHistory;

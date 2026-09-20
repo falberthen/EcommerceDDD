@@ -2,5 +2,5 @@
 
 public enum ShipmentCancellationReason
 {
-    ProcessmentError = 0,
+    Undeliverable = 1,
 }

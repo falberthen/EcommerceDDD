@@ -9,22 +9,22 @@ namespace EcommerceDDD.ServiceClients.CustomerManagement.Models
 {
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     #pragma warning disable CS1591
-    public partial class CreditLimitModel : IParsable
+    public partial class StoreCreditModel : IParsable
     #pragma warning restore CS1591
     {
-        /// <summary>The creditLimit property</summary>
-        public double? CreditLimit { get; set; }
         /// <summary>The customerId property</summary>
         public Guid? CustomerId { get; set; }
+        /// <summary>The storeCredit property</summary>
+        public double? StoreCredit { get; set; }
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="global::EcommerceDDD.ServiceClients.CustomerManagement.Models.CreditLimitModel"/></returns>
+        /// <returns>A <see cref="global::EcommerceDDD.ServiceClients.CustomerManagement.Models.StoreCreditModel"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static global::EcommerceDDD.ServiceClients.CustomerManagement.Models.CreditLimitModel CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static global::EcommerceDDD.ServiceClients.CustomerManagement.Models.StoreCreditModel CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             if(ReferenceEquals(parseNode, null)) throw new ArgumentNullException(nameof(parseNode));
-            return new global::EcommerceDDD.ServiceClients.CustomerManagement.Models.CreditLimitModel();
+            return new global::EcommerceDDD.ServiceClients.CustomerManagement.Models.StoreCreditModel();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -34,8 +34,8 @@ namespace EcommerceDDD.ServiceClients.CustomerManagement.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                { "creditLimit", n => { CreditLimit = n.GetDoubleValue(); } },
                 { "customerId", n => { CustomerId = n.GetGuidValue(); } },
+                { "storeCredit", n => { StoreCredit = n.GetDoubleValue(); } },
             };
         }
         /// <summary>
@@ -45,8 +45,8 @@ namespace EcommerceDDD.ServiceClients.CustomerManagement.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
-            writer.WriteDoubleValue("creditLimit", CreditLimit);
             writer.WriteGuidValue("customerId", CustomerId);
+            writer.WriteDoubleValue("storeCredit", StoreCredit);
         }
     }
 }

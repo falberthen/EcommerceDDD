@@ -1,11 +1,10 @@
-
 namespace EcommerceDDD.ServiceClients.Services.Shipment;
 
 public class ShipmentService(ShipmentProcessingClient shipmentProcessingClient) : IShipmentService
 {
 	private readonly ShipmentProcessingClient _shipmentProcessingClient = shipmentProcessingClient;
 
-	public async Task RequestShipmentAsync(Guid orderId, IList<ShipmentProductItem> items, CancellationToken cancellationToken)
+	public async Task RequestShipmentAsync(Guid orderId, Guid customerId, IList<ShipmentProductItem> items, CancellationToken cancellationToken)
 	{
 		var productItems = items.Select(i => new ShipmentProcessing.Models.ProductItemRequest()
 		{
@@ -18,6 +17,7 @@ public class ShipmentService(ShipmentProcessingClient shipmentProcessingClient) 
 		var request = new ShipOrderRequest()
 		{
 			OrderId = orderId,
+			CustomerId = customerId,
 			ProductItems = productItems
 		};
 

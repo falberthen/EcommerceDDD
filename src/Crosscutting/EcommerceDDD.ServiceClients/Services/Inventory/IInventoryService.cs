@@ -6,4 +6,5 @@ public interface IInventoryService
 {
     Task<List<InventoryStockUnitViewModel>?> CheckStockQuantityAsync(List<Guid?> productIds, CancellationToken cancellationToken);
     Task DecreaseStockQuantityAsync(Guid productId, int quantity, CancellationToken cancellationToken);
+    Task IncreaseStockQuantityAsync(Guid productId, int quantity, CancellationToken cancellationToken);
 }

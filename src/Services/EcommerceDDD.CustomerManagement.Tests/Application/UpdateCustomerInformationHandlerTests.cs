@@ -9,10 +9,10 @@ public class UpdateCustomerInformationHandlerTests
 		string email = "email@test.com";
 		string name = "UserTest";
 		string streetAddress = "Rue XYZ";
-		decimal creditLimit = 1000;
+		decimal storeCredit = 1000;
 
 		var customerWriteRepository = new DummyEventStoreRepository<Customer>();
-		var customerData = new CustomerData(email, name, streetAddress, creditLimit);
+		var customerData = new CustomerData(email, name, streetAddress, storeCredit);
 		var customer = Customer.Create(customerData);
 		await customerWriteRepository.AppendEventsAndCommitAsync(customer);
 
@@ -24,7 +24,7 @@ public class UpdateCustomerInformationHandlerTests
 			});
 
 		var updateCommand = UpdateCustomerInformation
-			.Create("New Name", "New Address", creditLimit);
+			.Create("New Name", "New Address", storeCredit);
 
 		var commandHandler = new UpdateCustomerInformationHandler(
 			_userInfoRequester, customerWriteRepository);

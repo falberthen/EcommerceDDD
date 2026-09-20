@@ -1,10 +1,9 @@
-using PackageShipped = EcommerceDDD.ShipmentProcessing.Domain.Events.PackageShipped;
-
 namespace EcommerceDDD.ShipmentProcessing.Domain;
 
 public class Shipment : AggregateRoot<ShipmentId>
 {
     public OrderId OrderId { get; private set; }
+    public string ShippingAddress { get; private set; } = default!;
     public IReadOnlyList<ProductItem> ProductItems { get; set; } = default!;
     public DateTime CreatedAt { get; private set; }
     public DateTime? ShippedAt { get; private set; }
@@ -13,11 +12,14 @@ public class Shipment : AggregateRoot<ShipmentId>
 
     public static Shipment Create(ShipmentData shipmentData)
     {
-        var (OrderId, ProductItems) = shipmentData
+        var (OrderId, ShippingAddress, ProductItems) = shipmentData
             ?? throw new ArgumentNullException(nameof(shipmentData));
 
         if (OrderId is null)
             throw new DomainException("The order id is required.");
+
+        if (string.IsNullOrWhiteSpace(ShippingAddress))
+            throw new DomainException("The shipping address is required.");
 
         if (ProductItems is null || shipmentData.ProductItems.Count == 0)
             throw new DomainException("There are no products to ship.");
@@ -53,6 +55,7 @@ public class Shipment : AggregateRoot<ShipmentId>
     {
         Id = ShipmentId.Of(@event.ShipmentId);
         OrderId = OrderId.Of(@event.OrderId);
+        ShippingAddress = @event.ShippingAddress;
         ProductItems = @event.ProductItems.Select(p =>
             new ProductItem(
                 ProductId.Of(p.ProductId),
@@ -81,6 +84,7 @@ public class Shipment : AggregateRoot<ShipmentId>
         var @event = new ShipmentCreated(
             Guid.NewGuid(),
             shipmentData.OrderId.Value,
+            shipmentData.ShippingAddress,
             productItemDetails);
 
         AppendEvent(@event);

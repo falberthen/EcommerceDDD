@@ -22,7 +22,7 @@ public class GetCustomerDetailsByIdHandler(
 			Email = customer.Email,
 			Name = customer.Name,
 			ShippingAddress = customer.ShippingAddress,
-			CreditLimit = customer.CreditLimit
+			StoreCredit = customer.StoreCredit
 		};
 
         return Result.Ok(details);

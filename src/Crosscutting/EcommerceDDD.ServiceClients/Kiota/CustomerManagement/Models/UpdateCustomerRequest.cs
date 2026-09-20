@@ -12,8 +12,6 @@ namespace EcommerceDDD.ServiceClients.CustomerManagement.Models
     public partial class UpdateCustomerRequest : IParsable
     #pragma warning restore CS1591
     {
-        /// <summary>The creditLimit property</summary>
-        public double? CreditLimit { get; set; }
         /// <summary>The name property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -30,6 +28,8 @@ namespace EcommerceDDD.ServiceClients.CustomerManagement.Models
 #else
         public string ShippingAddress { get; set; }
 #endif
+        /// <summary>The storeCredit property</summary>
+        public double? StoreCredit { get; set; }
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
@@ -48,9 +48,9 @@ namespace EcommerceDDD.ServiceClients.CustomerManagement.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                { "creditLimit", n => { CreditLimit = n.GetDoubleValue(); } },
                 { "name", n => { Name = n.GetStringValue(); } },
                 { "shippingAddress", n => { ShippingAddress = n.GetStringValue(); } },
+                { "storeCredit", n => { StoreCredit = n.GetDoubleValue(); } },
             };
         }
         /// <summary>
@@ -60,9 +60,9 @@ namespace EcommerceDDD.ServiceClients.CustomerManagement.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
-            writer.WriteDoubleValue("creditLimit", CreditLimit);
             writer.WriteStringValue("name", Name);
             writer.WriteStringValue("shippingAddress", ShippingAddress);
+            writer.WriteDoubleValue("storeCredit", StoreCredit);
         }
     }
 }

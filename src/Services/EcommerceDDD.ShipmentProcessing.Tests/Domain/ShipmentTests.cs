@@ -12,7 +12,7 @@ public class ShipmentTests
             new ProductItem(ProductId.Of(Guid.NewGuid()), 1),
             new ProductItem(ProductId.Of(Guid.NewGuid()), 1)
         };
-        var shipmentData = new ShipmentData(orderId, productItems);
+        var shipmentData = new ShipmentData(orderId, "123 Main St", productItems);
 
         // When
         var shipment = Shipment.Create(shipmentData);
@@ -36,7 +36,7 @@ public class ShipmentTests
             new ProductItem(ProductId.Of(Guid.NewGuid()), 1),
             new ProductItem(ProductId.Of(Guid.NewGuid()), 1)
         };
-        var shipmentData = new ShipmentData(orderId, productItems);
+        var shipmentData = new ShipmentData(orderId, "123 Main St", productItems);
         var shipment = Shipment.Create(shipmentData);
 
         // When
@@ -57,7 +57,7 @@ public class ShipmentTests
         // Given
         var orderId = OrderId.Of(Guid.NewGuid());
         var productItems = new List<ProductItem>();                    
-        var shipmentData = new ShipmentData(orderId, productItems);
+        var shipmentData = new ShipmentData(orderId, "123 Main St", productItems);
 
 		// When & Then
 		DomainException exception = Assert.Throws<DomainException>(() =>

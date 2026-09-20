@@ -24,7 +24,7 @@ public class UpdateCustomerInformationHandler(
             customer.Email,
             command.Name,
             command.ShippingAddress,
-            command.CreditLimit);
+            command.StoreCredit);
 
         customer.UpdateInformation(customerData);
 

@@ -6,6 +6,9 @@ public record class ShipOrderRequest
     public Guid OrderId { get; init; }
 
     [Required(ErrorMessage = "The {0} field is required.")]
+    public Guid CustomerId { get; init; }
+
+    [Required(ErrorMessage = "The {0} field is required.")]
     public IReadOnlyList<ProductItemRequest> ProductItems { get; init; }
 }
 

@@ -9,7 +9,7 @@
     </div>
   } @else {
   <div>
-    @if (orders.length == 0) {
+    @if (loaded && orders.length == 0) {
     <div class="alert alert-danger no-orders-message">You don't have Orders</div>
     }
     @else {

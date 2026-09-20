@@ -25,7 +25,7 @@ public class CustomersController(
 					request.PasswordConfirm,
 					request.Name,
 					request.ShippingAddress,
-					request.CreditLimit
+					request.StoreCredit
 				),
 				cancellationToken
 			);
@@ -70,7 +70,7 @@ public class CustomersController(
 				UpdateCustomerInformation.Create(
 					request.Name,
 					request.ShippingAddress,
-					request.CreditLimit
+					request.StoreCredit
 				), cancellationToken
 			);
 
