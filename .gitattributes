@@ -3,6 +3,13 @@
 ###############################################################################
 * text=auto
 
+# Shell scripts must stay LF even on Windows checkouts; they run inside Linux containers (kiota regen) 
+*.sh text eol=lf
+
+# Kiota-generated clients are produced with LF inside a Linux container; force LF
+# on checkout too so regen never shows phantom CRLF/LF churn on Windows.
+src/Crosscutting/EcommerceDDD.ServiceClients/Kiota/** text eol=lf
+
 ###############################################################################
 # Set default behavior for command prompt diff.
 #
