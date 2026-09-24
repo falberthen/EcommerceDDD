@@ -15,17 +15,14 @@ services.AddCoreInfrastructure(builder.Configuration, options =>
 
     options.PublishMessage<PaymentFinalized>().ToKafkaTopic("payments").UseDurableOutbox();
     options.PublishMessage<CustomerReachedStoreCreditLimit>().ToKafkaTopic("payments").UseDurableOutbox();
-    options.PublishMessage<ProductWasOutOfStock>().ToKafkaTopic("payments").UseDurableOutbox();
 });
 services.AddHealthChecks();
 
 // Service clients
-services.AddInventoryServiceClient(builder.Configuration);
 services.AddCustomerManagementServiceClient(builder.Configuration);
 
 // Services
 services.AddScoped<ICustomerStoreCreditChecker, CustomerStoreCreditChecker>();
-services.AddScoped<IProductInventoryHandler, ProductInventoryHandler>();
 services.AddScoped<IEventStoreRepository<Payment>, MartenRepository<Payment>>();
 
 // Marten

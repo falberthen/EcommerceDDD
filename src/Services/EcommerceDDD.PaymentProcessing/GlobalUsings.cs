@@ -15,11 +15,9 @@ global using EcommerceDDD.PaymentProcessing.Application.ProcessingPayment.Integr
 global using EcommerceDDD.PaymentProcessing.Application.RequestingPayment;
 global using EcommerceDDD.PaymentProcessing.Domain;
 global using EcommerceDDD.PaymentProcessing.Domain.Events;
-global using EcommerceDDD.PaymentProcessing.Infrastructure.InventoryHandling;
 global using EcommerceDDD.PaymentProcessing.Infrastructure.Projections;
 global using EcommerceDDD.ServiceClients.Extensions;
 global using EcommerceDDD.ServiceClients.Services.CustomerManagement;
-global using EcommerceDDD.ServiceClients.Services.Inventory;
 global using FluentResults;
 global using JasperFx.Events.Projections;
 global using Marten;

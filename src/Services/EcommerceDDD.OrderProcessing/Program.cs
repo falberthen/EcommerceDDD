@@ -28,8 +28,10 @@ services.AddPaymentServiceClient(builder.Configuration);
 services.AddShipmentServiceClient(builder.Configuration);
 services.AddQuoteServiceClient(builder.Configuration);
 services.AddOrderNotificationServiceClient(builder.Configuration);
+services.AddInventoryServiceClient(builder.Configuration);
 
 // Services
+services.AddScoped<IProductInventoryHandler, ProductInventoryHandler>();
 services.AddScoped<IEventStoreRepository<Order>, MartenRepository<Order>>();
 services.AddMarten(builder.Configuration, options =>
 	options.ConfigureProjections());

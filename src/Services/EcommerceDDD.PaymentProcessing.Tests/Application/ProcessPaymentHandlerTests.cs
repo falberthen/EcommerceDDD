@@ -20,17 +20,14 @@ public class ProcessPaymentHandlerTests
 		var paymentWriteRepository = new DummyEventStoreRepository<Payment>();
 		await paymentWriteRepository.AppendEventsAndCommitAsync(payment);
 
-		_customerStoreCreditChecker.
-			CheckIfStoreCreditIsEnoughAsync(Arg.Any<CustomerId>(), Arg.Any<Money>(), CancellationToken.None)
-		   .Returns(Task.FromResult(true));
-		_productInventoryHandler
-			.CheckProductsInStockAsync(Arg.Any<IReadOnlyList<ProductItem>>(), CancellationToken.None)
+		_customerStoreCreditChecker
+			.CheckIfStoreCreditIsEnoughAsync(Arg.Any<CustomerId>(), Arg.Any<Money>(), CancellationToken.None)
 			.Returns(Task.FromResult(true));
 
 		// When
 		var processPayment = ProcessPayment.Create(payment.Id, orderId);
 		var processPaymentHandler = new ProcessPaymentHandler(
-			_productInventoryHandler, _customerStoreCreditChecker, paymentWriteRepository);
+			_customerStoreCreditChecker, paymentWriteRepository);
 		await processPaymentHandler.HandleAsync(processPayment, CancellationToken.None);
 
 		// Then
@@ -63,14 +60,11 @@ public class ProcessPaymentHandlerTests
 
 		_customerStoreCreditChecker
 			.CheckIfStoreCreditIsEnoughAsync(Arg.Any<CustomerId>(), Arg.Any<Money>(), CancellationToken.None)
-		   .Returns(Task.FromResult(false));
-		_productInventoryHandler
-			.CheckProductsInStockAsync(Arg.Any<IReadOnlyList<ProductItem>>(), CancellationToken.None)
-			.Returns(Task.FromResult(true));
+			.Returns(Task.FromResult(false));
 
 		var processPayment = ProcessPayment.Create(payment.Id, orderId);
 		var processPaymentHandler = new ProcessPaymentHandler(
-			_productInventoryHandler, _customerStoreCreditChecker, paymentWriteRepository);
+			_customerStoreCreditChecker, paymentWriteRepository);
 
 		// When
 		await processPaymentHandler.HandleAsync(processPayment, CancellationToken.None);
@@ -87,5 +81,4 @@ public class ProcessPaymentHandlerTests
 	}
 
 	private ICustomerStoreCreditChecker _customerStoreCreditChecker = Substitute.For<ICustomerStoreCreditChecker>();
-	private IProductInventoryHandler _productInventoryHandler = Substitute.For<IProductInventoryHandler>();
 }
