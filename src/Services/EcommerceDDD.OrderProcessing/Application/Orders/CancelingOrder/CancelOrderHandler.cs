@@ -2,12 +2,15 @@ namespace EcommerceDDD.OrderProcessing.Application.Orders.CancelingOrder;
 
 public class CancelOrderHandler(
 	IOrderNotificationService orderNotificationService,
+	IProductInventoryHandler productInventoryHandler,
 	IEventStoreRepository<Order> orderWriteRepository,
 	IMessageBus messageBus
 )
 {
 	private readonly IOrderNotificationService _orderNotificationService = orderNotificationService
 		?? throw new ArgumentNullException(nameof(orderNotificationService));
+	private readonly IProductInventoryHandler _productInventoryHandler = productInventoryHandler
+		?? throw new ArgumentNullException(nameof(productInventoryHandler));
 	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository
 		?? throw new ArgumentNullException(nameof(orderWriteRepository));
 	private readonly IMessageBus _messageBus = messageBus
@@ -24,6 +27,9 @@ public class CancelOrderHandler(
 		if (order.Status == OrderStatus.Canceled)
 			return Result.Ok();
 
+		// Stock is decremented when the order is processed, so a cancellation past that point must put it back.
+		var shouldRestock = order.Status != OrderStatus.Placed;
+
 		order.Cancel(command.CancellationReason);
 
 		var orderCanceledEvent = order.GetUncommittedEvents()
@@ -32,6 +38,17 @@ public class CancelOrderHandler(
 
 		await _orderWriteRepository
 			.AppendEventsAndCommitAsync(order, cancellationToken: cancellationToken);
+
+		if (shouldRestock)
+			await _productInventoryHandler.IncreaseQuantityInStockAsync(
+				order.OrderLines.Select(ol => new ProductItemData
+				{
+					ProductId = ol.ProductItem.ProductId,
+					ProductName = ol.ProductItem.ProductName,
+					Quantity = ol.ProductItem.Quantity,
+					UnitPrice = ol.ProductItem.UnitPrice
+				}).ToList(),
+				cancellationToken);
 
 		// Lets the saga cancel the payment when the order had already been paid
 		await _messageBus.PublishAsync(orderCanceledEvent!);

@@ -1,6 +1,4 @@
-﻿using EcommerceDDD.Core.CQRS;
-
-namespace EcommerceDDD.CustomerManagement.Application.GettingCustomerEventHistory;
+﻿namespace EcommerceDDD.CustomerManagement.Application.GettingCustomerEventHistory;
 
 public record class GetCustomerEventHistory : IQuery<IReadOnlyList<CustomerEventHistory>>
 {

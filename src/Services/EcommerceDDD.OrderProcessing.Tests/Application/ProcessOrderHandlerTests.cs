@@ -1,34 +1,97 @@
+using EcommerceDDD.OrderProcessing.Application.Payments.ProcessingPayment.IntegrationEvents;
+
 namespace EcommerceDDD.OrderProcessing.Tests.Application;
 
 public class ProcessOrderHandlerTests
 {
 	[Fact]
-	public async Task PlaceOrder_WithCommand_ShouldPlaceOrder()
+	public async Task ProcessOrder_WithStockAvailable_ShouldProcessOrder()
 	{
 		// Given
 		var productId = ProductId.Of(Guid.NewGuid());
-		var productName = "Product XYZ";
-		var productPrice = Money.Of(10, Currency.USDollar.Code);
 		var customerId = CustomerId.Of(Guid.NewGuid());
 		var currency = Currency.OfCode(Currency.USDollar.Code);
 		var quoteId = QuoteId.Of(Guid.NewGuid());
 
-		var quoteItems = new List<ProductItemData>() {
-			new ProductItemData() {
-				ProductId = productId,
-				ProductName = productName,
-				Quantity = 1,
-				UnitPrice = productPrice
-			}
-		};
-
-		var orderData = new OrderData(customerId, quoteId, currency, quoteItems);
+		var orderData = BuildOrderData(customerId, quoteId, currency, productId);
 		var order = Order.Place(orderData);
 
 		var orderWriteRepository = new DummyEventStoreRepository<Order>();
-		var quoteService = Substitute.For<IQuoteService>();
+		await orderWriteRepository.AppendEventsAndCommitAsync(order);
 
-		var viewModelResponse = new QuoteViewModel()
+		var quoteService = Substitute.For<IQuoteService>();
+		quoteService.GetQuoteDetailsAsync(quoteId.Value, Arg.Any<CancellationToken>())
+			.Returns(BuildQuote(quoteId, customerId, currency, productId));
+
+		_productInventoryHandler
+			.CheckProductsInStockAsync(Arg.Any<IReadOnlyList<ProductItemData>>(), Arg.Any<CancellationToken>())
+			.Returns(Task.FromResult(true));
+
+		var processOrder = ProcessOrder.Create(customerId, order.Id, quoteId);
+		var processOrderHandler = new ProcessOrderHandler(
+			quoteService, _productInventoryHandler, orderWriteRepository, _messageBus);
+
+		// When
+		await processOrderHandler.HandleAsync(processOrder, CancellationToken.None);
+
+		// Then
+		var processedOrder = orderWriteRepository.AggregateStream.First().Aggregate;
+		Assert.NotNull(processedOrder);
+		Assert.Equal(OrderStatus.Processed, processedOrder.Status);
+		await _productInventoryHandler.Received(1)
+			.DecreaseQuantityInStockAsync(Arg.Any<IReadOnlyList<ProductItemData>>(), Arg.Any<CancellationToken>());
+	}
+
+	[Fact]
+	public async Task ProcessOrder_WhenOutOfStock_ShouldNotProcessAndSignalOutOfStock()
+	{
+		// Given
+		var productId = ProductId.Of(Guid.NewGuid());
+		var customerId = CustomerId.Of(Guid.NewGuid());
+		var currency = Currency.OfCode(Currency.USDollar.Code);
+		var quoteId = QuoteId.Of(Guid.NewGuid());
+
+		var orderData = BuildOrderData(customerId, quoteId, currency, productId);
+		var order = Order.Place(orderData);
+
+		var orderWriteRepository = new DummyEventStoreRepository<Order>();
+		await orderWriteRepository.AppendEventsAndCommitAsync(order);
+
+		var quoteService = Substitute.For<IQuoteService>();
+		quoteService.GetQuoteDetailsAsync(quoteId.Value, Arg.Any<CancellationToken>())
+			.Returns(BuildQuote(quoteId, customerId, currency, productId));
+
+		_productInventoryHandler
+			.CheckProductsInStockAsync(Arg.Any<IReadOnlyList<ProductItemData>>(), Arg.Any<CancellationToken>())
+			.Returns(Task.FromResult(false));
+
+		var processOrder = ProcessOrder.Create(customerId, order.Id, quoteId);
+		var processOrderHandler = new ProcessOrderHandler(
+			quoteService, _productInventoryHandler, orderWriteRepository, _messageBus);
+
+		// When
+		await processOrderHandler.HandleAsync(processOrder, CancellationToken.None);
+
+		// Then
+		var stillPlaced = orderWriteRepository.AggregateStream.First().Aggregate;
+		Assert.Equal(OrderStatus.Placed, stillPlaced.Status);
+		await _productInventoryHandler.DidNotReceive()
+			.DecreaseQuantityInStockAsync(Arg.Any<IReadOnlyList<ProductItemData>>(), Arg.Any<CancellationToken>());
+		await _messageBus.Received(1).PublishAsync(Arg.Any<ProductWasOutOfStock>());
+	}
+
+	private static OrderData BuildOrderData(CustomerId customerId, QuoteId quoteId, Currency currency, ProductId productId) =>
+		new OrderData(customerId, quoteId, currency, new List<ProductItemData>() {
+			new ProductItemData() {
+				ProductId = productId,
+				ProductName = "Product XYZ",
+				Quantity = 1,
+				UnitPrice = Money.Of(10, currency.Code)
+			}
+		});
+
+	private static QuoteViewModel BuildQuote(QuoteId quoteId, CustomerId customerId, Currency currency, ProductId productId) =>
+		new QuoteViewModel()
 		{
 			QuoteId = quoteId.Value,
 			CustomerId = customerId.Value,
@@ -39,33 +102,13 @@ public class ProcessOrderHandlerTests
 				new QuoteItemViewModel()
 				{
 					ProductId = productId.Value,
-					ProductName = "Product",
+					ProductName = "Product XYZ",
 					Quantity = 10,
 					UnitPrice = 200
 				}
 			}
 		};
 
-		quoteService.GetQuoteDetailsAsync(quoteId.Value, Arg.Any<CancellationToken>())
-			.Returns(viewModelResponse);
-
-		await orderWriteRepository
-			.AppendEventsAndCommitAsync(order);
-
-		var processOrder = ProcessOrder.Create(customerId, order.Id, quoteId);
-		var processOrderHandler = new ProcessOrderHandler(quoteService, orderWriteRepository, _messageBus);
-
-		// When
-		await processOrderHandler.HandleAsync(processOrder, CancellationToken.None);
-
-		// Then
-		var placedOrder = orderWriteRepository.AggregateStream.First().Aggregate;
-		Assert.NotNull(placedOrder);
-		Assert.Equal(placedOrder.CustomerId, customerId);
-		Assert.Equal(placedOrder.QuoteId, quoteId);
-		Assert.Equal(OrderStatus.Processed, placedOrder.Status);
-	}
-
 	private IMessageBus _messageBus = Substitute.For<IMessageBus>();
-
+	private IProductInventoryHandler _productInventoryHandler = Substitute.For<IProductInventoryHandler>();
 }

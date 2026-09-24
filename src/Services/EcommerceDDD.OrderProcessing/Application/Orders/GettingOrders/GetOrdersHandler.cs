@@ -40,7 +40,7 @@ public class GetOrdersHandler(
 		List<OrderLineViewModel> orderLines;
 		string currencySymbol;
 
-		if (order.OrderStatus == OrderStatus.Placed)
+		if (order.OrderLines is null || order.OrderLines.Count == 0)
 		{
 			var quoteResult = await GetQuoteAsync(order, cancellationToken);
 			if (quoteResult.IsFailed)

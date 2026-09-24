@@ -2,12 +2,15 @@ namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
 
 public class ProcessOrderHandler(
 	IQuoteService quoteService,
+	IProductInventoryHandler productInventoryHandler,
 	IEventStoreRepository<Order> orderWriteRepository,
 	IMessageBus messageBus
 )
 {
 	private readonly IQuoteService _quoteService = quoteService
 		?? throw new ArgumentNullException(nameof(quoteService));
+	private readonly IProductInventoryHandler _productInventoryHandler = productInventoryHandler
+		?? throw new ArgumentNullException(nameof(productInventoryHandler));
 	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository
 		?? throw new ArgumentNullException(nameof(orderWriteRepository));
 	private readonly IMessageBus _messageBus = messageBus
@@ -69,6 +72,17 @@ public class ProcessOrderHandler(
 			quoteId,
 			Currency.OfCode(quote.CurrencyCode!),
 			quoteItems);
+
+		// No stock reservation for now. Stock vailability is only checked here.
+		// If any product is short, cancel the whole order (all-or-nothing).
+		if (!await _productInventoryHandler.CheckProductsInStockAsync(quoteItems, cancellationToken))
+		{
+			await _messageBus.PublishAsync(new ProductWasOutOfStock(order.Id.Value));
+			return Result.Ok();
+		}
+
+		await _productInventoryHandler
+			.DecreaseQuantityInStockAsync(quoteItems, cancellationToken);
 
 		order.Process(orderData);
 

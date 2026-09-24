@@ -1,13 +1,11 @@
-﻿namespace EcommerceDDD.PaymentProcessing.Application.ProcessingPayment;
+namespace EcommerceDDD.PaymentProcessing.Application.ProcessingPayment;
 
 public class ProcessPaymentHandler(
-	IProductInventoryHandler productInventoryHandler,
 	ICustomerStoreCreditChecker storeCreditChecker,
 	IEventStoreRepository<Payment> paymentWriteRepository
 )
 {
 	private readonly ICustomerStoreCreditChecker _storeCreditChecker = storeCreditChecker;
-	private readonly IProductInventoryHandler _productInventoryHandler = productInventoryHandler;
 	private readonly IEventStoreRepository<Payment> _paymentWriteRepository = paymentWriteRepository;
 
 	public async Task<Result> HandleAsync(ProcessPayment command, CancellationToken cancellationToken)
@@ -17,7 +15,7 @@ public class ProcessPaymentHandler(
 
 		if (payment is null)
 			return Result.Fail($"Payment {command.PaymentId.Value} was not found.");
-		
+
 		INotification integrationEvent;
 
 		var isStoreCreditEnough = await _storeCreditChecker
@@ -27,17 +25,8 @@ public class ProcessPaymentHandler(
 			payment.Cancel(PaymentCancellationReason.CustomerReachedStoreCreditLimit);
 			integrationEvent = new CustomerReachedStoreCreditLimit(payment.OrderId.Value);
 		}
-		else if (!await _productInventoryHandler
-			.CheckProductsInStockAsync(payment.ProductItems, cancellationToken))
-		{
-			payment.Cancel(PaymentCancellationReason.ProductOutOfStock);
-			integrationEvent = new ProductWasOutOfStock(payment.OrderId.Value);
-		}
 		else
 		{
-			await _productInventoryHandler
-				.DecreaseQuantityInStockAsync(payment.ProductItems, cancellationToken);
-
 			payment.Complete();
 			integrationEvent = new PaymentFinalized(
 				payment.Id.Value,

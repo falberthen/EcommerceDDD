@@ -25,12 +25,14 @@ global using EcommerceDDD.OrderProcessing.Application.Shipments.RecordingShipmen
 global using EcommerceDDD.OrderProcessing.Application.Shipments.RequestingShipment;
 global using EcommerceDDD.OrderProcessing.Domain;
 global using EcommerceDDD.OrderProcessing.Domain.Events;
+global using EcommerceDDD.OrderProcessing.Infrastructure.InventoryHandling;
 global using EcommerceDDD.OrderProcessing.Infrastructure.Projections;
 global using EcommerceDDD.ServiceClients.Extensions;
 global using EcommerceDDD.ServiceClients.QuoteManagement.Models;
 global using EcommerceDDD.ServiceClients.Services.Notifications;
 global using EcommerceDDD.ServiceClients.Services.Payment;
 global using EcommerceDDD.ServiceClients.Services.Quote;
+global using EcommerceDDD.ServiceClients.Services.Inventory;
 global using EcommerceDDD.ServiceClients.Services.Shipment;
 global using FluentResults;
 global using JasperFx.Events.Projections;
