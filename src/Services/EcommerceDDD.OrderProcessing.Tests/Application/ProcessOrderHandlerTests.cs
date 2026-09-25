@@ -77,7 +77,8 @@ public class ProcessOrderHandlerTests
 		Assert.Equal(OrderStatus.Placed, stillPlaced.Status);
 		await _productInventoryHandler.DidNotReceive()
 			.DecreaseQuantityInStockAsync(Arg.Any<IReadOnlyList<ProductItemData>>(), Arg.Any<CancellationToken>());
-		await _messageBus.Received(1).PublishAsync(Arg.Any<ProductWasOutOfStock>());
+		await _messageBus.Received(1).PublishAsync(Arg.Is<CancelOrder>(c =>
+			c.OrderId == order.Id && c.CancellationReason == OrderCancellationReason.ProductWasOutOfStock));
 	}
 
 	private static OrderData BuildOrderData(CustomerId customerId, QuoteId quoteId, Currency currency, ProductId productId) =>

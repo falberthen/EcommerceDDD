@@ -77,7 +77,8 @@ public class ProcessOrderHandler(
 		// If any product is short, cancel the whole order (all-or-nothing).
 		if (!await _productInventoryHandler.CheckProductsInStockAsync(quoteItems, cancellationToken))
 		{
-			await _messageBus.PublishAsync(new ProductWasOutOfStock(order.Id.Value));
+			await _messageBus.PublishAsync(
+				CancelOrder.Create(order.Id, OrderCancellationReason.ProductWasOutOfStock));
 			return Result.Ok();
 		}
 
