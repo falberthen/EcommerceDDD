@@ -10,24 +10,24 @@ public partial class OrderSaga
 			OrderId.Of(@integrationEvent.OrderId),
 			OrderCancellationReason.CustomerReachedStoreCreditLimit);
 
-	public CancelOrder Handle(ProductWasOutOfStock @integrationEvent) =>
-		CancelOrder.Create(
-			OrderId.Of(@integrationEvent.OrderId),
-			OrderCancellationReason.ProductWasOutOfStock);
-
 	public CancelOrder Handle(ShipmentNotDelivered @integrationEvent) =>
 		CancelOrder.Create(
 			OrderId.Of(@integrationEvent.OrderId),
 			OrderCancellationReason.ShipmentNotDelivered);
 
 	/// <summary>
-	/// If the order was already paid before cancellation, ask the payment service to cancel the payment.
+	/// A canceled order ends the flow. If the order was already paid before cancellation,
+	/// ask the payment service to cancel the payment on the way out.
 	/// </summary>
-	public RequestCancelPayment? Handle(OrderCanceled @domainEvent) =>
-		@domainEvent.PaymentId is null
+	public RequestCancelPayment? Handle(OrderCanceled @domainEvent)
+	{
+		MarkCompleted();
+
+		return @domainEvent.PaymentId is null
 			? null
 			: RequestCancelPayment.Create(
 				OrderId.Of(@domainEvent.OrderId),
 				PaymentId.Of(@domainEvent.PaymentId.Value),
 				PaymentCancellationReason.OrderCanceled);
+	}
 }

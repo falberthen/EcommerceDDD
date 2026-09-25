@@ -54,4 +54,10 @@ public partial class OrderSaga : Saga
 		RecordShipment.Create(
 			OrderId.Of(@integrationEvent.OrderId),
 			ShipmentId.Of(@integrationEvent.ShipmentId));
+
+	/// <summary>
+	/// Order delivered. End of the flow, so the saga state can be deleted
+	/// </summary>
+	public void Handle(OrderDelivered @domainEvent) =>
+		MarkCompleted();
 }

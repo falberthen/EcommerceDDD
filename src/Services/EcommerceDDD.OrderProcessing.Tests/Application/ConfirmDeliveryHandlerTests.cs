@@ -48,9 +48,11 @@ public class ConfirmDeliveryHandlerTests
 				CustomerId = customerId.Value
 			});
 
+		var messageBus = Substitute.For<IMessageBus>();
+
 		var confirmDelivery = ConfirmDelivery.Create(order.Id);
 		var confirmDeliveryHandler = new ConfirmDeliveryHandler(orderNotificationService,
-			orderWriteRepository, userInfoRequester);
+			orderWriteRepository, userInfoRequester, messageBus);
 
 		// When
 		await confirmDeliveryHandler.HandleAsync(confirmDelivery, CancellationToken.None);
@@ -65,5 +67,6 @@ public class ConfirmDeliveryHandlerTests
 		Assert.Equal(completedOrder.ShipmentId, shipmentId);
 		Assert.Equal(completedOrder.OrderLines.Count, quoteItems.Count);
 		Assert.Equal(OrderStatus.Delivered, completedOrder.Status);
+		await messageBus.Received(1).PublishAsync(Arg.Any<OrderDelivered>());
 	}
 }
