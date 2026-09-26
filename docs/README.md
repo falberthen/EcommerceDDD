@@ -131,6 +131,7 @@ Microservices communicate directly using **Kiota-generated typed HTTP clients**.
 | NSubstitute | 6.2.0 |
 | Swashbuckle.AspNetCore.SwaggerUI | 10.2.3 |
 | FluentResults | 4.0.0 |
+| Mailpit (local e-mail inbox) | 1.31.2 |
 
 ### Frontend
 
@@ -163,6 +164,8 @@ docker compose --profile frontend up
 ```
 
 > 💡 **Tip:** You can also set `docker-compose.dcproj` as the startup project in Visual Studio for debugging.
+
+> 📧 **E-mails:** new accounts must confirm their e-mail before signing in, but no real e-mail is sent. Every confirmation and password-reset message lands in the [Mailpit](https://mailpit.axllent.org/) inbox at `http://localhost:8025`.
 
 <br/>
 

@@ -80,6 +80,14 @@ services:
       postgres:
         condition: service_started
 
+  # Catches every e-mail the services send; inbox at http://localhost:8025
+  mailpit:
+    image: axllent/mailpit:v1.31.2
+    ports:
+      - '8025:8025'
+      - '1025:1025'
+    restart: on-failure
+
   aspire-dashboard:
     image: mcr.microsoft.com/dotnet/aspire-dashboard:9.1
     ports:

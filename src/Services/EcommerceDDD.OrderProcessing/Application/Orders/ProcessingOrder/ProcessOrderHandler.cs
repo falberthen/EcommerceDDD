@@ -73,7 +73,7 @@ public class ProcessOrderHandler(
 			Currency.OfCode(quote.CurrencyCode!),
 			quoteItems);
 
-		// No stock reservation for now. Stock vailability is only checked here.
+		// No stock reservation for now. Stock availability is only checked here.
 		// If any product is short, cancel the whole order (all-or-nothing).
 		if (!await _productInventoryHandler.CheckProductsInStockAsync(quoteItems, cancellationToken))
 		{
