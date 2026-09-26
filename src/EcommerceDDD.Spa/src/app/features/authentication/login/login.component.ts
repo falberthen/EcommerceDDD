@@ -4,6 +4,9 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { AuthService } from '@core/services/auth.service';
 import { LoaderService } from '@core/services/loader.service';
+import { AuthApiService } from '@core/services/api/auth-api.service';
+import { NotificationService } from '@core/services/notification.service';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -17,9 +20,14 @@ export class LoginComponent implements OnInit {
   private route = inject(ActivatedRoute);
   protected loaderService = inject(LoaderService);
   private authenticationService = inject(AuthService);
+  private authApiService = inject(AuthApiService);
+  private notificationService = inject(NotificationService);
 
   loginForm!: FormGroup;
   returnUrl!: string;
+  emailNotConfirmed = false;
+  awaitingConfirmation = false;
+  readonly mailpitUrl = environment.mailpitUrl;
 
   constructor() {
     if (this.authenticationService.currentUser) {
@@ -34,6 +42,7 @@ export class LoginComponent implements OnInit {
     });
 
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    this.awaitingConfirmation = !!this.route.snapshot.queryParams['registered'];
   }
 
   get isLoading() {
@@ -52,14 +61,29 @@ export class LoginComponent implements OnInit {
 
     try {
       this.loaderService.setLoading(true);
-      const success = await this.authenticationService.login(
+      const outcome = await this.authenticationService.login(
         this.f.email.value,
         this.f.password.value
       );
 
-      if (success) {
+      this.emailNotConfirmed = outcome === 'emailNotConfirmed';
+      this.awaitingConfirmation ||= this.emailNotConfirmed;
+      if (outcome === 'loggedIn') {
         this.router.navigate([this.returnUrl]);
       }
+    } finally {
+      this.loaderService.setLoading(false);
+    }
+  }
+
+  async resendConfirmation() {
+    try {
+      this.loaderService.setLoading(true);
+      await this.authApiService.resendConfirmation(this.f.email.value);
+      this.emailNotConfirmed = false;
+      this.notificationService.showSuccess('A new confirmation link was sent. Check your inbox.');
+    } catch (error) {
+      this.authApiService.handleError(error);
     } finally {
       this.loaderService.setLoading(false);
     }

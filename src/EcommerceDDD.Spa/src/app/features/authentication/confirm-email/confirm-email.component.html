@@ -1,0 +1,21 @@
+<div class="card fadeInDown login-container">
+  <div class="card-body login-form">
+    <h4>E-mail confirmation</h4>
+    <hr />
+    @switch (status) {
+    @case ('confirming') {
+    <p>Confirming your e-mail...</p>
+    }
+    @case ('confirmed') {
+    <p>Your e-mail is confirmed. You can sign in now.</p>
+    }
+    @case ('failed') {
+    <p>
+      This link is invalid or has expired. Try signing in to request a new one,
+      or reset your password.
+    </p>
+    }
+    }
+    <a [routerLink]="['/login']" class="create-account-link">Go to login</a>
+  </div>
+</div>

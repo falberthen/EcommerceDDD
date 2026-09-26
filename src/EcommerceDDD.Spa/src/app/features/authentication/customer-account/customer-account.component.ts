@@ -63,7 +63,7 @@ export class CustomerAccountComponent implements OnInit {
     try {
       await this.customerApiService.registerCustomer(customerRegistration);
       this.notificationService.showSuccess('Account successfully created!');
-      this.router.navigate([this.returnUrl]);
+      this.router.navigate(['/login'], { queryParams: { registered: true } });
     } catch (error) {
       this.customerApiService.handleError(error);
     } finally {

@@ -14,6 +14,16 @@ export interface AddQuoteItemRequest extends Parsable {
      */
     quantity?: number | null;
 }
+export interface ConfirmEmailRequest extends Parsable {
+    /**
+     * The token property
+     */
+    token?: string | null;
+    /**
+     * The userId property
+     */
+    userId?: string | null;
+}
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
@@ -22,6 +32,15 @@ export interface AddQuoteItemRequest extends Parsable {
 // @ts-ignore
 export function createAddQuoteItemRequestFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
     return deserializeIntoAddQuoteItemRequest;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {ConfirmEmailRequest}
+ */
+// @ts-ignore
+export function createConfirmEmailRequestFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoConfirmEmailRequest;
 }
 /**
  * Creates a new instance of the appropriate class based on discriminator value
@@ -40,6 +59,15 @@ export function createCustomerDetailsFromDiscriminatorValue(parseNode: ParseNode
 // @ts-ignore
 export function createCustomerEventHistoryFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
     return deserializeIntoCustomerEventHistory;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {EmailRequest}
+ */
+// @ts-ignore
+export function createEmailRequestFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoEmailRequest;
 }
 /**
  * Creates a new instance of the appropriate class based on discriminator value
@@ -170,6 +198,15 @@ export function createRegisterCustomerRequestFromDiscriminatorValue(parseNode: P
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {ResetPasswordRequest}
+ */
+// @ts-ignore
+export function createResetPasswordRequestFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoResetPasswordRequest;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
  * @returns {UpdateCustomerRequest}
  */
 // @ts-ignore
@@ -196,10 +233,6 @@ export function createValidationProblemDetailsFromDiscriminatorValue(parseNode: 
 }
 export interface CustomerDetails extends Parsable {
     /**
-     * The storeCredit property
-     */
-    storeCredit?: number | null;
-    /**
      * The email property
      */
     email?: string | null;
@@ -215,6 +248,10 @@ export interface CustomerDetails extends Parsable {
      * The shippingAddress property
      */
     shippingAddress?: string | null;
+    /**
+     * The storeCredit property
+     */
+    storeCredit?: number | null;
 }
 export interface CustomerEventHistory extends Parsable {
     /**
@@ -252,17 +289,29 @@ export function deserializeIntoAddQuoteItemRequest(addQuoteItemRequest: Partial<
 }
 /**
  * The deserialization information for the current model
+ * @param ConfirmEmailRequest The instance to deserialize into.
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoConfirmEmailRequest(confirmEmailRequest: Partial<ConfirmEmailRequest> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "token": n => { confirmEmailRequest.token = n.getStringValue(); },
+        "userId": n => { confirmEmailRequest.userId = n.getStringValue(); },
+    }
+}
+/**
+ * The deserialization information for the current model
  * @param CustomerDetails The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
 export function deserializeIntoCustomerDetails(customerDetails: Partial<CustomerDetails> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
-        "storeCredit": n => { customerDetails.storeCredit = n.getNumberValue(); },
         "email": n => { customerDetails.email = n.getStringValue(); },
         "id": n => { customerDetails.id = n.getGuidValue(); },
         "name": n => { customerDetails.name = n.getStringValue(); },
         "shippingAddress": n => { customerDetails.shippingAddress = n.getStringValue(); },
+        "storeCredit": n => { customerDetails.storeCredit = n.getNumberValue(); },
     }
 }
 /**
@@ -278,6 +327,17 @@ export function deserializeIntoCustomerEventHistory(customerEventHistory: Partia
         "eventTypeName": n => { customerEventHistory.eventTypeName = n.getStringValue(); },
         "id": n => { customerEventHistory.id = n.getGuidValue(); },
         "timestamp": n => { customerEventHistory.timestamp = n.getDateValue(); },
+    }
+}
+/**
+ * The deserialization information for the current model
+ * @param EmailRequest The instance to deserialize into.
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoEmailRequest(emailRequest: Partial<EmailRequest> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "email": n => { emailRequest.email = n.getStringValue(); },
     }
 }
 /**
@@ -482,12 +542,26 @@ export function deserializeIntoQuoteViewModel(quoteViewModel: Partial<QuoteViewM
 // @ts-ignore
 export function deserializeIntoRegisterCustomerRequest(registerCustomerRequest: Partial<RegisterCustomerRequest> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
-        "storeCredit": n => { registerCustomerRequest.storeCredit = n.getNumberValue(); },
         "email": n => { registerCustomerRequest.email = n.getStringValue(); },
         "name": n => { registerCustomerRequest.name = n.getStringValue(); },
         "password": n => { registerCustomerRequest.password = n.getStringValue(); },
         "passwordConfirm": n => { registerCustomerRequest.passwordConfirm = n.getStringValue(); },
         "shippingAddress": n => { registerCustomerRequest.shippingAddress = n.getStringValue(); },
+        "storeCredit": n => { registerCustomerRequest.storeCredit = n.getNumberValue(); },
+    }
+}
+/**
+ * The deserialization information for the current model
+ * @param ResetPasswordRequest The instance to deserialize into.
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoResetPasswordRequest(resetPasswordRequest: Partial<ResetPasswordRequest> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "password": n => { resetPasswordRequest.password = n.getStringValue(); },
+        "passwordConfirm": n => { resetPasswordRequest.passwordConfirm = n.getStringValue(); },
+        "token": n => { resetPasswordRequest.token = n.getStringValue(); },
+        "userId": n => { resetPasswordRequest.userId = n.getStringValue(); },
     }
 }
 /**
@@ -498,9 +572,9 @@ export function deserializeIntoRegisterCustomerRequest(registerCustomerRequest: 
 // @ts-ignore
 export function deserializeIntoUpdateCustomerRequest(updateCustomerRequest: Partial<UpdateCustomerRequest> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
-        "storeCredit": n => { updateCustomerRequest.storeCredit = n.getNumberValue(); },
         "name": n => { updateCustomerRequest.name = n.getStringValue(); },
         "shippingAddress": n => { updateCustomerRequest.shippingAddress = n.getStringValue(); },
+        "storeCredit": n => { updateCustomerRequest.storeCredit = n.getNumberValue(); },
     }
 }
 /**
@@ -528,6 +602,12 @@ export function deserializeIntoValidationProblemDetails(validationProblemDetails
 export function deserializeIntoValidationProblemDetails_errors(validationProblemDetails_errors: Partial<ValidationProblemDetails_errors> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
     }
+}
+export interface EmailRequest extends Parsable {
+    /**
+     * The email property
+     */
+    email?: string | null;
 }
 export interface GetProductsRequest extends Parsable {
     /**
@@ -813,10 +893,6 @@ export interface QuoteViewModel extends Parsable {
 }
 export interface RegisterCustomerRequest extends Parsable {
     /**
-     * The storeCredit property
-     */
-    storeCredit?: number | null;
-    /**
      * The email property
      */
     email?: string | null;
@@ -836,6 +912,28 @@ export interface RegisterCustomerRequest extends Parsable {
      * The shippingAddress property
      */
     shippingAddress?: string | null;
+    /**
+     * The storeCredit property
+     */
+    storeCredit?: number | null;
+}
+export interface ResetPasswordRequest extends Parsable {
+    /**
+     * The password property
+     */
+    password?: string | null;
+    /**
+     * The passwordConfirm property
+     */
+    passwordConfirm?: string | null;
+    /**
+     * The token property
+     */
+    token?: string | null;
+    /**
+     * The userId property
+     */
+    userId?: string | null;
 }
 /**
  * Serializes information the current object
@@ -851,6 +949,18 @@ export function serializeAddQuoteItemRequest(writer: SerializationWriter, addQuo
 }
 /**
  * Serializes information the current object
+ * @param ConfirmEmailRequest The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeConfirmEmailRequest(writer: SerializationWriter, confirmEmailRequest: Partial<ConfirmEmailRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!confirmEmailRequest || isSerializingDerivedType) { return; }
+    writer.writeStringValue("token", confirmEmailRequest.token);
+    writer.writeStringValue("userId", confirmEmailRequest.userId);
+}
+/**
+ * Serializes information the current object
  * @param CustomerDetails The instance to serialize from.
  * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
  * @param writer Serialization writer to use to serialize this model
@@ -858,11 +968,11 @@ export function serializeAddQuoteItemRequest(writer: SerializationWriter, addQuo
 // @ts-ignore
 export function serializeCustomerDetails(writer: SerializationWriter, customerDetails: Partial<CustomerDetails> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
     if (!customerDetails || isSerializingDerivedType) { return; }
-    writer.writeNumberValue("storeCredit", customerDetails.storeCredit);
     writer.writeStringValue("email", customerDetails.email);
     writer.writeGuidValue("id", customerDetails.id);
     writer.writeStringValue("name", customerDetails.name);
     writer.writeStringValue("shippingAddress", customerDetails.shippingAddress);
+    writer.writeNumberValue("storeCredit", customerDetails.storeCredit);
 }
 /**
  * Serializes information the current object
@@ -878,6 +988,17 @@ export function serializeCustomerEventHistory(writer: SerializationWriter, custo
     writer.writeStringValue("eventTypeName", customerEventHistory.eventTypeName);
     writer.writeGuidValue("id", customerEventHistory.id);
     writer.writeDateValue("timestamp", customerEventHistory.timestamp);
+}
+/**
+ * Serializes information the current object
+ * @param EmailRequest The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeEmailRequest(writer: SerializationWriter, emailRequest: Partial<EmailRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!emailRequest || isSerializingDerivedType) { return; }
+    writer.writeStringValue("email", emailRequest.email);
 }
 /**
  * Serializes information the current object
@@ -1082,12 +1203,26 @@ export function serializeQuoteViewModel(writer: SerializationWriter, quoteViewMo
 // @ts-ignore
 export function serializeRegisterCustomerRequest(writer: SerializationWriter, registerCustomerRequest: Partial<RegisterCustomerRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
     if (!registerCustomerRequest || isSerializingDerivedType) { return; }
-    writer.writeNumberValue("storeCredit", registerCustomerRequest.storeCredit);
     writer.writeStringValue("email", registerCustomerRequest.email);
     writer.writeStringValue("name", registerCustomerRequest.name);
     writer.writeStringValue("password", registerCustomerRequest.password);
     writer.writeStringValue("passwordConfirm", registerCustomerRequest.passwordConfirm);
     writer.writeStringValue("shippingAddress", registerCustomerRequest.shippingAddress);
+    writer.writeNumberValue("storeCredit", registerCustomerRequest.storeCredit);
+}
+/**
+ * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param ResetPasswordRequest The instance to serialize from.
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeResetPasswordRequest(writer: SerializationWriter, resetPasswordRequest: Partial<ResetPasswordRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!resetPasswordRequest || isSerializingDerivedType) { return; }
+    writer.writeStringValue("password", resetPasswordRequest.password);
+    writer.writeStringValue("passwordConfirm", resetPasswordRequest.passwordConfirm);
+    writer.writeStringValue("token", resetPasswordRequest.token);
+    writer.writeStringValue("userId", resetPasswordRequest.userId);
 }
 /**
  * Serializes information the current object
@@ -1098,9 +1233,9 @@ export function serializeRegisterCustomerRequest(writer: SerializationWriter, re
 // @ts-ignore
 export function serializeUpdateCustomerRequest(writer: SerializationWriter, updateCustomerRequest: Partial<UpdateCustomerRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
     if (!updateCustomerRequest || isSerializingDerivedType) { return; }
-    writer.writeNumberValue("storeCredit", updateCustomerRequest.storeCredit);
     writer.writeStringValue("name", updateCustomerRequest.name);
     writer.writeStringValue("shippingAddress", updateCustomerRequest.shippingAddress);
+    writer.writeNumberValue("storeCredit", updateCustomerRequest.storeCredit);
 }
 /**
  * Serializes information the current object
@@ -1132,10 +1267,6 @@ export function serializeValidationProblemDetails_errors(writer: SerializationWr
 }
 export interface UpdateCustomerRequest extends Parsable {
     /**
-     * The storeCredit property
-     */
-    storeCredit?: number | null;
-    /**
      * The name property
      */
     name?: string | null;
@@ -1143,6 +1274,10 @@ export interface UpdateCustomerRequest extends Parsable {
      * The shippingAddress property
      */
     shippingAddress?: string | null;
+    /**
+     * The storeCredit property
+     */
+    storeCredit?: number | null;
 }
 export interface ValidationProblemDetails extends AdditionalDataHolder, ApiError, Parsable {
     /**
