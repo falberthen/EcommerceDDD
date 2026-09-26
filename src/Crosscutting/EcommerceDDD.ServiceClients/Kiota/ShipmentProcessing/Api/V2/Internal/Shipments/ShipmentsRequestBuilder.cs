@@ -39,6 +39,7 @@ namespace EcommerceDDD.ServiceClients.ShipmentProcessing.Api.V2.Internal.Shipmen
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::EcommerceDDD.ServiceClients.ShipmentProcessing.Models.ProblemDetails">When receiving a 400 status code</exception>
         /// <exception cref="global::EcommerceDDD.ServiceClients.ShipmentProcessing.Models.ProblemDetails">When receiving a 401 status code</exception>
+        /// <exception cref="global::EcommerceDDD.ServiceClients.ShipmentProcessing.Models.ProblemDetails">When receiving a 403 status code</exception>
         /// <exception cref="global::EcommerceDDD.ServiceClients.ShipmentProcessing.Models.ProblemDetails">When receiving a 404 status code</exception>
         /// <exception cref="global::EcommerceDDD.ServiceClients.ShipmentProcessing.Models.ValidationProblemDetails">When receiving a 422 status code</exception>
         /// <exception cref="global::EcommerceDDD.ServiceClients.ShipmentProcessing.Models.ProblemDetails">When receiving a 500 status code</exception>
@@ -57,6 +58,7 @@ namespace EcommerceDDD.ServiceClients.ShipmentProcessing.Api.V2.Internal.Shipmen
             {
                 { "400", global::EcommerceDDD.ServiceClients.ShipmentProcessing.Models.ProblemDetails.CreateFromDiscriminatorValue },
                 { "401", global::EcommerceDDD.ServiceClients.ShipmentProcessing.Models.ProblemDetails.CreateFromDiscriminatorValue },
+                { "403", global::EcommerceDDD.ServiceClients.ShipmentProcessing.Models.ProblemDetails.CreateFromDiscriminatorValue },
                 { "404", global::EcommerceDDD.ServiceClients.ShipmentProcessing.Models.ProblemDetails.CreateFromDiscriminatorValue },
                 { "422", global::EcommerceDDD.ServiceClients.ShipmentProcessing.Models.ValidationProblemDetails.CreateFromDiscriminatorValue },
                 { "500", global::EcommerceDDD.ServiceClients.ShipmentProcessing.Models.ProblemDetails.CreateFromDiscriminatorValue },

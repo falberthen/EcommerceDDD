@@ -12,6 +12,18 @@ export const routes: Routes = [
     loadComponent: () => import('@features/authentication/customer-account/customer-account.component').then(m => m.CustomerAccountComponent),
   },
   {
+    path: 'confirm-email',
+    loadComponent: () => import('@features/authentication/confirm-email/confirm-email.component').then(m => m.ConfirmEmailComponent),
+  },
+  {
+    path: 'forgot-password',
+    loadComponent: () => import('@features/authentication/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent),
+  },
+  {
+    path: 'reset-password',
+    loadComponent: () => import('@features/authentication/reset-password/reset-password.component').then(m => m.ResetPasswordComponent),
+  },
+  {
     path: 'home',
     loadComponent: () => import('@features/ecommerce/home/home.component').then(m => m.HomeComponent),
     canActivate: [authGuard],

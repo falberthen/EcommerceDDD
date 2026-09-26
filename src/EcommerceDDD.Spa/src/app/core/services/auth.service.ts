@@ -11,6 +11,8 @@ import {
 import { AuthApiService } from './api/auth-api.service';
 import { CustomerDetails, LoginResult } from 'src/app/clients/models';
 
+export type LoginOutcome = 'loggedIn' | 'emailNotConfirmed' | 'failed';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -53,7 +55,7 @@ export class AuthService {
     return null;
   }
 
-  async login(email: string, password: string): Promise<boolean> {
+  async login(email: string, password: string): Promise<LoginOutcome> {
     let isLogged = false;
     try {
       const result: LoginResult | undefined =
@@ -66,13 +68,17 @@ export class AuthService {
           email
         );
         this.isLogged.next(isLogged);
-        return isLogged;
+        return 'loggedIn';
       }
     } catch (error) {
       this.authApiService.handleError(error);
+      // 403 on login means right credentials, unconfirmed e-mail
+      if ((error as { responseStatusCode?: number })?.responseStatusCode === 403) {
+        return 'emailNotConfirmed';
+      }
     }
 
-    return isLogged;
+    return 'failed';
   }
 
   logout() {

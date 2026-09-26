@@ -57,6 +57,7 @@ namespace EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Customers
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::EcommerceDDD.ServiceClients.CustomerManagement.Models.ProblemDetails">When receiving a 400 status code</exception>
         /// <exception cref="global::EcommerceDDD.ServiceClients.CustomerManagement.Models.ProblemDetails">When receiving a 401 status code</exception>
+        /// <exception cref="global::EcommerceDDD.ServiceClients.CustomerManagement.Models.ProblemDetails">When receiving a 403 status code</exception>
         /// <exception cref="global::EcommerceDDD.ServiceClients.CustomerManagement.Models.ProblemDetails">When receiving a 404 status code</exception>
         /// <exception cref="global::EcommerceDDD.ServiceClients.CustomerManagement.Models.ValidationProblemDetails">When receiving a 422 status code</exception>
         /// <exception cref="global::EcommerceDDD.ServiceClients.CustomerManagement.Models.ProblemDetails">When receiving a 500 status code</exception>
@@ -75,6 +76,7 @@ namespace EcommerceDDD.ServiceClients.CustomerManagement.Api.V2.Customers
             {
                 { "400", global::EcommerceDDD.ServiceClients.CustomerManagement.Models.ProblemDetails.CreateFromDiscriminatorValue },
                 { "401", global::EcommerceDDD.ServiceClients.CustomerManagement.Models.ProblemDetails.CreateFromDiscriminatorValue },
+                { "403", global::EcommerceDDD.ServiceClients.CustomerManagement.Models.ProblemDetails.CreateFromDiscriminatorValue },
                 { "404", global::EcommerceDDD.ServiceClients.CustomerManagement.Models.ProblemDetails.CreateFromDiscriminatorValue },
                 { "422", global::EcommerceDDD.ServiceClients.CustomerManagement.Models.ValidationProblemDetails.CreateFromDiscriminatorValue },
                 { "500", global::EcommerceDDD.ServiceClients.CustomerManagement.Models.ProblemDetails.CreateFromDiscriminatorValue },

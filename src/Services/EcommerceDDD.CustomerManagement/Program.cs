@@ -14,7 +14,7 @@ services.AddHealthChecks();
 services.AddIdentityServiceClient(builder.Configuration);
 
 // Services
-services.AddScoped<IEmailUniquenessChecker, EmailUniquenessChecker>();
+services.AddScoped<ICustomerEmailLookup, CustomerEmailLookup>();
 services.AddScoped<IEventStoreRepository<Customer>, MartenRepository<Customer>>();
 services.AddMarten(builder.Configuration,
 	options => options.ConfigureProjections());

@@ -3,4 +3,5 @@ export const environment = {
   gatewayBaseUrl: 'http://localhost:5000',
   signalrOrdersHubUrl: 'http://localhost:5000/api/v2/signalr',
   aspireDashboardUrl: 'http://localhost:18888',
+  mailpitUrl: 'http://localhost:8025',
 };

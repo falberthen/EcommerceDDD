@@ -9,6 +9,7 @@
 # Kiota-generated clients are produced with LF inside a Linux container; force LF
 # on checkout too so regen never shows phantom CRLF/LF churn on Windows.
 src/Crosscutting/EcommerceDDD.ServiceClients/Kiota/** text eol=lf
+src/EcommerceDDD.Spa/src/app/clients/** text eol=lf
 
 ###############################################################################
 # Set default behavior for command prompt diff.
