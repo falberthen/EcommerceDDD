@@ -50,6 +50,7 @@ namespace EcommerceDDD.ServiceClients.QuoteManagement.Api.V2.Quotes.Item
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::EcommerceDDD.ServiceClients.QuoteManagement.Models.ProblemDetails">When receiving a 400 status code</exception>
         /// <exception cref="global::EcommerceDDD.ServiceClients.QuoteManagement.Models.ProblemDetails">When receiving a 401 status code</exception>
+        /// <exception cref="global::EcommerceDDD.ServiceClients.QuoteManagement.Models.ProblemDetails">When receiving a 403 status code</exception>
         /// <exception cref="global::EcommerceDDD.ServiceClients.QuoteManagement.Models.ProblemDetails">When receiving a 404 status code</exception>
         /// <exception cref="global::EcommerceDDD.ServiceClients.QuoteManagement.Models.ValidationProblemDetails">When receiving a 422 status code</exception>
         /// <exception cref="global::EcommerceDDD.ServiceClients.QuoteManagement.Models.ProblemDetails">When receiving a 500 status code</exception>
@@ -67,6 +68,7 @@ namespace EcommerceDDD.ServiceClients.QuoteManagement.Api.V2.Quotes.Item
             {
                 { "400", global::EcommerceDDD.ServiceClients.QuoteManagement.Models.ProblemDetails.CreateFromDiscriminatorValue },
                 { "401", global::EcommerceDDD.ServiceClients.QuoteManagement.Models.ProblemDetails.CreateFromDiscriminatorValue },
+                { "403", global::EcommerceDDD.ServiceClients.QuoteManagement.Models.ProblemDetails.CreateFromDiscriminatorValue },
                 { "404", global::EcommerceDDD.ServiceClients.QuoteManagement.Models.ProblemDetails.CreateFromDiscriminatorValue },
                 { "422", global::EcommerceDDD.ServiceClients.QuoteManagement.Models.ValidationProblemDetails.CreateFromDiscriminatorValue },
                 { "500", global::EcommerceDDD.ServiceClients.QuoteManagement.Models.ProblemDetails.CreateFromDiscriminatorValue },
