@@ -30,13 +30,16 @@ public record class RegisterCustomer : ICommand
 		if (storeCredit <= 0)
 			throw new ArgumentOutOfRangeException(nameof(storeCredit));
 
-		return new RegisterCustomer(email,
+		// Lower-cased so the lookup that finds unfinished registrations matches regardless of casing.
+		return new RegisterCustomer(email.Trim().ToLowerInvariant(),
 			password,
 			passwordConfirm,
 			name,
 			shippingAddress,
 			storeCredit);
 	}
+	
+	public override string ToString() => $"{nameof(RegisterCustomer)} {{ Email = {Email} }}";
 
 	private RegisterCustomer(
 		string email,
