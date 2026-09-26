@@ -57,9 +57,14 @@ public class IdentityManager(
 
 		var existing = await _userManager.FindByIdAsync(userId);
 		if (existing is not null)
-			return await IsSameRegistration(existing, request)
-				? UserRegistration.Registered(existing.Id)
-				: UserRegistration.EmailTaken();
+		{
+			if (!await IsSameRegistration(existing, request))
+				return UserRegistration.EmailTaken();
+
+			// Someone registering again most likely never found the first e-mail.
+			await TrySendConfirmationLinkAsync(existing);
+			return UserRegistration.Registered(existing.Id);
+		}
 
 		if (await _userManager.FindByEmailAsync(request.Email) is not null)
 			return UserRegistration.EmailTaken();
