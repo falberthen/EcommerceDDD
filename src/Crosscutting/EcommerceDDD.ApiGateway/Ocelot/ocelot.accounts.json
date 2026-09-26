@@ -18,6 +18,82 @@
         "MinimumThroughput": 3,
         "BreakDuration": 10000
       }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v{version}/accounts/confirm-email",
+      "UpstreamPathTemplate": "/api/v{version}/accounts/confirm-email",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-identityserver",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "QoSOptions": {
+        "Timeout": 3000,
+        "MinimumThroughput": 3,
+        "BreakDuration": 10000
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v{version}/accounts/resend-confirmation",
+      "UpstreamPathTemplate": "/api/v{version}/accounts/resend-confirmation",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-identityserver",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "QoSOptions": {
+        "Timeout": 3000,
+        "MinimumThroughput": 3,
+        "BreakDuration": 10000
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v{version}/accounts/forgot-password",
+      "UpstreamPathTemplate": "/api/v{version}/accounts/forgot-password",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-identityserver",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "QoSOptions": {
+        "Timeout": 3000,
+        "MinimumThroughput": 3,
+        "BreakDuration": 10000
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v{version}/accounts/reset-password",
+      "UpstreamPathTemplate": "/api/v{version}/accounts/reset-password",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ecommerceddd-identityserver",
+          "Port": 80
+        }
+      ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "QoSOptions": {
+        "Timeout": 3000,
+        "MinimumThroughput": 3,
+        "BreakDuration": 10000
+      }
     }
   ]
 }
