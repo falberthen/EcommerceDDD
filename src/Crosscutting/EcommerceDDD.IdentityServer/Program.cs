@@ -18,6 +18,8 @@ services.Configure<TokenIssuerSettings>(tokenIssuerSettings);
 services.AddScoped<IdentityApplicationDbContext>();
 services.AddScoped<ITokenRequester, TokenRequester>();
 services.AddScoped<IIdentityManager, IdentityManager>();
+services.Configure<EmailSettings>(builder.Configuration.GetSection(EmailSettings.SectionName));
+services.AddTransient<IEmailSender<ApplicationUser>, SmtpEmailSender>();
 services.AddTransient<IProfileService, CustomProfileService>();
 
 // ---- AspNet.Core.Identity settings
@@ -31,7 +33,11 @@ services.AddDbContext<IdentityApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
 
 // Authorization and Identity
-services.AddIdentity<ApplicationUser, IdentityRole>()
+services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+    {
+        options.User.RequireUniqueEmail = true;
+        options.SignIn.RequireConfirmedEmail = true;
+    })
     .AddEntityFrameworkStores<IdentityApplicationDbContext>()
     .AddDefaultTokenProviders();
 
@@ -79,4 +85,5 @@ app.UseAuthorization();
 app.MapControllers();
 app.UseHealthChecks();
 
-await app.MigrateDatabase().RunAsync();
+await app.MigrateDatabaseAsync();
+await app.RunAsync();
