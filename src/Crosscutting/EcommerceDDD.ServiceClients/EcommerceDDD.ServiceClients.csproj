@@ -13,7 +13,6 @@
     <PackageReference Include="Microsoft.Kiota.Serialization.Multipart" />
     <PackageReference Include="Microsoft.Kiota.Serialization.Text" />
     <PackageReference Include="Microsoft.Kiota.Http.HttpClientLibrary" />
-    <PackageReference Include="Microsoft.Extensions.Http.Polly" />
     <PackageReference Include="WolverineFx" />
   </ItemGroup>
 

@@ -124,7 +124,6 @@ Microservices communicate directly using **Kiota-generated typed HTTP clients**.
 | Npgsql (PostgreSQL) | 10.0.3 |
 | Duende IdentityServer | 8.0.6 |
 | ASP.NET Data Protection | 10.0.11 |
-| Polly | 8.7.0 |
 | Microsoft Kiota | 2.0.0 |
 | OpenTelemetry | 1.18.0 |
 | xUnit | 2.9.3 |
