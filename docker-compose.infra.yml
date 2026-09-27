@@ -89,11 +89,11 @@ services:
     restart: on-failure
 
   aspire-dashboard:
-    image: mcr.microsoft.com/dotnet/aspire-dashboard:9.1
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:13.5
     ports:
       - '18888:18888'
     environment:
-      DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS: 'true'
+      ASPIRE_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS: 'true'
     restart: on-failure
 
 networks:
