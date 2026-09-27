@@ -4,10 +4,10 @@ public class DummyEventStoreRepository<TA> : IEventStoreRepository<TA>
     where TA : class, IAggregateRoot<StronglyTypedId<Guid>>
 {
     public List<StreamAction> AggregateStream = new();
-    public List<INotification> PublishedIntegrationEvents = new();
+    public List<INotification> PublishedMessages = new();
 
     public async Task<long> AppendEventsAndCommitAsync(TA aggregate, CancellationToken cancellationToken = default,
-        params INotification[] integrationEvents)
+        params INotification[] messages)
     {
         var nextVersion = aggregate.Version + 1;
         AggregateStream.Add(new StreamAction(
@@ -16,7 +16,7 @@ public class DummyEventStoreRepository<TA> : IEventStoreRepository<TA>
             aggregate.GetUncommittedEvents())
         );
 
-        PublishedIntegrationEvents.AddRange(integrationEvents);
+        PublishedMessages.AddRange(messages);
 
         return await Task.FromResult(nextVersion);
     }
