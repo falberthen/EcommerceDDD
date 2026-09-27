@@ -4,4 +4,8 @@ public record class DecreaseQuantityInStockRequest
 {    
     [Range(0, int.MaxValue, ErrorMessage = "The value must be greater than 0")]
     public int DecreasedQuantity { get; init; }
+
+    /// <summary>The order taking the stock. Repeated calls for the same order are ignored.</summary>
+    [Required]
+    public Guid OrderId { get; init; }
 }

@@ -23,7 +23,7 @@ public class DecreaseStockQuantityHandler(
 		if (inventoryStockUnit is null)
 			return Result.Fail($"The inventory stock unit {inventoryStockUnitId} was not found.");
 
-		inventoryStockUnit.DecreaseStockQuantity(command.QuantityDecreased);
+		inventoryStockUnit.DecreaseStockQuantity(command.QuantityDecreased, command.OrderId);
 
 		await _inventoryStockUnitWriteRepository
 			.AppendEventsAndCommitAsync(inventoryStockUnit);
