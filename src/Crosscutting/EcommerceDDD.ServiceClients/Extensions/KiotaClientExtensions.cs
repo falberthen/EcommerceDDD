@@ -13,7 +13,7 @@ public static class KiotaClientExtensions
 	/// <returns></returns>
 	/// <exception cref="ArgumentNullException"></exception>
 	/// <exception cref="InvalidOperationException"></exception>
-	public static IServiceCollection AddKiotaClient<TClient>(this IServiceCollection services, string? baseUrl)
+	public static IServiceCollection AddKiotaClient<TClient>(this IServiceCollection services, string? baseUrl, TimeSpan? timeout = null)
 		where TClient : class
 	{
 		if (string.IsNullOrEmpty(baseUrl))
@@ -22,7 +22,7 @@ public static class KiotaClientExtensions
 		services.AddHttpClient<TClient>((serviceProvider, client) =>
 		{
 			client.BaseAddress = new Uri(baseUrl);
-			client.Timeout = _defaultTimeout;
+			client.Timeout = timeout ?? _defaultTimeout;
 		})
 		.AddTypedClient<TClient>((httpClient, serviceProvider) =>
 		{
@@ -95,7 +95,8 @@ public static class KiotaClientExtensions
 
 	public static IServiceCollection AddOrderNotificationServiceClient(this IServiceCollection services, string? baseUrl)
 	{
-		services.AddKiotaClient<SignalRClient>(baseUrl);
+		// Pushes run inline in request handlers: fail fast so a dead hub can't outlast the gateway's 3s budget.
+		services.AddKiotaClient<SignalRClient>(baseUrl, TimeSpan.FromSeconds(1));
 		services.AddScoped<IOrderNotificationService, OrderNotificationService>();
 		return services;
 	}
