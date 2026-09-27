@@ -18,10 +18,17 @@ public static class MartenConfigExtension
 
         if (string.IsNullOrEmpty(martenConfig?.WriteSchema))
             throw new ArgumentNullException("EventStore writeSchema is missing");
+        
+		// Filtering out non-essential sql traces to keep the dashboard cleaner.
+        var dataSource = new NpgsqlDataSourceBuilder(connectionString)
+            .ConfigureTracing(tracing => tracing
+                .ConfigureCommandFilter(_ => Activity.Current is not null)
+                .ConfigureBatchFilter(_ => Activity.Current is not null))
+            .Build();
 
         var martenConfiguration = services.AddMarten(options =>
         {
-            options.Connection(connectionString);
+            options.Connection(dataSource);
             options.AutoCreateSchemaObjects = AutoCreate.All;
 			options.Events.DatabaseSchemaName = martenConfig.WriteSchema;
 

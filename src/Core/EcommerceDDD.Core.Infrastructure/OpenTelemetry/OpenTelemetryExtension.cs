@@ -10,8 +10,9 @@ public static class OpenTelemetryExtension
         services.AddOpenTelemetry()
             .ConfigureResource(resource => resource
                 .AddService(serviceName, serviceVersion: serviceVersion))
-            .WithTracing(tracing => tracing
-                .AddAspNetCoreInstrumentation()
+            .WithTracing(tracing => tracing                
+                .AddAspNetCoreInstrumentation(options =>
+                    options.Filter = context => !context.Request.Path.StartsWithSegments("/health"))
                 .AddHttpClientInstrumentation()
                 .AddNpgsql()
                 .AddSource(ActivitySources.Wolverine)
