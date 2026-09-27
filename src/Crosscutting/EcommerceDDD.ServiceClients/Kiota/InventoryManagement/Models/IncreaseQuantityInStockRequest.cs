@@ -14,6 +14,8 @@ namespace EcommerceDDD.ServiceClients.InventoryManagement.Models
     {
         /// <summary>The increasedQuantity property</summary>
         public int? IncreasedQuantity { get; set; }
+        /// <summary>The orderId property</summary>
+        public Guid? OrderId { get; set; }
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
@@ -33,6 +35,7 @@ namespace EcommerceDDD.ServiceClients.InventoryManagement.Models
             return new Dictionary<string, Action<IParseNode>>
             {
                 { "increasedQuantity", n => { IncreasedQuantity = n.GetIntValue(); } },
+                { "orderId", n => { OrderId = n.GetGuidValue(); } },
             };
         }
         /// <summary>
@@ -43,6 +46,7 @@ namespace EcommerceDDD.ServiceClients.InventoryManagement.Models
         {
             if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
             writer.WriteIntValue("increasedQuantity", IncreasedQuantity);
+            writer.WriteGuidValue("orderId", OrderId);
         }
     }
 }

@@ -1,10 +1,8 @@
-using EcommerceDDD.ServiceClients.InventoryManagement.Models;
-
 namespace EcommerceDDD.ServiceClients.Services.Inventory;
 
 public interface IInventoryService
 {
-    Task<List<InventoryStockUnitViewModel>?> CheckStockQuantityAsync(List<Guid?> productIds, CancellationToken cancellationToken);
-    Task DecreaseStockQuantityAsync(Guid productId, int quantity, CancellationToken cancellationToken);
-    Task IncreaseStockQuantityAsync(Guid productId, int quantity, CancellationToken cancellationToken);
+	Task<List<InventoryStockUnitViewModel>?> CheckStockQuantityAsync(List<Guid?> productIds, CancellationToken cancellationToken);
+	Task<bool> DecreaseStockQuantityAsync(Guid productId, int quantity, Guid orderId, CancellationToken cancellationToken);
+	Task IncreaseStockQuantityAsync(Guid productId, int quantity, Guid orderId, CancellationToken cancellationToken);
 }
