@@ -3,8 +3,7 @@ namespace EcommerceDDD.OrderProcessing.Application.Orders.ConfirmingDelivery;
 public class ConfirmDeliveryHandler(
 	IOrderNotificationService orderNotificationService,
 	IEventStoreRepository<Order> orderWriteRepository,
-	IUserInfoRequester userInfoRequester,
-	IMessageBus messageBus
+	IUserInfoRequester userInfoRequester
 )
 {
 	private readonly IOrderNotificationService _orderNotificationService = orderNotificationService
@@ -13,8 +12,6 @@ public class ConfirmDeliveryHandler(
 		?? throw new ArgumentNullException(nameof(orderWriteRepository));
 	private readonly IUserInfoRequester _userInfoRequester = userInfoRequester
 		?? throw new ArgumentNullException(nameof(userInfoRequester));
-	private readonly IMessageBus _messageBus = messageBus
-		?? throw new ArgumentNullException(nameof(messageBus));
 
 	public async Task<Result> HandleAsync(ConfirmDelivery command, CancellationToken cancellationToken)
 	{
@@ -38,25 +35,16 @@ public class ConfirmDeliveryHandler(
 			.OfType<OrderDelivered>()
 			.FirstOrDefault();
 
+		// Committed with the order, so the saga is guaranteed to end.
 		await _orderWriteRepository
-			.AppendEventsAndCommitAsync(order, cancellationToken: cancellationToken);
+			.AppendEventsAndCommitAsync(order, cancellationToken, orderDeliveredEvent!);
 
-		// Lets the saga know the order reached its end
-		await _messageBus.PublishAsync(orderDeliveredEvent!);
-
-		try
-		{
-			await _orderNotificationService.UpdateOrderStatusAsync(
-				order.CustomerId.Value,
-				order.Id.Value,
-				order.Status.ToString(),
-				(int)order.Status,
-				cancellationToken);
-		}
-		catch (Exception)
-		{
-			return Result.Fail($"An error occurred when updating status for order {order.Id.Value}.");
-		}
+		await _orderNotificationService.UpdateOrderStatusAsync(
+			order.CustomerId.Value,
+			order.Id.Value,
+			order.Status.ToString(),
+			(int)order.Status,
+			cancellationToken);
 
 		return Result.Ok();
 	}

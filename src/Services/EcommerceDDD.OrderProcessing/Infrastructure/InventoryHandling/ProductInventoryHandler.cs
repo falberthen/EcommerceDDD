@@ -43,29 +43,26 @@ public class ProductInventoryHandler(
 		return true;
 	}
 
-	public async Task DecreaseQuantityInStockAsync(IReadOnlyList<ProductItemData> items, CancellationToken cancellationToken)
+	public async Task<bool> DecreaseQuantityInStockAsync(IReadOnlyList<ProductItemData> items, OrderId orderId, CancellationToken cancellationToken)
 	{
-		var tasks = items.Select(item =>
-			_inventoryService.DecreaseStockQuantityAsync(item.ProductId.Value, item.Quantity, cancellationToken));
+		var decreased = await Task.WhenAll(items.Select(item =>
+			_inventoryService.DecreaseStockQuantityAsync(item.ProductId.Value, item.Quantity, orderId.Value, cancellationToken)));
 
-		await Task.WhenAll(tasks);
+		if (decreased.Contains(false))
+		{
+			_logger.LogWarning("Stock ran out while decrementing it for order {OrderId}.", orderId.Value);
+			return false;
+		}
 
-		foreach (var item in items)
-			_logger.LogInformation(
-				"Stock decremented for product {ProductId} by {Quantity}.",
-				item.ProductId.Value, item.Quantity);
+		_logger.LogInformation("Stock decremented for order {OrderId}.", orderId.Value);
+		return true;
 	}
 
-	public async Task IncreaseQuantityInStockAsync(IReadOnlyList<ProductItemData> items, CancellationToken cancellationToken)
+	public async Task IncreaseQuantityInStockAsync(IReadOnlyList<ProductItemData> items, OrderId orderId, CancellationToken cancellationToken)
 	{
-		var tasks = items.Select(item =>
-			_inventoryService.IncreaseStockQuantityAsync(item.ProductId.Value, item.Quantity, cancellationToken));
+		await Task.WhenAll(items.Select(item =>
+			_inventoryService.IncreaseStockQuantityAsync(item.ProductId.Value, item.Quantity, orderId.Value, cancellationToken)));
 
-		await Task.WhenAll(tasks);
-
-		foreach (var item in items)
-			_logger.LogInformation(
-				"Stock restored for product {ProductId} by {Quantity}.",
-				item.ProductId.Value, item.Quantity);
+		_logger.LogInformation("Stock restored for order {OrderId}, where it had been taken.", orderId.Value);
 	}
 }
