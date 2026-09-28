@@ -18,7 +18,7 @@ public class UpdateCustomerInformationHandler(
 			.FetchForWritingAsync(response!.CustomerId, cancellationToken: cancellationToken);
 
 		if (customer is null)
-			return Result.Fail($"Customer {response!.CustomerId} not found.");
+			return Result.Fail(new RecordNotFoundError($"Customer {response!.CustomerId} not found."));
 
 		var customerData = new CustomerData(
             customer.Email,
