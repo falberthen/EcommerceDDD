@@ -14,7 +14,7 @@ public class DecreaseStockQuantityHandler(
 			x => x.ProductId == command.ProductId.Value, cancellationToken);
 
 		if (query is null)
-			return Result.Fail($"The product {command.ProductId.Value} was not found in the inventory.");
+			return Result.Fail(new RecordNotFoundError($"The product {command.ProductId.Value} was not found in the inventory."));
 
 		Guid inventoryStockUnitId = query.Id;
 		var inventoryStockUnit = await _inventoryStockUnitWriteRepository

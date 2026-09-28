@@ -17,7 +17,7 @@ public class AddQuoteItemHandler(
 			.FetchForWritingAsync(command.QuoteId.Value, cancellationToken: cancellationToken);
 
         if (quote is null)
-            return Result.Fail($"The quote {command.QuoteId.Value} was not found.");
+            return Result.Fail(new RecordNotFoundError($"The quote {command.QuoteId.Value} was not found."));
 
 		var ownershipResult = _userInfoRequester
 			.EnsureCurrentCustomerOwns(quote.CustomerId.Value);
@@ -33,7 +33,7 @@ public class AddQuoteItemHandler(
 
         var product = productDataResult.Value!.FirstOrDefault();
         if (product is null)
-            return Result.Fail($"Product {command.ProductId} is invalid.");
+            return Result.Fail(new ValidationError($"Product {command.ProductId} is invalid."));
 
 		decimal productPrice = Convert.ToDecimal(product.Price!.Value);
 		var quotetemData = new QuoteItemData(

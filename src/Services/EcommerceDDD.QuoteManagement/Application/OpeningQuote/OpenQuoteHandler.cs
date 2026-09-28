@@ -21,7 +21,7 @@ public class OpenQuoteHandler(
 			.CheckCustomerOpenQuoteAsync(customerId, cancellationToken);
 
 		if (openQuote is not null)
-            return Result.Fail($"The customer {customerId} has quote {openQuote.Id} open already.");
+            return Result.Fail(new ValidationError($"The customer {customerId} has quote {openQuote.Id} open already."));
 
         var quote = Quote.OpenQuoteForCustomer(customerId, command.Currency);
 

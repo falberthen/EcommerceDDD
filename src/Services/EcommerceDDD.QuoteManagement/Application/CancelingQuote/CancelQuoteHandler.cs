@@ -15,7 +15,7 @@ public class CancelQuoteHandler(
 			.FetchForWritingAsync(command.QuoteId.Value, cancellationToken: cancellationToken);
 
         if (quote is null)
-            return Result.Fail($"The quote {command.QuoteId.Value} was not found.");
+            return Result.Fail(new RecordNotFoundError($"The quote {command.QuoteId.Value} was not found."));
 
 		var ownershipResult = _userInfoRequester
 			.EnsureCurrentCustomerOwns(quote.CustomerId.Value);

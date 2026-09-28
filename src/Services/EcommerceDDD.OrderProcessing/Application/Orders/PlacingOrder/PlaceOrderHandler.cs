@@ -31,7 +31,7 @@ public class PlaceOrderHandler(
 			return ownershipResult;
 
 		if (!quote.Items!.Any())
-			return Result.Fail("No quote items found for customer.");
+			return Result.Fail(new ValidationError("No quote items found for customer."));
 
 		var confirmResult = await ConfirmQuoteAsync(quote.QuoteId!.Value, cancellationToken);
 		if (confirmResult.IsFailed)

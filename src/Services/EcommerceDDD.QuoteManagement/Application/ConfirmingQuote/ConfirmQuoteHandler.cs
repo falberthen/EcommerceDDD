@@ -12,7 +12,7 @@ public class ConfirmQuoteHandler(
 			.FetchForWritingAsync(command.QuoteId.Value, cancellationToken: cancellationToken);
 
         if (quote is null)
-            return Result.Fail($"The quote {command.QuoteId} not found.");
+            return Result.Fail(new RecordNotFoundError($"The quote {command.QuoteId} not found."));
 
         quote.Confirm();
 

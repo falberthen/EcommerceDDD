@@ -29,3 +29,4 @@ global using System.ComponentModel.DataAnnotations;
 global using Wolverine;
 global using Wolverine.Attributes;
 global using Wolverine.Kafka;
+global using EcommerceDDD.Core.Validation;

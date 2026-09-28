@@ -11,7 +11,7 @@ public class CancelPaymentHandler(
 			.FetchForWritingAsync(command.PaymentId.Value, cancellationToken: cancellationToken);
 
 		if (payment is null)
-			return Result.Fail($"Failed to find the payment {command.PaymentId}.");
+			return Result.Fail(new RecordNotFoundError($"Failed to find the payment {command.PaymentId}."));
 
 		payment.Cancel(command.PaymentCancellationReason);
 		await _paymentWriteRepository

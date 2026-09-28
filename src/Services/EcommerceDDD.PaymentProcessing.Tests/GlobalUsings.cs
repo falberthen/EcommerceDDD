@@ -11,3 +11,4 @@ global using Microsoft.AspNetCore.Mvc;
 global using NSubstitute;
 global using Wolverine;
 global using Xunit;
+global using EcommerceDDD.Core.Validation;
