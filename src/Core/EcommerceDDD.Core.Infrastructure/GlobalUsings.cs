@@ -48,3 +48,4 @@ global using Wolverine.ErrorHandling;
 global using Wolverine.Marten;
 global using Wolverine.Runtime.Serialization;
 global using Newtonsoft.Json.Serialization;
+global using Microsoft.AspNetCore.Mvc.Infrastructure;

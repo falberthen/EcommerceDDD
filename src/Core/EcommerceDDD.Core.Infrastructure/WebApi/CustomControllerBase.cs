@@ -25,7 +25,7 @@ public class CustomControllerBase : ControllerBase
 		CancellationToken cancellationToken)
 	{
 		var result = await Bus.InvokeAsync<Result<TResult>>(query, cancellationToken);
-		return result.IsFailed ? MapFailure(result) : Ok(result.Value);
+		return result.IsFailed ? Failure(result) : Ok(result.Value);
 	}
 
 	/// <summary>
@@ -36,7 +36,29 @@ public class CustomControllerBase : ControllerBase
 		CancellationToken cancellationToken)
 	{
 		var result = await Bus.InvokeAsync<Result>(command, cancellationToken);
-		return result.IsFailed ? MapFailure(result) : Ok();
+		return result.IsFailed ? Failure(result) : Ok();
+	}
+
+	/// <summary>
+	/// Maps a failed result and logs it. A Result failure never throws, so GlobalExceptionHandler
+	/// never sees it: this is the only place it gets logged. Same levels as the exception path.
+	/// </summary>
+	private IActionResult Failure(IResultBase result)
+	{
+		var response = MapFailure(result);
+		var statusCode = (response as IStatusCodeActionResult)?.StatusCode
+			?? StatusCodes.Status500InternalServerError;
+		var messages = string.Join("; ", result.Errors.Select(e => e.Message));
+		var logger = HttpContext.RequestServices
+			.GetRequiredService<ILoggerFactory>()
+			.CreateLogger(GetType());
+
+		if (statusCode >= 500)
+			logger.LogError("Request failed ({StatusCode}): {Message}", statusCode, messages);
+		else
+			logger.LogWarning("Request failed ({StatusCode}): {Message}", statusCode, messages);
+
+		return response;
 	}
 
 	/// <summary>
@@ -44,46 +66,33 @@ public class CustomControllerBase : ControllerBase
 	/// </summary>
 	protected virtual IActionResult MapFailure(IResultBase result)
 	{
-		var firstMessage = result.Errors.FirstOrDefault()?.Message ?? "Unexpected error.";
+		var errors = result.Errors;
+		var firstMessage = errors.FirstOrDefault()?.Message ?? "Unexpected error.";
 
-		// 403 - Authenticated, but the resource belongs to someone else
-		if (result.Errors.OfType<ForbiddenError>().Any())
+		// Arms are checked in order, so with mixed errors the first matching type wins.
+		return errors switch
 		{
-			return this.ForbiddenProblem(
-				detail: firstMessage,
-				title: "Forbidden");
-		}
+			// 403 - Authenticated, but the resource belongs to someone else
+			_ when errors.Any(e => e is ForbiddenError) =>
+				this.ForbiddenProblem(detail: firstMessage, title: "Forbidden"),
 
-		// 404 - Not found
-		if (result.Errors.OfType<RecordNotFoundError>().Any())
-		{
-			return this.NotFoundProblem(
-				detail: firstMessage,
-				title: "Resource not found");
-		}
+			// 404 - Not found
+			_ when errors.Any(e => e is RecordNotFoundError) =>
+				this.NotFoundProblem(detail: firstMessage, title: "Resource not found"),
 
-		// 422 - Validation/business rule failure
-		if (result.Errors.OfType<ValidationError>().Any())
-		{
-			var validationErrors = result.Errors
-				.OfType<ValidationError>()
-				.Select((e, index) => new { Key = $"error{index + 1}", Message = e.Message })
-				.GroupBy(x => x.Key)
-				.ToDictionary(
-					g => g.Key,
-					g => g.Select(x => x.Message).ToArray()
-				);
+			// 422 - Validation/business rule failure
+			_ when errors.Any(e => e is ValidationError) =>
+				this.ValidationProblemResponse(
+					detail: firstMessage,
+					errors: errors
+						.OfType<ValidationError>()
+						.Select((e, index) => (Key: $"error{index + 1}", e.Message))
+						.ToDictionary(x => x.Key, x => new[] { x.Message }),
+					title: "Validation failed"),
 
-			return this.ValidationProblemResponse(
-				detail: firstMessage,
-				errors: validationErrors,
-				title: "Validation failed");
-		}
-
-		// 500 - Unexpected/internal failure
-		return this.InternalServerErrorProblem(
-			detail: firstMessage,
-			title: "Internal server error");
+			// 500 - Unexpected/internal failure
+			_ => this.InternalServerErrorProblem(detail: firstMessage, title: "Internal server error")
+		};
 	}
 
 	private IMessageBus Bus => _bus ?? throw new InvalidOperationException(
