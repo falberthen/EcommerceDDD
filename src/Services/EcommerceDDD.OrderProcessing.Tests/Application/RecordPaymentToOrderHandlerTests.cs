@@ -49,6 +49,7 @@ public class RecordPaymentToOrderHandlerTests
 		Assert.Equal(paidOrder.PaymentId, paymentId);
 		Assert.Equal(paidOrder.OrderLines?.Count, quoteItems.Count);
 		Assert.Equal(OrderStatus.Paid, paidOrder.Status);
+		Assert.Single(orderWriteRepository.PublishedMessages.OfType<OrderPaid>());
 	}
 
 }

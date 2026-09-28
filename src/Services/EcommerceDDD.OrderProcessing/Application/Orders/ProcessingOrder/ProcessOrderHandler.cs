@@ -73,17 +73,22 @@ public class ProcessOrderHandler(
 			Currency.OfCode(quote.CurrencyCode!),
 			quoteItems);
 
-		// No stock reservation for now. Stock availability is only checked here.
-		// If any product is short, cancel the whole order (all-or-nothing).
-		if (!await _productInventoryHandler.CheckProductsInStockAsync(quoteItems, cancellationToken))
+		// If any product is short, cancel the whole order (all-or-nothing). The decrement is idempotent per order,
+		// so a retry of this handler never takes the stock twice.
+		var inStock = await _productInventoryHandler.CheckProductsInStockAsync(quoteItems, cancellationToken);
+		if (inStock && !await _productInventoryHandler.DecreaseQuantityInStockAsync(quoteItems, order.Id, cancellationToken))
+		{
+			// Another order took the stock between the check and the decrement, so some items may already be taken.			
+			await _productInventoryHandler.IncreaseQuantityInStockAsync(quoteItems, order.Id, cancellationToken);
+			inStock = false;
+		}
+
+		if (!inStock)
 		{
 			await _messageBus.PublishAsync(
 				CancelOrder.Create(order.Id, OrderCancellationReason.ProductWasOutOfStock));
 			return Result.Ok();
 		}
-
-		await _productInventoryHandler
-			.DecreaseQuantityInStockAsync(quoteItems, cancellationToken);
 
 		order.Process(orderData);
 
@@ -91,10 +96,9 @@ public class ProcessOrderHandler(
 		   .OfType<OrderProcessed>()
 		   .FirstOrDefault();
 
+		// Committed with the order, so the saga is guaranteed to request the payment
 		await _orderWriteRepository
-			.AppendEventsAndCommitAsync(order, cancellationToken);
-
-		await _messageBus.PublishAsync(orderProcessedEvent!);
+			.AppendEventsAndCommitAsync(order, cancellationToken, orderProcessedEvent!);
 
 		return Result.Ok();
 	}

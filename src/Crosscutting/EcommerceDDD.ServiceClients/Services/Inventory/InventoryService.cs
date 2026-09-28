@@ -15,22 +15,33 @@ public class InventoryService(InventoryManagementClient inventoryManagementClien
 			.PostAsync(request, cancellationToken: cancellationToken);
 	}
 
-	public async Task DecreaseStockQuantityAsync(Guid productId, int quantity, CancellationToken cancellationToken)
+	public async Task<bool> DecreaseStockQuantityAsync(Guid productId, int quantity, Guid orderId, CancellationToken cancellationToken)
 	{
 		var request = new DecreaseQuantityInStockRequest()
 		{
-			DecreasedQuantity = quantity
+			DecreasedQuantity = quantity,
+			OrderId = orderId
 		};
 
-		await _inventoryManagementClient.Api.V2.Internal.Inventory[productId].DecreaseStockQuantity
-			.PutAsync(request, cancellationToken: cancellationToken);
+		try
+		{
+			await _inventoryManagementClient.Api.V2.Internal.Inventory[productId].DecreaseStockQuantity
+				.PutAsync(request, cancellationToken: cancellationToken);
+			return true;
+		}
+		// 422 is the inventory's business rule (not enough stock), not a technical failure to retry.
+		catch (ApiException ex) when (ex.ResponseStatusCode == (int)HttpStatusCode.UnprocessableEntity)
+		{
+			return false;
+		}
 	}
 
-	public async Task IncreaseStockQuantityAsync(Guid productId, int quantity, CancellationToken cancellationToken)
+	public async Task IncreaseStockQuantityAsync(Guid productId, int quantity, Guid orderId, CancellationToken cancellationToken)
 	{
 		var request = new IncreaseQuantityInStockRequest()
 		{
-			IncreasedQuantity = quantity
+			IncreasedQuantity = quantity,
+			OrderId = orderId
 		};
 
 		await _inventoryManagementClient.Api.V2.Internal.Inventory[productId].IncreaseStockQuantity

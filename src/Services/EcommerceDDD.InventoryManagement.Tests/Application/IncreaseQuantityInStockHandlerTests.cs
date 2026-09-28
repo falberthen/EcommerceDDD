@@ -11,7 +11,9 @@ public class IncreaseQuantityInStockHandlerTests
 		var initialQuantity = 1;
 		var quantityIncreased = 2;
 
-		var inventoryStockUnit = InventoryStockUnit.EnterStockUnit(productId, initialQuantity);
+		var orderId = Guid.NewGuid();
+		var inventoryStockUnit = InventoryStockUnit.EnterStockUnit(productId, initialQuantity + quantityIncreased);
+		inventoryStockUnit.DecreaseStockQuantity(quantityIncreased, orderId);
 
 		var inventoryStockUnitDetails = new InventoryStockUnitDetails()
 		{
@@ -31,7 +33,7 @@ public class IncreaseQuantityInStockHandlerTests
 		var increaseQuantityInStockHandler = new IncreaseQuantityInStockHandler(
 			querySessionMock, _inventoryStockUnitRepository);
 
-		var increaseQuantityInStock = IncreaseStockQuantity.Create(productId, quantityIncreased);
+		var increaseQuantityInStock = IncreaseStockQuantity.Create(productId, quantityIncreased, orderId);
 
 		// When
 		await increaseQuantityInStockHandler.HandleAsync(increaseQuantityInStock, CancellationToken.None);

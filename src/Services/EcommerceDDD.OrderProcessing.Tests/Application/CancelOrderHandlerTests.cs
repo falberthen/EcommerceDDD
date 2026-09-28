@@ -17,7 +17,7 @@ public class CancelOrderHandlerTests
 
 		var cancelOrder = CancelOrder.Create(order.Id, OrderCancellationReason.ShipmentNotDelivered);
 		var cancelOrderHandler = new CancelOrderHandler(
-			_orderNotificationService, _productInventoryHandler, orderWriteRepository, Substitute.For<IMessageBus>());
+			_orderNotificationService, _productInventoryHandler, orderWriteRepository);
 
 		// When
 		await cancelOrderHandler.HandleAsync(cancelOrder, CancellationToken.None);
@@ -26,8 +26,9 @@ public class CancelOrderHandlerTests
 		var canceledOrder = orderWriteRepository.AggregateStream.First().Aggregate;
 		Assert.NotNull(canceledOrder);
 		Assert.Equal(OrderStatus.Canceled, canceledOrder.Status);
+		Assert.Single(orderWriteRepository.PublishedMessages.OfType<OrderCanceled>());
 		await _productInventoryHandler.DidNotReceive()
-			.IncreaseQuantityInStockAsync(Arg.Any<IReadOnlyList<ProductItemData>>(), Arg.Any<CancellationToken>());
+			.IncreaseQuantityInStockAsync(Arg.Any<IReadOnlyList<ProductItemData>>(), Arg.Any<OrderId>(), Arg.Any<CancellationToken>());
 	}
 
 	[Fact]
@@ -55,7 +56,7 @@ public class CancelOrderHandlerTests
 
 		var cancelOrder = CancelOrder.Create(order.Id, OrderCancellationReason.ShipmentNotDelivered);
 		var cancelOrderHandler = new CancelOrderHandler(
-			_orderNotificationService, _productInventoryHandler, orderWriteRepository, Substitute.For<IMessageBus>());
+			_orderNotificationService, _productInventoryHandler, orderWriteRepository);
 
 		// When
 		await cancelOrderHandler.HandleAsync(cancelOrder, CancellationToken.None);
@@ -64,7 +65,7 @@ public class CancelOrderHandlerTests
 		var canceledOrder = orderWriteRepository.AggregateStream.First().Aggregate;
 		Assert.Equal(OrderStatus.Canceled, canceledOrder.Status);
 		await _productInventoryHandler.Received(1)
-			.IncreaseQuantityInStockAsync(Arg.Any<IReadOnlyList<ProductItemData>>(), Arg.Any<CancellationToken>());
+			.IncreaseQuantityInStockAsync(Arg.Any<IReadOnlyList<ProductItemData>>(), order.Id, Arg.Any<CancellationToken>());
 	}
 
 	private IOrderNotificationService _orderNotificationService = Substitute.For<IOrderNotificationService>();

@@ -31,7 +31,7 @@ public class InventoryStockUnitTests
 			.EnterStockUnit(productId, initialQuantity);
 
 		// When
-		inventoryStockUnit.DecreaseStockQuantity(quantityToDecrease);
+		inventoryStockUnit.DecreaseStockQuantity(quantityToDecrease, Guid.NewGuid());
 
 		// Then
 		Assert.NotNull(inventoryStockUnit);
@@ -40,23 +40,72 @@ public class InventoryStockUnitTests
 	}
 
 	[Fact]
-	public void IncreaseStockQuantity_WithQuantityToDecrease_ShouldIncreaseInventoryStockUnitQuantity()
+	public void IncreaseStockQuantity_ForOrderThatDecreased_ShouldReturnItsQuantity()
 	{
 		// Given        
 		var productId = ProductId.Of(Guid.NewGuid());
 		var initialQuantity = 10;
-		var quantityToDecrease = 6;
+		var quantity = 6;
+		var orderId = Guid.NewGuid();
 
 		var inventoryStockUnit = InventoryStockUnit
 			.EnterStockUnit(productId, initialQuantity);
+		inventoryStockUnit.DecreaseStockQuantity(quantity, orderId);
 
 		// When
-		inventoryStockUnit.IncreaseStockQuantity(quantityToDecrease);
+		inventoryStockUnit.IncreaseStockQuantity(quantity, orderId);
 
 		// Then
 		Assert.NotNull(inventoryStockUnit);
 		Assert.Equal(inventoryStockUnit.ProductId.Value, productId.Value);
-		Assert.Equal(inventoryStockUnit.Quantity, initialQuantity + quantityToDecrease);
+		Assert.Equal(initialQuantity, inventoryStockUnit.Quantity);
+	}
+
+	[Fact]
+	public void DecreaseStockQuantity_RepeatedForSameOrder_ShouldDecreaseOnce()
+	{
+		// Given
+		var inventoryStockUnit = InventoryStockUnit.EnterStockUnit(ProductId.Of(Guid.NewGuid()), 10);
+		var orderId = Guid.NewGuid();
+
+		// When
+		inventoryStockUnit.DecreaseStockQuantity(3, orderId);
+		inventoryStockUnit.DecreaseStockQuantity(3, orderId);
+
+		// Then
+		Assert.Equal(7, inventoryStockUnit.Quantity);
+		Assert.Single(inventoryStockUnit.GetUncommittedEvents().OfType<StockQuantityDecreased>());
+	}
+
+	[Fact]
+	public void IncreaseStockQuantity_RepeatedForSameOrder_ShouldIncreaseOnce()
+	{
+		// Given
+		var inventoryStockUnit = InventoryStockUnit.EnterStockUnit(ProductId.Of(Guid.NewGuid()), 10);
+		var orderId = Guid.NewGuid();
+		inventoryStockUnit.DecreaseStockQuantity(3, orderId);
+
+		// When
+		inventoryStockUnit.IncreaseStockQuantity(3, orderId);
+		inventoryStockUnit.IncreaseStockQuantity(3, orderId);
+
+		// Then
+		Assert.Equal(10, inventoryStockUnit.Quantity);
+		Assert.Single(inventoryStockUnit.GetUncommittedEvents().OfType<StockQuantityIncreased>());
+	}
+
+	[Fact]
+	public void IncreaseStockQuantity_ForOrderThatTookNothing_ShouldBeIgnored()
+	{
+		// Given
+		var inventoryStockUnit = InventoryStockUnit.EnterStockUnit(ProductId.Of(Guid.NewGuid()), 10);
+
+		// When
+		inventoryStockUnit.IncreaseStockQuantity(3, Guid.NewGuid());
+
+		// Then
+		Assert.Equal(10, inventoryStockUnit.Quantity);
+		Assert.Empty(inventoryStockUnit.GetUncommittedEvents().OfType<StockQuantityIncreased>());
 	}
 
 	[Fact]
@@ -78,10 +127,12 @@ public class InventoryStockUnitTests
 		var productId = ProductId.Of(Guid.NewGuid());
 		var initialQuantity = 10;
 		var inventoryStockUnit = InventoryStockUnit.EnterStockUnit(productId, initialQuantity);
+		var orderId = Guid.NewGuid();
+		inventoryStockUnit.DecreaseStockQuantity(1, orderId);
 
 		// When & Then
 		Assert.Throws<DomainException>(() =>
-			inventoryStockUnit.IncreaseStockQuantity(0));
+			inventoryStockUnit.IncreaseStockQuantity(0, orderId));
 	}
 
 	[Fact]
@@ -94,6 +145,6 @@ public class InventoryStockUnitTests
 
 		// When & Then
 		Assert.Throws<DomainException>(() =>
-			inventoryStockUnit.DecreaseStockQuantity(0));
+			inventoryStockUnit.DecreaseStockQuantity(0, Guid.NewGuid()));
 	}
 }

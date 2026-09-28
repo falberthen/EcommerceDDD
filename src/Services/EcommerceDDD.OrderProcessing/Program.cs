@@ -19,6 +19,11 @@ services.AddCoreInfrastructure(builder.Configuration, options =>
 	// payment and shipment integration events cross the broker.
 	options.ListenToKafkaTopic("payments").UseDurableInbox();
 	options.ListenToKafkaTopic("shipments").UseDurableInbox();
+
+	// The saga steps run over local queues.
+	// Durable ones persist each message in the same transaction as the state change that produced it,
+	// so a crash can't strand an order between steps, and exhausted retries dead-letter instead of vanishing from memory.
+	options.Policies.UseDurableLocalQueues();
 });
 services.AddHealthChecks();
 services.AddWolverineHttp();

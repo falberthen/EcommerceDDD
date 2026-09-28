@@ -27,19 +27,12 @@ public class RecordShipmentHandler(
 		await _orderWriteRepository
 			.AppendEventsAndCommitAsync(order, cancellationToken);
 
-		try
-		{
-			await _orderNotificationService.UpdateOrderStatusAsync(
-				order.CustomerId.Value,
-				order.Id.Value,
-				order.Status.ToString(),
-				(int)order.Status,
-				cancellationToken);
-		}
-		catch (Exception)
-		{
-			return Result.Fail($"An error occurred when updating status for order {order.Id.Value}.");
-		}
+		await _orderNotificationService.UpdateOrderStatusAsync(
+			order.CustomerId.Value,
+			order.Id.Value,
+			order.Status.ToString(),
+			(int)order.Status,
+			cancellationToken);
 
 		return Result.Ok();
 	}

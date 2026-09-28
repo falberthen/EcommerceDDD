@@ -25,7 +25,7 @@ public class DecreaseQuantityInStockHandlerTests
 			.Returns(inventoryStockUnit);
 
 		var handler = new DecreaseStockQuantityHandler(querySessionMock, _inventoryStockUnitRepository);
-		var command = DecreaseStockQuantity.Create(ProductId.Of(productId), 2);
+		var command = DecreaseStockQuantity.Create(ProductId.Of(productId), 2, Guid.NewGuid());
 
 		// When
 		await handler.HandleAsync(command, CancellationToken.None);

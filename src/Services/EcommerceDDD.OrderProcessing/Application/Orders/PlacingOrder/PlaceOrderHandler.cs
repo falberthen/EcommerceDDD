@@ -4,8 +4,7 @@ public class PlaceOrderHandler(
 	IOrderNotificationService orderNotificationService,
 	IQuoteService quoteService,
 	IEventStoreRepository<Order> orderWriteRepository,
-	IUserInfoRequester userInfoRequester,
-	IMessageBus messageBus
+	IUserInfoRequester userInfoRequester
 )
 {
 	private readonly IOrderNotificationService _orderNotificationService = orderNotificationService
@@ -16,8 +15,6 @@ public class PlaceOrderHandler(
 		?? throw new ArgumentNullException(nameof(orderWriteRepository));
 	private readonly IUserInfoRequester _userInfoRequester = userInfoRequester
 		?? throw new ArgumentNullException(nameof(userInfoRequester));
-	private readonly IMessageBus _messageBus = messageBus
-		?? throw new ArgumentNullException(nameof(messageBus));
 
 	public async Task<Result> HandleAsync(PlaceOrder command, CancellationToken cancellationToken)
 	{
@@ -62,25 +59,16 @@ public class PlaceOrderHandler(
 		var orderPlacedEvent = order.GetUncommittedEvents()
 			.OfType<OrderPlaced>().FirstOrDefault();
 
+		// Committed with the order, so the saga is guaranteed to start the order fulfilment
 		await _orderWriteRepository
-			.AppendEventsAndCommitAsync(order, cancellationToken);
+			.AppendEventsAndCommitAsync(order, cancellationToken, orderPlacedEvent!);
 
-		// Lets the saga start the order fulfilment
-		await _messageBus.PublishAsync(orderPlacedEvent!);
-
-		try
-		{
-			await _orderNotificationService.UpdateOrderStatusAsync(
-				order.CustomerId.Value,
-				order.Id.Value,
-				order.Status.ToString(),
-				(int)order.Status,
-				cancellationToken);
-		}
-		catch (Exception)
-		{
-			return Result.Fail($"An error occurred when updating status for order {order.Id.Value}.");
-		}
+		await _orderNotificationService.UpdateOrderStatusAsync(
+			order.CustomerId.Value,
+			order.Id.Value,
+			order.Status.ToString(),
+			(int)order.Status,
+			cancellationToken);
 
 		return Result.Ok();
 	}

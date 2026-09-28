@@ -16,7 +16,7 @@ public class MartenRepository<TA>(
 	private readonly Dictionary<Guid, IEventStream<TA>> _streams = new();
 
 	public async Task<long> AppendEventsAndCommitAsync(TA aggregate, CancellationToken cancellationToken = default,
-		params INotification[] integrationEvents)
+		params INotification[] messages)
     {
         var events = aggregate.GetUncommittedEvents().ToArray();
         aggregate.ClearUncommittedEvents();
@@ -37,7 +37,7 @@ public class MartenRepository<TA>(
             version = events.Length;
         }
 
-        await StageIntegrationEventsAsync(integrationEvents);
+        await StageMessagesAsync(messages);
 
         await _documentSession.SaveChangesAsync(cancellationToken);
         return version;
@@ -56,22 +56,21 @@ public class MartenRepository<TA>(
 
     /// <summary>
     /// Writes the outgoing messages into the same session that holds the aggregate's events,
-    /// so the caller's SaveChangesAsync commits both or neither. Wolverine's durability agent
-    /// relays them to Kafka after the commit and carries the trace context across the hop on its own. 
+    /// so the caller's SaveChangesAsync commits both or neither.
     /// </summary>
-    private async Task StageIntegrationEventsAsync(INotification[] integrationEvents)
+    private async Task StageMessagesAsync(INotification[] messages)
     {
-        if (integrationEvents.Length == 0)
+        if (messages.Length == 0)
             return;
 
-        if (Array.Exists(integrationEvents, e => e is null))
-            throw new ArgumentException("Integration events cannot be null.", nameof(integrationEvents));
+        if (Array.Exists(messages, e => e is null))
+            throw new ArgumentException("Messages cannot be null.", nameof(messages));
 
         _outbox.Enroll(_documentSession);
 
-        foreach (var @event in integrationEvents)
+        foreach (var @event in messages)
         {
-            _logger.LogInformation("Adding integration event {EventName} to outbox...", @event.GetType().Name);
+            _logger.LogInformation("Adding {EventName} to outbox...", @event.GetType().Name);
             await _outbox.PublishAsync(@event);
         }
     }

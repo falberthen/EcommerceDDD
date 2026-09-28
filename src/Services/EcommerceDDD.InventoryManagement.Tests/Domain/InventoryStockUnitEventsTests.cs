@@ -35,7 +35,7 @@ public class InventoryStockUnitEventsTests
             .EnterStockUnit(productId, initialQuantity);
 
         // When
-        inventoryStockUnit.DecreaseStockQuantity(5);
+        inventoryStockUnit.DecreaseStockQuantity(5, Guid.NewGuid());
 
         // Then
         var @event = inventoryStockUnit.GetUncommittedEvents()
@@ -54,8 +54,11 @@ public class InventoryStockUnitEventsTests
         var inventoryStockUnit = InventoryStockUnit
             .EnterStockUnit(productId, initialQuantity);
 
+        var orderId = Guid.NewGuid();
+        inventoryStockUnit.DecreaseStockQuantity(5, orderId);
+
         // When
-        inventoryStockUnit.IncreaseStockQuantity(5);
+        inventoryStockUnit.IncreaseStockQuantity(5, orderId);
 
         // Then
         var @event = inventoryStockUnit.GetUncommittedEvents()

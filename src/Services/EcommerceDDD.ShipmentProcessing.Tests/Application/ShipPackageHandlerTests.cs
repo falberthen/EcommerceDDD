@@ -73,7 +73,7 @@ public class ShipPackageHandlerTests
 		Assert.Equal(ShipmentStatus.Canceled, shipment.Status);
 
 		var published = Assert.IsType<ShipmentNotDelivered>(
-			Assert.Single(shipmentWriteRepository.PublishedIntegrationEvents));
+			Assert.Single(shipmentWriteRepository.PublishedMessages));
 		Assert.Equal(shipment.Id.Value, published.ShipmentId);
 		Assert.Equal(orderId.Value, published.OrderId);
 	}

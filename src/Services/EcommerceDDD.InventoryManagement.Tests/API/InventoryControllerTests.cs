@@ -52,7 +52,8 @@ public class InventoryControllerTests
 		Guid productId = Guid.NewGuid();
 		var request = new DecreaseQuantityInStockRequest()
 		{
-			DecreasedQuantity = 3
+			DecreasedQuantity = 3,
+			OrderId = Guid.NewGuid()
 		};
 
 		_bus.InvokeAsync<Result>(Arg.Any<DecreaseStockQuantity>(), Arg.Any<CancellationToken>(), Arg.Any<TimeSpan?>())

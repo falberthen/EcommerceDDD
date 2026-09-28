@@ -26,7 +26,7 @@ public class InventoryInternalController(
 		);
 
 	/// <summary>
-	/// Decreases the quantity of a given stock unit
+	/// Decreases the quantity of a given stock unit (idempotent per order)
 	/// </summary>
 	/// <param name="productId"></param>
 	/// <param name="request"></param>
@@ -39,13 +39,13 @@ public class InventoryInternalController(
 		CancellationToken cancellationToken) =>
 		await Response(
 			DecreaseStockQuantity.Create(
-				ProductId.Of(productId), request.DecreasedQuantity
+				ProductId.Of(productId), request.DecreasedQuantity, request.OrderId
 			),
 			cancellationToken
 		);
 
 	/// <summary>
-	/// Increases the quantity of a given stock unit (e.g. restock after a canceled/undeliverable order)
+	/// Returns to a given stock unit what an order took (idempotent per order)
 	/// </summary>
 	/// <param name="productId"></param>
 	/// <param name="request"></param>
@@ -58,7 +58,7 @@ public class InventoryInternalController(
 		CancellationToken cancellationToken) =>
 		await Response(
 			IncreaseStockQuantity.Create(
-				ProductId.Of(productId), request.IncreasedQuantity
+				ProductId.Of(productId), request.IncreasedQuantity, request.OrderId
 			),
 			cancellationToken
 		);

@@ -30,8 +30,8 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger)
 		}
 		else
 		{
+			// 4xx leaves the server span status unset, per the OTel HTTP semantic conventions.
 			logger.LogWarning("Request error ({StatusCode}): {Message}", statusCode, exception.Message);
-			Activity.Current?.SetStatus(ActivityStatusCode.Error, message);
 		}
 
 		var traceId = Activity.Current?.TraceId.ToString()

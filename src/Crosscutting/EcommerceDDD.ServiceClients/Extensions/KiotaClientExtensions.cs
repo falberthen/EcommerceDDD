@@ -3,12 +3,9 @@ namespace EcommerceDDD.ServiceClients.Extensions;
 public static class KiotaClientExtensions
 {
 	private static readonly TimeSpan _defaultTimeout = TimeSpan.FromSeconds(30);
-	private const int _retryCount = 3;
-	private static readonly TimeSpan _circuitBreakerDuration = TimeSpan.FromSeconds(30);
-	private const int _circuitBreakerThreshold = 5;
 
 	/// <summary>
-	/// Adds a Kiota generated client to the service collection with resilience policies.
+	/// Adds a Kiota generated client to the service collection.	
 	/// </summary>
 	/// <typeparam name="TClient"></typeparam>
 	/// <param name="services"></param>
@@ -16,7 +13,7 @@ public static class KiotaClientExtensions
 	/// <returns></returns>
 	/// <exception cref="ArgumentNullException"></exception>
 	/// <exception cref="InvalidOperationException"></exception>
-	public static IServiceCollection AddKiotaClient<TClient>(this IServiceCollection services, string? baseUrl)
+	public static IServiceCollection AddKiotaClient<TClient>(this IServiceCollection services, string? baseUrl, TimeSpan? timeout = null)
 		where TClient : class
 	{
 		if (string.IsNullOrEmpty(baseUrl))
@@ -25,10 +22,8 @@ public static class KiotaClientExtensions
 		services.AddHttpClient<TClient>((serviceProvider, client) =>
 		{
 			client.BaseAddress = new Uri(baseUrl);
-			client.Timeout = _defaultTimeout;
+			client.Timeout = timeout ?? _defaultTimeout;
 		})
-		.AddPolicyHandler(GetRetryPolicy())
-		.AddPolicyHandler(GetCircuitBreakerPolicy())
 		.AddTypedClient<TClient>((httpClient, serviceProvider) =>
 		{
 			var tokenRequester = serviceProvider.GetRequiredService<ITokenRequester>();
@@ -100,7 +95,8 @@ public static class KiotaClientExtensions
 
 	public static IServiceCollection AddOrderNotificationServiceClient(this IServiceCollection services, string? baseUrl)
 	{
-		services.AddKiotaClient<SignalRClient>(baseUrl);
+		// Pushes run inline in request handlers: fail fast so a dead hub can't outlast the gateway's 3s budget.
+		services.AddKiotaClient<SignalRClient>(baseUrl, TimeSpan.FromSeconds(1));
 		services.AddScoped<IOrderNotificationService, OrderNotificationService>();
 		return services;
 	}
@@ -132,28 +128,4 @@ public static class KiotaClientExtensions
 	private static ServiceClientsOptions GetOptions(IConfiguration configuration)
 		=> configuration.GetSection(ServiceClientsOptions.SectionName).Get<ServiceClientsOptions>()
 			?? new ServiceClientsOptions();
-
-	/// <summary>
-	/// Gets the retry policy with exponential backoff.
-	/// Retries on transient HTTP errors (5xx, 408, network failures).
-	/// </summary>
-	private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
-	{
-		return HttpPolicyExtensions
-			.HandleTransientHttpError()
-			.WaitAndRetryAsync(
-				_retryCount,
-				retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
-	}
-
-	/// <summary>
-	/// Gets the circuit breaker policy.
-	/// Opens circuit after consecutive failures to prevent cascading failures.
-	/// </summary>
-	private static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy()
-	{
-		return HttpPolicyExtensions
-			.HandleTransientHttpError()
-			.CircuitBreakerAsync(_circuitBreakerThreshold, _circuitBreakerDuration);
-	}
 }

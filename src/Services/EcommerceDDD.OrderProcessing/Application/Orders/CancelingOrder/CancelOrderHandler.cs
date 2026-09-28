@@ -3,8 +3,7 @@ namespace EcommerceDDD.OrderProcessing.Application.Orders.CancelingOrder;
 public class CancelOrderHandler(
 	IOrderNotificationService orderNotificationService,
 	IProductInventoryHandler productInventoryHandler,
-	IEventStoreRepository<Order> orderWriteRepository,
-	IMessageBus messageBus
+	IEventStoreRepository<Order> orderWriteRepository
 )
 {
 	private readonly IOrderNotificationService _orderNotificationService = orderNotificationService
@@ -13,8 +12,6 @@ public class CancelOrderHandler(
 		?? throw new ArgumentNullException(nameof(productInventoryHandler));
 	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository
 		?? throw new ArgumentNullException(nameof(orderWriteRepository));
-	private readonly IMessageBus _messageBus = messageBus
-		?? throw new ArgumentNullException(nameof(messageBus));
 
 	public async Task<Result> HandleAsync(CancelOrder command, CancellationToken cancellationToken)
 	{
@@ -27,19 +24,10 @@ public class CancelOrderHandler(
 		if (order.Status == OrderStatus.Canceled)
 			return Result.Ok();
 
-		// Stock is decremented when the order is processed, so a cancellation past that point must put it back.
-		var shouldRestock = order.Status != OrderStatus.Placed;
-
-		order.Cancel(command.CancellationReason);
-
-		var orderCanceledEvent = order.GetUncommittedEvents()
-			.OfType<OrderCanceled>()
-			.FirstOrDefault();
-
-		await _orderWriteRepository
-			.AppendEventsAndCommitAsync(order, cancellationToken: cancellationToken);
-
-		if (shouldRestock)
+		// Stock is decreased when the order is processed.		
+		// The inventory is increased back only by what an order took.
+		// A retry after a failed commit never restocks twice nor loses the restock.
+		if (order.OrderLines is { Count: > 0 })
 			await _productInventoryHandler.IncreaseQuantityInStockAsync(
 				order.OrderLines.Select(ol => new ProductItemData
 				{
@@ -48,24 +36,25 @@ public class CancelOrderHandler(
 					Quantity = ol.ProductItem.Quantity,
 					UnitPrice = ol.ProductItem.UnitPrice
 				}).ToList(),
+				order.Id,
 				cancellationToken);
 
-		// Lets the saga cancel the payment when the order had already been paid
-		await _messageBus.PublishAsync(orderCanceledEvent!);
+		order.Cancel(command.CancellationReason);
 
-		try
-		{
-			await _orderNotificationService.UpdateOrderStatusAsync(
-				order.CustomerId.Value,
-				command.OrderId.Value,
-				order.Status.ToString(),
-				(int)order.Status,
-				cancellationToken);
-		}
-		catch (Exception)
-		{
-			return Result.Fail($"An error occurred when updating status for order {command.OrderId.Value}.");
-		}
+		var orderCanceledEvent = order.GetUncommittedEvents()
+			.OfType<OrderCanceled>()
+			.FirstOrDefault();
+
+		// Committed with the order, so the saga is guaranteed to cancel the payment when the order had already been paid
+		await _orderWriteRepository
+			.AppendEventsAndCommitAsync(order, cancellationToken, orderCanceledEvent!);
+
+		await _orderNotificationService.UpdateOrderStatusAsync(
+			order.CustomerId.Value,
+			command.OrderId.Value,
+			order.Status.ToString(),
+			(int)order.Status,
+			cancellationToken);
 
 		return Result.Ok();
 	}

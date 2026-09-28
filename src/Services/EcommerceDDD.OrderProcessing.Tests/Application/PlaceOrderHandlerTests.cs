@@ -37,7 +37,7 @@ public class PlaceOrderHandlerTests
 
 		var placeOrder = PlaceOrder.Create(_quoteId);
 		var placeOrderHandler = new PlaceOrderHandler(orderNotificationService, quoteService,
-			orderWriteRepository, GivenCurrentCustomer(customerId.Value), Substitute.For<IMessageBus>());
+			orderWriteRepository, GivenCurrentCustomer(customerId.Value));
 
 		// When
 		await placeOrderHandler.HandleAsync(placeOrder, CancellationToken.None);
@@ -48,6 +48,7 @@ public class PlaceOrderHandlerTests
 		Assert.Equal(placedOrder.CustomerId, customerId);
 		Assert.Equal(placedOrder.QuoteId, _quoteId);
 		Assert.Equal(OrderStatus.Placed, placedOrder.Status);
+		Assert.Single(orderWriteRepository.PublishedMessages.OfType<OrderPlaced>());
 	}
 
 	[Fact]
@@ -81,7 +82,7 @@ public class PlaceOrderHandlerTests
 
 		var placeOrder = PlaceOrder.Create(_quoteId);
 		var placeOrderHandler = new PlaceOrderHandler(orderNotificationService, quoteService,
-			orderWriteRepository, GivenCurrentCustomer(currentCustomerId), Substitute.For<IMessageBus>());
+			orderWriteRepository, GivenCurrentCustomer(currentCustomerId));
 
 		// When
 		var result = await placeOrderHandler.HandleAsync(placeOrder, CancellationToken.None);
@@ -111,7 +112,7 @@ public class PlaceOrderHandlerTests
 
 		var placeOrder = PlaceOrder.Create(_quoteId);
 		var placeOrderHandler = new PlaceOrderHandler(orderNotificationService, quoteService,
-			orderWriteRepository, GivenCurrentCustomer(customerId), Substitute.For<IMessageBus>());
+			orderWriteRepository, GivenCurrentCustomer(customerId));
 
 		// When
 		var result = await placeOrderHandler.HandleAsync(placeOrder, CancellationToken.None);
