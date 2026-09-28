@@ -17,3 +17,4 @@ global using NSubstitute;
 global using System.Linq.Expressions;
 global using Xunit;
 global using Wolverine;
+global using EcommerceDDD.Core.Validation;

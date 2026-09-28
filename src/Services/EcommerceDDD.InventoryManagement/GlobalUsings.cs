@@ -27,3 +27,4 @@ global using Microsoft.AspNetCore.Mvc;
 global using Newtonsoft.Json;
 global using System.ComponentModel.DataAnnotations;
 global using Wolverine;
+global using EcommerceDDD.Core.Validation;

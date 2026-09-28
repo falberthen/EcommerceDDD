@@ -1,35 +1,33 @@
-﻿using EcommerceDDD.InventoryManagement.Application.IncreaseQuantityInStock;
-
-namespace EcommerceDDD.InventoryManagement.Application.DecreasingQuantityInStock;
+﻿namespace EcommerceDDD.InventoryManagement.Application.DecreasingQuantityInStock;
 
 public class IncreaseQuantityInStockHandler(
 	IQuerySessionWrapper querySession,
-    IEventStoreRepository<InventoryStockUnit> inventoryStockUnitWriteRepository
+	IEventStoreRepository<InventoryStockUnit> inventoryStockUnitWriteRepository
 )
 {
 	private readonly IQuerySessionWrapper _querySession = querySession;
 	private readonly IEventStoreRepository<InventoryStockUnit> _inventoryStockUnitWriteRepository = inventoryStockUnitWriteRepository;
 
 	public async Task<Result> HandleAsync(IncreaseStockQuantity command, CancellationToken cancellationToken)
-    {
-        var existingEntry = await _querySession.QueryFirstOrDefaultAsync<InventoryStockUnitDetails>(
-            x => x.ProductId == command.ProductId.Value, cancellationToken);
+	{
+		var existingEntry = await _querySession.QueryFirstOrDefaultAsync<InventoryStockUnitDetails>(
+			x => x.ProductId == command.ProductId.Value, cancellationToken);
 
-        if (existingEntry is null)
-            return Result.Fail($"The product {command.ProductId.Value} was not found in the inventory.");
+		if (existingEntry is null)
+			return Result.Fail(new RecordNotFoundError($"The product {command.ProductId.Value} was not found in the inventory."));
 
-        Guid inventoryStockUnitId = existingEntry.Id;
+		Guid inventoryStockUnitId = existingEntry.Id;
 		var inventoryStockUnit = await _inventoryStockUnitWriteRepository
 			.FetchForWritingAsync(inventoryStockUnitId, cancellationToken: cancellationToken);
 
 		if (inventoryStockUnit is null)
-            return Result.Fail($"The inventory stock unit {inventoryStockUnitId} was not found.");
+			return Result.Fail($"The inventory stock unit {inventoryStockUnitId} was not found.");
 
-        inventoryStockUnit.IncreaseStockQuantity(command.QuantityIncreased, command.OrderId);
+		inventoryStockUnit.IncreaseStockQuantity(command.QuantityIncreased, command.OrderId);
 
-        await _inventoryStockUnitWriteRepository
+		await _inventoryStockUnitWriteRepository
 			.AppendEventsAndCommitAsync(inventoryStockUnit, cancellationToken: cancellationToken);
 
 		return Result.Ok();
-    }
+	}
 }
