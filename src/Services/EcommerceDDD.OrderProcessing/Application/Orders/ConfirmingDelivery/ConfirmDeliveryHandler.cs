@@ -19,7 +19,7 @@ public class ConfirmDeliveryHandler(
 			.FetchForWritingAsync(command.OrderId.Value, cancellationToken: cancellationToken);
 
 		if (order is null)
-			return Result.Fail($"Failed to find the order {command.OrderId}.");
+			return Result.Fail(new RecordNotFoundError($"Failed to find the order {command.OrderId}."));
 
 		var ownershipResult = _userInfoRequester
 			.EnsureCurrentCustomerOwns(order.CustomerId.Value);
@@ -27,7 +27,7 @@ public class ConfirmDeliveryHandler(
 			return ownershipResult;
 
 		if (order.ShipmentId is null)
-			return Result.Fail($"Order {command.OrderId} has no associated shipment.");
+			return Result.Fail(new ValidationError($"Order {command.OrderId} has no associated shipment."));
 
 		order.Deliver(order.ShipmentId);
 
