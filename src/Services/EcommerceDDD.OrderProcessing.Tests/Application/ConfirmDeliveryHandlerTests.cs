@@ -1,8 +1,6 @@
-using EcommerceDDD.OrderProcessing.Application.Orders.ConfirmingDelivery;
-
 namespace EcommerceDDD.OrderProcessing.Tests.Application;
 
-public class ConfirmDeliveryHandlerTests
+public class ConfirmDeliveryHandlerTests : IDisposable
 {
 	[Fact]
 	public async Task ConfirmDelivery_WithCommand_ShouldDeliverOrder()
@@ -50,7 +48,7 @@ public class ConfirmDeliveryHandlerTests
 
 		var confirmDelivery = ConfirmDelivery.Create(order.Id);
 		var confirmDeliveryHandler = new ConfirmDeliveryHandler(orderNotificationService,
-			orderWriteRepository, userInfoRequester);
+			orderWriteRepository, userInfoRequester, _orderMetrics.Metrics);
 
 		// When
 		await confirmDeliveryHandler.HandleAsync(confirmDelivery, CancellationToken.None);
@@ -66,5 +64,14 @@ public class ConfirmDeliveryHandlerTests
 		Assert.Equal(completedOrder.OrderLines.Count, quoteItems.Count);
 		Assert.Equal(OrderStatus.Delivered, completedOrder.Status);
 		Assert.Single(orderWriteRepository.PublishedMessages.OfType<OrderDelivered>());
+
+		var measurement = Assert.Single(_orderMetrics.Measurements);
+		Assert.Equal(1, measurement.Value);
+		Assert.Equal("completed", measurement.Tags["outcome"]);
+		Assert.Single(measurement.Tags);
 	}
+
+	public void Dispose() => _orderMetrics.Dispose();
+
+	private OrderMetricsRecorder _orderMetrics = new();
 }

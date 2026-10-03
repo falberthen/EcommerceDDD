@@ -33,9 +33,7 @@ public class PlaceOrderHandler(
 		if (!quote.Items!.Any())
 			return Result.Fail(new ValidationError("No quote items found for customer."));
 
-		var confirmResult = await ConfirmQuoteAsync(quote.QuoteId!.Value, cancellationToken);
-		if (confirmResult.IsFailed)
-			return confirmResult;
+		await _quoteService.ConfirmQuoteAsync(quote.QuoteId!.Value, cancellationToken);
 
 		var orderItems = quote.Items!.Select(qi => new ProductItemData()
 		{
@@ -75,34 +73,13 @@ public class PlaceOrderHandler(
 
 	private async Task<Result<QuoteViewModel>> GetQuoteAsync(PlaceOrder command, CancellationToken cancellationToken)
 	{
-		try
-		{
-			var response = await _quoteService
-				.GetQuoteDetailsAsync(command.QuoteId.Value, cancellationToken);
+		var response = await _quoteService
+			.GetQuoteDetailsAsync(command.QuoteId.Value, cancellationToken);
 
-			if (response is null)
-				return Result.Fail<QuoteViewModel>(
-					new RecordNotFoundError($"Quote data not found."));
-
-			return Result.Ok(response);
-		}
-		catch (Exception)
-		{
+		if (response is null)
 			return Result.Fail<QuoteViewModel>(
-				$"An error occurred when getting quote {command.QuoteId.Value}.");
-		}
-	}
+				new RecordNotFoundError($"Quote data not found."));
 
-	private async Task<Result> ConfirmQuoteAsync(Guid quoteId, CancellationToken cancellationToken)
-	{
-		try
-		{
-			await _quoteService.ConfirmQuoteAsync(quoteId, cancellationToken);
-			return Result.Ok();
-		}
-		catch (Exception)
-		{
-			return Result.Fail($"An error occurred when confirming quote {quoteId}.");
-		}
+		return Result.Ok(response);
 	}
 }

@@ -13,6 +13,10 @@ public class CancelPaymentHandler(
 		if (payment is null)
 			return Result.Fail(new RecordNotFoundError($"Failed to find the payment {command.PaymentId}."));
 
+		// Cancelled by an earlier attempt.
+		if (payment.Status == PaymentStatus.Canceled)
+			return Result.Ok();
+
 		payment.Cancel(command.PaymentCancellationReason);
 		await _paymentWriteRepository
 			.AppendEventsAndCommitAsync(payment, cancellationToken);

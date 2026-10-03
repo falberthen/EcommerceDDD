@@ -8,6 +8,7 @@ global using EcommerceDDD.Core.Infrastructure.Identity;
 global using EcommerceDDD.Core.Infrastructure.Marten;
 global using EcommerceDDD.Core.Infrastructure.WebApi;
 global using EcommerceDDD.Core.Persistence;
+global using EcommerceDDD.Core.Validation;
 global using EcommerceDDD.ServiceClients.Extensions;
 global using EcommerceDDD.ServiceClients.Services.CustomerManagement;
 global using EcommerceDDD.ShipmentProcessing.API.Controllers.Requests;

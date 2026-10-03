@@ -19,7 +19,7 @@ public class RequestPaymentHandlerTests
 		var paymentWriteRepository = new DummyEventStoreRepository<Payment>();
 
         var requestPayment = RequestPayment.Create(customerId, orderId, totalAmount, currency, productItems);
-        var requestPaymentHandler = new RequestPaymentHandler(_bus, paymentWriteRepository);
+        var requestPaymentHandler = new RequestPaymentHandler(_orderPaymentLookup, paymentWriteRepository);
 
         // When
         await requestPaymentHandler.HandleAsync(requestPayment, CancellationToken.None);
@@ -32,7 +32,35 @@ public class RequestPaymentHandlerTests
 		Assert.Null(payment.CompletedAt);
 		Assert.Equal(payment.TotalAmount.Amount, totalAmount.Amount);
 		Assert.Equal(PaymentStatus.Pending, payment.Status);
+		var paymentCreated = Assert.IsType<PaymentCreated>(Assert.Single(paymentWriteRepository.PublishedMessages));
+		Assert.Equal(payment.Id.Value, paymentCreated.PaymentId);
 	}
 
-    private IMessageBus _bus = Substitute.For<IMessageBus>();
+	[Fact]
+	public async Task RequestPayment_WhenOrderAlreadyHasPayment_ShouldNotCreateAnother()
+	{
+		// Given
+		var orderId = OrderId.Of(Guid.NewGuid());
+		var customerId = CustomerId.Of(Guid.NewGuid());
+		var currency = Currency.OfCode(Currency.USDollar.Code);
+		var totalAmount = Money.Of(100, currency.Code);
+		var productItems = new List<ProductItem>() {
+			new ProductItem(ProductId.Of(Guid.NewGuid()), 1)
+		};
+		_orderPaymentLookup.HasPaymentAsync(orderId, Arg.Any<CancellationToken>())
+			.Returns(true);
+
+		var paymentWriteRepository = new DummyEventStoreRepository<Payment>();
+		var requestPayment = RequestPayment.Create(customerId, orderId, totalAmount, currency, productItems);
+		var requestPaymentHandler = new RequestPaymentHandler(_orderPaymentLookup, paymentWriteRepository);
+
+		// When
+		await requestPaymentHandler.HandleAsync(requestPayment, CancellationToken.None);
+
+		// Then
+		Assert.Empty(paymentWriteRepository.AggregateStream);
+		Assert.Empty(paymentWriteRepository.PublishedMessages);
+	}
+
+	private IOrderPaymentLookup _orderPaymentLookup = Substitute.For<IOrderPaymentLookup>();
 }

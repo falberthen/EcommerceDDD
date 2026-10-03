@@ -1,6 +1,3 @@
-using EcommerceDDD.ServiceClients.ProductCatalog;
-using EcommerceDDD.ServiceClients.ProductCatalog.Models;
-
 namespace EcommerceDDD.ServiceClients.Services.ProductCatalog;
 
 public class ProductCatalogService(ProductCatalogClient productCatalogClient) : IProductCatalogService

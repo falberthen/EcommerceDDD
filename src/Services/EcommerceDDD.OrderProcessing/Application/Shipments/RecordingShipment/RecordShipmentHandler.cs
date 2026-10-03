@@ -18,7 +18,7 @@ public class RecordShipmentHandler(
 			.FetchForWritingAsync(command.OrderId.Value, cancellationToken: cancellationToken);
 
 		if (order is null)
-			return Result.Fail($"Failed to find the order {command.OrderId}.");
+			throw new RecordNotFoundException($"Failed to find the order {command.OrderId}.");
 
 		if (order.Status == OrderStatus.Shipped)
 			return Result.Ok();

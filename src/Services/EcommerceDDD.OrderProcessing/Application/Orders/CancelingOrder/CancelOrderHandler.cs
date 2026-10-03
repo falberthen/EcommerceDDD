@@ -3,7 +3,8 @@ namespace EcommerceDDD.OrderProcessing.Application.Orders.CancelingOrder;
 public class CancelOrderHandler(
 	IOrderNotificationService orderNotificationService,
 	IProductInventoryHandler productInventoryHandler,
-	IEventStoreRepository<Order> orderWriteRepository
+	IEventStoreRepository<Order> orderWriteRepository,
+	OrderMetrics orderMetrics
 )
 {
 	private readonly IOrderNotificationService _orderNotificationService = orderNotificationService
@@ -12,6 +13,8 @@ public class CancelOrderHandler(
 		?? throw new ArgumentNullException(nameof(productInventoryHandler));
 	private readonly IEventStoreRepository<Order> _orderWriteRepository = orderWriteRepository
 		?? throw new ArgumentNullException(nameof(orderWriteRepository));
+	private readonly OrderMetrics _orderMetrics = orderMetrics
+		?? throw new ArgumentNullException(nameof(orderMetrics));
 
 	public async Task<Result> HandleAsync(CancelOrder command, CancellationToken cancellationToken)
 	{
@@ -19,7 +22,7 @@ public class CancelOrderHandler(
 			.FetchForWritingAsync(command.OrderId.Value, cancellationToken: cancellationToken);
 
 		if (order is null)
-			return Result.Fail($"Failed to find the order {command.OrderId}.");
+			throw new RecordNotFoundException($"Failed to find the order {command.OrderId}.");
 
 		if (order.Status == OrderStatus.Canceled)
 			return Result.Ok();
@@ -48,6 +51,7 @@ public class CancelOrderHandler(
 		// Committed with the order, so the saga is guaranteed to cancel the payment when the order had already been paid
 		await _orderWriteRepository
 			.AppendEventsAndCommitAsync(order, cancellationToken, orderCanceledEvent!);
+		_orderMetrics.RecordCanceled(command.CancellationReason);
 
 		await _orderNotificationService.UpdateOrderStatusAsync(
 			order.CustomerId.Value,

@@ -21,7 +21,7 @@ public class RecordPaymentHandler(
 			.FetchForWritingAsync(command.OrderId.Value, cancellationToken: cancellationToken);
 
 		if (order is null)
-			return Result.Fail($"Failed to find the order {command.OrderId}.");
+			throw new RecordNotFoundException($"Failed to find the order {command.OrderId}.");
 
 		// Idempotency: if already paid, re-publish OrderPaid to retry the downstream chain
 		if (order.Status == OrderStatus.Paid)

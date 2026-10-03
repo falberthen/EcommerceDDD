@@ -21,6 +21,10 @@ public static class OpenTelemetryExtension
                 .AddAspNetCoreInstrumentation()
                 .AddHttpClientInstrumentation()
                 .AddRuntimeInstrumentation()
+                // Wolverine's meter, named "Wolverine:{ServiceName}".
+                .AddMeter("Wolverine:*")
+                // The service's own metrics.
+                .AddMeter(serviceName)
                 .AddOtlpExporter())
             .WithLogging(
                 logging => logging.AddOtlpExporter(),

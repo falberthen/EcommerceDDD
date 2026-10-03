@@ -22,7 +22,7 @@ public class ProcessOrderHandler(
 			.FetchForWritingAsync(command.OrderId.Value, cancellationToken: cancellationToken);
 
 		if (order is null)
-			return Result.Fail($"Order {command.OrderId} not found.");
+			throw new RecordNotFoundException($"Order {command.OrderId} not found.");
 
 		// Idempotency: if already processed, re-publish OrderProcessed to retry the downstream chain
 		if (order.Status == OrderStatus.Processed)
@@ -48,15 +48,12 @@ public class ProcessOrderHandler(
 			return Result.Ok();
 
 		// Getting open quote data
-		var quoteResult = await GetQuoteAsync(command, cancellationToken);
-		if (quoteResult.IsFailed)
-			return Result.Fail(quoteResult.Errors);
-
-		var quote = quoteResult.Value!;
+		var quote = await _quoteService.GetQuoteDetailsAsync(command.QuoteId.Value, cancellationToken)
+			?? throw new RecordNotFoundException($"Quote {command.QuoteId} not found.");
 		var quoteId = QuoteId.Of(quote.QuoteId!.Value);
 
 		if (!quote.Items!.Any())
-			return Result.Fail("No quote items found for customer.");
+			return Result.Fail(new ValidationError("No quote items found for customer."));
 
 		var quoteItems = quote.Items!.Select(qi =>
 			new ProductItemData()
@@ -101,17 +98,5 @@ public class ProcessOrderHandler(
 			.AppendEventsAndCommitAsync(order, cancellationToken, orderProcessedEvent!);
 
 		return Result.Ok();
-	}
-
-	private async Task<Result<QuoteViewModel>> GetQuoteAsync(ProcessOrder command, CancellationToken cancellationToken)
-	{
-		var response = await _quoteService
-			.GetQuoteDetailsAsync(command.QuoteId.Value, cancellationToken);
-
-		if (response is null)
-			return Result.Fail<QuoteViewModel>(
-				new RecordNotFoundError($"Quote data not found."));
-
-		return Result.Ok(response);
 	}
 }

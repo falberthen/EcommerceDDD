@@ -14,7 +14,11 @@ public class ProcessPaymentHandler(
 			.FetchForWritingAsync(command.PaymentId.Value, cancellationToken: cancellationToken);
 
 		if (payment is null)
-			return Result.Fail($"Payment {command.PaymentId.Value} was not found.");
+			throw new RecordNotFoundException($"Payment {command.PaymentId.Value} was not found.");
+
+		// Settled by an earlier attempt.
+		if (payment.Status != PaymentStatus.Pending)
+			return Result.Ok();
 
 		INotification integrationEvent;
 

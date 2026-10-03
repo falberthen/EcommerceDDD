@@ -10,12 +10,16 @@ services.AddEndpointsApiExplorer();
 services.AddCoreInfrastructure(builder.Configuration, options =>
 {
     options.UseServiceClientServiceLocation();
+    options.DeadLetterServiceClientRejections();
 
     options.UseKafka(builder.Configuration["Kafka:ConnectionString"]!)
         .AutoProvision();
 
     options.PublishMessage<ShipmentFinalized>().ToKafkaTopic("shipments").UseDurableOutbox();
     options.PublishMessage<ShipmentNotDelivered>().ToKafkaTopic("shipments").UseDurableOutbox();
+
+    // Shipment processing runs over durable local queues, so a crash can't leave a shipment pending.
+    options.Policies.UseDurableLocalQueues();
 });
 services.AddHealthChecks();
 
@@ -23,6 +27,7 @@ services.AddHealthChecks();
 services.AddCustomerManagementServiceClient(builder.Configuration);
 
 // Services
+services.AddScoped<IOrderShipmentLookup, OrderShipmentLookup>();
 services.AddScoped<IEventStoreRepository<Shipment>, MartenRepository<Shipment>>();
 
 // Marten

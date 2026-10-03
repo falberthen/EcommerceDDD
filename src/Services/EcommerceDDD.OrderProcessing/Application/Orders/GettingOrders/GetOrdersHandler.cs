@@ -93,21 +93,13 @@ public class GetOrdersHandler(
 
 	private async Task<Result<QuoteViewModel>> GetQuoteAsync(OrderDetails orderDetails, CancellationToken cancellationToken)
 	{
-		try
-		{
-			var response = await _quoteService
-				.GetQuoteDetailsAsync(orderDetails.QuoteId, cancellationToken);
+		var response = await _quoteService
+			.GetQuoteDetailsAsync(orderDetails.QuoteId, cancellationToken);
 
-			if (response is null)
-				return Result.Fail<QuoteViewModel>(
-					new RecordNotFoundError($"Quote data not found."));
-
-			return Result.Ok(response);
-		}
-		catch (Exception)
-		{
+		if (response is null)
 			return Result.Fail<QuoteViewModel>(
-				$"An error occurred when getting quote {orderDetails.QuoteId} for order {orderDetails.Id}.");
-		}
+				new RecordNotFoundError($"Quote data not found."));
+
+		return Result.Ok(response);
 	}
 }

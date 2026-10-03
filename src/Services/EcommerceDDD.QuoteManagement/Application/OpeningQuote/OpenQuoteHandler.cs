@@ -14,7 +14,7 @@ public class OpenQuoteHandler(
 		UserInfo? userInfo = userInfoRequester.GetCurrentUser();
 
 		if (userInfo is null)
-			return Result.Fail($"The was an issue loading quote for the customer.");
+			return Result.Fail(new RecordNotFoundError("Customer not found."));
 
 		CustomerId customerId = CustomerId.Of(userInfo.CustomerId);
 		QuoteDetails? openQuote = await _customerOpenQuoteChecker
