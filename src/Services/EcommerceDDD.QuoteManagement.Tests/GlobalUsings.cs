@@ -18,3 +18,4 @@ global using NSubstitute;
 global using Wolverine;
 global using Xunit;
 global using EcommerceDDD.Core.Validation;
+global using EcommerceDDD.QuoteManagement.Application.GettingQuoteById;

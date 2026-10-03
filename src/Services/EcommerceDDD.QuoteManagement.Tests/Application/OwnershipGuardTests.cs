@@ -1,5 +1,3 @@
-using EcommerceDDD.QuoteManagement.Application.GettingQuoteById;
-
 namespace EcommerceDDD.QuoteManagement.Tests.Application;
 
 public class OwnershipGuardTests

@@ -1,5 +1,3 @@
-using NSubstitute.Core;
-
 namespace EcommerceDDD.Core.Tests.Domain;
 
 public class AggregateRootTests

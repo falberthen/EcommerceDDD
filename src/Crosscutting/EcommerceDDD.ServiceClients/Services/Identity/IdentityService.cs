@@ -1,7 +1,3 @@
-using System.Net;
-using EcommerceDDD.ServiceClients.IdentityServer;
-using EcommerceDDD.ServiceClients.IdentityServer.Models;
-
 namespace EcommerceDDD.ServiceClients.Services.Identity;
 
 public class IdentityService(IdentityServerClient identityServerClient) : IIdentityService

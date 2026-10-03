@@ -1,4 +1,4 @@
-namespace EcommerceDDD.CustomerManagement.Domain;
+namespace EcommerceDDD.CustomerManagement.Application.RegisteringCustomer;
 
 /// <summary>
 /// Finds the customer registered under an e-mail, if any.

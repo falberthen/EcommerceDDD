@@ -1,5 +1,3 @@
-using EcommerceDDD.ServiceClients.QuoteManagement.Models;
-
 namespace EcommerceDDD.ServiceClients.Services.Quote;
 
 public interface IQuoteService
