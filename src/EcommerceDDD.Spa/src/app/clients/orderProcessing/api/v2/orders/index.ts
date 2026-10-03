@@ -4,9 +4,7 @@
 // @ts-ignore
 import { createOrderViewModelFromDiscriminatorValue, createProblemDetailsFromDiscriminatorValue, createValidationProblemDetailsFromDiscriminatorValue, type OrderViewModel, type ProblemDetails, type ValidationProblemDetails } from '../../../../models/index.js';
 // @ts-ignore
-import { type WithOrderItemRequestBuilder, WithOrderItemRequestBuilderNavigationMetadata } from './item/index.js';
-// @ts-ignore
-import { QuoteRequestBuilderNavigationMetadata, type QuoteRequestBuilder } from './quote/index.js';
+import { type WithOrderItemRequestBuilder, WithOrderItemRequestBuilderNavigationMetadata, WithOrderItemRequestBuilderRequestsMetadata } from './item/index.js';
 // @ts-ignore
 import { type BaseRequestBuilder, type Guid, type KeysToExcludeForNavigationMetadata, type NavigationMetadata, type Parsable, type ParsableFactory, type RequestConfiguration, type RequestInformation, type RequestsMetadata } from '@microsoft/kiota-abstractions';
 
@@ -14,10 +12,6 @@ import { type BaseRequestBuilder, type Guid, type KeysToExcludeForNavigationMeta
  * Builds and executes requests for operations under /orderProcessing/api/v2/orders
  */
 export interface OrdersRequestBuilder extends BaseRequestBuilder<OrdersRequestBuilder> {
-    /**
-     * The quote property
-     */
-    get quote(): QuoteRequestBuilder;
     /**
      * Gets an item from the ApiSdk.orderProcessing.api.v2.orders.item collection
      * @param orderId Unique identifier of the item
@@ -50,11 +44,9 @@ export const OrdersRequestBuilderUriTemplate = "{+baseurl}/orderProcessing/api/v
  */
 export const OrdersRequestBuilderNavigationMetadata: Record<Exclude<keyof OrdersRequestBuilder, KeysToExcludeForNavigationMetadata>, NavigationMetadata> = {
     byOrderId: {
+        requestsMetadata: WithOrderItemRequestBuilderRequestsMetadata,
         navigationMetadata: WithOrderItemRequestBuilderNavigationMetadata,
         pathParametersMappings: ["orderId"],
-    },
-    quote: {
-        navigationMetadata: QuoteRequestBuilderNavigationMetadata,
     },
 };
 /**

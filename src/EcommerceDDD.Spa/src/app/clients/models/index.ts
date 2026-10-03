@@ -144,6 +144,15 @@ export function createOrderViewModelFromDiscriminatorValue(parseNode: ParseNode 
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {PlaceOrderRequest}
+ */
+// @ts-ignore
+export function createPlaceOrderRequestFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoPlaceOrderRequest;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
  * @returns {ProblemDetails}
  */
 // @ts-ignore
@@ -454,6 +463,17 @@ export function deserializeIntoOrderViewModel(orderViewModel: Partial<OrderViewM
 }
 /**
  * The deserialization information for the current model
+ * @param PlaceOrderRequest The instance to deserialize into.
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoPlaceOrderRequest(placeOrderRequest: Partial<PlaceOrderRequest> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "quoteId": n => { placeOrderRequest.quoteId = n.getGuidValue(); },
+    }
+}
+/**
+ * The deserialization information for the current model
  * @param ProblemDetails The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
@@ -752,6 +772,12 @@ export interface OrderViewModel extends Parsable {
      * The totalPrice property
      */
     totalPrice?: number | null;
+}
+export interface PlaceOrderRequest extends Parsable {
+    /**
+     * The quoteId property
+     */
+    quoteId?: Guid | null;
 }
 export interface ProblemDetails extends AdditionalDataHolder, ApiError, Parsable {
     /**
@@ -1111,6 +1137,17 @@ export function serializeOrderViewModel(writer: SerializationWriter, orderViewMo
     writer.writeNumberValue("statusCode", orderViewModel.statusCode);
     writer.writeStringValue("statusText", orderViewModel.statusText);
     writer.writeNumberValue("totalPrice", orderViewModel.totalPrice);
+}
+/**
+ * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param PlaceOrderRequest The instance to serialize from.
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializePlaceOrderRequest(writer: SerializationWriter, placeOrderRequest: Partial<PlaceOrderRequest> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!placeOrderRequest || isSerializingDerivedType) { return; }
+    writer.writeGuidValue("quoteId", placeOrderRequest.quoteId);
 }
 /**
  * Serializes information the current object
