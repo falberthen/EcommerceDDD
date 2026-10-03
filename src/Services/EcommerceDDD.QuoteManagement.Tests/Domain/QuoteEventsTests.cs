@@ -105,7 +105,7 @@ public class QuoteEventsTests
         quote.AddItem(quoteItem);
 
         // When        
-        quote.Confirm();
+        quote.Confirm(OrderId.Of(Guid.NewGuid()));
 
         // Then
         var @event = quote.GetUncommittedEvents().LastOrDefault() as QuoteConfirmed;

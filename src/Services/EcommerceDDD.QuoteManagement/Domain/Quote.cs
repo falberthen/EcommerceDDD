@@ -7,6 +7,7 @@ public class Quote : AggregateRoot<QuoteId>
     public DateTime ConfirmedAt { get; private set; }
     public DateTime? CanceledAt { get; private set; }
     public QuoteStatus Status { get; private set; }
+    public OrderId? OrderId { get; private set; }
     public Currency Currency { get; private set; }
     public IList<QuoteItem> Items => _quoteItems;
 
@@ -80,15 +81,22 @@ public class Quote : AggregateRoot<QuoteId>
         Apply(@event);
     }
 
-    public void Confirm()
+    public void Confirm(OrderId orderId)
     {
+        if (orderId is null)
+            throw new DomainException("The order Id is required.");
+
+        // Already confirmed by this same order.
+        if (Status == QuoteStatus.Confirmed && OrderId == orderId)
+            return;
+
         if (Status != QuoteStatus.Open)
             throw new DomainException("Quote cannot be confirmed at this point.");
 
         if (!Items.Any())
             throw new DomainException("Quote needs at least 1 item to be confirmed.");
 
-        var @event = new QuoteConfirmed(Id.Value);
+        var @event = new QuoteConfirmed(Id.Value, orderId.Value);
 
         AppendEvent(@event);
         Apply(@event);
@@ -141,6 +149,7 @@ public class Quote : AggregateRoot<QuoteId>
     {
         Status = QuoteStatus.Confirmed;
         ConfirmedAt = @event.Timestamp;
+        OrderId = OrderId.Of(@event.OrderId);
     }
 
     private Quote(CustomerId customerId, Currency currency)

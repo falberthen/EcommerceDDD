@@ -18,7 +18,7 @@ public class ConfirmQuoteHandlerTests
 		var quoteWriteRepository = new DummyEventStoreRepository<Quote>();
 		await quoteWriteRepository.AppendEventsAndCommitAsync(quote);
 
-		var confirmQuote = ConfirmQuote.Create(quote.Id);
+		var confirmQuote = ConfirmQuote.Create(quote.Id, OrderId.Of(Guid.NewGuid()));
 		var confirmQuoteHandler = new ConfirmQuoteHandler(quoteWriteRepository);
 
 		// When
@@ -39,7 +39,7 @@ public class ConfirmQuoteHandlerTests
 		var quoteWriteRepository = new DummyEventStoreRepository<Quote>();
 
 		await quoteWriteRepository.AppendEventsAndCommitAsync(quote);
-		var confirmQuote = ConfirmQuote.Create(quote.Id);
+		var confirmQuote = ConfirmQuote.Create(quote.Id, OrderId.Of(Guid.NewGuid()));
 		var confirmQuoteHandler = new ConfirmQuoteHandler(quoteWriteRepository);
 
 		// When & Then
