@@ -1,10 +1,3 @@
-using EcommerceDDD.ServiceClients.SignalR;
-using Microsoft.Extensions.Logging;
-using Microsoft.Kiota.Abstractions.Authentication;
-using Microsoft.Kiota.Http.HttpClientLibrary;
-using System.Net;
-using System.Net.Http;
-
 namespace EcommerceDDD.OrderProcessing.Tests.Infrastructure;
 
 public class OrderNotificationServiceTests

@@ -9,6 +9,7 @@ services.AddEndpointsApiExplorer();
 services.AddCoreInfrastructure(builder.Configuration, options =>
 {
 	options.UseServiceClientServiceLocation();
+	options.DeadLetterServiceClientRejections();
 
 	// OrderSaga is a Wolverine saga rather than a *Handler, so name it explicitly.
 	options.Discovery.IncludeType<OrderSaga>();
@@ -38,6 +39,7 @@ services.AddInventoryServiceClient(builder.Configuration);
 // Services
 services.AddScoped<IProductInventoryHandler, ProductInventoryHandler>();
 services.AddScoped<IEventStoreRepository<Order>, MartenRepository<Order>>();
+services.AddSingleton<OrderMetrics>();
 services.AddMarten(builder.Configuration, options =>
 	options.ConfigureProjections());
 

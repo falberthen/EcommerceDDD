@@ -3,7 +3,8 @@ namespace EcommerceDDD.OrderProcessing.Application.Orders.ConfirmingDelivery;
 public class ConfirmDeliveryHandler(
 	IOrderNotificationService orderNotificationService,
 	IEventStoreRepository<Order> orderWriteRepository,
-	IUserInfoRequester userInfoRequester
+	IUserInfoRequester userInfoRequester,
+	OrderMetrics orderMetrics
 )
 {
 	private readonly IOrderNotificationService _orderNotificationService = orderNotificationService
@@ -12,6 +13,8 @@ public class ConfirmDeliveryHandler(
 		?? throw new ArgumentNullException(nameof(orderWriteRepository));
 	private readonly IUserInfoRequester _userInfoRequester = userInfoRequester
 		?? throw new ArgumentNullException(nameof(userInfoRequester));
+	private readonly OrderMetrics _orderMetrics = orderMetrics
+		?? throw new ArgumentNullException(nameof(orderMetrics));
 
 	public async Task<Result> HandleAsync(ConfirmDelivery command, CancellationToken cancellationToken)
 	{
@@ -35,9 +38,10 @@ public class ConfirmDeliveryHandler(
 			.OfType<OrderDelivered>()
 			.FirstOrDefault();
 
-		// Committed with the order, so the saga is guaranteed to end.
+		// The event is committed with the order, so the saga is guaranteed to end.
 		await _orderWriteRepository
 			.AppendEventsAndCommitAsync(order, cancellationToken, orderDeliveredEvent!);
+		_orderMetrics.RecordCompleted();
 
 		await _orderNotificationService.UpdateOrderStatusAsync(
 			order.CustomerId.Value,

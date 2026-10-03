@@ -26,6 +26,7 @@ global using EcommerceDDD.OrderProcessing.Application.Shipments.RequestingShipme
 global using EcommerceDDD.OrderProcessing.Domain;
 global using EcommerceDDD.OrderProcessing.Domain.Events;
 global using EcommerceDDD.OrderProcessing.Infrastructure.InventoryHandling;
+global using EcommerceDDD.OrderProcessing.Infrastructure.OpenTelemetry;
 global using EcommerceDDD.OrderProcessing.Infrastructure.Projections;
 global using EcommerceDDD.ServiceClients.Extensions;
 global using EcommerceDDD.ServiceClients.QuoteManagement.Models;
@@ -46,6 +47,7 @@ global using System.Collections.Immutable;
 global using System.ComponentModel;
 global using System.ComponentModel.DataAnnotations;
 global using System.Diagnostics;
+global using System.Diagnostics.Metrics;
 global using Wolverine;
 global using Wolverine.Attributes;
 global using Wolverine.Kafka;

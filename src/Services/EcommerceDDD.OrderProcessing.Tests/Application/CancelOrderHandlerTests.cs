@@ -1,6 +1,6 @@
 namespace EcommerceDDD.OrderProcessing.Tests.Application;
 
-public class CancelOrderHandlerTests
+public class CancelOrderHandlerTests : IDisposable
 {
 	[Fact]
 	public async Task CancelOrder_WhenNotYetProcessed_ShouldCancelWithoutRestocking()
@@ -17,7 +17,7 @@ public class CancelOrderHandlerTests
 
 		var cancelOrder = CancelOrder.Create(order.Id, OrderCancellationReason.ShipmentNotDelivered);
 		var cancelOrderHandler = new CancelOrderHandler(
-			_orderNotificationService, _productInventoryHandler, orderWriteRepository);
+			_orderNotificationService, _productInventoryHandler, orderWriteRepository, _orderMetrics.Metrics);
 
 		// When
 		await cancelOrderHandler.HandleAsync(cancelOrder, CancellationToken.None);
@@ -56,7 +56,7 @@ public class CancelOrderHandlerTests
 
 		var cancelOrder = CancelOrder.Create(order.Id, OrderCancellationReason.ShipmentNotDelivered);
 		var cancelOrderHandler = new CancelOrderHandler(
-			_orderNotificationService, _productInventoryHandler, orderWriteRepository);
+			_orderNotificationService, _productInventoryHandler, orderWriteRepository, _orderMetrics.Metrics);
 
 		// When
 		await cancelOrderHandler.HandleAsync(cancelOrder, CancellationToken.None);
@@ -68,6 +68,33 @@ public class CancelOrderHandlerTests
 			.IncreaseQuantityInStockAsync(Arg.Any<IReadOnlyList<ProductItemData>>(), order.Id, Arg.Any<CancellationToken>());
 	}
 
+	[Fact]
+	public async Task CancelOrder_WhenRetried_ShouldCountCanceledOrderOnceWithReason_AndNoOrderId()
+	{
+		// Given
+		var order = Order.Place(new OrderData(CustomerId.Of(Guid.NewGuid()), QuoteId.Of(Guid.NewGuid())));
+		var orderWriteRepository = new DummyEventStoreRepository<Order>();
+		await orderWriteRepository.AppendEventsAndCommitAsync(order);
+
+		var cancelOrder = CancelOrder.Create(order.Id, OrderCancellationReason.ProductWasOutOfStock);
+		var cancelOrderHandler = new CancelOrderHandler(
+			_orderNotificationService, _productInventoryHandler, orderWriteRepository, _orderMetrics.Metrics);
+
+		// When: the same message is handled twice, as a Wolverine retry would
+		await cancelOrderHandler.HandleAsync(cancelOrder, CancellationToken.None);
+		await cancelOrderHandler.HandleAsync(cancelOrder, CancellationToken.None);
+
+		// Then
+		var measurement = Assert.Single(_orderMetrics.Measurements);
+		Assert.Equal(1, measurement.Value);
+		Assert.Equal("canceled", measurement.Tags["outcome"]);
+		Assert.Equal("out_of_stock", measurement.Tags["reason"]);
+		Assert.Equal(2, measurement.Tags.Count);
+	}
+
+	public void Dispose() => _orderMetrics.Dispose();
+
 	private IOrderNotificationService _orderNotificationService = Substitute.For<IOrderNotificationService>();
 	private IProductInventoryHandler _productInventoryHandler = Substitute.For<IProductInventoryHandler>();
+	private OrderMetricsRecorder _orderMetrics = new();
 }

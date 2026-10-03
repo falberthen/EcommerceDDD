@@ -16,7 +16,7 @@ public class RequestShipmentHandler(
 			.FetchForWritingAsync(command.OrderId.Value, cancellationToken: cancellationToken);
 
 		if (order is null)
-			return Result.Fail($"Failed to find the order {command.OrderId}.");
+			throw new RecordNotFoundException($"Failed to find the order {command.OrderId}.");
 
 		// Idempotency: shipment already requested/recorded in a prior (retried) saga step.
 		if (order.Status != OrderStatus.Paid)
@@ -33,6 +33,7 @@ public class RequestShipmentHandler(
 		// Let transient failures throw so Wolverine retries and dead-letters instead of stranding the order.
 		await _shipmentService
 			.RequestShipmentAsync(order.Id.Value, order.CustomerId.Value, productItems, cancellationToken);
+
 		return Result.Ok();
 	}
 }

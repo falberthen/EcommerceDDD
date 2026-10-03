@@ -1,5 +1,3 @@
-using EcommerceDDD.OrderProcessing.Application.Payments.ProcessingPayment.IntegrationEvents;
-
 namespace EcommerceDDD.OrderProcessing.Tests.Application;
 
 public class ProcessOrderHandlerTests

@@ -21,7 +21,7 @@ public class RequestPaymentHandler(
 			.FetchForWritingAsync(command.OrderId.Value, cancellationToken: cancellationToken);
 
 		if (order is null)
-			return Result.Fail($"Failed to find the order {command.OrderId}.");
+			throw new RecordNotFoundException($"Failed to find the order {command.OrderId}.");
 
 		// Idempotency: payment already requested/recorded in a prior (retried) saga step.
 		if (order.Status != OrderStatus.Processed)
