@@ -1,5 +1,3 @@
-using EcommerceDDD.Core.Exceptions;
-
 namespace EcommerceDDD.Core.Infrastructure.WebApi;
 
 public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger)
