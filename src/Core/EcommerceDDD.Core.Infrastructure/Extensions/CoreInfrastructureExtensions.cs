@@ -53,8 +53,8 @@ public static class CoreInfrastructureExtensions
 				.OnAnyException()
 				.ScheduleRetry(RetryDelays);
 
-			// A message handler's failed Result is thrown as a FailedResultException.
-			options.Policies.AddMiddleware(typeof(FailedResultMiddleware), FailedResultMiddleware.Applies);
+			// A returned Result goes to the InvokeAsync caller and is never cascaded as a message.
+			options.Policies.Add<ResultReturnPolicy>();
 		});
 
 		services

@@ -44,6 +44,7 @@ public class FailedResultTests(FailedResultTests.WolverineHost wolverine)
 
 		Assert.Empty(session.AllExceptions());
 		Assert.Empty(session.MovedToErrorQueue.Envelopes());
+		Assert.Empty(session.NoRoutes.Envelopes());
 	}
 
 	public class WolverineHost : IAsyncLifetime
