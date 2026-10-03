@@ -35,7 +35,7 @@ public class PlaceOrderHandlerTests
 		quoteService.GetQuoteDetailsAsync(_quoteId.Value, Arg.Any<CancellationToken>())
 			.Returns(viewModelResponse);
 
-		var placeOrder = PlaceOrder.Create(_quoteId);
+		var placeOrder = PlaceOrder.Create(OrderId.Of(Guid.NewGuid()), _quoteId);
 		var placeOrderHandler = new PlaceOrderHandler(orderNotificationService, quoteService,
 			orderWriteRepository, GivenCurrentCustomer(customerId.Value));
 
@@ -80,7 +80,7 @@ public class PlaceOrderHandlerTests
 				}
 			});
 
-		var placeOrder = PlaceOrder.Create(_quoteId);
+		var placeOrder = PlaceOrder.Create(OrderId.Of(Guid.NewGuid()), _quoteId);
 		var placeOrderHandler = new PlaceOrderHandler(orderNotificationService, quoteService,
 			orderWriteRepository, GivenCurrentCustomer(currentCustomerId));
 
@@ -110,7 +110,7 @@ public class PlaceOrderHandlerTests
 				Items = new List<QuoteItemViewModel>()
 			});
 
-		var placeOrder = PlaceOrder.Create(_quoteId);
+		var placeOrder = PlaceOrder.Create(OrderId.Of(Guid.NewGuid()), _quoteId);
 		var placeOrderHandler = new PlaceOrderHandler(orderNotificationService, quoteService,
 			orderWriteRepository, GivenCurrentCustomer(customerId));
 

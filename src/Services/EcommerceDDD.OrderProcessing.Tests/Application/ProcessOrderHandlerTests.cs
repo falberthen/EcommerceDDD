@@ -12,12 +12,13 @@ public class ProcessOrderHandlerTests
 		var quoteId = QuoteId.Of(Guid.NewGuid());
 
 		var orderData = BuildOrderData(customerId, quoteId, currency, productId);
-		var order = Order.Place(orderData);
+		var order = Order.Place(OrderId.Of(Guid.NewGuid()), orderData);
 
 		var orderWriteRepository = new DummyEventStoreRepository<Order>();
 		await orderWriteRepository.AppendEventsAndCommitAsync(order);
 
 		var quoteService = Substitute.For<IQuoteService>();
+		quoteService.ConfirmQuoteAsync(quoteId.Value, Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(true);
 		quoteService.GetQuoteDetailsAsync(quoteId.Value, Arg.Any<CancellationToken>())
 			.Returns(BuildQuote(quoteId, customerId, currency, productId));
 
@@ -54,12 +55,13 @@ public class ProcessOrderHandlerTests
 		var quoteId = QuoteId.Of(Guid.NewGuid());
 
 		var orderData = BuildOrderData(customerId, quoteId, currency, productId);
-		var order = Order.Place(orderData);
+		var order = Order.Place(OrderId.Of(Guid.NewGuid()), orderData);
 
 		var orderWriteRepository = new DummyEventStoreRepository<Order>();
 		await orderWriteRepository.AppendEventsAndCommitAsync(order);
 
 		var quoteService = Substitute.For<IQuoteService>();
+		quoteService.ConfirmQuoteAsync(quoteId.Value, Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(true);
 		quoteService.GetQuoteDetailsAsync(quoteId.Value, Arg.Any<CancellationToken>())
 			.Returns(BuildQuote(quoteId, customerId, currency, productId));
 
@@ -92,12 +94,13 @@ public class ProcessOrderHandlerTests
 		var currency = Currency.OfCode(Currency.USDollar.Code);
 		var quoteId = QuoteId.Of(Guid.NewGuid());
 
-		var order = Order.Place(BuildOrderData(customerId, quoteId, currency, productId));
+		var order = Order.Place(OrderId.Of(Guid.NewGuid()), BuildOrderData(customerId, quoteId, currency, productId));
 
 		var orderWriteRepository = new DummyEventStoreRepository<Order>();
 		await orderWriteRepository.AppendEventsAndCommitAsync(order);
 
 		var quoteService = Substitute.For<IQuoteService>();
+		quoteService.ConfirmQuoteAsync(quoteId.Value, Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(true);
 		quoteService.GetQuoteDetailsAsync(quoteId.Value, Arg.Any<CancellationToken>())
 			.Returns(BuildQuote(quoteId, customerId, currency, productId));
 

@@ -9,17 +9,18 @@ public class QuotesInternalController(
 ) : CustomControllerBase(bus)
 {
 	/// <summary>
-	/// Confirms a quote
+	/// Confirms a quote for the order placed from it.
 	/// </summary>
 	/// <param name="quoteId"></param>
+	/// <param name="request"></param>
 	/// <returns></returns>
 	[HttpPut, Route("{quoteId:guid}/confirm")]
 	[Authorize(Policy = Policies.CanWrite)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	public async Task<IActionResult> Confirm([FromRoute] Guid quoteId,
-		CancellationToken cancellationToken) =>
+		[FromBody] ConfirmQuoteRequest request, CancellationToken cancellationToken) =>
 		await Response(
-			ConfirmQuote.Create(QuoteId.Of(quoteId)),
+			ConfirmQuote.Create(QuoteId.Of(quoteId), OrderId.Of(request.OrderId)),
 			cancellationToken
 		);
 

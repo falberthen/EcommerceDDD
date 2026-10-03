@@ -23,7 +23,8 @@ public static class MartenConfigExtension
         var dataSource = new NpgsqlDataSourceBuilder(connectionString)
             .ConfigureTracing(tracing => tracing
                 .ConfigureCommandFilter(_ => Activity.Current is not null)
-                .ConfigureBatchFilter(_ => Activity.Current is not null))
+                .ConfigureBatchFilter(_ => Activity.Current is not null)
+                .EnablePhysicalOpenTracing(false))
             .Build();
 
         var martenConfiguration = services.AddMarten(options =>

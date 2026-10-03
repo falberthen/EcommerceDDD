@@ -2,7 +2,6 @@ const USER_EMAIL = 'user@test.com';
 const USER_PASSWORD = 'Password123!';
 
 const QUOTE_ID = '00000000-0000-0000-0000-000000000001';
-const ORDER_ID = '00000000-0000-0000-0000-000000000002';
 const CUSTOMER_ID = '00000000-0000-0000-0000-000000000003';
 
 const PRODUCTS = [
@@ -84,9 +83,9 @@ function setupApiMocks(): void {
     request.reply({ statusCode: 204 });
   }).as('removeQuoteItem');
 
-  cy.intercept('POST', '**/orderProcessing/api/v2/orders/quote/*', request => {
+  cy.intercept('PUT', '**/orderProcessing/api/v2/orders/*', request => {
     quoteItems = [];
-    request.reply({ statusCode: 201, body: { orderId: ORDER_ID } });
+    request.reply({ statusCode: 200 });
   }).as('placeOrder');
 
   cy.intercept('GET', '**/orderProcessing/api/v2/orders*', {

@@ -40,6 +40,8 @@ export class CartComponent implements OnInit {
   private quoteApiService = inject(QuoteApiService);
   private orderApiService = inject(OrderApiService);
   private destroyed = false;
+  // Kept until the order is placed, so a retry sends the same order id.
+  private pendingOrderId?: string;
 
   constructor() {
     inject(DestroyRef).onDestroy(() => this.destroyed = true);
@@ -211,7 +213,9 @@ export class CartComponent implements OnInit {
         if (this.quote && confirmed) {
           try {
             this.loaderService.setLoading(true);
-            await this.orderApiService.placeOrder(this.quote.quoteId!);
+            this.pendingOrderId ??= crypto.randomUUID();
+            await this.orderApiService.placeOrder(this.pendingOrderId, this.quote.quoteId!);
+            this.pendingOrderId = undefined;
             this.quoteNotificationService.changeQuoteItemsCount(0);
             this.notificationService.showSuccess('Order placed with success.');
             this.router.navigate(['/orders']);

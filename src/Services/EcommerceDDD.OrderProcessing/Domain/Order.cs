@@ -16,14 +16,16 @@ public class Order : AggregateRoot<OrderId>
 
     private List<OrderLine> _orderLines = default!;
 
-    public static Order Place(OrderData orderData)
+    public static Order Place(OrderId orderId, OrderData orderData)
     {
+        if (orderId is null)
+            throw new DomainException("The order Id is required.");
         if (orderData.CustomerId is null)
             throw new DomainException("The customer Id is required.");
         if (orderData.QuoteId is null)
             throw new DomainException("The quote Id is required.");        
 
-        return new Order(orderData);
+        return new Order(orderId, orderData);
     }
 
     public void Process(OrderData orderData)
@@ -193,12 +195,11 @@ public class Order : AggregateRoot<OrderId>
         return Money.Of(amount, currency.Code);
     }
 
-    private Order(OrderData orderData)
+    private Order(OrderId orderId, OrderData orderData)
     {
-        Guid orderId = Guid.NewGuid();
         var @event = new OrderPlaced(
             orderData.CustomerId.Value,
-            orderId,
+            orderId.Value,
             orderData.QuoteId.Value);
 
         AppendEvent(@event);

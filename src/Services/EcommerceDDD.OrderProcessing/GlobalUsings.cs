@@ -9,6 +9,7 @@ global using EcommerceDDD.Core.Infrastructure.Marten;
 global using EcommerceDDD.Core.Infrastructure.WebApi;
 global using EcommerceDDD.Core.Persistence;
 global using EcommerceDDD.Core.Validation;
+global using EcommerceDDD.OrderProcessing.API.Controllers.Requests;
 global using EcommerceDDD.OrderProcessing.Application;
 global using EcommerceDDD.OrderProcessing.Application.GettingOrderEventHistory;
 global using EcommerceDDD.OrderProcessing.Application.Orders.CancelingOrder;

@@ -26,7 +26,7 @@ public class ConfirmDeliveryHandlerTests : IDisposable
 
 		var totalPaid = Money.Of(quoteItems.Sum(p => p.UnitPrice.Amount), currency.Code);
 		var orderData = new OrderData(customerId, quoteId, currency, quoteItems);
-		var order = Order.Place(orderData);
+		var order = Order.Place(OrderId.Of(Guid.NewGuid()), orderData);
 
 		order.Process(orderData);
 		order.RecordPayment(paymentId, totalPaid);

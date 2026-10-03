@@ -18,6 +18,12 @@ public class PlaceOrderHandler(
 
 	public async Task<Result> HandleAsync(PlaceOrder command, CancellationToken cancellationToken)
 	{
+		// A retry of an order already placed.
+		var placedOrder = await _orderWriteRepository
+			.FetchForWritingAsync(command.OrderId.Value, cancellationToken: cancellationToken);
+		if (placedOrder is not null)
+			return Result.Ok();
+
 		var quoteResult = await GetQuoteAsync(command, cancellationToken);
 		if (quoteResult.IsFailed)
 			return Result.Fail(quoteResult.Errors);
@@ -33,8 +39,6 @@ public class PlaceOrderHandler(
 		if (!quote.Items!.Any())
 			return Result.Fail(new ValidationError("No quote items found for customer."));
 
-		await _quoteService.ConfirmQuoteAsync(quote.QuoteId!.Value, cancellationToken);
-
 		var orderItems = quote.Items!.Select(qi => new ProductItemData()
 		{
 			ProductId = ProductId.Of(qi.ProductId!.Value),
@@ -49,15 +53,13 @@ public class PlaceOrderHandler(
 			Currency.OfCode(quote.CurrencyCode!),
 			orderItems);
 
-		var order = Order.Place(orderData);
-		// "order.id" is the key the SPA's Aspire trace deep-link filters on. Elsewhere
-		// Wolverine's [Audit] on a command's OrderId writes it; PlaceOrder has no id yet.
-		Activity.Current?.SetTag("order.id", order.Id.Value);
+		var order = Order.Place(command.OrderId, orderData);
 
 		var orderPlacedEvent = order.GetUncommittedEvents()
 			.OfType<OrderPlaced>().FirstOrDefault();
 
-		// Committed with the order, so the saga is guaranteed to start the order fulfilment
+		// Committed with the order, so the saga is guaranteed to start the order fulfilment.
+		// The quote is confirmed by ProcessOrder.
 		await _orderWriteRepository
 			.AppendEventsAndCommitAsync(order, cancellationToken, orderPlacedEvent!);
 

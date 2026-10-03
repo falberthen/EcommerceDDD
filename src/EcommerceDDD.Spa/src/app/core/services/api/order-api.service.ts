@@ -19,11 +19,11 @@ export class OrderApiService {
       .history.get();
   }
 
-  placeOrder(quoteId: string) {
+  placeOrder(orderId: string, quoteId: string) {
     return this.kiotaClientService.client
-      .orderProcessing.api.v2.orders.quote
-      .byQuoteId(quoteId)
-      .post();
+      .orderProcessing.api.v2.orders
+      .byOrderId(orderId)
+      .put({ quoteId });
   }
 
   confirmDelivery(orderId: string) {

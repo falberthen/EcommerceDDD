@@ -1,4 +1,5 @@
 namespace EcommerceDDD.QuoteManagement.Domain.Events;
 
 public record class QuoteConfirmed(
-    Guid QuoteId) : DomainEvent;
+    Guid QuoteId,
+    Guid OrderId) : DomainEvent;

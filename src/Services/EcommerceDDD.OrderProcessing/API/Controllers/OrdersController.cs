@@ -37,18 +37,19 @@ public class OrdersController(
 		);
 
 	/// <summary>
-	/// Places an order from a quote
+	/// Places an order from a quote. 
 	/// </summary>
-	/// <param name="quoteId"></param>
+	/// <param name="orderId"></param>
+	/// <param name="request"></param>
 	/// <param name="cancellationToken"></param>
 	/// <returns></returns>
-	[HttpPost, Route("quote/{quoteId:guid}")]
+	[HttpPut, Route("{orderId:guid}")]
 	[Authorize(Policy = Policies.CanWrite)]
 	[ProducesResponseType(StatusCodes.Status200OK)]
-	public async Task<IActionResult> PlaceOrderFromQuote([FromRoute] Guid quoteId,
-		CancellationToken cancellationToken) =>
+	public async Task<IActionResult> PlaceOrderFromQuote([FromRoute] Guid orderId,
+		[FromBody] PlaceOrderRequest request, CancellationToken cancellationToken) =>
 		await Response(
-			PlaceOrder.Create(QuoteId.Of(quoteId)),
+			PlaceOrder.Create(OrderId.Of(orderId), QuoteId.Of(request.QuoteId)),
 			cancellationToken
 		);
 

@@ -18,7 +18,7 @@ public class OrderEventsTests
 		var orderData = new OrderData(_customerId, _quoteId, currency, quoteItems);
 
 		// When
-		var order = Order.Place(orderData);
+		var order = Order.Place(OrderId.Of(Guid.NewGuid()), orderData);
 
 		// Then
 		var @event = order.GetUncommittedEvents().LastOrDefault() as OrderPlaced;
@@ -40,7 +40,7 @@ public class OrderEventsTests
 		};
 
 		var orderData = new OrderData(_customerId, _quoteId, currency, quoteItems);
-		var order = Order.Place(orderData);
+		var order = Order.Place(OrderId.Of(Guid.NewGuid()), orderData);
 
 		// When
 		order.Process(orderData);
@@ -67,7 +67,7 @@ public class OrderEventsTests
 		};
 
 		var orderData = new OrderData(_customerId, _quoteId, currency, quoteItems);
-		var order = Order.Place(orderData);
+		var order = Order.Place(OrderId.Of(Guid.NewGuid()), orderData);
 		order.Process(orderData);
 
 		// When
@@ -95,7 +95,7 @@ public class OrderEventsTests
 		};
 
 		var orderData = new OrderData(_customerId, _quoteId, currency, quoteItems);
-		var order = Order.Place(orderData);
+		var order = Order.Place(OrderId.Of(Guid.NewGuid()), orderData);
 		order.Process(orderData);
 		order.RecordPayment(_paymentId, totalPaid);
 
@@ -125,7 +125,7 @@ public class OrderEventsTests
 
 		var orderData = new OrderData(_customerId, _quoteId, currency, quoteItems);
 
-		var order = Order.Place(orderData);
+		var order = Order.Place(OrderId.Of(Guid.NewGuid()), orderData);
 		order.Process(orderData);
 		order.RecordPayment(_paymentId, totalPaid);
 		order.RecordShipment(_shipmentId);
@@ -153,7 +153,7 @@ public class OrderEventsTests
 		};
 
 		var orderData = new OrderData(_customerId, _quoteId, currency, quoteItems);
-		var order = Order.Place(orderData);
+		var order = Order.Place(OrderId.Of(Guid.NewGuid()), orderData);
 
 		// When
 		order.Cancel(OrderCancellationReason.ShipmentNotDelivered);

@@ -25,7 +25,7 @@ public class RecordPaymentToOrderHandlerTests
 		var totalPaid = Money.Of(100, currency.Code);
 		var paymentId = PaymentId.Of(Guid.NewGuid());
 
-		var order = Order.Place(orderData);
+		var order = Order.Place(OrderId.Of(Guid.NewGuid()), orderData);
 		order.Process(orderData);
 
 		var orderWriteRepository = new DummyEventStoreRepository<Order>();

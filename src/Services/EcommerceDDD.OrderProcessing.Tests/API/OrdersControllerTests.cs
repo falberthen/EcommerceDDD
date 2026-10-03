@@ -97,7 +97,8 @@ public class OrdersControllerTests
 
         // When
         var response = await _ordersController
-            .PlaceOrderFromQuote(quoteId, CancellationToken.None);
+            .PlaceOrderFromQuote(Guid.NewGuid(), new PlaceOrderRequest { QuoteId = quoteId },
+                CancellationToken.None);
 
         // Then
 		Assert.IsType<OkResult>(response);

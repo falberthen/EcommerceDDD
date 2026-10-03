@@ -14,7 +14,7 @@ public class ConfirmQuoteHandler(
         if (quote is null)
             return Result.Fail(new RecordNotFoundError($"The quote {command.QuoteId} not found."));
 
-        quote.Confirm();
+        quote.Confirm(command.OrderId);
 
         await _quoteWriteRepository
 			.AppendEventsAndCommitAsync(quote, cancellationToken);

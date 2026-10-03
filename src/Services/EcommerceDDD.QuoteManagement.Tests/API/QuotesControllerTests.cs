@@ -134,6 +134,7 @@ public class QuotesControllerTests
 
 		// When
 		var response = await _quotesInternalController.Confirm(quoteId,
+			new ConfirmQuoteRequest { OrderId = Guid.NewGuid() },
 			CancellationToken.None);
 
 		// Then

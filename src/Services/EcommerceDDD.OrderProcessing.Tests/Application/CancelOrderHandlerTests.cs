@@ -10,7 +10,7 @@ public class CancelOrderHandlerTests : IDisposable
 		var customerId = CustomerId.Of(Guid.NewGuid());
 
 		var orderData = new OrderData(customerId, quoteId);
-		var order = Order.Place(orderData);
+		var order = Order.Place(OrderId.Of(Guid.NewGuid()), orderData);
 
 		var orderWriteRepository = new DummyEventStoreRepository<Order>();
 		await orderWriteRepository.AppendEventsAndCommitAsync(order);
@@ -48,7 +48,7 @@ public class CancelOrderHandlerTests : IDisposable
 				UnitPrice = Money.Of(10, currency.Code)
 			}
 		});
-		var order = Order.Place(orderData);
+		var order = Order.Place(OrderId.Of(Guid.NewGuid()), orderData);
 		order.Process(orderData);
 
 		var orderWriteRepository = new DummyEventStoreRepository<Order>();
@@ -72,7 +72,7 @@ public class CancelOrderHandlerTests : IDisposable
 	public async Task CancelOrder_WhenRetried_ShouldCountCanceledOrderOnceWithReason_AndNoOrderId()
 	{
 		// Given
-		var order = Order.Place(new OrderData(CustomerId.Of(Guid.NewGuid()), QuoteId.Of(Guid.NewGuid())));
+		var order = Order.Place(OrderId.Of(Guid.NewGuid()), new OrderData(CustomerId.Of(Guid.NewGuid()), QuoteId.Of(Guid.NewGuid())));
 		var orderWriteRepository = new DummyEventStoreRepository<Order>();
 		await orderWriteRepository.AppendEventsAndCommitAsync(order);
 

@@ -8,6 +8,7 @@ global using EcommerceDDD.Core.Validation;
 global using FluentResults;
 global using JasperFx;
 global using JasperFx.Events;
+global using Marten.Exceptions;
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.Extensions.Caching.Memory;

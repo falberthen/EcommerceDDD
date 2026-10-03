@@ -9,6 +9,7 @@ public class ShipmentDetails
     public IReadOnlyList<ProductItemDetails> ProductItems { get; set; } = default!;
     public DateTime? CreatedAt { get; set; }
     public DateTime? ShippedAt { get; set; }
+    public DateTime? CanceledAt { get; set; }
     public ShipmentStatus Status { get; set; }
 
     internal void Apply(ShipmentCreated @event)
@@ -30,5 +31,11 @@ public class ShipmentDetails
     {
         ShippedAt = @event.Timestamp;
         Status = ShipmentStatus.Shipped;
+    }
+
+    internal void Apply(ShipmentCanceled @event)
+    {
+        CanceledAt = @event.Timestamp;
+        Status = ShipmentStatus.Canceled;
     }
 }

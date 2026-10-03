@@ -26,6 +26,7 @@ public class OrderMetrics
 				OrderCancellationReason.ProductWasOutOfStock => "out_of_stock",
 				OrderCancellationReason.CustomerReachedStoreCreditLimit => "credit_limit",
 				OrderCancellationReason.ShipmentNotDelivered => "not_delivered",
+				OrderCancellationReason.QuoteUnavailable => "quote_unavailable",
 				_ => "other"
 			}));
 }
