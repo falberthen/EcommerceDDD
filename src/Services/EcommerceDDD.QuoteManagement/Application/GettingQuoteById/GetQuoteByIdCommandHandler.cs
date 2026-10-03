@@ -53,8 +53,7 @@ public class GetQuoteByIdCommandHandler(
 						p.ProductId == quoteItem.ProductId);
 
 					if (product is null)
-						return Result.Fail<QuoteViewModel>(
-							$"The product {quoteItem.ProductId} is invalid.");
+						throw new RecordNotFoundException($"The product {quoteItem.ProductId} is not in the catalog.");
 
 					catalogItems.Add(new QuoteItemViewModel()
 					{

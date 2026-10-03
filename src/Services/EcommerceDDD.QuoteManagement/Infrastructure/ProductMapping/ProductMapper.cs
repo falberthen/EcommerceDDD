@@ -9,19 +9,12 @@ public class ProductMapper(IProductCatalogService productCatalogService) : IProd
 			.Select(p => (Guid?)p.Value)
 			.ToList();
 
-		try
-		{
-			var response = await productCatalogService
-				.GetProductsAsync(currency.Code, productIdValues, cancellationToken);
+		var response = await productCatalogService
+			.GetProductsAsync(currency.Code, productIdValues, cancellationToken);
 
-			if (response is null)
-				return Result.Fail<IEnumerable<ProductViewModel>>("An error occurred while retrieving products from catalog.");
+		if (response is null)
+			throw new InvalidOperationException("The product catalog returned no products.");
 
-			return Result.Ok<IEnumerable<ProductViewModel>>(response);
-		}
-		catch (Exception)
-		{
-			return Result.Fail<IEnumerable<ProductViewModel>>("An error occurred requesting products from catalog.");
-		}
+		return Result.Ok<IEnumerable<ProductViewModel>>(response);
 	}
 }

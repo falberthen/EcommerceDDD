@@ -21,7 +21,7 @@ public class IncreaseQuantityInStockHandler(
 			.FetchForWritingAsync(inventoryStockUnitId, cancellationToken: cancellationToken);
 
 		if (inventoryStockUnit is null)
-			return Result.Fail($"The inventory stock unit {inventoryStockUnitId} was not found.");
+			throw new RecordNotFoundException($"The inventory stock unit {inventoryStockUnitId} was not found.");
 
 		inventoryStockUnit.IncreaseStockQuantity(command.QuantityIncreased, command.OrderId);
 
