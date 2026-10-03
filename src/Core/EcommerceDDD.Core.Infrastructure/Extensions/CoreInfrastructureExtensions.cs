@@ -22,6 +22,9 @@ public static class CoreInfrastructureExtensions
 
 			options.DefaultSerializer = new NewtonsoftMessageSerializer();
 
+			// Node assignment health checks are background polling, not traces worth keeping.
+			options.Durability.NodeAssignmentHealthCheckTracingEnabled = false;
+
 			// The service's own options come first, so its failure rules take precedence over the ones below.
 			configureWolverine?.Invoke(options);
 
@@ -43,6 +46,7 @@ public static class CoreInfrastructureExtensions
 				.OnException<HttpRequestException>()
 				.Or<ConcurrencyException>()
 				.Or<DocumentAlreadyExistsException>()
+				.Or<ExistingStreamIdCollisionException>()
 				.RetryWithCooldown(
 					TimeSpan.FromMilliseconds(50), TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(250))
 				.Then.ScheduleRetry(RetryDelays);

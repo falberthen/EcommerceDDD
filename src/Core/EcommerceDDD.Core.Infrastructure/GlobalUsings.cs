@@ -18,6 +18,7 @@ global using JasperFx;
 global using JasperFx.CodeGeneration;
 global using JasperFx.CodeGeneration.Frames;
 global using JasperFx.Events;
+global using Marten.Exceptions;
 global using Marten;
 global using Marten.Newtonsoft;
 global using Microsoft.AspNetCore.Authentication;

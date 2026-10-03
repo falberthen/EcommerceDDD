@@ -16,6 +16,7 @@ public static class FailureProbeHandler
 			"dependency unreachable" => new HttpRequestException("connection refused"),
 			"write conflict" => new EventStreamUnexpectedMaxEventIdException("stream changed"),
 			"duplicate insert" => new DocumentAlreadyExistsException(new Exception("unique index"), typeof(FailureProbe), probe.Id),
+			"duplicate stream" => new ExistingStreamIdCollisionException(probe.Id, typeof(FailureProbe)),
 			_ => new InvalidOperationException("dependency down")
 		};
 	}
@@ -28,6 +29,7 @@ public class FailureHandlingTests(FailureHandlingTests.WolverineHost wolverine)
 	[InlineData("dependency unreachable", typeof(HttpRequestException))]
 	[InlineData("write conflict", typeof(EventStreamUnexpectedMaxEventIdException))]
 	[InlineData("duplicate insert", typeof(DocumentAlreadyExistsException))]
+	[InlineData("duplicate stream", typeof(ExistingStreamIdCollisionException))]
 	public async Task Invoked_TransientException_ShouldBeRetriedInPlace(string outcome, Type exception)
 	{
 		// Given
