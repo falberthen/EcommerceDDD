@@ -1,15 +1,19 @@
 namespace EcommerceDDD.PaymentProcessing.Application.RequestingPayment;
 
 public class RequestPaymentHandler(
-	IMessageBus bus,
+	IOrderPaymentLookup orderPaymentLookup,
 	IEventStoreRepository<Payment> paymentWriteRepository
 )
 {
-	private readonly IMessageBus _bus = bus;
+	private readonly IOrderPaymentLookup _orderPaymentLookup = orderPaymentLookup;
 	private readonly IEventStoreRepository<Payment> _paymentWriteRepository = paymentWriteRepository;
 
 	public async Task<Result> HandleAsync(RequestPayment command, CancellationToken cancellationToken)
     {
+		// Requested by an earlier attempt.
+		if (await _orderPaymentLookup.HasPaymentAsync(command.OrderId, cancellationToken))
+			return Result.Ok();
+
         var paymentData = new PaymentData(
             command.CustomerId,
             command.OrderId,
@@ -18,10 +22,14 @@ public class RequestPaymentHandler(
 
         var payment = Payment.Create(paymentData);
 
-        await _paymentWriteRepository
-			.AppendEventsAndCommitAsync(payment, cancellationToken);
+		var paymentCreatedEvent = payment.GetUncommittedEvents()
+			.OfType<PaymentCreated>()
+			.FirstOrDefault();
 
-        return await _bus.InvokeAsync<Result>(
-            ProcessPayment.Create(payment.Id, command.OrderId), cancellationToken);
+		// Committed with the payment, so the payment is guaranteed to be processed.
+        await _paymentWriteRepository
+			.AppendEventsAndCommitAsync(payment, cancellationToken, paymentCreatedEvent!);
+
+        return Result.Ok();
     }
 }

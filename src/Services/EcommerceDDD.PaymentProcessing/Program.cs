@@ -9,12 +9,16 @@ services.AddEndpointsApiExplorer();
 services.AddCoreInfrastructure(builder.Configuration, options =>
 {
     options.UseServiceClientServiceLocation();
+    options.DeadLetterServiceClientRejections();
 
     options.UseKafka(builder.Configuration["Kafka:ConnectionString"]!)
         .AutoProvision();
 
     options.PublishMessage<PaymentFinalized>().ToKafkaTopic("payments").UseDurableOutbox();
     options.PublishMessage<CustomerReachedStoreCreditLimit>().ToKafkaTopic("payments").UseDurableOutbox();
+
+    // Payment processing runs over durable local queues, so a crash can't leave a payment pending.
+    options.Policies.UseDurableLocalQueues();
 });
 services.AddHealthChecks();
 
@@ -23,6 +27,7 @@ services.AddCustomerManagementServiceClient(builder.Configuration);
 
 // Services
 services.AddScoped<ICustomerStoreCreditChecker, CustomerStoreCreditChecker>();
+services.AddScoped<IOrderPaymentLookup, OrderPaymentLookup>();
 services.AddScoped<IEventStoreRepository<Payment>, MartenRepository<Payment>>();
 
 // Marten
