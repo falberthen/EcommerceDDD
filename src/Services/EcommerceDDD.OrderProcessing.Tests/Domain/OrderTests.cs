@@ -8,7 +8,7 @@ public class OrderTests
 		var orderData = new OrderData(_customerId, _quoteId, currency);
 
 		// When
-		var order = Order.Place(orderData);
+		var order = Order.Place(OrderId.Of(Guid.NewGuid()), orderData);
 
 		// Then
 		Assert.NotNull(order);
@@ -22,7 +22,7 @@ public class OrderTests
 	{
 		// Given
 		var orderData = new OrderData(_customerId, _quoteId, currency);
-		var order = Order.Place(orderData);
+		var order = Order.Place(OrderId.Of(Guid.NewGuid()), orderData);
 
 		var productId = ProductId.Of(Guid.NewGuid());
 		var productPrice = Money.Of(15, Currency.USDollar.Code);
@@ -55,7 +55,7 @@ public class OrderTests
 	{
 		// Given
 		var orderData = new OrderData(_customerId, _quoteId, currency);
-		var order = Order.Place(orderData);
+		var order = Order.Place(OrderId.Of(Guid.NewGuid()), orderData);
 
 		// When & Then
 		Assert.Throws<DomainException>(() => 

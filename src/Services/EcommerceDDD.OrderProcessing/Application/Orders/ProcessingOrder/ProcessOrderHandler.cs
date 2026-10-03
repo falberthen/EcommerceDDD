@@ -47,7 +47,14 @@ public class ProcessOrderHandler(
 		if (order.Status != OrderStatus.Placed)
 			return Result.Ok();
 
-		// Getting open quote data
+		// Confirmed before reading the items, so the order lines are the confirmed quote's.
+		if (!await _quoteService.ConfirmQuoteAsync(command.QuoteId.Value, order.Id.Value, cancellationToken))
+		{
+			await _messageBus.PublishAsync(
+				CancelOrder.Create(order.Id, OrderCancellationReason.QuoteUnavailable));
+			return Result.Ok();
+		}
+
 		var quote = await _quoteService.GetQuoteDetailsAsync(command.QuoteId.Value, cancellationToken)
 			?? throw new RecordNotFoundException($"Quote {command.QuoteId} not found.");
 		var quoteId = QuoteId.Of(quote.QuoteId!.Value);
