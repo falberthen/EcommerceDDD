@@ -8,7 +8,9 @@ services.AddHttpClient();
 services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddCoreInfrastructure(builder.Configuration,
-	options => options.UseServiceClientServiceLocation());
+	options => options
+		.UseServiceClientServiceLocation()
+		.DeadLetterServiceClientRejections());
 services.AddHealthChecks();
 
 // Service clients

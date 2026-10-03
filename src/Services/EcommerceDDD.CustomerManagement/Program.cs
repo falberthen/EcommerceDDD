@@ -7,7 +7,9 @@ services.AddApiVersioning(ApiVersions.V2);
 services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddCoreInfrastructure(builder.Configuration,
-	options => options.UseServiceClientServiceLocation());
+	options => options
+		.UseServiceClientServiceLocation()
+		.DeadLetterServiceClientRejections());
 services.AddHealthChecks();
 
 // Service clients

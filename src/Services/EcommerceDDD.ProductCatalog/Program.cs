@@ -10,6 +10,7 @@ services.AddEndpointsApiExplorer();
 services.AddCoreInfrastructure(builder.Configuration, options =>
 {
 	options.UseServiceClientServiceLocation();
+	options.DeadLetterServiceClientRejections();
 	// EF Core registers DbContextOptions as an opaque Scoped factory that codegen can't inline.
 	options.CodeGeneration.AlwaysUseServiceLocationFor<ProductsDbContext>();
 });
