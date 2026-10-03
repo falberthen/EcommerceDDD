@@ -10,9 +10,23 @@ public class QuoteService(QuoteManagementClient quoteManagementClient) : IQuoteS
             .GetAsync(cancellationToken: cancellationToken);
     }
 
-    public async Task ConfirmQuoteAsync(Guid quoteId, CancellationToken cancellationToken)
+    public async Task<bool> ConfirmQuoteAsync(Guid quoteId, Guid orderId, CancellationToken cancellationToken)
     {
-        await _quoteManagementClient.Api.V2.Internal.Quotes[quoteId].Confirm
-            .PutAsync(cancellationToken: cancellationToken);
+        var request = new ConfirmQuoteRequest()
+        {
+            OrderId = orderId
+        };
+
+        try
+        {
+            await _quoteManagementClient.Api.V2.Internal.Quotes[quoteId].Confirm
+                .PutAsync(request, cancellationToken: cancellationToken);
+            return true;
+        }
+        // 422 is the quote's business rule (taken by another order or cancelled), not a technical failure to retry.
+        catch (ApiException ex) when (ex.ResponseStatusCode == (int)HttpStatusCode.UnprocessableEntity)
+        {
+            return false;
+        }
     }
 }
