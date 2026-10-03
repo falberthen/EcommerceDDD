@@ -13,17 +13,9 @@ public class ShipPackageHandlerTests
             new ProductItem(ProductId.Of(Guid.NewGuid()), 1)
         };
 
-        _customerManagementService
-            .GetShippingAddressAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
-            .Returns("123 Main St");
-
+        var shipment = Shipment.Create(new ShipmentData(orderId, "123 Main St", productItems));
         var shipmentWriteRepository = new DummyEventStoreRepository<Shipment>();
-
-        var requestShipment = RequestShipment.Create(orderId, Guid.NewGuid(), productItems);
-        var requestShipmentHandler = new RequestShipmentHandler(_bus, _customerManagementService, shipmentWriteRepository);
-        await requestShipmentHandler.HandleAsync(requestShipment, CancellationToken.None);
-        var shipment = shipmentWriteRepository.AggregateStream.First().Aggregate;
-        Assert.NotNull(shipment);
+        await shipmentWriteRepository.AppendEventsAndCommitAsync(shipment);
 
         var shipPackage = ProcessShipment.Create(shipment.Id, orderId);
         var shipPackageHandler = new ProcessShipmentHandler(Substitute.For<IConfiguration>(), shipmentWriteRepository);
@@ -51,16 +43,9 @@ public class ShipPackageHandlerTests
 		};
 
 		// The shipping address carries the sentinel marker, which the carrier simulation treats as undeliverable.
-		_customerManagementService
-			.GetShippingAddressAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
-			.Returns("308 Permanent Redirect Ave");
-
+		var shipment = Shipment.Create(new ShipmentData(orderId, "308 Permanent Redirect Ave", productItems));
 		var shipmentWriteRepository = new DummyEventStoreRepository<Shipment>();
-
-		var requestShipment = RequestShipment.Create(orderId, Guid.NewGuid(), productItems);
-		var requestShipmentHandler = new RequestShipmentHandler(_bus, _customerManagementService, shipmentWriteRepository);
-		await requestShipmentHandler.HandleAsync(requestShipment, CancellationToken.None);
-		var shipment = shipmentWriteRepository.AggregateStream.First().Aggregate;
+		await shipmentWriteRepository.AppendEventsAndCommitAsync(shipment);
 
 		var configuration = Substitute.For<IConfiguration>();
 		configuration["ShipmentFailureSimulation:UndeliverableAddressMarker"].Returns("308");
@@ -78,6 +63,26 @@ public class ShipPackageHandlerTests
 		Assert.Equal(orderId.Value, published.OrderId);
 	}
 
-	private IMessageBus _bus = Substitute.For<IMessageBus>();
-	private ICustomerManagementService _customerManagementService = Substitute.For<ICustomerManagementService>();
+	[Fact]
+	public async Task ProcessShipment_WhenAlreadyShipped_ShouldSucceedWithoutChangingIt()
+	{
+		// Given: shipped by an earlier attempt
+		var orderId = OrderId.Of(Guid.NewGuid());
+		var shipment = Shipment.Create(new ShipmentData(orderId, "123 Main St",
+			new List<ProductItem>() { new ProductItem(ProductId.Of(Guid.NewGuid()), 1) }));
+		shipment.Complete();
+
+		var shipmentWriteRepository = new DummyEventStoreRepository<Shipment>();
+		await shipmentWriteRepository.AppendEventsAndCommitAsync(shipment);
+
+		var processShipmentHandler = new ProcessShipmentHandler(Substitute.For<IConfiguration>(), shipmentWriteRepository);
+
+		// When
+		await processShipmentHandler.HandleAsync(
+			ProcessShipment.Create(shipment.Id, orderId), CancellationToken.None);
+
+		// Then
+		Assert.Single(shipmentWriteRepository.AggregateStream);
+		Assert.Empty(shipmentWriteRepository.PublishedMessages);
+	}
 }

@@ -19,21 +19,48 @@ public class RequestShipmentHandlerTests
 
         var shipmentWriteRepository = new DummyEventStoreRepository<Shipment>();
         var requestShipment = RequestShipment.Create(orderId, Guid.NewGuid(), productItems);
-        var requestShipmentHandler = new RequestShipmentHandler(_bus, _customerManagementService, shipmentWriteRepository);
+        var requestShipmentHandler = new RequestShipmentHandler(_customerManagementService, _orderShipmentLookup, shipmentWriteRepository);
 
         // When
         await requestShipmentHandler.HandleAsync(requestShipment, CancellationToken.None);
 
         // Then
         var shipment = shipmentWriteRepository.AggregateStream.First().Aggregate;
-        Assert.NotNull(shipment);        
+        Assert.NotNull(shipment);
 		Assert.Equal(shipment.OrderId, orderId);
 		Assert.Equal(shipment.ProductItems.Count(), productItems.Count());
 		Assert.NotEqual(default(DateTime), shipment.CreatedAt);
 		Assert.Null(shipment.ShippedAt);
 		Assert.Equal(ShipmentStatus.Pending, shipment.Status);
+		var shipmentCreated = Assert.IsType<ShipmentCreated>(Assert.Single(shipmentWriteRepository.PublishedMessages));
+		Assert.Equal(shipment.Id.Value, shipmentCreated.ShipmentId);
 	}
 
-    private IMessageBus _bus = Substitute.For<IMessageBus>();
+	[Fact]
+	public async Task RequestShipment_WhenOrderAlreadyHasShipment_ShouldNotCreateAnother()
+	{
+		// Given
+		var orderId = OrderId.Of(Guid.NewGuid());
+		var productItems = new List<ProductItem>() {
+			new ProductItem(ProductId.Of(Guid.NewGuid()), 1)
+		};
+		_orderShipmentLookup.HasShipmentAsync(orderId, Arg.Any<CancellationToken>())
+			.Returns(true);
+
+		var shipmentWriteRepository = new DummyEventStoreRepository<Shipment>();
+		var requestShipment = RequestShipment.Create(orderId, Guid.NewGuid(), productItems);
+		var requestShipmentHandler = new RequestShipmentHandler(_customerManagementService, _orderShipmentLookup, shipmentWriteRepository);
+
+		// When
+		await requestShipmentHandler.HandleAsync(requestShipment, CancellationToken.None);
+
+		// Then
+		Assert.Empty(shipmentWriteRepository.AggregateStream);
+		Assert.Empty(shipmentWriteRepository.PublishedMessages);
+		await _customerManagementService.DidNotReceive()
+			.GetShippingAddressAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
+	}
+
     private ICustomerManagementService _customerManagementService = Substitute.For<ICustomerManagementService>();
+	private IOrderShipmentLookup _orderShipmentLookup = Substitute.For<IOrderShipmentLookup>();
 }

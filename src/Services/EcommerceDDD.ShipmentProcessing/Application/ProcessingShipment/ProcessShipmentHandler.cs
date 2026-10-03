@@ -14,7 +14,11 @@ public class ProcessShipmentHandler(
 				.FetchForWritingAsync(command.ShipmentId.Value, cancellationToken: cancellationToken);
 
 		if (shipment is null)
-			return Result.Fail($"The shipment {command.ShipmentId.Value} was not found.");
+			throw new RecordNotFoundException($"The shipment {command.ShipmentId.Value} was not found.");
+
+		// Settled by an earlier attempt.
+		if (shipment.Status != ShipmentStatus.Pending)
+			return Result.Ok();
 
 		INotification integrationEvent;
 
