@@ -27,14 +27,12 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 
 RUN mkdir -p /app/Ocelot
-COPY src/Crosscutting/EcommerceDDD.ApiGateway/Ocelot/ocelot.json /app/Ocelot/ocelot.json
 
 # 1654 is the 'app' User's UID default on.NET 8/10
 # Diving full permissions (777) to this folder to ensure ocelot file merge
 RUN chown -R 1654:1654 /app && \
     chmod -R 777 /app/Ocelot
 
-# Mudamos para o usuário padrão da imagem
 USER 1654
 
 ENTRYPOINT ["dotnet", "EcommerceDDD.ApiGateway.dll"]

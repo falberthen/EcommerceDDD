@@ -82,6 +82,7 @@ export class OrdersComponent implements OnInit {
 
   async loadOrders() {
     try {
+      this.loaderService.setLoading(true);
       await this.orderApiService.getOrders().then((result) => {
         if (result) {
           this.orders = result;
@@ -90,6 +91,8 @@ export class OrdersComponent implements OnInit {
       });
     } catch (error) {
       this.orderApiService.handleError(error);
+    } finally {
+      this.loaderService.setLoading(false);
     }
   }
 

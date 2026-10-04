@@ -23,14 +23,6 @@
 		<ProjectReference Include="..\..\Core\EcommerceDDD.Core\EcommerceDDD.Core.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Content Update="Ocelot\ocelot.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-		</Content>
-	</ItemGroup>
-
 	<ProjectExtensions>
 		<VisualStudio>
 			<UserProperties />

@@ -101,8 +101,8 @@ export class ProductSelectionComponent implements OnInit {
 
   async saveCart(product: ProductViewModel) {
     try {
+      this.loaderService.setLoading(true);
       if (!this.cart()?.quote) {
-        this.loaderService.setLoading(true);
         await this.createQuote();
       }
 

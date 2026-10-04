@@ -41,7 +41,8 @@ public static class MartenConfigExtension
 
             // Custom store options
             configureOptions?.Invoke(options);
-        }).UseLightweightSessions();
+        }).UseLightweightSessions()
+        .ApplyAllDatabaseChangesOnStartup();
 
         // Wolverine's inbox/outbox tables live in the same database, created by Marten's
         // schema management. MartenRepository takes IMartenOutbox and this registration is what supplies it.

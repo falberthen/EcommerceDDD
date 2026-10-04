@@ -3,7 +3,7 @@
     {
       "DownstreamPathTemplate": "/api/v{version}/signalr",
       "UpstreamPathTemplate": "/api/v{version}/signalr",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "ws",
       "DownstreamHostAndPorts": [
         {
           "Host": "ecommerceddd-signalr",

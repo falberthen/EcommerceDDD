@@ -56,6 +56,8 @@ builder.Services.AddIdentityServer(opt =>
 		opt.IssuerUri = tokenIssuerSettings.GetValue<string>("Authority");
 
 		opt.KeyManagement.Enabled = true;
+		// Single instance, so the first signing key needs no wait for other instances.
+		opt.KeyManagement.InitializationSynchronizationDelay = TimeSpan.Zero;
 	})
     .AddOperationalStore(options =>
     {

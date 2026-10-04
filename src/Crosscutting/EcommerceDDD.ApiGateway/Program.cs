@@ -1,10 +1,9 @@
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 IServiceCollection services = builder.Services;
 
-// Load merged ocelot.json
+// Merge the per-route files into ocelot.json and load it
 builder.Configuration
 	.SetBasePath(Directory.GetCurrentDirectory())
-	.AddJsonFile("Ocelot/ocelot.json", optional: false, reloadOnChange: true)
 	.AddOcelot(
 		folder: "Ocelot",
 		env: builder.Environment,
