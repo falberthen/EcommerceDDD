@@ -1,5 +1,5 @@
 
-namespace EcommerceDDD.OrderProcessing.Application.GettingOrderEventHistory;
+namespace EcommerceDDD.OrderProcessing.Application.Orders.GettingOrderEventHistory;
 
 public record OrderEventHistory(
     Guid Id, 

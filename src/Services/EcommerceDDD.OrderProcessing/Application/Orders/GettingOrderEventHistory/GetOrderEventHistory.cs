@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.OrderProcessing.Application.GettingOrderEventHistory;
+﻿namespace EcommerceDDD.OrderProcessing.Application.Orders.GettingOrderEventHistory;
 
 public record class GetOrderEventHistory : IQuery<IReadOnlyList<OrderEventHistory>>
 {

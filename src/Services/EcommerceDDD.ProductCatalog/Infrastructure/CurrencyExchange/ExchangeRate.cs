@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.ProductCatalog.Infrastructure;
+﻿namespace EcommerceDDD.ProductCatalog.Infrastructure.CurrencyExchange;
 
 public record class ExchangeRate
 {

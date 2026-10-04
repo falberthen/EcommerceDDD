@@ -4,7 +4,7 @@ global using EcommerceDDD.Core.Testing;
 global using EcommerceDDD.Core.Validation;
 global using EcommerceDDD.OrderProcessing.API.Controllers;
 global using EcommerceDDD.OrderProcessing.API.Controllers.Requests;
-global using EcommerceDDD.OrderProcessing.Application.GettingOrderEventHistory;
+global using EcommerceDDD.OrderProcessing.Application.Orders.GettingOrderEventHistory;
 global using EcommerceDDD.OrderProcessing.Application.Orders.CancelingOrder;
 global using EcommerceDDD.OrderProcessing.Application.Orders.ConfirmingDelivery;
 global using EcommerceDDD.OrderProcessing.Application.Orders.GettingOrders;

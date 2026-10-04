@@ -4,6 +4,7 @@ global using EcommerceDDD.Core.Infrastructure.Identity;
 global using EcommerceDDD.Core.Infrastructure.Messaging;
 global using EcommerceDDD.Core.Infrastructure.OpenTelemetry;
 global using EcommerceDDD.Core.Infrastructure.WebApi;
+global using EcommerceDDD.Core.Infrastructure.Tests.Http;
 global using EcommerceDDD.Core.Validation;
 global using FluentResults;
 global using JasperFx;

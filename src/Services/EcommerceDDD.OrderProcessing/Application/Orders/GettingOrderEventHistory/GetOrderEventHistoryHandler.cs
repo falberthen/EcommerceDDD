@@ -1,4 +1,4 @@
-namespace EcommerceDDD.OrderProcessing.Application.GettingOrderEventHistory;
+namespace EcommerceDDD.OrderProcessing.Application.Orders.GettingOrderEventHistory;
 
 public class GetOrderEventHistoryHandler(
     IQuerySession querySession,

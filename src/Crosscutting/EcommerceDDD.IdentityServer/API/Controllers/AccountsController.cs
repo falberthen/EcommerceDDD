@@ -1,4 +1,4 @@
-namespace EcommerceDDD.IdentityServer.Controllers;
+namespace EcommerceDDD.IdentityServer.API.Controllers;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/accounts")]

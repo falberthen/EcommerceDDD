@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.Core.Infrastructure;
+﻿namespace EcommerceDDD.Core.Infrastructure.Identity;
 
 public record class TokenIssuerSettings
 {
