@@ -355,3 +355,6 @@ healthchecksdb
 tempkey.jwk
 /src/Crosscutting/EcommerceDDD.IdentityServer/tempkey.jwk
 /src/Crosscutting/EcommerceDDD.IdentityServer/tempkey.jwk
+
+# Generated at gateway startup by merging the per-route Ocelot files
+/src/Crosscutting/EcommerceDDD.ApiGateway/Ocelot/ocelot.json
