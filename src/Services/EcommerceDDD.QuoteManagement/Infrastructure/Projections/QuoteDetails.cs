@@ -10,7 +10,6 @@ public class QuoteDetails
     public QuoteStatus QuoteStatus { get; set; }
     public IList<QuoteItemDetails> Items { get; set; } = default!;
     public string CurrencyCode { get; private set; }
-    public decimal TotalPrice { get; set; }
 
     internal void Apply(QuoteOpen @event)
     {
