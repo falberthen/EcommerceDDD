@@ -71,17 +71,17 @@ An experimental full-stack application showcasing cutting-edge technologies and 
 
 | Layer | |
 |-------|-------------|
-| **Core** | Defines building blocks and abstractions used across all projects. Highly abstract with no implementations. |
-| **Core.Infrastructure** | Shared infrastructure abstractions and implementations for all microservices. |
-| **Crosscutting** | Projects that cross-cut all microservices: `IdentityServer`, `API Gateway`, and `ServiceClients` with Kiota-generated HTTP clients. |
-| **Services** | Backend microservices built with a vertically sliced structure. |
+| **Core** | Defines building blocks and abstractions used across all projects, such as the aggregate root, value object and repository contracts, shaped around event sourcing with Marten. |
+| **Core.Infrastructure** | Shared infrastructure abstractions and implementations for all microservices, such as authentication, messaging with Wolverine (inbox/outbox) and event sourcing with Marten. |
+| **Crosscutting** | Projects that cross-cut all microservices: `IdentityServer`, `API Gateway`, `SignalR` for real-time order updates, and `ServiceClients` with Kiota-generated HTTP clients. |
+| **Services** | Backend microservices, each self-contained with its own API, Application, Domain and Infrastructure, with use cases sliced by feature inside Application. |
 | **SPA** | Lightweight Angular-based Single Page Application. |
 
 <br/>
 
 ### Microservice Structure
 
-Each microservice follows a clean vertical slice architecture.
+Each microservice is self-contained with its own API, Application, Domain and Infrastructure, with use cases sliced by feature inside Application.
 
 ```
 ├── EcommerceDDD.ProductCatalog
@@ -97,13 +97,15 @@ Each microservice follows a clean vertical slice architecture.
 
 #### External Communication (SPA → Backend)
 
-- [Koalesce.OpenAPI](https://github.com/falberthen/Koalesce) aggregates all OpenAPI definitions exposed in the **API Gateway**.
+- The **API Gateway** routes requests to the microservices with [Ocelot](https://github.com/ThreeMammals/Ocelot), and [Koalesce](https://github.com/falberthen/Koalesce) merges their OpenAPI documents into a single spec.
 - **Kiota** generates typed TypeScript clients from this unified spec.
 - The Angular SPA communicates through the **API Gateway** using the clients.
+- Order status updates are pushed by the **SignalR** hub, which the SPA also reaches through the **API Gateway**.
 
 #### Internal Communication (Service-to-Service)
 
-Microservices communicate directly using **Kiota-generated typed HTTP clients**.
+- **Synchronous:** microservices call each other directly using **Kiota-generated typed HTTP clients**.
+- **Asynchronous:** messaging runs on [Wolverine](https://wolverinefx.net). `PaymentProcessing` and `ShipmentProcessing` publish integration events to the `payments` and `shipments` **Kafka** topics through the durable outbox. `OrderProcessing` is the only consumer, through the durable inbox, since the `OrderSaga` is orchestrated there. The saga's domain events travel over durable local queues.
 
 ---
 
@@ -166,6 +168,8 @@ docker compose --profile frontend up
 
 > 📧 **E-mails:** new accounts must confirm their e-mail before signing in, but no real e-mail is sent. Every confirmation and password-reset message lands in the [Mailpit](https://mailpit.axllent.org/) inbox at `http://localhost:8025`.
 
+> 🔍 **Local tools:** kafka-ui at `localhost:8080`, pgAdmin at `localhost:8081` and the Aspire dashboard at `localhost:18888`.
+
 <br/>
 
 ### Running the SPA locally (with hot-reload)
@@ -197,13 +201,13 @@ Tool services are defined in `docker-compose.override.yml`, which Docker Compose
 ## 📧 Support & Contributing
 
 - **Issues**: Report bugs or request features via [GitHub Issues](https://github.com/falberthen/EcommerceDDD/issues).
-- **Contributing**: Contributions are welcome! Please read [CONTRIBUTING.md](https://github.com/falberthen/EcommerceDDD/tree/master/docs/CONTRIBUTING.md) before submitting PRs.
+- **Contributing**: Contributions are welcome! Please read [CONTRIBUTING.md](https://github.com/falberthen/EcommerceDDD/blob/master/docs/CONTRIBUTING.md) before submitting PRs.
 
 ---
 
 ## 📄 License
 
-This project is licensed under the terms of the [LICENSE](LICENSE) file.
+This project is licensed under the terms of the [LICENSE](https://github.com/falberthen/EcommerceDDD/blob/master/LICENSE) file.
 
 ---
 
