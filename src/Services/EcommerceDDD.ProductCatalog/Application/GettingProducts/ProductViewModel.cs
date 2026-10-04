@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.ProductCatalog.Application.Products.GettingProducts;
+﻿namespace EcommerceDDD.ProductCatalog.Application.GettingProducts;
 
 public record class ProductViewModel(
     Guid ProductId, 

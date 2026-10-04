@@ -1,4 +1,4 @@
-namespace EcommerceDDD.ApiGateway.SignalR.Hubs.Order;
+namespace EcommerceDDD.SignalR.Hubs.Orders;
 
 public interface IOrderStatusHubClient
 {

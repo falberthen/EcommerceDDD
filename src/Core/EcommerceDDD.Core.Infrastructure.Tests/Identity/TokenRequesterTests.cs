@@ -1,4 +1,4 @@
-namespace EcommerceDDD.Core.Infrastructure.Tests.Http;
+namespace EcommerceDDD.Core.Infrastructure.Tests.Identity;
 
 public class TokenRequesterTests
 {

@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.ProductCatalog.Infrastructure.CurrencyConverter;
+﻿namespace EcommerceDDD.ProductCatalog.Infrastructure.CurrencyExchange;
 
 public class CurrencyConverter : ICurrencyConverter
 {

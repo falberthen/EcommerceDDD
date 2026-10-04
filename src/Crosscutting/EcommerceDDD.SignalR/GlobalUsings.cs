@@ -1,4 +1,4 @@
-global using EcommerceDDD.ApiGateway.SignalR.Hubs.Order;
+global using EcommerceDDD.SignalR.Hubs.Orders;
 global using EcommerceDDD.Core.Infrastructure.Identity;
 global using EcommerceDDD.Core.Infrastructure.WebApi;
 global using Microsoft.AspNetCore.Authorization;

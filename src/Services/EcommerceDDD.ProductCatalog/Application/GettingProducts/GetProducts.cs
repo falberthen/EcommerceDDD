@@ -1,4 +1,4 @@
-﻿namespace EcommerceDDD.ProductCatalog.Application.Products.GettingProducts;
+﻿namespace EcommerceDDD.ProductCatalog.Application.GettingProducts;
 
 public record class GetProducts : IQuery<IReadOnlyList<ProductViewModel>>
 {

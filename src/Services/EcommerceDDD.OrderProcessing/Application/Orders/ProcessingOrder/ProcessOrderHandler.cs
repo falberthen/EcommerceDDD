@@ -1,4 +1,4 @@
-namespace EcommerceDDD.OrderProcessing.Application.Orders.PlacingOrder;
+namespace EcommerceDDD.OrderProcessing.Application.Orders.ProcessingOrder;
 
 public class ProcessOrderHandler(
 	IQuoteService quoteService,
