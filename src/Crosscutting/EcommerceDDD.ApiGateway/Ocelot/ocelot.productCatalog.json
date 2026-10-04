@@ -18,7 +18,7 @@
         "AuthenticationProviderKey": "Bearer"
       },
       "QoSOptions": {
-        "Timeout": 3000,
+        "Timeout": 10000,
         "MinimumThroughput": 3,
         "BreakDuration": 10000
       }
@@ -42,7 +42,7 @@
         "AuthenticationProviderKey": "Bearer"
       },
       "QoSOptions": {
-        "Timeout": 3000,
+        "Timeout": 10000,
         "MinimumThroughput": 3,
         "BreakDuration": 10000
       }
