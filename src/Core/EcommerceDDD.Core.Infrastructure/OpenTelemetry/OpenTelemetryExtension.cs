@@ -27,7 +27,9 @@ public static class OpenTelemetryExtension
                 .AddMeter(serviceName)
                 .AddOtlpExporter())
             .WithLogging(
-                logging => logging.AddOtlpExporter(),
+                logging => logging
+                    .AddProcessor(new OrderIdLogProcessor())
+                    .AddOtlpExporter(),
                 options =>
                 {
                     options.IncludeFormattedMessage = true;
