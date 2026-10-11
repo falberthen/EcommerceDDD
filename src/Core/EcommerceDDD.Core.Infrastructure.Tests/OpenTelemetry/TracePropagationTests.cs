@@ -1,7 +1,7 @@
 
 namespace EcommerceDDD.Core.Infrastructure.Tests.OpenTelemetry;
 
-public record TraceProbe([property: Audit] Guid OrderId);
+public record TraceProbe(Guid OrderId) : ICommand;
 
 public static class TraceProbeHandler
 {
@@ -34,6 +34,7 @@ public class TracePropagationTests : IDisposable
 			{
 				options.ApplicationAssembly = typeof(TracePropagationTests).Assembly;
 				options.Discovery.DisableConventionalDiscovery().IncludeType(typeof(TraceProbeHandler));
+				options.Policies.Add<OrderIdTagPolicy>();
 			})
 			.StartAsync();
 
@@ -50,7 +51,7 @@ public class TracePropagationTests : IDisposable
 		var envelope = session.Sent.SingleEnvelope<TraceProbe>();
 		Assert.Contains(publisherSpan.TraceId.ToHexString(), envelope.ParentId);
 
-		// ...and the handler span continues it, tagged with the order id by [Audit]
+		// ...and the handler span continues it, tagged with the order id by OrderIdTagPolicy
 		var handlerSpan = TraceProbeHandler.HandlerActivity;
 		Assert.NotNull(handlerSpan);
 		Assert.Equal(ActivitySources.Wolverine, handlerSpan.Source.Name);
@@ -95,5 +96,36 @@ public class TracePropagationTests : IDisposable
 		Assert.DoesNotContain(span.Events, e => e.Name == "exception");
 	}
 
+	[Fact]
+	public void LogWithinOrderSpan_ShouldCarryOrderIdAttribute()
+	{
+		// Given
+		var records = new List<IReadOnlyList<KeyValuePair<string, object?>>>();
+		using var loggerFactory = LoggerFactory.Create(builder => builder.AddOpenTelemetry(options =>
+		{
+			options.AddProcessor(new OrderIdLogProcessor());
+			options.AddProcessor(new CollectingLogProcessor(records));
+		}));
+		var logger = loggerFactory.CreateLogger<TracePropagationTests>();
+		var orderId = Guid.NewGuid();
+
+		using var handlerSpan = _testSource.StartActivity("handler")!;
+		handlerSpan.SetTag(OrderIdTagPolicy.OrderIdTag, orderId);
+		using var childSpan = _testSource.StartActivity("http-call")!;
+
+		// When
+		logger.LogInformation("Calling another service");
+
+		// Then: the log is written under a child span and still gets the order id
+		var attributes = Assert.Single(records);
+		Assert.Contains(attributes, a => a.Key == OrderIdTagPolicy.OrderIdTag && a.Value as string == orderId.ToString());
+	}
+
 	public void Dispose() => _listener.Dispose();
+
+	private class CollectingLogProcessor(List<IReadOnlyList<KeyValuePair<string, object?>>> records)
+		: BaseProcessor<LogRecord>
+	{
+		public override void OnEnd(LogRecord record) => records.Add(record.Attributes?.ToList() ?? []);
+	}
 }
