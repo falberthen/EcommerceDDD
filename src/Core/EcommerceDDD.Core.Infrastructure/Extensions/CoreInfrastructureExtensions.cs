@@ -31,9 +31,9 @@ public static class CoreInfrastructureExtensions
 			// Note 1: Wolverine 6 defaults ServiceLocationPolicy to NotAllowed. Services that consume the
 			// Kiota clients opt into service location via EcommerceDDD.ServiceClients.Extensions.UseServiceClientServiceLocation().
 
-			// Note 2: A command's [Audit]-marked OrderId is written onto Wolverine's handler
-			// span natively as the "order.id" tag the SPA deep-links on.
-			
+			// Tags every command and event span with the "order.id" the SPA deep-links on.
+			options.Policies.Add<OrderIdTagPolicy>();
+
 			// Wolverine is the only retry layer (the HTTP clients don't retry). Applies to every service.
 			// A broken domain rule or a failed Result is not retried.
 			options.Policies
