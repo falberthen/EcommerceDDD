@@ -2,7 +2,6 @@
 
 public record class RequestShipment : ICommand
 {
-	[Audit]
 	public OrderId OrderId { get; private set; }
 
 	public static RequestShipment Create(OrderId orderId)

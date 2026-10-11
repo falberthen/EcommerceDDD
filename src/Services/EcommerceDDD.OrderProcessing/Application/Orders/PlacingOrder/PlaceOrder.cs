@@ -2,7 +2,6 @@
 
 public record class PlaceOrder : ICommand
 {
-	[Audit]
 	public OrderId OrderId { get; private set; }
 	public QuoteId QuoteId { get; private set; }
 

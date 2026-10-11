@@ -3,7 +3,6 @@
 public record class RequestPayment : ICommand
 {
 	public CustomerId CustomerId { get; set; }
-	[Audit]
 	public OrderId OrderId { get; set; }
 	public Money TotalPrice { get; set; }
 	public Currency Currency { get; set; }
