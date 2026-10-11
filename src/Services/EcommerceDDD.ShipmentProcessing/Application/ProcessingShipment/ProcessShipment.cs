@@ -3,7 +3,6 @@ namespace EcommerceDDD.ShipmentProcessing.Application.ProcessingShipment;
 public record class ProcessShipment : ICommand
 {
 	public ShipmentId ShipmentId { get; private set; }
-	[Audit]
 	public OrderId OrderId { get; private set; }
 
 	public static ProcessShipment Create(ShipmentId shipmentId, OrderId orderId)

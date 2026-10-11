@@ -17,7 +17,7 @@ public abstract class StronglyTypedId<T> : ValueObject<StronglyTypedId<T>>
 	public override int GetHashCode()
 		=> EqualityComparer<T>.Default.GetHashCode(Value);
 
-	// Stringifies to the wrapped value so [Audit] / logging / OpenTelemetry tags
+	// Stringifies to the wrapped value so logging and OpenTelemetry tags
 	// carry the raw id rather than the type name.
 	public override string ToString() => Value?.ToString() ?? string.Empty;
 

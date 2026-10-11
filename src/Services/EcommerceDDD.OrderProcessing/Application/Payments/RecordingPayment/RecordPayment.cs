@@ -2,7 +2,6 @@
 
 public record class RecordPayment : ICommand
 {
-	[Audit]
 	public OrderId OrderId { get; private set; }
 	public PaymentId PaymentId { get; private set; }
 	public Money TotalPaid { get; private set; }

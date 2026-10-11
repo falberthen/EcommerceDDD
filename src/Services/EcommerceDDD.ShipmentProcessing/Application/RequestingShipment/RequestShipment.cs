@@ -2,7 +2,6 @@
 
 public record class RequestShipment : ICommand
 {
-	[Audit]
 	public OrderId OrderId { get; private set; }
 	public Guid CustomerId { get; private set; }
 	public IReadOnlyList<ProductItem> ProductItems { get; private set; }

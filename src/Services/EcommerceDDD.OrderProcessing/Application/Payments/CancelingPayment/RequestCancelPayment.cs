@@ -2,7 +2,6 @@
 
 public record class RequestCancelPayment : ICommand
 {
-	[Audit]
 	public OrderId OrderId { get; private set; }
 	public PaymentId PaymentId { get; private set; }
 	public PaymentCancellationReason PaymentCancellationReason { get; private set; }

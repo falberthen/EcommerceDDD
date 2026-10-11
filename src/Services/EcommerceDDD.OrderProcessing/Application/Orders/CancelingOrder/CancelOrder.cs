@@ -2,7 +2,6 @@
 
 public record class CancelOrder : ICommand
 {
-	[Audit]
 	public OrderId OrderId { get; private set; }
 	public OrderCancellationReason CancellationReason { get; private set; }
 

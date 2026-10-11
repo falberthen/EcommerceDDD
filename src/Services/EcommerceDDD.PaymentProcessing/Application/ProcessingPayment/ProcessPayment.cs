@@ -3,7 +3,6 @@ namespace EcommerceDDD.PaymentProcessing.Application.ProcessingPayment;
 public record class ProcessPayment : ICommand
 {
 	public PaymentId PaymentId { get; private set; }
-	[Audit]
 	public OrderId OrderId { get; private set; }
 
 	public static ProcessPayment Create(PaymentId paymentId, OrderId orderId)
